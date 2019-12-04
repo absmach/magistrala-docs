@@ -47,7 +47,6 @@ Thank you for your interest in Mainflux and the desire to contribute!
 
 ## Community
 
-- [Google group][forum]
 - [Gitter][gitter]
 - [Twitter][twitter]
 
@@ -59,3 +58,4 @@ Thank you for your interest in Mainflux and the desire to contribute!
 [gitter-badge]: https://badges.gitter.im/Join%20Chat.svg
 [license]: https://img.shields.io/badge/license-Apache%20v2.0-blue.svg
 [blog]: https://medium.com/mainflux-iot-platform
+[twitter]: https://twitter.com/mainflux
