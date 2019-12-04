@@ -59,3 +59,4 @@ Thank you for your interest in Mainflux and the desire to contribute!
 [license]: https://img.shields.io/badge/license-Apache%20v2.0-blue.svg
 [blog]: https://medium.com/mainflux-iot-platform
 [twitter]: https://twitter.com/mainflux
+[docs]: http://mainflux.readthedocs.io
