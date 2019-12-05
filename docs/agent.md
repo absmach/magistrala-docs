@@ -73,7 +73,7 @@ Take a note on first thing and on channels and use it in the next commands as th
 
 Then use this token to create bootstrap configuration
 ```
-curl -s -S -i -X POST -H "Authorization: TOKEN" -H "Content-Type: application/json" http://localhost:8202/things/configs -d '{ "external_id":"44:e1:2d:e6:cf:03","thing_id": "THING_ID","external_key":"edged","name":"edged","channels":[ "CH_ID1", "CH_ID2" ], "content" :"{\"log_level\":\"debug\", \"http_port\":\"9000\", \"mqtt_url\":\"tcp://localhost:18831\",\"edgex_url\":\"http://localhost:48090/api/v1/\" }"}'
+curl -s -S -i -X POST -H "Authorization: TOKEN" -H "Content-Type: application/json" http://localhost:8202/things/configs -d '{ "external_id":"44:e1:2d:e6:cf:03","thing_id": "THING_ID","external_key":"edged","name":"edged","channels":[ "CONTROL_CH", "DATA_CH" ], "content" :"{\"log_level\":\"debug\", \"http_port\":\"9000\", \"mqtt_url\":\"tcp://localhost:18831\",\"edgex_url\":\"http://localhost:48090/api/v1/\" }"}'
 
 ```
 
@@ -106,3 +106,21 @@ MF_AGENT_BOOTSTRAP_ID=34:e1:2d:e6:cf:03 ./mainflux-agent
 
  - MF_AGENT_BOOTSTRAP_KEY - is external_key in bootstrap configuration
  - MF_AGENT_BOOSTRAP_ID - is external_id in bootstrap configuration 
+
+# Executing commands via Agent
+
+To see how commands are executed on remote device via **agent** subscribe first to CONTROL_CH like this
+
+```
+mosquitto_sub -u THING_ID -P THING_KEY -t channels/CONTROL_CH/messages/res -h localhost -p 1883
+```
+
+Then send command to be executed send senml vi mqtt like this ( use different terminal than for subscribe)
+```
+mosquitto_pub -u THING_ID -P THING_KEY -t channels/CONTROL_CH/messages/req -h localhost -p 1883  -m  '[{"bn":"1:", "n":"exec", "vs":"ls, -l"}]'
+```
+
+In the terminal where you subscribed you will get result of executing `ls -l` in the dir where your agent is running (`build`) so you should get result something like this
+```
+[{"bn":"1","n":"ls","vs":"total 14504\n-rw-r--r-- 1 mirko mirko      448 дец  5 12:03 config.toml\n-rwxrwxr-x 1 mirko mirko 14848000 дец  4 18:02 mainflux-agent\n"}]
+```
