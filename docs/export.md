@@ -2,7 +2,7 @@
 Export service is build to bridge between two Mainflux instances. For example we can run Mainflux on the gateway and
 we want to export the data to cloud instance of Mainflux as well.
 Export service is listening to the NATS and forwards payload to the specified MQTT channel.
- 
+C
 
 ## Run Export service
 
@@ -54,7 +54,7 @@ provide
 you can start export service in docker as well
 ```docker-compose -f docker/docker-compose.yml up```
 
-this requires that you have previously brought up Mainflux instance with docker-compose 
+this requires that you have previously brought up Mainflux instance with docker-compose as it depends on docker network created from `docker/docker-compose.yml`
 
 If you are running MTLS on your Mainflux cloud instance you will need to setup export service for MTLS communication. You need to set `mtls=true` and you will need to provide `thing.crt` and `thing.key` as well as `ca.crt` that you produced for provisioned thing [MTLS Authentication](./authentication.md)
 
