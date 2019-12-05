@@ -78,11 +78,11 @@ curl -s -S -i -X POST -H "Authorization: TOKEN" -H "Content-Type: application/js
 ```
 
 
-- external_id is usually MAC address 
-- external_key is key that will be provided to agent process
-- thing_id is mainflux thing id 
-- channels is 2-element array where first channel is CONTROL and second is DATA, both channels should be assigned to thing
-- content is used for configuring parameters of agent service 
+- `external_id` is usually MAC address 
+- `external_key` is key that will be provided to agent process
+- `thing_id` is mainflux thing id 
+- `channels` is 2-element array where first channel is CONTROL and second is DATA, both channels should be assigned to thing
+- `content` is used for configuring parameters of agent service 
 
 
 Then to start the agent service you can do it like this
