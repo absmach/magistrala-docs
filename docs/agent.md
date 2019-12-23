@@ -124,3 +124,39 @@ In the terminal where you subscribed you will get result of executing `ls -l` in
 ```
 [{"bn":"1","n":"ls","vs":"total 14504\n-rw-r--r-- 1 mirko mirko      448 дец  5 12:03 config.toml\n-rwxrwxr-x 1 mirko mirko 14848000 дец  4 18:02 mainflux-agent\n"}]
 ```
+
+## EdgeX 
+
+[Edgex](https://github.com/edgexfoundry/edgex-go) control messages are sent and received over control channel. MF sends a control SenML of the following form:
+
+[{"bn":"<uuid>:", "n":"control", "vs":"<cmd>, <param>, edgexsvc1, edgexsvc2, …, edgexsvcN"}}]
+For example,
+
+[{"bn":"1:", "n":"control", "vs":"operation, stop, edgex-support-notifications, edgex-core-data"}]
+
+Agent, on the other hand, returns a response SenML of the following form:
+
+[{"bn":"<uuid>:", "n":"<>", "v":"<RESP>"}]
+### Remote Commands
+EdgeX defines SMA commands in the following [RAML file](https://github.com/edgexfoundry/edgex-go/blob/master/api/raml/system-agent.raml)
+
+Commands are:
+
+* OPERATION
+* CONFIG
+* METRICS
+* PING
+
+**Operation**
+  
+```
+mosquitto_pub -u 2caf6758-1248-4047-b323-bf9177d71056 -P 2ef07679-0764-4009-a65d-29b673a550fe -t channels/3ace3fa3-aa84-4a02-b0ab-6d594268dc77/messages/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"operation, start, edgex-support-notifications, edgex-core-data"}]'
+```
+**Config**
+```
+mosquitto_pub -u 2caf6758-1248-4047-b323-bf9177d71056 -P 2ef07679-0764-4009-a65d-29b673a550fe -t channels/3ace3fa3-aa84-4a02-b0ab-6d594268dc77/messages/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"config, edgex-support-notifications, edgex-core-data"}]'
+```
+**Metrics**
+```
+mosquitto_pub -u 2caf6758-1248-4047-b323-bf9177d71056 -P 2ef07679-0764-4009-a65d-29b673a550fe -t channels/3ace3fa3-aa84-4a02-b0ab-6d594268dc77/messages/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"metrics, edgex-support-notifications, edgex-core-data"}]'
+```
