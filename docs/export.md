@@ -1,5 +1,4 @@
-# Export service
-Export service is build to bridge between two Mainflux instances. For example we can run Mainflux on the gateway and
+Bridging between two mainflux instances can be done with [export](https://github.com/mainflux/export) service is build to bridge between two Mainflux instances. For example we can run Mainflux on the gateway and
 we want to export the data to cloud instance of Mainflux as well.
 Export service is listening to the NATS and forwards payload to the specified MQTT channel.
 

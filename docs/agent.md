@@ -4,7 +4,7 @@ Over the `control` we are sending commands and receiving response from commands
 Data collected from sensors connected to gateway are being sent over `data` channel.
 Agent is able to configure itself provided that [bootstrap server](./bootstrap.md) is running, it will retrieve configuration from bootstrap server provided few argumentss.
 
-# Run Agent 
+## Run Agent
 
 Before running agent we need to provision a thing and DATA and CONTROL channel. Thing that will be used as gateway representation and make bootstrap configuration.
 If using Mainflux UI this is done automatically.
@@ -107,7 +107,7 @@ MF_AGENT_BOOTSTRAP_ID=34:e1:2d:e6:cf:03 ./mainflux-agent
  - MF_AGENT_BOOTSTRAP_KEY - is external_key in bootstrap configuration
  - MF_AGENT_BOOSTRAP_ID - is external_id in bootstrap configuration 
 
-# Executing commands via Agent
+## Executing commands via Agent
 
 To see how commands are executed on remote device via **agent** subscribe first to CONTROL_CH like this
 
