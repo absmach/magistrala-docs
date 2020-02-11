@@ -8,7 +8,7 @@ used in the platform - users, channels and things.
 Use the Mainflux API to create user account:
 
 ```
-curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/json" https://localhost/users -d '{"email":"john.doe@email.com", "password":"123"}'
+curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/json" https://localhost/users -d '{"email":"john.doe@email.com", "password":"12345678"}'
 ```
 
 Note that when using official `docker-compose`, all services are behind `nginx`
@@ -20,7 +20,7 @@ In order for this user to be able to authenticate to the system, you will have
 to create an authorization token for him:
 
 ```
-curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/json" https://localhost/tokens -d '{"email":"john.doe@email.com", "password":"123"}'
+curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/json" https://localhost/tokens -d '{"email":"john.doe@email.com", "password":"12345678"}'
 ```
 
 Response should look like this:
