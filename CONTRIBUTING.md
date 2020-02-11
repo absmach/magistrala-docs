@@ -41,9 +41,9 @@ To contribute to the project, [fork](https://help.github.com/articles/fork-a-rep
 clone your fork repository, and configure the remotes:
 
 ```
-git clone https://github.com/<your-username>/mainflux.git
-cd mainflux
-git remote add upstream https://github.com/mainflux/mainflux.git
+git clone https://github.com/<your-username>/docs.git
+cd docs
+git remote add upstream https://github.com/mainflux/docs.git
 ```
 
 If your cloned repository is behind the upstream commits, then get the latest changes from upstream:
