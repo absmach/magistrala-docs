@@ -15,7 +15,7 @@ modules won't work).
 
 ### Prerequisites
 
-Make sure that you have [Protocol Buffers](https://developers.google.com/protocol-buffers/) (version 3.6.1) compiler (`protoc`) installed.
+Make sure that you have [Protocol Buffers](https://developers.google.com/protocol-buffers/) (version 3.11.4) compiler (`protoc`) installed.
 
 [Go Protobuf](https://github.com/golang/protobuf) installation instructions are [here](https://github.com/golang/protobuf#installation).
 Go Protobuf uses C bindings, so you will need to install [C++ protobuf](https://github.com/google/protobuf) as a prerequisite.
@@ -179,6 +179,7 @@ To do this by hand, execute:
 
 ```
 protoc --gofast_out=plugins=grpc:. *.proto
+protoc --gogo_out=plugins=grpc:. broker/*.proto
 ```
 
 A shorthand to do this via `make` tool is:
