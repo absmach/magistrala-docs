@@ -48,10 +48,15 @@ helm dependency update
 
 Deploying release named `mainflux` in namespace named `mf` is done with just:
 ```
-helm install mainflux -n mf
+helm install mainflux . -n mf
 ```
 
 Mainflux is now deployed on your Kubernetes.
+
+If you didn't already have namespace created you should do it with:
+```
+kubectl create namespace mf
+```
 
 ### Customizing installation
 
@@ -73,13 +78,15 @@ The following table lists the configurable parameters and their default values.
 | `defaults.logLevel`                    | Log level                                                                  | `debug`        |
 | `defaults.image.pullPolicy`            | Docker Image Pull Policy                                                   | `IfNotPresent` |
 | `defaults.image.repository`            | Docker Image Repository                                                    | `mainflux`     |
-| `defaults.image.tag`                   | Docker Image Tag                                                           | `0.10.0`        |
+| `defaults.image.tag`                   | Docker Image Tag                                                           | `0.10.0`       |
 | `nginx_internal.mtls.tls`              | TLS secret which contains the server cert/key                              | `''`           |
 | `nginx_internal.mtls.intermediate_crt` | Generic secret which contains the intermediate cert used to verify clients | `''`           |
 | `ingress.enabled`                      | Should the Nginx Ingress be created                                        | `true`         |
 | `ingress.hostname`                     | Hostname for the Nginx Ingress                                             | `''`           |
 | `ingress.tls.hostname`                 | Hostname of the Nginx Ingress certificate                                  | `''`           |
 | `ingress.tls.secret`                   | TLS secret for the Nginx Ingress                                           | `''`           |
+| `mqtt.broker.limits.reqRam`            | VerneMQ memory resource request                                            | `512Mi`        |
+| `mqtt.broker.limits.maxRam`            | VerneMQ memory resource limit                                              | `4Gi`          |
 
 All Mainflux services can have their `logLevel`, `image.pullPolicy`, `image.repository` and `image.tag` overridden. The names of the services are:
 
