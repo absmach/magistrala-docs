@@ -54,10 +54,10 @@ helm install mainflux . -n mf
 
 Mainflux is now deployed on your Kubernetes.
 
->If Nginx Ingress Controller isn't already installed, this would install it in `mf` namespace:
->```bash
->helm install nginx-mainflux stable/nginx-ingress -n mf
->```
+If Nginx Ingress Controller isn't already installed, this would install it in `mf` namespace:
+```bash
+helm install nginx-mainflux stable/nginx-ingress -n mf
+```
 
 ### Customizing installation
 
