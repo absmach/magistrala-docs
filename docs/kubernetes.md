@@ -11,50 +11,49 @@ Mainflux can be easily deployed on Kubernetes platform by using Helm Chart from 
 Kubectl is official Kubernetes command line client, follow [this instructions](https://kubernetes.io/docs/tasks/tools/install-kubectl/) to install it. 
 
 Installing Helm v3 on Linux:
-```
-$ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
-$ chmod 700 get_helm.sh
-$ ./get_helm.sh
+```bash
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
+chmod 700 get_helm.sh
+./get_helm.sh
 ```
 
 Verify it's installed:
-```
-$ helm version
+```bash
+helm version
 ```
 
 Add stable chart repository:
-```
+```bash
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/
 ```
 
 If Nginx Ingress Controller isn't already installed, this would install it in `mf` namespace:
-```
+```bash
 helm install nginx-mainflux stable/nginx-ingress -n mf
 ```
 
 ## Deploying Mainflux
 
 Get Helm charts from [Mainflux DevOps GitHub repository](https://github.com/mainflux/devops):
-```
+```bash
 git clone https://github.com/mainflux/devops.git
 cd devops/charts/mainflux
 ```
 
 Update the on-disk dependencies to mirror Chart.yaml:
-
-```
+```bash
 helm dependency update
 ```
 
 Deploying release named `mainflux` in namespace named `mf` is done with just:
-```
+```bash
 helm install mainflux . -n mf
 ```
 
 Mainflux is now deployed on your Kubernetes.
 
 If you didn't already have namespace created you should do it with:
-```
+```bash
 kubectl create namespace mf
 ```
 
@@ -62,12 +61,12 @@ kubectl create namespace mf
 
 
 You can override default values while installing with `--set` option. For example, if you want to specify ingress hostname and pull `latest` tag of `users` image:
-```
+```bash
 helm install mainflux -n mf --set ingress.hostname='example.com' --set users.image.tag='latest'
 ```
 
 Or if release is already installed, you can update it:
-```
+```bash
 helm upgrade mainflux -n mf --set ingress.hostname='example.com' --set users.image.tag='latest'
 ```
 
