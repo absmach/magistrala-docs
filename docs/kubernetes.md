@@ -8,7 +8,9 @@ Mainflux can be easily deployed on Kubernetes platform by using Helm Chart from 
 - Stable Helm repository installed
 - Nginx Ingress Controller
 
-Kubectl is official Kubernetes command line client, follow [this instructions](https://kubernetes.io/docs/tasks/tools/install-kubectl/) to install it. 
+Kubectl is official Kubernetes command line client, follow [this instructions](https://kubernetes.io/docs/tasks/tools/install-kubectl/) to install it.
+
+Regaqrding the cluster control with `kubectl`, defualt config `.yaml` file should be `~/.kube/config`, so if you have another one (for example one downloaded from DO), it should be renamed.
 
 Installing Helm v3 on Linux:
 ```bash
@@ -27,11 +29,6 @@ Add stable chart repository:
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/
 ```
 
-If Nginx Ingress Controller isn't already installed, this would install it in `mf` namespace:
-```bash
-helm install nginx-mainflux stable/nginx-ingress -n mf
-```
-
 ## Deploying Mainflux
 
 Get Helm charts from [Mainflux DevOps GitHub repository](https://github.com/mainflux/devops):
@@ -45,6 +42,11 @@ Update the on-disk dependencies to mirror Chart.yaml:
 helm dependency update
 ```
 
+If you didn't already have namespace created you should do it with:
+```bash
+kubectl create namespace mf
+```
+
 Deploying release named `mainflux` in namespace named `mf` is done with just:
 ```bash
 helm install mainflux . -n mf
@@ -52,10 +54,10 @@ helm install mainflux . -n mf
 
 Mainflux is now deployed on your Kubernetes.
 
-If you didn't already have namespace created you should do it with:
-```bash
-kubectl create namespace mf
-```
+>If Nginx Ingress Controller isn't already installed, this would install it in `mf` namespace:
+>```bash
+>helm install nginx-mainflux stable/nginx-ingress -n mf
+>```
 
 ### Customizing installation
 
