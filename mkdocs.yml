@@ -34,8 +34,11 @@ pages:
   - Storage: storage.md
   - LoRa: lora.md
   - OPC-UA: opcua.md
-  - Export: export.md
-  - Agent: agent.md
+  - Edge:
+    - Edge: edge.md
+    - Export: export.md
+    - Agent: agent.md
+    - Example deployment: edge-deployment.md
   - Security: security.md
   - Authentication: authentication.md
   - CLI: cli.md
