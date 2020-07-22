@@ -242,6 +242,12 @@ You can observe which things are connected to specific channel:
 curl -s -S -i --cacert docker/ssl/certs/ca.crt -H "Authorization: <user_auth_token>" https://localhost/channels/<channel_id>/things
 ```
 
+You can also observe which things are not connected to specific channel by adding a query parameter `connected=false` to the HTTP request:
+
+```
+curl -s -S -i --cacert docker/ssl/certs/ca.crt -H "Authorization: <user_auth_token>" https://localhost/channels/<channel_id>/things?connected=false
+```
+
 Response that you'll get should look like this:
 
 ```json
@@ -266,10 +272,16 @@ Response that you'll get should look like this:
 }
 ```
 
-You can also observe to which channels is specified thing connected:
+You can observe to which channels is specified thing connected:
 
 ```bash
 curl -s -S -i --cacert docker/ssl/certs/ca.crt -H "Authorization: <user_auth_token>" https://localhost/things/<thing_id>/channels
+```
+
+You can also observe to which channels is specified thing not connected by adding a query parameter `connected=false` to the HTTP request:
+
+```
+curl -s -S -i --cacert docker/ssl/certs/ca.crt -H "Authorization: <user_auth_token>" https://localhost/things/<thing_id>/channels?connected=false
 ```
 
 Response that you'll get should look like this:
