@@ -24,7 +24,7 @@ Provision service provides a way of specifying this `provision layout` and creat
 The service is configured using the environment variables presented in the following [table][config]. Note that any unset variables will be replaced with their default values.
 
 
-By default, call to `/mapping` endpoint will create one thing and two channels (`control` and `data`) and connect it. If there is a requirement for different provision layout we can use [config][conftoml] file in addition to environment variables. 
+By default, call to `/mapping` endpoint will create one thing and two channels (`control` and `data`) and connect it as this is typical setup required by [Agent](agent.md). If there is a requirement for different provision layout we can use [config][conftoml] file in addition to environment variables. 
 
 For the purposes of running provision as an add-on in docker composition environment variables seems more suitable. Environment variables are set in [.env][env].  
 
@@ -37,12 +37,71 @@ Bootstrap configuration can be fetched with [Agent][agent]. For channel's metada
 
 Example of provision layout below
 ```toml
+[bootstrap]
+  [bootstrap.content]
+    [bootstrap.content.agent.edgex]
+      url = "http://localhost:48090/api/v1/"
+
+    [bootstrap.content.agent.log]
+      level = "info"
+
+    [bootstrap.content.agent.mqtt]
+      mtls = false
+      qos = 0
+      retain = false
+      skip_tls_ver = true
+      url = "localhost:1883"
+
+    [bootstrap.content.agent.server]
+      nats_url = "localhost:4222"
+      port = "9000"
+  
+    [bootstrap.content.agent.heartbeat]
+      interval = "30s"
+  
+    [bootstrap.content.agent.terminal]
+      session_timeout = "30s"
+    
+    [bootstrap.content.export.exp]
+      log_level = "debug"
+      nats = "nats://localhost:4222"
+      port = "8172"
+      cache_url = "localhost:6379"
+      cache_pass = ""
+      cache_db = "0"
+
+    [bootstrap.content.export.mqtt]
+      ca_path = "ca.crt"
+      cert_path = "thing.crt"
+      channel = ""
+      host = "tcp://localhost:1883"
+      mtls = false
+      password = ""
+      priv_key_path = "thing.key"
+      qos = 0
+      retain = false
+      skip_tls_ver = false
+      username = ""
+
+    [[bootstrap.content.export.routes]]
+      mqtt_topic = ""
+      nats_topic = "channels"
+      subtopic = ""
+      type = "mfx"
+      workers = 10
+    
+    [[bootstrap.content.export.routes]]
+      mqtt_topic = ""
+      nats_topic = "export"
+      subtopic = ""
+      type = "default"
+      workers = 10
+
 [[things]]
   name = "thing"
 
   [things.metadata]
     external_id = "xxxxxx"
-
 
 [[channels]]
   name = "control-channel"
@@ -60,8 +119,11 @@ Example of provision layout below
   name = "export-channel"
 
   [channels.metadata]
-    type = "data"
+    type = "export"
+
 ```
+
+`[bootstrap.content]` will be marshalled and saved into `content` field in bootstrap configs when request to `/mappings` is made, `content` field from bootstrap config is used to create `Agent` and `Export` configuration files upon `Agent` fetching bootstrap configuration.
 
 ## Authentication
 In order to create necessary entities provision service needs to authenticate against Mainflux. 
@@ -142,6 +204,60 @@ Response contains created things, channels and certificates if any:
   }
 }
 ```
+
+## Example
+
+Deploy Mainflux UI docker composition as it contains all the required services for provisioning to work ( `certs`, `bootstrap` and Mainflux core)
+
+```
+git clone https://github.com/mainflux/ui
+cd ui
+docker-compose -f docker/docker-compose.yml up
+```
+Create user and obtain access token
+
+```bash
+mainflux-cli -m https://mainflux.com users create john.doe@email.com 12345678
+
+# Retrieve token
+mainflux-cli -m https://mainflux.com users token john.doe@email.com 12345678
+
+created: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTY1ODU3MDUsImlhdCI6MTU5NjU0OTcwNSwiaXNzIjoibWFpbmZsdXguYXV0aG4iLCJzdWIiOiJtaXJrYXNoQGdtYWlsLmNvbSIsInR5cGUiOjB9._vq0zJzFc9tQqc8x74kpn7dXYefUtG9IB0Cb-X2KMK8
+
+```
+Put a value of token into environment variable
+
+```
+TOK=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTY1ODU3MDUsImlhdCI6MTU5NjU0OTcwNSwiaXNzIjoibWFpbmZsdXguYXV0aG4iLCJzdWIiOiJtaXJrYXNoQGdtYWlsLmNvbSIsInR5cGUiOjB9._vq0zJzFc9tQqc8x74kpn7dXYefUtG9IB0Cb-X2KMK8
+```
+
+Make a call to provision endpoint
+
+```
+curl -s -S  -X POST  http://mainflux.com:8190/mapping -H "Authorization: $TOK" -H 'Content-Type: application/json'   -d '{"name":"edge-gw",  "external_id" : "gateway", "external_key":"external_key" }'
+```
+
+To check the results you can make a call to bootstrap endpoint
+
+```
+curl -s -S -X GET http://mainflux.com:8202/things/bootstrap/gateway -H "Authorization: external_key" -H 'Content-Type: application/json'
+```
+
+Or you can start `Agent` with:
+
+```bash
+git clone https://github.com/mainflux/agent
+cd agent
+make
+MF_AGENT_BOOTSTRAP_ID=gateway MF_AGENT_BOOTSTRAP_KEY=external_key MF_AGENT_BOOTSTRAP_URL=http://mainflux.ccom:8202/things/bootstrap build/mainflux-agent
+```
+
+Agent will retrieve connections parameters and connect to Mainflux cloud.
+
+
+
+
+
 
 [mainflux]: https://github.com/mainflux/mainflux
 [bootstrap]: https://github.com/mainflux/mainflux/tree/master/bootstrap
