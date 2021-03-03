@@ -22,6 +22,11 @@ Helm is the package manager for Kubernetes. Follow [these instructions](https://
 ### Stable Helm Repository
 Add a stable chart repository:
 ```bash
+helm repo add stable https://charts.helm.sh/stable
+```
+
+Add a bitnami chart repository:
+```bash
 helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
 
