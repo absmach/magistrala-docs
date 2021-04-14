@@ -111,13 +111,13 @@ Access-Control-Allow-Headers: *
 ```
 
 ### Update User
-Updating user entity
+Updating user's metadata
 
-> Must-have: `user_token`, e-mail and password
+> Must-have: `user_token`
 
 ```
 curl -s -S -i -X PUT -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost/users -d 
-'{"email":"<user_email>", "password":"<user_password>"}'
+'{"metadata":{"foo":"bar"}}'
 ```
 
 Response:
