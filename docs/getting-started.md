@@ -24,6 +24,9 @@ wget -O- https://github.com/mainflux/mainflux/releases/download/0.9.0/mainflux-c
 
 > Make sure that `$GOBIN` is added to your `$PATH` so that `mainflux-cli` command can be accessible system-wide
 
+#### Build mainflux-cli
+Build `mainflux-cli` if the pre-built CLI is not compatible with your OS, i.e MacOS. Please see the [CLI](cli.md) for further details.
+
 ## Step 3 - Provision the System
 Once installed, you can use the CLI to quick-provision the system for testing:
 ```bash
