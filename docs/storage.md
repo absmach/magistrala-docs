@@ -169,7 +169,7 @@ curl -s -S -i  -H "Authorization: <thing_token>" http://localhost:<service_port>
 ```
 
 If you don't provide `offset` and `limit` parameters, default values will be used instead: 0 for `offset` and 10 for `limit`.
-The `format` parameter indicates the last subtopic that the message is published. As indicated under the [`Writers`](storage.md#writers) section, the message format is stored in the subtopic as the last part of the subtopic. In the example:
+The `format` parameter indicates the last subtopic of the message. As indicated under the [`Writers`](storage.md#writers) section, the message format is stored in the subtopic as the last part of the subtopic. In the example:
 ```
 http://localhost:8185/channels/<channelID>/messages/home/temperature/myFormat
 ```
