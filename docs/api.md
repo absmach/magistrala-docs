@@ -450,7 +450,7 @@ curl -s -S -i -X PUT -H "Content-Type: application/json" -H "Authorization: <use
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
 Date: Sun, 11 Jul 2021 17:23:39 GMT
