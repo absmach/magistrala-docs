@@ -440,7 +440,24 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Disconnect
-Disconnect the thing from the channel
+
+- Disconnect things from channels specified by lists of IDs.
+
+> Must-have: `user_token`, `channel_ids` and `thing_ids`
+
+```
+curl -s -S -i -X PUT -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost:<service_port>/disconnect -d '{"thing_ids": ["<thing_id>"], "channel_ids": ["<channel_id>"]}'
+```
+
+Response:
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Sun, 11 Jul 2021 17:23:39 GMT
+Content-Length: 0
+```
+
+- Disconnect the thing from the channel
 
 > Must-have: `user_token`, `channel_id` and `thing_id`
 
