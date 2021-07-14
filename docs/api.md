@@ -7,12 +7,12 @@ To start working with the Mainflux system, you need to create a user account.
 
 > Must-have: e-mail and password (password must contain at least 8 characters)
 
-```
+```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/users -d '{"email":"<user_email>", "password":"<user_password>"}'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 201 Created
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:06:45 GMT
@@ -33,13 +33,13 @@ To log in to the Mainflux system, you need to create a `user_token`.
 
 > Must-have: registered e-mail and password
 
-```
+```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/tokens -d '{"email":"<user_email>", 
 "password":"<user_password>"}'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 201 Created
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:07:18 GMT
@@ -61,12 +61,12 @@ You can always check the user entity that is logged in by entering the user ID a
 
 > Must-have: `user_id` and `user_token`
 
-```
+```bash
 curl -s -S -i -X GET -H "Authorization: <user_token>" http://localhost/users/<user_id>
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:09:47 GMT
@@ -88,12 +88,12 @@ You can get all users in the database by calling the this function
 
 > Must-have: `user_token`
 
-```
+```bash
 curl -s -S -i -X GET -H "Authorization: <user_token>" http://localhost/users
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:11:28 GMT
@@ -115,13 +115,13 @@ Updating user's metadata
 
 > Must-have: `user_token`
 
-```
+```bash
 curl -s -S -i -X PUT -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost/users -d 
 '{"metadata":{"foo":"bar"}}'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:15:31 GMT
@@ -141,12 +141,12 @@ Changing the user password can be done by calling the update password function
 
 > Must-have: `user_token`, `old_password` and password (`new_password`)
 
-```
+```bash
 curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost/password -d '{"old_password":"<old_password>", "password":"<new_password>"}'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 201 Created
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:17:36 GMT
@@ -168,12 +168,12 @@ To create a thing, you need the thing and a `user_token`
 
 > Must-have: `user_token`
 
-```
+```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost/things/bulk -d '[{"name": "<thing_name>"}]'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 201 Created
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:18:37 GMT
@@ -190,12 +190,12 @@ You can create multiple things at once by entering a series of things structures
 
 > Must-have: `user_token` and at least two things
 
-```
+```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost/things/bulk -d '[{"name": "<thing_name_1>"}, {"name": "<thing_name_2>"}]'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 201 Created
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:19:48 GMT
@@ -212,12 +212,12 @@ You can get thing entity by entering the thing ID and `user_token`
 
 > Must-have: `user_token` and `thing_id`
 
-```
+```bash
 curl -s -S -i -X GET -H "Authorization: <user_token>" http://localhost/things/<thing_id>
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:20:52 GMT
@@ -234,12 +234,12 @@ Get all things, list requests accepts limit and offset query parameters
 
 > Must-have: `user_token`
 
-```
+```bash
 curl -s -S -i -X GET -H "Authorization: <user_token>" http://localhost/things
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:21:49 GMT
@@ -256,12 +256,12 @@ Updating a thing entity
 
 > Must-have: `user_token` and `thing_id`
 
-```
+```bash
 curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: <user_token>" http://localhost/things/<thing_id> -d '{"name": "<thing_name>"}'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:23:36 GMT
@@ -276,12 +276,12 @@ To delete a thing you need a `thing_id` and a `user_token`
 
 > Must-have: `user_token` and `thing_id`
 
-```
+```bash
 curl -s -S -i -X DELETE -H "Content-Type: application/json" -H  "Authorization: <user_token>" http://localhost/things/<thing_id>
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 204 No Content
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:24:44 GMT
@@ -297,12 +297,12 @@ To create a channel, you need a `user_token`
 
 > Must-have: `user_token`
 
-```
+```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost/channels -d '{"name": "<channel_name>"}'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 201 Created
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:26:51 GMT
@@ -319,12 +319,12 @@ As with things, you can create multiple channels at once
 
 > Must-have: `user_token` and at least 2 channels
 
-```
+```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost/channels/bulk -d '[{"name": "<channel_name_1>"}, {"name": "<channel_name_2>"}]'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 201 Created
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:28:10 GMT
@@ -341,12 +341,12 @@ Get a channel entity for a logged in user
 
 > Must-have: `user_token` and `channel_id`
 
-```
+```bash
 curl -s -S -i -X GET -H "Authorization: <user_token>" http://localhost/channels/<channel_id>
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:29:49 GMT
@@ -363,12 +363,12 @@ Get all channels, list requests accepts limit and offset query parameters
 
 > Must-have: `user_token`
 
-```
+```bash
 curl -s -S -i -X GET -H "Authorization: <user_token>" http://localhost/channels
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:30:34 GMT
@@ -385,12 +385,12 @@ Update channel entity
 
 > Must-have: `user_token` and `channel_id`
 
-```
+```bash
 curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: <user_token>" http://localhost/channels/<channel_id> -d '{"name": "<channel_name>"}'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:32:08 GMT
@@ -405,12 +405,12 @@ Delete a channel entity
 
 > Must-have: `user_token` and `channel_id`
 
-```
+```bash
 curl -s -S -i -X DELETE -H "Content-Type: application/json" -H  "Authorization: <user_token>" http://localhost/channels/<channel_id>
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 204 No Content
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:33:21 GMT
@@ -424,12 +424,12 @@ Connect thing to channel
 
 > Must-have: `user_token`, `channel_id` and `thing_id`
 
-```
+```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost/connect -d '{"channel_ids": ["<channel_id>"], "thing_ids": ["<thing_id>"]}'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:36:32 GMT
@@ -440,16 +440,33 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Disconnect
-Disconnect the thing from the channel
+
+- Disconnect things from channels specified by lists of IDs.
+
+> Must-have: `user_token`, `channel_ids` and `thing_ids`
+
+```bash
+curl -s -S -i -X PUT -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost:<service_port>/disconnect -d '{"thing_ids": ["<thing_id_1>", "<thing_id_2>"], "channel_ids": ["<channel_id_1>", "<channel_id_2>"]}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Sun, 11 Jul 2021 17:23:39 GMT
+Content-Length: 0
+```
+
+- Disconnect the thing from the channel
 
 > Must-have: `user_token`, `channel_id` and `thing_id`
 
-```
+```bash
 curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost/channels/<channel_id>/things/<thing_id>
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 204 No Content
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:38:14 GMT
@@ -463,12 +480,12 @@ Checks if thing has access to a channel
 
 > Must-have: `channel_id` and `thing_key`
 
-```
+```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/identify/channels/<channel_id>/access-by-key -d '{"token": "<thing_key>"}'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Mon, 22 Mar 2021 13:10:53 GMT
@@ -485,12 +502,12 @@ Checks if thing has access to a channel
 
 > Must-have: `channel_id` and `thing_id`
 
-```
+```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/identify/channels/<channel_id>/access-by-id -d '{"thing_id": "<thing_id>"}'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Mon, 22 Mar 2021 15:02:02 GMT
@@ -504,12 +521,12 @@ Access-Control-Expose-Headers: Location
 Validates thing's key and returns it's ID if key is valid
 
 > Must-have: `thing_key`
-```
+```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/identify -d '{"token": "<thing_key>"}'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Mon, 22 Mar 2021 15:04:41 GMT
@@ -528,12 +545,12 @@ Sends message via HTTP protocol
 
 > Must-have: `thing_key` and `channel_id`
 
-```
+```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: <thing_key>" http://localhost/http/channels/<channel_id>/messages -d '[{"bn":"some-base-name:","bt":1.276020076001e+09,"bu":"A","bver":5,"n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 202 Accepted
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 16:53:54 GMT
@@ -546,12 +563,12 @@ Reads messages from database for a given channel
 
 > Must-have: `thing_key` and `channel_id`
 
-```
+```bash
 curl -s -S -i -H "Authorization: <thing_key>" http://localhost:<service_port>/channels/<channel_id>/messages?offset=0&limit=5
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
 Date: Wed, 10 Mar 2021 16:54:58 GMT
@@ -567,12 +584,12 @@ To create a group, you need the group name and a `user_token`
 
 > Must-have: `user_token`
 
-```
+```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost/groups -d '{"name": "<group_name>", "parent_id": "<previous_group_id>", "description": "<group_description>", "metadata": {}}'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 201 Created
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 16:58:09 GMT
@@ -588,12 +605,12 @@ Get list of ID's from group
 
 > Must-have: `user_token` and `group_id`
 
-```
+```bash
 curl -s -S -i -X GET -H 'Content-Type: application/json' -H "Authorization: <user_token>" http://localhost/groups/<group_id>/members  
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Tue, 23 Mar 2021 09:18:10 GMT
@@ -610,12 +627,12 @@ Assign user, thing or channel to a group
 
 > Must-have: `user_token`, `group_id`, `member_id` and `member_type`
 
-```
+```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost/groups/<group_id>/members -d '{"members":["<user_id>" | "<thing_id_>" | "<channel_id_>"], "type":["users" | "things" | "channels"]}' 
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 17:04:41 GMT
@@ -630,12 +647,12 @@ Unassign user, thing or channel from group
 
 > Must-have: `user_token`, `group_id`, `member_id` and `member_type`
 
-```
+```bash
 curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost/groups/<group_id>/members -d '{"members":["<user_id>" | "<thing_id_>" | "<channel_id_>"], "type":["users" | "things" | "channels"]}'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 204 No Content
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 17:13:06 GMT
@@ -649,12 +666,12 @@ Get a group entity for a logged in user
 
 > Must-have: `user_token` and `group_id`
 
-```
+```bash
 curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost/groups/<group_id>
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 17:06:48 GMT
@@ -671,12 +688,12 @@ Get all groups, list requests accepts limit and offset query parameters
 
 > Must-have: `user_token`
 
-```
+```bash
 curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost/groups
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 17:09:28 GMT
@@ -693,12 +710,12 @@ Update group entity
 
 > Must-have: `user_token` and `group_id`
 
-```
+```bash
 curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: <user_token>" http://localhost/groups/<group_id> -d '{"name": "<group_name>"}'
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 17:11:51 GMT
@@ -713,12 +730,12 @@ Delete a group entity
 
 > Must-have: `user_token` and `group_id`
 
-```
+```bash
 curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost/groups/<group_id>
 ```
 
 Response:
-```
+```bash
 HTTP/1.1 204 No Content
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 17:14:13 GMT
