@@ -446,7 +446,7 @@ Access-Control-Expose-Headers: Location
 > Must-have: `user_token`, `channel_ids` and `thing_ids`
 
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost:<service_port>/disconnect -d '{"thing_ids": ["<thing_id>"], "channel_ids": ["<channel_id>"]}'
+curl -s -S -i -X PUT -H "Content-Type: application/json" -H "Authorization: <user_token>" http://localhost:<service_port>/disconnect -d '{"thing_ids": ["<thing_id_1>", "<thing_id_2>"], "channel_ids": ["<channel_id_1>", "<channel_id_2>"]}'
 ```
 
 Response:
