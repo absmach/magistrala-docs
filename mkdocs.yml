@@ -33,6 +33,7 @@ nav:
   - Edge: edge.md
   - Security: security.md
   - Authentication: authentication.md
+  - Authorization: authorization.md
   - CLI: cli.md
   - API: api.md
   - Groups: groups.md

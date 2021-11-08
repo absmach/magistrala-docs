@@ -85,9 +85,17 @@ mainflux-cli version
 
 ### Users management
 #### Create User
+
+Mainflux has two options for user creation. Either everybody or just the admin is able to create new users. This option is dictated through policies and be configured through environment variable (`MF_USERS_ALLOW_SELF_REGISTER`). If only the admin is allowed to create new users, then the `<user_auth_token>` is required because the token is used to verify that the requester is admin or not. Otherwise, the token is not used, since everybody can create new users. However, the token is still required, in order to be consistent. For more details, please see [Authorization page](authorization.md).
+
 ```bash
-mainflux-cli users create <user_email> <user_password>
+if env `MF_USERS_ALLOW_SELF_REGISTER` is "true" then   
+  mainflux-cli users create <user_email> <user_password>
+else   
+  mainflux-cli users create <user_email> <user_password> <admin_auth_token>
 ```
+
+`MF_USERS_ALLOW_SELF_REGISTER` is `true` by default. Therefore, you do not need to provide `<admin_auth_token>` if `MF_USERS_ALLOW_SELF_REGISTER` is true. On the other hand, if you set `MF_USERS_ALLOW_SELF_REGISTER` to `false`, the Admin token is required for authorization. Therefore, you have to provide the admin token through third argument stated as `<admin_auth_token>`.
 
 #### Login User
 ```bash

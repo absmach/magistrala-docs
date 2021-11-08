@@ -743,3 +743,56 @@ Content-Type: application/json
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 ```
+
+### Share User Group with Things Group
+Adds access rights on thing groups to the user group.
+
+> Must-have: `user_token`, `user_group_id` and `<thing_group_id>`.
+
+```bash
+curl -s -S -i -X POST http://localhost/groups/<user_group_id>/share -d '{"thing_group_id": "<thing_group_id>"}' -H 'Content-Type: application/json' -H "Authorization: <user_token>"
+```
+
+Each user from the the group identified by `user_group_id` will have `read`, `write`, and `delete` policies on the things grouped by `thing_group_id`. Therefore, they will be able to do operations defined under [Things Policies section](/authorization/#things-service-related-policies).
+
+## Policies
+
+### Add policies
+The admin can add custom policies. Only policies defined on [Predefined Policies section](/authorization/#summary-of-the-defined-policies) are allowed.
+
+> Must-have: admin_token, object, subjects_ids and policies
+
+```bash
+curl -isSX POST http://localhost/policies -d '{"subjects": ["<subject_id1>",..."<subject_idN>"], "object": "<object>", "policies": ["<action_1>, ..."<action_N>"]}' -H "Authorization: <admin_token>" -H 'Content-Type: application/json'
+```
+
+*admin_token* must belong to the admin.
+
+Response:
+```bash
+HTTP/1.1 201 Created
+Content-Type: application/json
+Date: Wed, 03 Nov 2021 13:00:14 GMT
+Content-Length: 3
+
+{}
+```
+
+### Delete policies
+The admin can delete policies. Only policies defined on [Predefined Policies section](/authorization/#summary-of-the-defined-policies) are allowed.
+
+> Must-have: admin_token, object, subjects_ids and policies
+
+```bash
+curl -isSX PUT http://localhost/policies -d '{"subjects": ["<subject_id1>",..."<subject_idN>"], "object": "<object>", "policies": ["<action_1>, ..."<action_N>"]}' -H "Authorization: <admin_token>" -H 'Content-Type: application/json'
+```
+
+*admin_token* must belong to the admin.
+
+Response:
+```bash
+HTTP/1.1 204 No Content
+Content-Type: application/json
+Date: Wed, 03 Nov 2021 13:00:05 GMT
+
+```
