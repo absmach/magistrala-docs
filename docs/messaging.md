@@ -41,15 +41,23 @@ to every command.
 
 ## CoAP
 
-CoAP adapter implements CoAP protocol using underlying UDP and according to [RFC 7252](https://tools.ietf.org/html/rfc7252). To send and receive messages over CoAP, you can use [Copper](https://github.com/mkovatsc/Copper) CoAP user-agent. To set the add-on, please follow the installation instructions provided [here](https://github.com/mkovatsc/Copper#how-to-integrate-the-copper-sources-into-firefox). Once the Mozilla Firefox and Copper are ready and CoAP adapter is running locally on the default port (5683), you can navigate to the appropriate URL and start using CoAP. The URL should look like this:
+CoAP adapter implements CoAP protocol using underlying UDP and according to [RFC 7252](https://tools.ietf.org/html/rfc7252). To send and receive messages over CoAP, you can use [CoAP CLI](https://github.com/mainflux/coap-cli). To set the add-on, please follow the installation instructions provided [here](https://github.com/mainflux/coap-cli).
+
+###
+Examples:
 
 ```
-coap://localhost/channels/<channel_id>/messages?auth=<thing_auth_key>
+coap-cli get channels/0bb5ba61-a66e-4972-bab6-26f19962678f/messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -o
 ```
-
+```
+coap-cli post channels/0bb5ba61-a66e-4972-bab6-26f19962678f/messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -d "hello world"
+```
+```
+coap-cli post channels/0bb5ba61-a66e-4972-bab6-26f19962678f/messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -d "hello world" -h 0.0.0.0 -p 1234
+```
 To send a message, use `POST` request.
-To subscribe, send `GET` request with Observe option set to 0. There are two ways to unsubscribe:
-  1) Send `GET` request with Observe option set to 1.
+To subscribe, send `GET` request with Observe option (flag `o`) set to false. There are two ways to unsubscribe:
+  1) Send `GET` request with Observe option set to true.
   2) Forget the token and send `RST` message as a response to `CONF` message received by the server.
 
 The most of the notifications received from the Adapter are non-confirmable. By [RFC 7641](https://tools.ietf.org/html/rfc7641#page-18):
