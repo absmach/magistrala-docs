@@ -20,19 +20,15 @@ Mainflux IoT platform is comprised of the following services:
 
 ## Domain Model
 
-The platform is built around 3 main entities: **users**, **things** and **channels**.
+The platform is built around 2 main entities: **users** and **things**.
 
-`User` represents the real (human) user of the system. It is represented via its
-e-mail and password, which he uses as platform access credentials in order to obtain
-an access token. Once logged into the system, user can manage his resources (i.e.
-things and channels) in CRUD fashion and define access control policies by
-connecting them.
+`User` represents the real (human) user of the system. It is represented via its e-mail and password, which he uses as platform access credentials in order to obtain an access token. Once logged into the system, user can manage his resources (i.e. things, groups and channels) in CRUD fashion and define access control policies by connecting them.
 
-`Thing` represents devices (or applications) connected to Mainflux that uses the
-platform for message exchange with other "things".
+`Group` represents a group for users. It is a grouping mechanism for users. Users in one group have access to other users in the same group so long as they have the required policy.
 
-`Channel` represents a communication channel. It serves as message topic that
-can be consumed by all of the things connected to it.
+`Thing` represents devices (or applications) connected to Mainflux that uses the platform for message exchange with other "things".
+
+`Channel` represents a communication channel. It is a grouping mechanism for things. It serves as message topic that can be consumed by all of the things connected to it.
 
 ## Messaging
 
@@ -56,6 +52,7 @@ To connect Mainflux instances running on a gateway with Mainflux in a cloud we c
 * [Export](/edge/#export)
 
 ## Unified IoT Platform
-Running Mainflux on gateway moves computation from cloud towards the edge thus decentralizing IoT system. 
+
+Running Mainflux on gateway moves computation from cloud towards the edge thus decentralizing IoT system.
 Since we can deploy same Mainflux code on gateway and in the cloud there are many benefits but the biggest one is easy deployment and adoption - once the engineers understand how to deploy and maintain the platform, they will have the same known work across the whole edge-fog-cloud continuum.
 Same set of tools can be used, same patches and bug fixes can be applied. The whole system is much easier to reason about, and the maintenance is much easier and less costly.
