@@ -530,19 +530,20 @@ cd build
 
 #### Testing Export
 ```bash
-git clone https://github.com/nats-io/nats.go
-cd github.com/nats-io/nats.go/examples/nats-pub
-go run main.go -s http://localhost:4222 export.test "[{\"bn\":\"test\"}]";
+git clone https://github.com/mainflux/agent
+go run ./examples/publish/main.go -s http://localhost:4222 export.test "[{\"bn\":\"test\"}]";
 ```
 
-We have configured route for export, `nats_topic = ">"` means that it will listen to `NATS` subject `export.>` and `mqtt_topic` is configured so that data will be sent to MQTT broker on topic `channels/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/messages` with appended `NATS` subject.
+We have configured route for export, `nats_topic = ">"` means that it will listen to `NATS` subject `export.>` and `mqtt_topic` is configured so that data will be sent to MQTT broker on topic `channels/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/messages` with appended `NATS` subject. Other brokers can such as `rabbitmq` can be used, for more detail refer to [dev-guide][dev-guide].
 
 In terminal where export is started you should see following message:
+
 ```log
 {"level":"debug","message":"Published to: export.test, payload: [{\"bn\":\"test\"}]","ts":"2020-05-08T15:14:15.757298992Z"}
 ```
 
 In Mainflux `mqtt` service:
+
 ```log
 mainflux-mqtt   | {"level":"info","message":"Publish - client ID export-88529fb2-6c1e-4b60-b9ab-73b5d89f7404 to the topic: channels/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/messages/export/test","ts":"2020-05-08T15:16:02.999684791Z"}
 ```
@@ -552,3 +553,4 @@ mainflux-mqtt   | {"level":"info","message":"Publish - client ID export-88529fb2
 [env]:(https://github.com/mainflux/export#environmet-variables)
 [agent]:(https://github.com/mainflux/agent)
 [protomsg]:https://github.com/mainflux/mainflux/blob/master/pkg/messaging/message.proto
+[dev-guide]: /docs/dev-guide.md/#message-broker
