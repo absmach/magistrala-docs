@@ -2,9 +2,7 @@
 
 ## Reference
 
-API reference in the Swagger UI can be found at:
-
-[https://api.mainflux.io](https://api.mainflux.io)
+API reference in the Swagger UI can be found at: [https://api.mainflux.io][api]
 
 ## Users
 
@@ -12,17 +10,39 @@ API reference in the Swagger UI can be found at:
 
 To start working with the Mainflux system, you need to create a user account.
 
-> Must-have: e-mail (this must be unique as it identifies the user) and password (password must contain at least 8 characters) and status
-> Optional: name, tags, metadata, status and role
+> Identity, which can be email-address (this must be unique as it identifies the user) and secret (password must contain at least 8 characters).
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/users -d '{"credentials": {"identity": "<user_email>", "secret": "<user_password>"}}'
+curl -sSiX POST http://localhost/users -H "Content-Type: application/json" [-H "Authorization: Bearer <user_token>"] -d @- << EOF
+{
+  "name": "[name]",
+  "tags": ["[tag1]", "[tag2]"],
+  "credentials": {
+    "identity": "<user_identity>",
+    "secret": "<user_secret>"
+  },
+  "metadata": {
+    "[key1]": "[value1]",
+    "[key2]": "[value2]"
+  },
+  "status": "[status]",
+  "role": "[role]"
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/users -d '{"credentials": {"identity": "john.doe@email.com", "secret": "12345678"}, "name": "John Doe"}'
+curl -sSiX POST http://localhost/users -H "Content-Type: application/json" -d @- << EOF
+{
+  "name": "John Doe",
+  "credentials": {
+    "identity": "john.doe@email.com",
+    "secret": "12345678"
+  }
+}
+EOF
 
 HTTP/1.1 201 Created
 Server: nginx/1.23.3
@@ -36,17 +56,25 @@ Access-Control-Expose-Headers: Location
 {
   "id": "4f22fa45-50ca-491b-a7c9-680a2608dc13",
   "name": "John Doe",
-  "credentials": { "identity": "john.doe@email.com", "secret": "" },
+  "credentials": { "identity": "john.doe@email.com" },
   "created_at": "2023-06-14T13:45:38.808423Z",
   "updated_at": "0001-01-01T00:00:00Z",
   "status": "enabled"
 }
 ```
 
-You can also use <user_token> so that the new user has an owner for example:
+You can also use `<user_token>` so that the owner of the new user is the one identified by the `<user_token>` for example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/users -d '{"credentials": {"identity": "john.doe2@email.com", "secret": "12345678"}}'
+curl -sSiX POST http://localhost/users -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "name": "John Doe",
+  "credentials": {
+    "identity": "jane.doe@email.com",
+    "secret": "12345678"
+  },
+}
+EOF
 
 HTTP/1.1 201 Created
 Server: nginx/1.23.3
@@ -60,7 +88,7 @@ Access-Control-Expose-Headers: Location
 {
   "id": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
   "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "credentials": { "identity": "john.doe2@email.com", "secret": "" },
+  "credentials": { "identity": "jane.doe@email.com" },
   "created_at": "2023-06-14T13:46:47.322648Z",
   "updated_at": "0001-01-01T00:00:00Z",
   "status": "enabled"
@@ -71,17 +99,24 @@ Access-Control-Expose-Headers: Location
 
 To log in to the Mainflux system, you need to create a `user_token`.
 
-> Must-have: registered e-mail and password
-
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/users/tokens/issue -d '{"identity":"<user_email>",
-"secret":"<user_password>"}'
+curl -sSiX POST http://localhost/users/tokens/issue -H "Content-Type: application/json" -d @- << EOF
+{
+  "identity": "<user_identity>",
+  "secret": "<user_secret>"
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/users/tokens/issue -d '{"identity": "john.doe@email.com", "secret": "12345678"}'
+curl -sSiX POST http://localhost/users/tokens/issue -H "Content-Type: application/json" -d @- << EOF
+{
+  "identity": "john.doe@email.com",
+  "secret": "12345678"
+}
+EOF
 
 HTTP/1.1 201 Created
 Server: nginx/1.23.3
@@ -100,18 +135,16 @@ Access-Control-Expose-Headers: Location
 
 ### Refresh Token
 
-To issue another access_token after getting expired, you need to use a `refresh_token`.
-
-> Must-have: refresh_token
+To issue another `access_token` after getting expired, you need to use a `refresh_token`.
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <refresh_token>" http://localhost/users/tokens/refresh
+curl -sSiX POST http://localhost/users/tokens/refresh -H "Content-Type: application/json" -H "Authorization: Bearer <refresh_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $REFRESH_TOKEN" http://localhost/users/tokens/refresh
+curl -sSiX POST http://localhost/users/tokens/refresh -H "Content-Type: application/json" -H "Authorization: Bearer <refresh_token>"
 
 HTTP/1.1 201 Created
 Server: nginx/1.23.3
@@ -128,20 +161,18 @@ Access-Control-Expose-Headers: Location
 }
 ```
 
-### Get User
+### Get User Profile
 
-You can always check the user entity that is logged in by entering the user ID and `user_token`.
-
-> Must-have: `user_id` and `user_token`
+You can always check the user profile that is logged-in by using the `user_token`.
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>
+curl -sSiX GET http://localhost/users/profile -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer $USER_TOKEN" http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281
+curl -sSiX GET http://localhost/users/profile -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -155,8 +186,40 @@ Access-Control-Expose-Headers: Location
   "id": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
   "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
   "credentials": {
-    "identity": "john.doe2@email.com",
-    "secret": "$2a$10$pgpEKv0K5Xs9ULyBCVzGyeBwWIUleIH5IqXZ4XnLI6/.Aw2CHujr."
+    "identity": "jane.doe@email.com"
+  },
+  "created_at": "2023-06-14T13:46:47.322648Z",
+  "updated_at": "0001-01-01T00:00:00Z",
+  "status": "enabled"
+}
+```
+
+### Get User
+
+You can always check the user entity by entering the user ID and `user_token`.
+
+```bash
+curl -sSiX GET http://localhost/users/<user_id> -H "Authorization: Bearer <user_token>"
+```
+
+For example:
+
+```bash
+curl -sSiX GET http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281  -H "Authorization: Bearer <user_token>"
+
+HTTP/1.1 200 OK
+Server: nginx/1.23.3
+Date: Wed, 14 Jun 2023 13:51:59 GMT
+Content-Type: application/json
+Content-Length: 312
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{
+  "id": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
+  "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
+  "credentials": {
+    "identity": "jane.doe@email.com"
   },
   "created_at": "2023-06-14T13:46:47.322648Z",
   "updated_at": "0001-01-01T00:00:00Z",
@@ -166,18 +229,16 @@ Access-Control-Expose-Headers: Location
 
 ### Get Users
 
-You can get all users in the database by querying this endpoint. List all users request accepts limit, offset, email and metadata query parameters.
-
-> Must-have: `user_token`
+You can get all users in the database by querying `/users` endpoint.
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/users
+curl -sSiX GET http://localhost/users -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer $USER_TOKEN" http://localhost/users
+curl -sSiX GET http://localhost/users -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -194,7 +255,7 @@ Access-Control-Expose-Headers: Location
     {
       "id": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
       "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "credentials": { "identity": "john.doe2@email.com", "secret": "" },
+      "credentials": { "identity": "jane.doe@email.com" },
       "created_at": "2023-06-14T13:46:47.322648Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -203,19 +264,16 @@ Access-Control-Expose-Headers: Location
 }
 ```
 
-If you want to paginate your results then use this
-
-> Must have: `user_token`
-> Additional parameters: `offset`, `limit`, `metadata`, `name`, `identity`, `tag`, `status` and `visbility`
+If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `identity`, `tag`, `status` and `visbility` as query parameters.
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/users?offset=<offset>&limit=<limit>&identity=<identity>
+curl -sSiX GET http://localhost/users?[offset=<offset>]&[limit=<limit>]&[identity=<identity>]&[name=<name>]&[tag=<tag>]&[status=<status>]&[visibility=<visibility>] -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer $USER_TOKEN" http://localhost/users?offset=0&limit=5&identity=john.doe2@email.com
+curl -sSiX GET http://localhost/users?offset=0&limit=5&identity=jane.doe@email.com -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -232,7 +290,7 @@ Access-Control-Expose-Headers: Location
     {
       "id": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
       "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "credentials": { "identity": "john.doe2@email.com", "secret": "" },
+      "credentials": { "identity": "jane.doe@email.com" },
       "created_at": "2023-06-14T13:46:47.322648Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -243,19 +301,30 @@ Access-Control-Expose-Headers: Location
 
 ### Update User
 
-Updating user's name and metadata
-
-> Must-have: `user_token` and `user_id`
+Updating user's name and/or metadata
 
 ```bash
-curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id> -d
-'{"metadata":{"foo":"bar"}}'
+curl -sSiX PATCH http://localhost/users/<user_id> -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "name": "[new_name]",
+  "metadata": {
+    "[key]": "[value]",
+  }
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281 -d '{"name": "new name", "metadata":{"foo":"bar"}}'
+curl -sSiX PATCH http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281 -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "name": "Jane Doe",
+  "metadata": {
+    "location": "london",
+  }
+}
+EOF
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -267,10 +336,10 @@ Access-Control-Expose-Headers: Location
 
 {
   "id": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
-  "name": "new name",
+  "name": "Jane Doe",
   "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "credentials": { "identity": "john.doe2@email.com", "secret": "" },
-  "metadata": { "foo": "bar" },
+  "credentials": { "identity": "jane.doe@email.com" },
+  "metadata": { "location": "london" },
   "created_at": "2023-06-14T13:46:47.322648Z",
   "updated_at": "2023-06-14T13:54:40.208005Z",
   "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
@@ -282,17 +351,26 @@ Access-Control-Expose-Headers: Location
 
 Updating user's tags
 
-> Must-have: `user_token` and `user_id`
-
 ```bash
-curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/tags -d
-'{"tags":["<tag_1>", ..., "tag_N"]}'
+curl -sSiX PATCH http://localhost/users/<user_id>/tags -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "tags": [
+    "[tag_1]",
+    ...
+    "[tag_N]"
+  ]
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/tags -d '{"tags":["foo","bar"]}'
+curl -sSiX PATCH http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/tags -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "tags": ["male", "developer"]
+}
+EOF
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -304,11 +382,11 @@ Access-Control-Expose-Headers: Location
 
 {
   "id": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
-  "name": "new name",
-  "tags": ["foo", "bar"],
+  "name": "Jane Doe",
+  "tags": ["male", "developer"],
   "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "credentials": { "identity": "john.doe2@email.com", "secret": "" },
-  "metadata": { "foo": "bar" },
+  "credentials": { "identity": "jane.doe@email.com" },
+  "metadata": { "location": "london" },
   "created_at": "2023-06-14T13:46:47.322648Z",
   "updated_at": "2023-06-14T13:55:18.353027Z",
   "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
@@ -320,17 +398,22 @@ Access-Control-Expose-Headers: Location
 
 Updating user's owner
 
-> Must-have: `user_token` and `user_id`
-
 ```bash
-curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/owner -d
-'{"owner":<owner_id>}'
+curl -sSiX PATCH http://localhost/users/<user_id>/owner -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "owner": "<owner_id>"
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/owner -d '{"owner": "532311a4-c13b-4061-b991-98dcae7a934e"}'
+curl -sSiX PATCH http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/owner -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "owner": "532311a4-c13b-4061-b991-98dcae7a934e"
+}
+EOF
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -342,11 +425,11 @@ Access-Control-Expose-Headers: Location
 
 {
   "id": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
-  "name": "new name",
-  "tags": ["foo", "bar"],
+  "name": "Jane Doe",
+  "tags": ["male", "developer"],
   "owner": "532311a4-c13b-4061-b991-98dcae7a934e",
-  "credentials": { "identity": "john.doe2@email.com", "secret": "" },
-  "metadata": { "foo": "bar" },
+  "credentials": { "identity": "jane.doe@email.com" },
+  "metadata": { "location": "london" },
   "created_at": "2023-06-14T13:46:47.322648Z",
   "updated_at": "2023-06-14T13:56:32.059484Z",
   "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
@@ -358,17 +441,22 @@ Access-Control-Expose-Headers: Location
 
 Updating user's identity
 
-> Must-have: `user_token` and `user_id`
-
 ```bash
-curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/identity -d
-'{"identity":<user_identity>}'
+curl -sSiX PATCH http://localhost/users/<user_id>/identity -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "identity": "<user_identity>"
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/identity -d '{"identity": "updated.john.doe@email.com"}'
+curl -sSiX PATCH http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/identity -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "identity": "updated.jane.doe@gmail.com"
+}
+EOF
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -380,11 +468,11 @@ Access-Control-Expose-Headers: Location
 
 {
   "id": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
-  "name": "new name",
-  "tags": ["foo", "bar"],
+  "name": "Jane Doe",
+  "tags": ["male", "developer"],
   "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "credentials": { "identity": "updated.john.doe@email.com", "secret": "" },
-  "metadata": { "foo": "bar" },
+  "credentials": { "identity": "updated.jane.doe@gmail.com" },
+  "metadata": { "location": "london" },
   "created_at": "2023-06-14T13:46:47.322648Z",
   "updated_at": "2023-06-14T13:59:53.422595Z",
   "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
@@ -394,18 +482,26 @@ Access-Control-Expose-Headers: Location
 
 ### Change Secret
 
-Changing the user secret can be done by calling the update secret function
-
-> Must-have: `user_token`, `old_secret` and password (`new_secret`)
+Changing the user secret can be done by calling the update secret method
 
 ```bash
-curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/users/secret -d '{"old_secret":"<old_secret>", "new_secret":"<new_secret>"}'
+curl -sSiX PATCH http://localhost/users/secret -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "old_secret": "<old_secret>",
+  "new_secret": "<new_secret>"
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/users/secret -d '{"old_secret":"12345678", "new_secret":"12345678a"}'
+curl -sSiX PATCH http://localhost/users/secret -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "old_secret": "12345678",
+  "new_secret": "12345678a"
+}
+EOF
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -418,18 +514,16 @@ Access-Control-Expose-Headers: Location
 
 ### Enable User
 
-Changing the user status to enabled can be done by calling the enable user function
-
-> Must-have: `user_id` and `user_token`
+Changing the user status to enabled can be done by calling the enable user method
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/enable
+curl -sSiX POST http://localhost/users/<user_id>/enable -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Authorization: Bearer $USER_TOKEN" http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/enable
+curl -sSiX POST http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/enable -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -441,11 +535,11 @@ Access-Control-Expose-Headers: Location
 
 {
   "id": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
-  "name": "new name",
-  "tags": ["foo", "bar"],
+  "name": "Jane Doe",
+  "tags": ["male", "developer"],
   "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "credentials": { "identity": "updated.john.doe@email.com", "secret": "" },
-  "metadata": { "foo": "bar" },
+  "credentials": { "identity": "updated.jane.doe@gmail.com" },
+  "metadata": { "location": "london" },
   "created_at": "2023-06-14T13:46:47.322648Z",
   "updated_at": "2023-06-14T13:59:53.422595Z",
   "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
@@ -455,18 +549,16 @@ Access-Control-Expose-Headers: Location
 
 ### Disable User
 
-Changing the user status to disabled can be done by calling the disable user function
-
-> Must-have: `user_id` and `user_token`
+Changing the user status to disabled can be done by calling the disable user method
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/disable
+curl -sSiX POST http://localhost/users/<user_id>/disable -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Authorization: Bearer $USER_TOKEN" http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/disable
+curl -sSiX POST http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/disable -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -478,11 +570,11 @@ Access-Control-Expose-Headers: Location
 
 {
   "id": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
-  "name": "new name",
-  "tags": ["foo", "bar"],
+  "name": "Jane Doe",
+  "tags": ["male", "developer"],
   "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "credentials": { "identity": "updated.john.doe@email.com", "secret": "" },
-  "metadata": { "foo": "bar" },
+  "credentials": { "identity": "updated.jane.doe@gmail.com" },
+  "metadata": { "location": "london" },
   "created_at": "2023-06-14T13:46:47.322648Z",
   "updated_at": "2023-06-14T13:59:53.422595Z",
   "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
@@ -492,19 +584,20 @@ Access-Control-Expose-Headers: Location
 
 ### Get User Memberships
 
-Changing the user status to disabled can be done by calling the disable user function
+You can get all groups a user is assigned to by calling the get user memberships method.
 
-> Must-have: `user_id` and `user_token`
-> Must take into consideration the user identified by the `user_token` needs to be assigned to the same group with `c_list` action
+If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parentID`, `ownerID`, `tree` and `dir` as query parameters.
+
+> The user identified by the `user_token` must be assigned to the same group as the user with id `user_id` with `c_list` action. Alternatively, the user identified by the `user_token` must be the owner of the user with id `user_id`.
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/memberships
+curl -sSiX GET http://localhost/users/<user_id>/memberships -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer $USER_TOKEN" http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/memberships
+curl -sSiX GET http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/memberships -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -521,9 +614,9 @@ Access-Control-Expose-Headers: Location
     {
       "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "new name",
-      "description": "new description",
-      "metadata": { "foo": "bar" },
+      "name": "Data analysts",
+      "description": "This group would be responsible for analyzing data collected from sensors.",
+      "metadata": { "location": "london" },
       "created_at": "2023-06-15T09:41:42.860481Z",
       "updated_at": "2023-06-15T10:17:56.475241Z",
       "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
@@ -539,16 +632,33 @@ Access-Control-Expose-Headers: Location
 
 To create a thing, you need the thing and a `user_token`
 
-> Must-have: `user_token`
-
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things -d '{"name": "<thing_name>"}'
+curl -sSiX POST http://localhost/things -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "id": "[thing_id]",
+  "name":"[thing_name]",
+  "tags": ["[tag1]", "[tag2]"],
+  "credentials": {
+      "identity": "[thing-identity]",
+      "secret":"[thing-secret]"
+  },
+    "metadata": {
+      "[key1]": "[value1]",
+      "[key2]": "[value2]"
+  },
+  "status": "[enabled|disabled]"
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/things -d '{"name": "examplething"}'
+curl -sSiX POST http://localhost/things -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "name":"Temperature Sensor"
+}
+EOF
 
 HTTP/1.1 201 Created
 Server: nginx/1.23.3
@@ -561,7 +671,7 @@ Access-Control-Expose-Headers: Location
 
 {
   "id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
-  "name": "examplething",
+  "name": "Temperature Sensor",
   "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
   "credentials": { "secret": "c3f8c096-c60f-4375-8494-bca20a12fca7" },
   "created_at": "2023-06-15T09:04:04.292602664Z",
@@ -573,20 +683,20 @@ Access-Control-Expose-Headers: Location
 ### Create Thing with External ID
 
 It is often the case that the user will want to integrate the existing solutions, e.g. an asset management system, with the Mainflux platform. To simplify the integration between the systems and avoid artificial cross-platform reference, such as special fields in Mainflux Things metadata, it is possible to set Mainflux Thing ID with an existing unique ID while create the Thing. This way, the user can set the existing ID as the Thing ID of a newly created Thing to keep reference between Thing and the asset that Thing represents.
-There are two limitations - the existing ID have to be in UUID V4 format and it has to be unique in the Mainflux domain.
 
-To create a thing with an external ID, you need provide the UUID v4 format ID together with thing name, and other fields as well as a `user_token`
+The limitation is that the existing ID has to be unique in the Mainflux domain.
 
-> Must-have: `user_token`
-
-```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things/bulk -d '[{"id": "<thing_id>","name": "<thing_name>"}]'
-```
+To create a thing with an external ID, you need to provide the ID together with thing name, and other fields as well as a `user_token`
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/things -d '{"id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e", "name": "examplething"}'
+curl -sSiX POST http://localhost/things -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
+  "name":"Temperature Sensor"
+}
+EOF
 
 HTTP/1.1 201 Created
 Server: nginx/1.23.3
@@ -599,9 +709,48 @@ Access-Control-Expose-Headers: Location
 
 {
   "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-  "name": "examplething",
+  "name": "Temperature Sensor",
   "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
   "credentials": { "secret": "65ca03bd-eb6b-420b-9d5d-46d459d4f71c" },
+  "created_at": "2023-06-15T09:05:06.538170496Z",
+  "updated_at": "0001-01-01T00:00:00Z",
+  "status": "enabled"
+}
+```
+
+### Create Thing with External Secret
+
+It is often the case that the user will want to integrate the existing solutions, e.g. an asset management system, with the Mainflux platform. To simplify the integration between the systems and avoid artificial cross-platform reference, such as special fields in Mainflux Things metadata, it is possible to set Mainflux Thing secret with an existing unique secret when creating the Thing. This way, the user can set the existing secret as the Thing secret of a newly created Thing to keep reference between Thing and the asset that Thing represents.
+The limitation is that the existing secret has to be unique in the Mainflux domain.
+
+To create a thing with an external secret, you need to provide the secret together with thing name, and other fields as well as a `user_token`
+
+For example:
+
+```bash
+curl -sSiX POST http://localhost/things -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "name":"Temperature Sensor"
+  "credentials": {
+    "secret": "94939159-9a08-4f17-9e4e-3b91cf2ccd3e"
+  }
+}
+EOF
+
+HTTP/1.1 201 Created
+Server: nginx/1.23.3
+Date: Thu, 15 Jun 2023 09:05:06 GMT
+Content-Type: application/json
+Content-Length: 280
+Connection: keep-alive
+Location: /things/2766ae94-9a08-4418-82ce-3b91cf2ccd3e
+Access-Control-Expose-Headers: Location
+
+{
+  "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
+  "name": "Temperature Sensor",
+  "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
+  "credentials": { "secret": "94939159-9a08-4f17-9e4e-3b91cf2ccd3e" },
   "created_at": "2023-06-15T09:05:06.538170496Z",
   "updated_at": "0001-01-01T00:00:00Z",
   "status": "enabled"
@@ -612,16 +761,54 @@ Access-Control-Expose-Headers: Location
 
 You can create multiple things at once by entering a series of things structures and a `user_token`
 
-> Must-have: `user_token` and at least two things
-
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things/bulk -d '[{"name": "<thing_name_1>"}, {"name": "<thing_name_2>"}]'
+curl -sSiX POST http://localhost/things/bulk -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+[
+  {
+    "id": "[thing_id]",
+    "name":"[thing_name]",
+    "tags": ["[tag1]", "[tag2]"],
+    "credentials": {
+        "identity": "[thing-identity]",
+        "secret":"[thing-secret]"
+    },
+      "metadata": {
+        "[key1]": "[value1]",
+        "[key2]": "[value2]"
+    },
+    "status": "[enabled|disabled]"
+  },
+  {
+    "id": "[thing_id]",
+    "name":"[thing_name]",
+    "tags": ["[tag1]", "[tag2]"],
+    "credentials": {
+        "identity": "[thing-identity]",
+        "secret":"[thing-secret]"
+    },
+      "metadata": {
+        "[key1]": "[value1]",
+        "[key2]": "[value2]"
+    },
+    "status": "[enabled|disabled]"
+  }
+]
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/things/bulk -d '[{"name": "thing_name_1"}, {"name": "thing_name_2"}]'
+curl -sSiX POST http://localhost/things/bulk -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+[
+  {
+    "name":"Motion Sensor"
+  },
+  {
+    "name":"Light Sensor"
+  }
+]
+EOF
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -636,7 +823,7 @@ Access-Control-Expose-Headers: Location
   "things": [
     {
       "id": "19f59b2d-1e9c-43db-bc84-5432bd52a83f",
-      "name": "thing_name_1",
+      "name": "Motion Sensor",
       "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
       "credentials": { "secret": "941c380a-3a41-40e9-8b79-3087daa4f3a6" },
       "created_at": "2023-06-15T09:05:45.719182307Z",
@@ -645,7 +832,7 @@ Access-Control-Expose-Headers: Location
     },
     {
       "id": "3709f2b0-9c73-413f-992e-7f6f9b396b0d",
-      "name": "thing_name_2",
+      "name": "Light Sensor",
       "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
       "credentials": { "secret": "798ee6be-311b-4640-99e4-0ccb19e0dcb9" },
       "created_at": "2023-06-15T09:05:45.719186184Z",
@@ -660,16 +847,21 @@ Access-Control-Expose-Headers: Location
 
 The same as creating a Thing with external ID the user can create multiple things at once by providing UUID v4 format unique ID in a series of things together with a `user_token`
 
-> Must-have: `user_token` and at least two things
-
-```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things/bulk -d '[{"id": "<thing_id_1>","name": "<thing_name_1>"},{"id": "<thing_id_2>","name": "<thing_name_2>"}]'
-```
-
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/things/bulk -d '[{"id": "eb2670ba-a2be-4ea4-83cb-111111111111","name": "thing_name_1"},{"id": "eb2670ba-a2be-4ea4-83cb-111111111112","name": "thing_name_2"}]'
+curl -sSiX POST http://localhost/things/bulk -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+[
+  {
+    "id": "eb2670ba-a2be-4ea4-83cb-111111111111",
+    "name":"Motion Sensor"
+  },
+  {
+    "id": "eb2670ba-a2be-4ea4-83cb-111111111112",
+    "name":"Light Sensor"
+  }
+]
+EOF
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -684,7 +876,7 @@ Access-Control-Expose-Headers: Location
   "things": [
     {
       "id": "eb2670ba-a2be-4ea4-83cb-111111111111",
-      "name": "thing_name_1",
+      "name": "Motion Sensor",
       "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
       "credentials": { "secret": "325cda17-3a52-465d-89a7-2b63c7d0e3a6" },
       "created_at": "2023-06-15T09:06:17.967825372Z",
@@ -693,7 +885,7 @@ Access-Control-Expose-Headers: Location
     },
     {
       "id": "eb2670ba-a2be-4ea4-83cb-111111111112",
-      "name": "thing_name_2",
+      "name": "Light Sensor",
       "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
       "credentials": { "secret": "67b6cbb8-4a9e-4d32-8b9c-d7cd3352aa2b" },
       "created_at": "2023-06-15T09:06:17.967828689Z",
@@ -708,16 +900,14 @@ Access-Control-Expose-Headers: Location
 
 You can get thing entity by entering the thing ID and `user_token`
 
-> Must-have: `user_token` and `thing_id`
-
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/things/<thing_id>
+curl -sSiX GET http://localhost/things/<thing_id> -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer $USER_TOKEN" http://localhost/things/48101ecd-1535-40c6-9ed8-5b1d21e371bb
+curl -sSiX GET http://localhost/things/48101ecd-1535-40c6-9ed8-5b1d21e371bb -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -729,7 +919,7 @@ Access-Control-Expose-Headers: Location
 
 {
   "id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
-  "name": "examplething",
+  "name": "Temperature Sensor",
   "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
   "credentials": { "secret": "c3f8c096-c60f-4375-8494-bca20a12fca7" },
   "created_at": "2023-06-15T09:04:04.292602Z",
@@ -740,18 +930,16 @@ Access-Control-Expose-Headers: Location
 
 ### Get Things
 
-You can get all things in the database by querying this endpoint. List all things request accepts limit, offset, name and metadata query parameters.
-
-> Must-have: `user_token`
+You can get all things in the database by querying `/things` endpoint.
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/things
+curl -sSiX GET http://localhost/things -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer $USER_TOKEN" http://localhost/things
+curl -sSiX GET http://localhost/things -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -767,7 +955,7 @@ Access-Control-Expose-Headers: Location
   "things": [
     {
       "id": "f3047c10-f2c7-4d53-b3c0-bc56c560c546",
-      "name": "weio",
+      "name": "Humidity Sensor",
       "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
       "credentials": { "secret": "6d11a91f-0bd8-41aa-8e1b-4c6338329c9c" },
       "created_at": "2023-06-14T12:04:12.740098Z",
@@ -776,7 +964,7 @@ Access-Control-Expose-Headers: Location
     },
     {
       "id": "04b0b2d1-fdaf-4b66-96a0-740a3151db4c",
-      "name": "bob",
+      "name": "UV Sensor",
       "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
       "credentials": { "secret": "a1e5d77f-8903-4cef-87b1-d793a3c28de3" },
       "created_at": "2023-06-14T12:04:56.245743Z",
@@ -785,7 +973,7 @@ Access-Control-Expose-Headers: Location
     },
     {
       "id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
-      "name": "examplething",
+      "name": "Temperature Sensor",
       "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
       "credentials": { "secret": "c3f8c096-c60f-4375-8494-bca20a12fca7" },
       "created_at": "2023-06-15T09:04:04.292602Z",
@@ -794,7 +982,7 @@ Access-Control-Expose-Headers: Location
     },
     {
       "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-      "name": "examplething",
+      "name": "Temperature Sensor",
       "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
       "credentials": { "secret": "65ca03bd-eb6b-420b-9d5d-46d459d4f71c" },
       "created_at": "2023-06-15T09:05:06.53817Z",
@@ -803,7 +991,7 @@ Access-Control-Expose-Headers: Location
     },
     {
       "id": "19f59b2d-1e9c-43db-bc84-5432bd52a83f",
-      "name": "thing_name_1",
+      "name": "Motion Sensor",
       "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
       "credentials": { "secret": "941c380a-3a41-40e9-8b79-3087daa4f3a6" },
       "created_at": "2023-06-15T09:05:45.719182Z",
@@ -812,7 +1000,7 @@ Access-Control-Expose-Headers: Location
     },
     {
       "id": "3709f2b0-9c73-413f-992e-7f6f9b396b0d",
-      "name": "thing_name_2",
+      "name": "Light Sensor",
       "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
       "credentials": { "secret": "798ee6be-311b-4640-99e4-0ccb19e0dcb9" },
       "created_at": "2023-06-15T09:05:45.719186Z",
@@ -821,7 +1009,7 @@ Access-Control-Expose-Headers: Location
     },
     {
       "id": "eb2670ba-a2be-4ea4-83cb-111111111111",
-      "name": "thing_name_1",
+      "name": "Motion Sensor",
       "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
       "credentials": { "secret": "325cda17-3a52-465d-89a7-2b63c7d0e3a6" },
       "created_at": "2023-06-15T09:06:17.967825Z",
@@ -830,7 +1018,7 @@ Access-Control-Expose-Headers: Location
     },
     {
       "id": "eb2670ba-a2be-4ea4-83cb-111111111112",
-      "name": "thing_name_2",
+      "name": "Light Sensor",
       "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
       "credentials": { "secret": "67b6cbb8-4a9e-4d32-8b9c-d7cd3352aa2b" },
       "created_at": "2023-06-15T09:06:17.967828Z",
@@ -841,19 +1029,16 @@ Access-Control-Expose-Headers: Location
 }
 ```
 
-If you want to paginate your results then use this
-
-> Must have: `user_token`
-> Additional parameters: `offset`, `limit`, `metadata`, `status`, `tags` and `name`
+If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `tags` and `visibility` as query parameters.
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/things?offset=<offset>&limit=<limit>&name=<name>
+curl -sSiX GET http://localhost/things?[offset=<offset>]&[limit=<limit>]&name=[name]&[status=<status>] -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer $USER_TOKEN" http://localhost/things?offset=1&limit=5&name=thing_name_2
+curl -sSiX GET http://localhost/things?offset=1&limit=5&name=Light Sensor -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -870,7 +1055,7 @@ Access-Control-Expose-Headers: Location
   "things": [
     {
       "id": "eb2670ba-a2be-4ea4-83cb-111111111112",
-      "name": "thing_name_2",
+      "name": "Light Sensor",
       "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
       "credentials": { "secret": "67b6cbb8-4a9e-4d32-8b9c-d7cd3352aa2b" },
       "created_at": "2023-06-15T09:06:17.967828Z",
@@ -883,18 +1068,28 @@ Access-Control-Expose-Headers: Location
 
 ### Update Thing
 
-Updating a thing name and metadata
-
-> Must-have: `user_token` and `thing_id`
+Updating a thing name and/or metadata
 
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/things/<thing_id> -d '{"name": "<thing_name>"}'
+curl -sSiX PATCH http://localhost/things/<thing_id> -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "name":"[thing_name]",
+  "metadata": {
+      "[key1]": "[value1]",
+      "[key2]": "[value2]"
+  }
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/things/48101ecd-1535-40c6-9ed8-5b1d21e371bb -d '{"name": "new name"}'
+curl -sSiX PATCH http://localhost/things/48101ecd-1535-40c6-9ed8-5b1d21e371bb -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "name":"Pressure Sensor"
+}
+EOF
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -906,7 +1101,7 @@ Access-Control-Expose-Headers: Location
 
 {
   "id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
-  "name": "new name",
+  "name": "Pressure Sensor",
   "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
   "credentials": { "secret": "c3f8c096-c60f-4375-8494-bca20a12fca7" },
   "created_at": "2023-06-15T09:04:04.292602Z",
@@ -920,16 +1115,22 @@ Access-Control-Expose-Headers: Location
 
 Updating a thing tags
 
-> Must-have: `user_token` and `thing_id`
-
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/things/<thing_id>/tags -d '{"tags": ["tag_1", ..., "tag_N"]}'
+curl -sSiX PATCH http://localhost/things/<thing_id>/tags -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "tags": ["tag_1", ..., "tag_N"]
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/things/48101ecd-1535-40c6-9ed8-5b1d21e371bb/tags -d '{"tags": ["tag"]}'
+curl -sSiX PATCH http://localhost/things/48101ecd-1535-40c6-9ed8-5b1d21e371bb/tags -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "tags": ["sensor", "smart"]
+}
+EOF
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -941,8 +1142,8 @@ Access-Control-Expose-Headers: Location
 
 {
   "id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
-  "name": "new name",
-  "tags": ["tag"],
+  "name": "Pressure Sensor",
+  "tags": ["sensor", "smart"],
   "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
   "credentials": { "secret": "c3f8c096-c60f-4375-8494-bca20a12fca7" },
   "created_at": "2023-06-15T09:04:04.292602Z",
@@ -956,16 +1157,22 @@ Access-Control-Expose-Headers: Location
 
 Updating a thing entity
 
-> Must-have: `user_token` and `thing_id`
-
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/things/<thing_id>/owner -d '{"owner": "<owner_id>"}'
+curl -sSiX PATCH http://localhost/things/<thing_id>/owner -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "owner": "[owner_id]"
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/things/48101ecd-1535-40c6-9ed8-5b1d21e371bb -d '{"owner": "f7c55a1f-dde8-4880-9796-b3a0cd05745b"}'
+curl -sSiX PATCH http://localhost/things/48101ecd-1535-40c6-9ed8-5b1d21e371bb/owner -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "owner": "f7c55a1f-dde8-4880-9796-b3a0cd05745b"
+}
+EOF
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -977,8 +1184,8 @@ Access-Control-Expose-Headers: Location
 
 {
   "id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
-  "name": "new name",
-  "tags": ["tag"],
+  "name": "Pressure Sensor",
+  "tags": ["sensor", "smart"],
   "owner": "f7c55a1f-dde8-4880-9796-b3a0cd05745b",
   "credentials": { "secret": "c3f8c096-c60f-4375-8494-bca20a12fca7" },
   "created_at": "2023-06-15T09:04:04.292602Z",
@@ -992,16 +1199,22 @@ Access-Control-Expose-Headers: Location
 
 Updating a thing secret
 
-> Must-have: `user_token` and `thing_id`
-
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/things/<thing_id>/secret -d '{"secret": "<thing_secret>"}'
+curl -sSiX PATCH http://localhost/things/<thing_id>/secret -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "secret": "<thing_secret>"
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/things/48101ecd-1535-40c6-9ed8-5b1d21e371bb/secret -d '{"secret": "secret-key"}'
+curl -sSiX PATCH http://localhost/things/48101ecd-1535-40c6-9ed8-5b1d21e371bb/secret -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "secret": "94939159-9a08-4f17-9e4e-3b91cf2ccd3e"
+}
+EOF
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1013,10 +1226,10 @@ Access-Control-Expose-Headers: Location
 
 {
   "id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
-  "name": "new name",
-  "tags": ["tag"],
+  "name": "Pressure Sensor",
+  "tags": ["sensor", "smart"],
   "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "credentials": { "secret": "secret-key" },
+  "credentials": { "secret": "94939159-9a08-4f17-9e4e-3b91cf2ccd3e" },
   "created_at": "2023-06-15T09:04:04.292602Z",
   "updated_at": "2023-06-15T09:10:52.051497Z",
   "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
@@ -1028,16 +1241,14 @@ Access-Control-Expose-Headers: Location
 
 To enable a thing you need a `thing_id` and a `user_token`
 
-> Must-have: `user_token` and `thing_id`
-
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/things/<thing_id>/enable
+curl -sSiX POST http://localhost/things/<thing_id>/enable -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/things/48101ecd-1535-40c6-9ed8-5b1d21e371bb/enable
+curl -sSiX POST http://localhost/things/48101ecd-1535-40c6-9ed8-5b1d21e371bb/enable -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1049,10 +1260,10 @@ Access-Control-Expose-Headers: Location
 
 {
   "id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
-  "name": "new name",
-  "tags": ["tag"],
+  "name": "Pressure Sensor",
+  "tags": ["sensor", "smart"],
   "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "credentials": { "secret": "secret-key" },
+  "credentials": { "secret": "94939159-9a08-4f17-9e4e-3b91cf2ccd3e" },
   "created_at": "2023-06-15T09:04:04.292602Z",
   "updated_at": "2023-06-15T09:10:52.051497Z",
   "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
@@ -1064,16 +1275,14 @@ Access-Control-Expose-Headers: Location
 
 To disable a thing you need a `thing_id` and a `user_token`
 
-> Must-have: `user_token` and `thing_id`
-
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/things/<thing_id>/disable
+curl -sSiX POST http://localhost/things/<thing_id>/disable  -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/things/48101ecd-1535-40c6-9ed8-5b1d21e371bb/disable
+curl -sSiX POST http://localhost/things/48101ecd-1535-40c6-9ed8-5b1d21e371bb/disable  -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1085,10 +1294,10 @@ Access-Control-Expose-Headers: Location
 
 {
   "id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
-  "name": "new name",
-  "tags": ["tag"],
+  "name": "Pressure Sensor",
+  "tags": ["sensor", "smart"],
   "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "credentials": { "secret": "secret-key" },
+  "credentials": { "secret": "94939159-9a08-4f17-9e4e-3b91cf2ccd3e" },
   "created_at": "2023-06-15T09:04:04.292602Z",
   "updated_at": "2023-06-15T09:10:52.051497Z",
   "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
@@ -1102,16 +1311,30 @@ Access-Control-Expose-Headers: Location
 
 To create a channel, you need a `user_token`
 
-> Must-have: `user_token`
-
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/channels -d '{"name": "<channel_name>"}'
+curl -sSiX POST http://localhost/channels -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "id": "[channel_id]",
+  "name":"[channel_name]",
+  "description":"[channel_description]",
+  "owner_id": "[owner_id]",
+  "metadata": {
+      "[key1]": "[value1]",
+      "[key2]": "[value2]"
+  },
+  "status": "[enabled|disabled]"
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/channels -d '{"name": "examplechannel"}'
+curl -sSiX POST http://localhost/channels -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "name": "Temperature Data"
+}
+EOF
 
 HTTP/1.1 201 Created
 Server: nginx/1.23.3
@@ -1125,7 +1348,7 @@ Access-Control-Expose-Headers: Location
 {
   "id": "aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8",
   "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "examplechannel",
+  "name": "Temperature Data",
   "created_at": "2023-06-15T09:12:51.162431Z",
   "updated_at": "0001-01-01T00:00:00Z",
   "status": "enabled"
@@ -1136,18 +1359,17 @@ Access-Control-Expose-Headers: Location
 
 Channel is a group of things that could represent a special category in existing systems, e.g. a building level channel could represent the level of a smarting building system. For helping to keep the reference, it is possible to set an existing ID while creating the Mainflux channel. There are two limitations - the existing ID has to be in UUID V4 format and it has to be unique in the Mainflux domain.
 
-To create a channel with external ID, the user needs provide a UUID v4 format unique ID, and a `user_token`
-
-> Must-have: `user_token`
-
-```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/channels -d '{"id": "<channel_id>","name": "<channel_name>"}'
-```
+To create a channel with external ID, the user needs to provide a UUID v4 format unique ID, and a `user_token`
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/channels -d '{"id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb", "name": "examplechannel2"}'
+curl -sSiX POST http://localhost/channels -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
+  "name": "Humidity Data"
+}
+EOF
 
 HTTP/1.1 201 Created
 Server: nginx/1.23.3
@@ -1161,7 +1383,7 @@ Access-Control-Expose-Headers: Location
 {
   "id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
   "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "examplechannel2",
+  "name": "Humidity Data",
   "created_at": "2023-06-15T09:15:11.477695Z",
   "updated_at": "0001-01-01T00:00:00Z",
   "status": "enabled"
@@ -1172,16 +1394,48 @@ Access-Control-Expose-Headers: Location
 
 The same as creating a channel with external ID the user can create multiple channels at once by providing UUID v4 format unique ID in a series of channels together with a `user_token`
 
-> Must-have: `user_token` and at least 2 channels
-
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/channels/bulk -d '[{"name": "<channel_name_1>"}, {"name": "<channel_name_2>"}]'
+curl -sSiX POST http://localhost/channels/bulk -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+[
+  {
+    "id": "[channel_id]",
+    "name":"[channel_name]",
+    "description":"[channel_description]",
+    "owner_id": "[owner_id]",
+    "metadata": {
+        "[key1]": "[value1]",
+        "[key2]": "[value2]"
+    },
+    "status": "[enabled|disabled]"
+  },
+  {
+    "id": "[channel_id]",
+    "name":"[channel_name]",
+    "description":"[channel_description]",
+    "owner_id": "[owner_id]",
+    "metadata": {
+        "[key1]": "[value1]",
+        "[key2]": "[value2]"
+    },
+    "status": "[enabled|disabled]"
+  }
+]
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/channels/bulk -d '[{"name": "channel_name_1"}, {"name": "channel_name_2"}]'
+curl -sSiX POST http://localhost/channels/bulk -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+[
+  {
+    "name":"Light Data"
+  },
+  {
+    "name":"Pressure Data"
+  }
+]
+EOF
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1196,7 +1450,7 @@ Access-Control-Expose-Headers: Location
     {
       "id": "cb81bbff-850d-471f-bd74-c15d6e1a6c4e",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "channel_name_1",
+      "name": "Light Data",
       "created_at": "2023-06-15T09:15:44.154283Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -1204,7 +1458,7 @@ Access-Control-Expose-Headers: Location
     {
       "id": "fc9bf029-b1d3-4408-8d53-fc576247a4b3",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "channel_name_2",
+      "name": "Pressure Data",
       "created_at": "2023-06-15T09:15:44.15721Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -1217,16 +1471,21 @@ Access-Control-Expose-Headers: Location
 
 As with things, you can create multiple channels with external ID at once
 
-> Must-have: `user_token` and at least 2 channels
-
-```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/channels/bulk -d '[{"id": "<channel_id_1>","name": "<channel_name_1>"}, {"id": "<channel_id_2>","name": "<channel_name_2>"}]'
-```
-
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/channels/bulk -d '[{"id": "977bbd33-5b59-4b7a-a9c3-111111111111","name": "channel_name_1a"}, {"id": "977bbd33-5b59-4b7a-a9c3-111111111112","name": "channel_name_2a"}]'
+curl -sSiX POST http://localhost/channels/bulk -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+[
+  {
+    "id": "977bbd33-5b59-4b7a-a9c3-111111111111",
+    "name":"Light Data"
+  },
+  {
+    "id": "977bbd33-5b59-4b7a-a9c3-111111111112",
+    "name":"Pressure Data"
+  }
+]
+EOF
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1241,7 +1500,7 @@ Access-Control-Expose-Headers: Location
     {
       "id": "977bbd33-5b59-4b7a-a9c3-111111111111",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "channel_name_1a",
+      "name": "Light Data",
       "created_at": "2023-06-15T09:16:16.931016Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -1249,7 +1508,7 @@ Access-Control-Expose-Headers: Location
     {
       "id": "977bbd33-5b59-4b7a-a9c3-111111111112",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "channel_name_2a",
+      "name": "Pressure Data",
       "created_at": "2023-06-15T09:16:16.934486Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -1260,18 +1519,16 @@ Access-Control-Expose-Headers: Location
 
 ### Get Channel
 
-Get a channel entity for a logged in user
-
-> Must-have: `user_token` and `channel_id`
+Get a channel entity for a logged-in user
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/channels/<channel_id>
+curl -sSiX GET http://localhost/channels/<channel_id> -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer $USER_TOKEN" http://localhost/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8
+curl -sSiX GET http://localhost/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8 -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1284,7 +1541,7 @@ Access-Control-Expose-Headers: Location
 {
   "id": "aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8",
   "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "examplechannel",
+  "name": "Temperature Data",
   "created_at": "2023-06-15T09:12:51.162431Z",
   "updated_at": "0001-01-01T00:00:00Z",
   "status": "enabled"
@@ -1293,18 +1550,18 @@ Access-Control-Expose-Headers: Location
 
 ### Get Channels
 
-You can get all channels in the database by querying this endpoint. List all channels request accepts limit, offset, name and metadata query parameters.
+You can get all channels for a logged-in user.
 
-> Must-have: `user_token`
+If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parentID`, `ownerID`, `tree` and `dir` as query parameters.
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/channels
+curl -sSiX GET http://localhost/channels -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer $USER_TOKEN" http://localhost/channels
+curl -sSiX GET http://localhost/channels -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1320,7 +1577,7 @@ Access-Control-Expose-Headers: Location
     {
       "id": "17129934-4f48-4163-bffe-0b7b532edc5c",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "betty",
+      "name": "Tokyo",
       "created_at": "2023-06-14T12:10:07.950311Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -1328,7 +1585,7 @@ Access-Control-Expose-Headers: Location
     {
       "id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "examplechannel2",
+      "name": "Humidity Data",
       "created_at": "2023-06-15T09:15:11.477695Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -1336,7 +1593,7 @@ Access-Control-Expose-Headers: Location
     {
       "id": "977bbd33-5b59-4b7a-a9c3-111111111111",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "channel_name_1a",
+      "name": "Light Data",
       "created_at": "2023-06-15T09:16:16.931016Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -1344,7 +1601,7 @@ Access-Control-Expose-Headers: Location
     {
       "id": "977bbd33-5b59-4b7a-a9c3-111111111112",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "channel_name_2a",
+      "name": "Pressure Data",
       "created_at": "2023-06-15T09:16:16.934486Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -1352,7 +1609,7 @@ Access-Control-Expose-Headers: Location
     {
       "id": "aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "examplechannel",
+      "name": "Temperature Data",
       "created_at": "2023-06-15T09:12:51.162431Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -1360,7 +1617,7 @@ Access-Control-Expose-Headers: Location
     {
       "id": "b3867a52-675d-4f05-8cd0-df5a08a63ff3",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "mychan",
+      "name": "London",
       "created_at": "2023-06-14T12:09:34.205894Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -1368,7 +1625,7 @@ Access-Control-Expose-Headers: Location
     {
       "id": "cb81bbff-850d-471f-bd74-c15d6e1a6c4e",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "channel_name_1",
+      "name": "Light Data",
       "created_at": "2023-06-15T09:15:44.154283Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -1376,7 +1633,7 @@ Access-Control-Expose-Headers: Location
     {
       "id": "fc9bf029-b1d3-4408-8d53-fc576247a4b3",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "channel_name_2",
+      "name": "Pressure Data",
       "created_at": "2023-06-15T09:15:44.15721Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -1387,18 +1644,32 @@ Access-Control-Expose-Headers: Location
 
 ### Update Channel
 
-Update channel entity
-
-> Must-have: `user_token` and `channel_id`
+Update channel name and/or metadata.
 
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/channels/<channel_id> -d '{"name": "<channel_name>"}'
+curl -sSiX PUT http://localhost/channels/<channel_id> -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "name":"[channel_name]",
+  "description":"[channel_description]",
+  "metadata": {
+      "[key1]": "[value1]",
+      "[key2]": "[value2]"
+  }
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8 -d '{"name": "new name", "metadata": {"foo": "bar"}}'
+curl -sSiX PUT http://localhost/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8 -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "name":"Jane Doe",
+  "metadata": {
+      "location": "london"
+  }
+}
+EOF
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1411,8 +1682,8 @@ Access-Control-Expose-Headers: Location
 {
   "id": "aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8",
   "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "new name",
-  "metadata": { "foo": "bar" },
+  "name": "Jane Doe",
+  "metadata": { "location": "london" },
   "created_at": "2023-06-15T09:12:51.162431Z",
   "updated_at": "2023-06-15T09:18:26.886913Z",
   "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
@@ -1424,16 +1695,14 @@ Access-Control-Expose-Headers: Location
 
 To enable a channel you need a `channel_id` and a `user_token`
 
-> Must-have: `user_token` and `channel_id`
-
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/channels/<channel_id>/enable
+curl -sSiX POST http://localhost/channels/<channel_id>/enable -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/enable
+curl -sSiX POST http://localhost/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/enable -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1446,8 +1715,8 @@ Access-Control-Expose-Headers: Location
 {
   "id": "aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8",
   "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "new name",
-  "metadata": { "foo": "bar" },
+  "name": "Jane Doe",
+  "metadata": { "location": "london" },
   "created_at": "2023-06-15T09:12:51.162431Z",
   "updated_at": "2023-06-15T09:18:26.886913Z",
   "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
@@ -1459,16 +1728,14 @@ Access-Control-Expose-Headers: Location
 
 To disable a channel you need a `channel_id` and a `user_token`
 
-> Must-have: `user_token` and `channel_id`
-
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/channels/<channel_id>/disable
+curl -sSiX POST http://localhost/channels/<channel_id>/disable -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/disable
+curl -sSiX POST http://localhost/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/disable -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1481,8 +1748,8 @@ Access-Control-Expose-Headers: Location
 {
   "id": "aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8",
   "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "new name",
-  "metadata": { "foo": "bar" },
+  "name": "Jane Doe",
+  "metadata": { "location": "london" },
   "created_at": "2023-06-15T09:12:51.162431Z",
   "updated_at": "2023-06-15T09:18:26.886913Z",
   "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
@@ -1494,16 +1761,27 @@ Access-Control-Expose-Headers: Location
 
 Connect things to channels
 
-> Must-have: `user_token`, `channel_id` and `thing_id`
+> `actions` is optional, if not provided, the default action is `m_read` and `m_write`.
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/connect -d '{"group_ids": ["<channel_id>"], "client_ids": ["<thing_id>"]}'
+curl -sSiX POST http://localhost/connect -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subjects": ["<thing_id>"],
+  "objects": ["<channel_id>"],
+  "actions": ["[action]"]
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/connect -d '{"group_ids": ["aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8"], "client_ids": ["48101ecd-1535-40c6-9ed8-5b1d21e371bb"]}'
+curl -sSiX POST http://localhost/connect -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subjects": ["48101ecd-1535-40c6-9ed8-5b1d21e371bb"],
+  "objects": ["aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8"]
+}
+EOF
 
 HTTP/1.1 201 Created
 Server: nginx/1.23.3
@@ -1530,16 +1808,27 @@ Access-Control-Expose-Headers: Location
 
 Connect thing to channel
 
-> Must-have: `user_token`, `channel_id` and `thing_id`
+> `actions` is optional, if not provided, the default actions are `m_read` and `m_write`.
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/channels/<channel_id>/things/<thing_id>
+curl -sSiX POST http://localhost/things/policies -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subject": "<thing_id>",
+  "object": "<channel_id>",
+  "actions": ["<action>", "[action]"]]
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/things/48101ecd-1535-40c6-9ed8-5b1d21e371bb
+curl -sSiX POST http://localhost/things/policies -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subject": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
+  "object": "aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8"
+}
+EOF
 
 HTTP/1.1 201 Created
 Server: nginx/1.23.3
@@ -1568,16 +1857,24 @@ Access-Control-Expose-Headers: Location
 
 Disconnect things from channels specified by lists of IDs.
 
-> Must-have: `user_token`, `group_ids` and `client_ids`
-
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/disconnect -d '{"client_ids": ["<thing_id_1>", "<thing_id_2>"], "group_ids": ["<channel_id_1>", "<channel_id_2>"]}'
+curl -sSiX POST http://localhost/disconnect -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subjects": ["<thing_id_1>", "[thing_id_2]"],
+  "objects": ["<channel_id_1>", "[channel_id_2]"]
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/disconnect -d '{"group_ids": ["aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8"], "client_ids": ["48101ecd-1535-40c6-9ed8-5b1d21e371bb"]}'
+curl -sSiX POST http://localhost/disconnect -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subjects": ["48101ecd-1535-40c6-9ed8-5b1d21e371bb"],
+  "objects": ["aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8"]
+}
+EOF
 
 HTTP/1.1 204 No Content
 Server: nginx/1.23.3
@@ -1589,16 +1886,14 @@ Access-Control-Expose-Headers: Location
 
 Disconnect thing from the channel
 
-> Must-have: `user_token`, `channel_id` and `thing_id`
-
 ```bash
-curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/channels/<channel_id>/things/<thing_id>
+curl -sSiX DELETE http://localhost/things/policies/<subject_id>/<object_id> -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/things/48101ecd-1535-40c6-9ed8-5b1d21e371bb
+curl -sSiX DELETE http://localhost/things/policies/48101ecd-1535-40c6-9ed8-5b1d21e371bb/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8 -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 204 No Content
 Server: nginx/1.23.3
@@ -1612,16 +1907,26 @@ Access-Control-Expose-Headers: Location
 
 Checks if thing has access to a channel
 
-> Must-have: `channel_id` and `thing_id`
-
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/channels/<channel_id>/access -d '{"secret": "<thing_id>", "action": "m_read" | "m_write", "entity_type": "group"}'
+curl -sSiX POST http://localhost/channels/<channel_id>/access -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subject": "<thing_secret>",
+  "action": "m_read" | "m_write",
+  "entity_type": "thing"
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/access -d '{"secret": "48101ecd-1535-40c6-9ed8-5b1d21e371bb", "action": "m_read", "entity_type": "group"}'
+curl -sSiX POST http://localhost/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/access -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subject": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
+  "action": "m_read",
+  "entity_type": "thing"
+}
+EOF
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1636,16 +1941,14 @@ Access-Control-Expose-Headers: Location
 
 Validates thing's key and returns it's ID if key is valid
 
-> Must-have: `thing_secret`
-
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Thing <thing_secret>" http://localhost/identify
+curl -sSiX POST http://localhost/identify -H "Content-Type: application/json" -H "Authorization: Thing <thing_secret>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Thing 6d11a91f-0bd8-41aa-8e1b-4c6338329c9c" http://localhost/identify
+curl -sSiX POST http://localhost/identify -H "Content-Type: application/json" -H "Authorization: Thing 6d11a91f-0bd8-41aa-8e1b-4c6338329c9c"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1664,17 +1967,53 @@ Access-Control-Expose-Headers: Location
 
 Sends message via HTTP protocol
 
-> Must-have: `thing_secret` and `channel_id`
-
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/senml+json" -H "Authorization: Thing <thing_secret>" http://localhost/http/channels/<channel_id>/messages -d '[{"bn":"some-base-name:","bt":1.276020076001e+09,"bu":"A","bver":5,"n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+curl -sSiX POST http://localhost/http/channels/<channel_id>/messages -H "Content-Type: application/senml+json" -H "Authorization: Thing <thing_secret>" -d @- << EOF
+[
+  {
+    "bn": "<base_name>",
+    "bt": "[base_time]",
+    "bu": "[base_unit]",
+    "bver": [base_version],
+    "n": "<measurement_name>",
+    "u": "<measurement_unit>",
+    "v": <measurement_value>,
+  },
+  {
+    "n": "[measurement_name]",
+    "t": <measurement_time>,
+    "v": <measurement_value>,
+  }
+]
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/senml+json" -H "Authorization: Thing a83b9afb-9022-4f9e-ba3d-4354a08c273a" http://localhost/http/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/messages -d '[{"bn":"some-base-name:","bt":1.276020076001e+09,"bu":"A","bver":5,"n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
-
+curl -sSiX POST http://localhost/http/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/messages -H "Content-Type: application/senml+json" -H "Authorization: Thing a83b9afb-9022-4f9e-ba3d-4354a08c273a" -d @- << EOF
+[
+  {
+    "bn": "some-base-name:",
+    "bt": 1.276020076001e+09,
+    "bu": "A",
+    "bver": 5,
+    "n": "voltage",
+    "u": "V",
+    "v": 120.1
+  },
+  {
+    "n": "current",
+    "t": -5,
+    "v": 1.2
+  },
+  {
+    "n": "current",
+    "t": -4,
+    "v": 1.3
+  }
+]
+EOF
 HTTP/1.1 202 Accepted
 Server: nginx/1.23.3
 Date: Thu, 15 Jun 2023 09:40:44 GMT
@@ -1686,16 +2025,14 @@ Connection: keep-alive
 
 Reads messages from database for a given channel
 
-> Must-have: `thing_secret` and `channel_id`
-
 ```bash
-curl -s -S -i -H "Authorization: Thing <thing_secret>" http://localhost:<service_port>/channels/<channel_id>/messages?offset=0&limit=5
+curl -sSiX GET http://localhost:<service_port>/channels/<channel_id>/messages?[offset=<offset>]&[limit=<limit>] -H "Authorization: Thing <thing_secret>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -H "Authorization: Thing a83b9afb-9022-4f9e-ba3d-4354a08c273a" http://localhost:9009/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/messages
+curl -sSiX GET http://localhost:9009/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/messages -H "Authorization: Thing a83b9afb-9022-4f9e-ba3d-4354a08c273a"
 
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -1744,18 +2081,31 @@ Content-Length: 660
 
 To create a group, you need the group name and a `user_token`
 
-> Must-have: `user_token`, `name`
-> Nice-to-have: `parent_id`, `metadata`, `owner_id`, `description` and `status`
-
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups -d '{"name": "<group_name>", "description": "<group_description>"}'
+curl -sSiX POST http://localhost/groups -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "name":"<group_name>",
+  "description":"[group_description]",
+  "parent_id": "[parent_id]",
+  "owner_id": "[owner_id]",
+  "metadata": {
+      "[key1]": "[value1]",
+      "[key2]": "[value2]"
+  },
+  "status": "[enabled|disabled]"
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/groups -d '{"name": "testgroup",
-"description": "test group description"}'
+curl -sSiX POST http://localhost/groups -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "name": "Security Engineers",
+  "description": "This group would be responsible for securing the platform."
+}
+EOF
 
 HTTP/1.1 201 Created
 Server: nginx/1.23.3
@@ -1769,8 +2119,8 @@ Access-Control-Expose-Headers: Location
 {
   "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
   "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "testgroup",
-  "description": "test group description",
+  "name": "Security Engineers",
+  "description": "This group would be responsible for securing the platform.",
   "created_at": "2023-06-15T09:41:42.860481Z",
   "updated_at": "0001-01-01T00:00:00Z",
   "status": "enabled"
@@ -1779,15 +2129,16 @@ Access-Control-Expose-Headers: Location
 
 When you use `parent_id` make sure the parent is an already exisiting group
 
-```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups -d '{"name": "<group_name>", "description": "<group_description>", "parent_id": "<parent_id>"}'
-```
-
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/groups -d '{"name": "testgroup2",
-"description": "test group 2 description", "parent_id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e"}'
+curl -sSiX POST http://localhost/groups -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "name": "Customer Support",
+  "description": "This group would be responsible for providing support to users of the platform.",
+  "parent_id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e"
+}
+EOF
 
 HTTP/1.1 201 Created
 Server: nginx/1.23.3
@@ -1802,8 +2153,8 @@ Access-Control-Expose-Headers: Location
   "id": "dd2dc8d4-f7cf-42f9-832b-81cae9a8e90a",
   "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
   "parent_id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-  "name": "testgroup2",
-  "description": "test group 2 description",
+  "name": "Customer Support",
+  "description": "This group would be responsible for providing support to users of the platform.",
   "created_at": "2023-06-15T09:42:34.063997Z",
   "updated_at": "0001-01-01T00:00:00Z",
   "status": "enabled"
@@ -1812,18 +2163,16 @@ Access-Control-Expose-Headers: Location
 
 ### Get group
 
-Get a group entity for a logged in user
-
-> Must-have: `user_token` and `group_id`
+Get a group entity for a logged-in user
 
 ```bash
-curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>
+curl -sSiX GET http://localhost/groups/<group_id> -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e
+curl -sSiX GET http://localhost/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1836,8 +2185,8 @@ Access-Control-Expose-Headers: Location
 {
   "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
   "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "testgroup",
-  "description": "test group description",
+  "name": "Security Engineers",
+  "description": "This group would be responsible for securing the platform.",
   "created_at": "2023-06-15T09:41:42.860481Z",
   "updated_at": "0001-01-01T00:00:00Z",
   "status": "enabled"
@@ -1846,18 +2195,18 @@ Access-Control-Expose-Headers: Location
 
 ### Get groups
 
-Get all groups, list requests accepts limit and offset query parameters
+You can get all groups for a logged-in user.
 
-> Must-have: `user_token`
+If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parentID`, `ownerID`, `tree` and `dir` as query parameters.
 
 ```bash
-curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups
+curl -sSiX GET http://localhost/groups -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/groups
+curl -sSiX GET http://localhost/groups -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1875,7 +2224,7 @@ Access-Control-Expose-Headers: Location
     {
       "id": "0a4a2c33-2d0e-43df-b51c-d905aba99e17",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "a",
+      "name": "Sensor Operators",
       "created_at": "2023-06-14T13:33:52.249784Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -1883,8 +2232,8 @@ Access-Control-Expose-Headers: Location
     {
       "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "testgroup",
-      "description": "test group description",
+      "name": "Security Engineers",
+      "description": "This group would be responsible for securing the platform.",
       "created_at": "2023-06-15T09:41:42.860481Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -1893,8 +2242,8 @@ Access-Control-Expose-Headers: Location
       "id": "dd2dc8d4-f7cf-42f9-832b-81cae9a8e90a",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
       "parent_id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-      "name": "testgroup2",
-      "description": "test group 2 description",
+      "name": "Customer Support",
+      "description": "This group would be responsible for providing support to users of the platform.",
       "created_at": "2023-06-15T09:42:34.063997Z",
       "updated_at": "0001-01-01T00:00:00Z",
       "status": "enabled"
@@ -1905,18 +2254,18 @@ Access-Control-Expose-Headers: Location
 
 ### Get Group Parents
 
-Get all group parents, list requests accepts limit and offset query parameters
+You can get all groups that are parents of a group for a logged-in user.
 
-> Must-have: `user_token` and `group_id`
+If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parentID`, `ownerID`, `tree` and `dir` as query parameters.
 
 ```bash
-curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/parents
+curl -sSiX GET http://localhost/groups/<group_id>/parents -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/groups/dd2dc8d4-f7cf-42f9-832b-81cae9a8e90a/parents?tree=true
+curl -sSiX GET http://localhost/groups/dd2dc8d4-f7cf-42f9-832b-81cae9a8e90a/parents?tree=true -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1934,16 +2283,16 @@ Access-Control-Expose-Headers: Location
     {
       "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "testgroup",
-      "description": "test group description",
+      "name": "Security Engineers",
+      "description": "This group would be responsible for securing the platform.",
       "level": -1,
       "children": [
         {
           "id": "dd2dc8d4-f7cf-42f9-832b-81cae9a8e90a",
           "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
           "parent_id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-          "name": "testgroup2",
-          "description": "test group 2 description",
+          "name": "Customer Support",
+          "description": "This group would be responsible for providing support to users of the platform.",
           "created_at": "2023-06-15T09:42:34.063997Z",
           "updated_at": "0001-01-01T00:00:00Z",
           "status": "enabled"
@@ -1959,18 +2308,18 @@ Access-Control-Expose-Headers: Location
 
 ### Get Group Children
 
-Get all group children, list requests accepts limit and offset query parameters
+You can get all groups that are children of a group for a logged-in user.
 
-> Must-have: `user_token`
+If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parentID`, `ownerID`, `tree` and `dir` as query parameters.
 
 ```bash
-curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/children
+curl -sSiX GET http://localhost/groups/<group_id>/children -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e/children?tree=true
+curl -sSiX GET http://localhost/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e/children?tree=true -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1988,16 +2337,16 @@ Access-Control-Expose-Headers: Location
     {
       "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
       "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "testgroup",
-      "description": "test group description",
+      "name": "Security Engineers",
+      "description": "This group would be responsible for securing the platform.",
       "path": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
       "children": [
         {
           "id": "dd2dc8d4-f7cf-42f9-832b-81cae9a8e90a",
           "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
           "parent_id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-          "name": "testgroup2",
-          "description": "test group 2 description",
+          "name": "Customer Support",
+          "description": "This group would be responsible for providing support to users of the platform.",
           "level": 1,
           "path": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e.dd2dc8d4-f7cf-42f9-832b-81cae9a8e90a",
           "created_at": "2023-06-15T09:42:34.063997Z",
@@ -2017,16 +2366,31 @@ Access-Control-Expose-Headers: Location
 
 Update group entity
 
-> Must-have: `user_token` and `group_id`
-
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/groups/<group_id> -d '{"name": "<group_name>"}'
+curl -sSiX PUT http://localhost/groups/<group_id> -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "name":"[group_name]",
+  "description":"[group_description]",
+  "metadata": {
+      "[key1]": "[value1]",
+      "[key2]": "[value2]"
+  }
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e -d '{"name": "new name", "description": "new description", "metadata": {"foo":"bar"}}'
+curl -sSiX PUT http://localhost/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e  -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "name":"Data Analysts",
+  "description":"This group would be responsible for analyzing data collected from sensors.",
+  "metadata": {
+      "location": "london"
+  }
+}
+EOF
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -2039,9 +2403,9 @@ Access-Control-Expose-Headers: Location
 {
   "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
   "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "new name",
-  "description": "new description",
-  "metadata": { "foo": "bar" },
+  "name": "Data Analysts",
+  "description": "This group would be responsible for analyzing data collected from sensors.",
+  "metadata": { "location": "london" },
   "created_at": "2023-06-15T09:41:42.860481Z",
   "updated_at": "2023-06-15T10:17:56.475241Z",
   "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
@@ -2053,16 +2417,14 @@ Access-Control-Expose-Headers: Location
 
 Disable a group entity
 
-> Must-have: `user_token` and `group_id`
-
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/disable
+curl -sSiX POST http://localhost/groups/<group_id>/disable -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e/disable
+curl -sSiX POST http://localhost/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e/disable -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -2075,9 +2437,9 @@ Access-Control-Expose-Headers: Location
 {
   "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
   "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "new name",
-  "description": "new description",
-  "metadata": { "foo": "bar" },
+  "name": "Data Analysts",
+  "description": "This group would be responsible for analyzing data collected from sensors.",
+  "metadata": { "location": "london" },
   "created_at": "2023-06-15T09:41:42.860481Z",
   "updated_at": "2023-06-15T10:17:56.475241Z",
   "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
@@ -2089,16 +2451,14 @@ Access-Control-Expose-Headers: Location
 
 Enable a group entity
 
-> Must-have: `user_token` and `group_id`
-
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/enable
+curl -sSiX POST http://localhost/groups/<group_id>/enable -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e/enable
+curl -sSiX POST http://localhost/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e/enable -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -2111,9 +2471,9 @@ Access-Control-Expose-Headers: Location
 {
   "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
   "owner_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "new name",
-  "description": "new description",
-  "metadata": { "foo": "bar" },
+  "name": "Data Analysts",
+  "description": "This group would be responsible for analyzing data collected from sensors.",
+  "metadata": { "location": "london" },
   "created_at": "2023-06-15T09:41:42.860481Z",
   "updated_at": "2023-06-15T10:17:56.475241Z",
   "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
@@ -2123,18 +2483,28 @@ Access-Control-Expose-Headers: Location
 
 ### Assign
 
-Assign user, thing or channel to a group
-
-> Must-have: `user_token`, `group_id`, `member_id` and `member_action`
+Assign user to a group
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/policies -d '{"subject": "<user_id>" | "<thing_id_>" | "<channel_id_>", "object": "<group_id>", "actions":["<client_actions>" | "<group_actions>"]}'
+curl -sSiX POST http://localhost/users/policies -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subject": "<user_id>",
+  "object": "<group_id>",
+  "actions": ["<member_action>"]
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/policies -d '{"subject": "1890c034-7ef9-4cde-83df-d78ea1d4d281", "object": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e", "actions":["g_list", "c_list"]}'
+curl -sSiX POST http://localhost/users/policies -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subject": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
+  "object": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
+  "actions": ["g_list", "c_list"]
+}
+EOF
 
 HTTP/1.1 201 Created
 Server: nginx/1.23.3
@@ -2147,19 +2517,20 @@ Access-Control-Expose-Headers: Location
 
 ### Members
 
-Get list of ID's from group
+You can get all users assigned to a group.
 
-> Must-have: `user_token` and `group_id`
-> Must take into consideration the user identified by the `user_token` needs to be assigned to the same group with `g_list` action
+If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `identity`, and `tag` as query parameters.
+
+> Must take into consideration the user identified by the `user_token` needs to be assigned to the same group identified by `group_id` with `g_list` action or be the owner of the group identified by `group_id`.
 
 ```bash
-curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/members
+curl -sSiX GET http://localhost/groups/<group_id>/members -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e/members
+curl -sSiX GET http://localhost/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e/members -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -2175,10 +2546,10 @@ Access-Control-Expose-Headers: Location
   "members": [
     {
       "id": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
-      "name": "new name",
-      "tags": ["foo", "bar"],
-      "credentials": { "identity": "updated.john.doe@email.com", "secret": "" },
-      "metadata": { "foo": "bar" },
+      "name": "Jane Doe",
+      "tags": ["male", "developer"],
+      "credentials": { "identity": "updated.jane.doe@gmail.com" },
+      "metadata": { "location": "london" },
       "created_at": "2023-06-14T13:46:47.322648Z",
       "updated_at": "2023-06-14T13:59:53.422595Z",
       "status": "enabled"
@@ -2189,18 +2560,16 @@ Access-Control-Expose-Headers: Location
 
 ### Unassign
 
-Unassign user, thing or channel from group
-
-> Must-have: `user_token`, `group_id`, `member_id` and `action`
+Unassign user from group
 
 ```bash
-curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/policies/"<user_id>" | "<thing_id_>" | "<channel_id_>"/<group_id> -d '{ "actions":["<client_actions>" | "<group_actions>"]}'
+curl -sSiX DELETE http://localhost/users/policies/<subject_id>/<object_id> -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/policies/1890c034-7ef9-4cde-83df-d78ea1d4d281/2766ae94-9a08-4418-82ce-3b91cf2ccd3e -d '{"actions":["g_add", "c_list"]}'
+curl -sSiX DELETE http://localhost/users/policies/1890c034-7ef9-4cde-83df-d78ea1d4d281/2766ae94-9a08-4418-82ce-3b91cf2ccd3e  -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 204 No Content
 Server: nginx/1.23.3
@@ -2214,18 +2583,49 @@ Access-Control-Expose-Headers: Location
 
 ### Add policies
 
-Only policies defined on [Predefined Policies section](/authorization/#summary-of-defined-policies) are allowed.
-
-> Must-have: user_token, object, subject_id and actions
+Only actions defined on [Predefined Policies section][predefined-policies] are allowed.
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/policies -d '{"subject": "<user_id>" | "<thing_id_>" | "<channel_id_>", "object": "<group_id>", "actions":["<client_actions>" | "<group_actions>"]}'
+curl -sSiX POST http://localhost/users/policies -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subject": "<user_id>",
+  "object": "<group_id>",
+  "actions": ["<actions>", "[actions]"]
+}
+EOF
+```
+
+```bash
+curl -sSiX POST http://localhost/things/policies -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subject": "<thing_id>",
+  "object": "<channel_id>",
+  "actions": ["<actions>", "[actions]"]
+}
+EOF
+```
+
+```bash
+curl -sSiX POST http://localhost/things/policies -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subject": "<user_id>",
+  "object": "<channel_id>",
+  "actions": ["<actions>", "[actions]"]
+  "external": true
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/policies -d '{"subject": "1890c034-7ef9-4cde-83df-d78ea1d4d281", "object": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e", "actions":["g_add", "c_list"]}'
+curl -sSiX POST http://localhost/users/policies -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subject": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
+  "object": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
+  "actions": ["g_add", "c_list"]
+}
+EOF
 
 HTTP/1.1 201 Created
 Server: nginx/1.23.3
@@ -2238,18 +2638,38 @@ Access-Control-Expose-Headers: Location
 
 ### Update policies
 
-Only policies defined on [Predefined Policies section](/authorization/#summary-of-defined-policies) are allowed.
-
-> Must-have: user_token, object, subject_id and actions
+Only actions defined on [Predefined Policies section][predefined-policies] are allowed.
 
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/policies -d '{"subject": "<user_id>" | "<thing_id_>" | "<channel_id_>", "object": "<group_id>", "actions":["<client_actions>" | "<group_actions>"]}'
+curl -sSiX PUT http://localhost/users/policies -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subject": "<user_id>",
+  "object": "<group_id>",
+  "actions": ["<actions>", "[actions]"]
+}
+EOF
+```
+
+```bash
+curl -sSiX PUT http://localhost/things/policies -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subject": "<thing_id> | <user_id>",
+  "object": "<channel_id>",
+  "actions": ["<actions>", "[actions]"]
+}
+EOF
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/policies -d '{"subject": "1890c034-7ef9-4cde-83df-d78ea1d4d281", "object": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e", "actions":["g_list", "c_list"]}'
+curl -sSiX PUT http://localhost/users/policies -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" -d @- << EOF
+{
+  "subject": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
+  "object": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
+  "actions": ["g_list", "c_list"]
+}
+EOF
 
 HTTP/1.1 204 No Content
 Server: nginx/1.23.3
@@ -2261,18 +2681,20 @@ Access-Control-Expose-Headers: Location
 
 ### Delete policies
 
-Only policies defined on [Predefined Policies section](/authorization/#summary-of-defined-policies) are allowed.
-
-> Must-have: `user_token`, `group_id`, `member_id` and `action`
+Only policies defined on [Predefined Policies section][predefined-policies] are allowed.
 
 ```bash
-curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/policies/"<user_id>" | "<thing_id_>" | "<channel_id_>"/<group_id> -d '{ "actions":["<client_actions>" | "<group_actions>"]}'
+curl -sSiX DELETE http://localhost/users/policies/<user_id>/<channel_id> -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
+```
+
+```bash
+curl -sSiX DELETE http://localhost/things/policies/<thing_id>/<channel_id> -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: Bearer $USER_TOKEN" http://localhost/policies/1890c034-7ef9-4cde-83df-d78ea1d4d281/2766ae94-9a08-4418-82ce-3b91cf2ccd3e
+curl -sSiX DELETE http://localhost/users/policies/1890c034-7ef9-4cde-83df-d78ea1d4d281/2766ae94-9a08-4418-82ce-3b91cf2ccd3e -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 204 No Content
 Server: nginx/1.23.3
@@ -2281,3 +2703,6 @@ Content-Type: application/json
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 ```
+
+[api]: https://api.mainflux.io
+[predefined-policies]: /authorization/#summary-of-defined-policies
