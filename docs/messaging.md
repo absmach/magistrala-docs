@@ -270,6 +270,120 @@ it's subtopics.
 
 For more information and examples checkout [official nats.io documentation][nats], [official rabbitmq documentation][rabbitmq], [official vernemq documentation][vernemq] and [official kafka documentation][kafka].
 
+## MQTT Broker
+
+Mainflux supports the MQTT protocol for message exchange. MQTT is a lightweight Publish/Subscribe messaging protocol used to connect restricted devices in low bandwidth, high-latency or unreliable networks. The publish-subscribe messaging pattern requires a message broker. The broker is responsible for distributing messages to and from clients connected to the MQTT adapter.
+
+Mainflux supports [MQTT version 3.1.1][mqtt-v3.1.1]. The MQTT adapter is based on [Eclipse Paho][paho] MQTT client library. The adapter is configured to use [nats][nats-mqtt] as the default MQTT broker, but you can use [vernemq][vernemq] too.
+
+### Configuration
+
+In the dev environment, docker profiles are preferred when handling different MQTT and message brokers supported by Mainflux.
+
+Mainflux uses two types of brokers:
+
+1. `MQTT_BROKER`: Handles MQTT communication between MQTT adapters and message broker.
+2. `MESSAGE_BROKER`: Manages communication between adapters and Mainflux writer services.
+
+`MQTT_BROKER` can be either `vernemq` or `nats`.
+`MESSAGE_BROKER` can be either `nats` or `rabbitmq`.
+
+Each broker has a unique profile for configuration. The available profiles are:
+
+- `vernemq_nats`: Uses `vernemq` as MQTT_BROKER and `nats` as MESSAGE_BROKER.
+- `vernemq_rabbitmq`: Uses `vernemq` as MQTT_BROKER and `rabbitmq` as MESSAGE_BROKER.
+- `nats_nats`: Uses `nats` as both MQTT_BROKER and MESSAGE_BROKER.
+- `nats_rabbitmq`: Uses `nats` as MQTT_BROKER and `rabbitmq` as MESSAGE_BROKER.
+
+The following command will run VerneMQ as an MQTT broker and Nats as a message broker:
+
+```bash
+MF_MQTT_BROKER_TYPE=vernemq MF_BROKER_TYPE=nats make run
+```
+
+The following command will run NATS as an MQTT broker and RabbitMQ as a message broker:
+
+```bash
+MF_MQTT_BROKER_TYPE=nats MF_BROKER_TYPE=rabbitmq make run
+```
+
+By default, NATS is used as an MQTT broker and RabbitMQ as a message broker.
+
+### Nats MQTT Broker
+
+NATS support for MQTT and it is designed to empower users to leverage their existing IoT deployments. NATS offers significant advantages in terms of security and observability when used end-to-end. NATS server as a drop-in replacement for MQTT is compelling. This approach allows you to retain your existing IoT investments while benefiting from NATS' secure, resilient, and scalable access to your streams and services.
+
+#### Architecture
+
+To enable MQTT support on NATS, JetStream needs to be enabled. This is done by default in Mainflux. This is because persistence is necessary for sessions and retained messages, even for QoS 0 retained messages. Communication between MQTT and NATS involves creating similar NATS subscriptions when MQTT clients subscribe to topics. This ensures that the interest is registered in the NATS cluster, and messages are delivered accordingly. When MQTT publishers send messages, they are converted to NATS subjects, and matching NATS subscriptions receive the MQTT messages.
+
+NATS supports up to QoS 1 subscriptions, where the server retains messages until it receives the PUBACK for the corresponding packet identifier. If PUBACK is not received within the "ack_wait" interval, the message is resent. The maximum value for "max_ack_pending" is 65535.
+
+NATS Server persists all sessions, even if they are created with the "clean session" flag. Sessions are identified by client identifiers. If two connections attempt to use the same client identifier, the server will close the existing connection and accept the new one, reducing the flapping rate.
+
+NATS supports MQTT in a NATS cluster, with the replication factor automatically set based on cluster size.
+
+#### Limitations
+
+- NATS does not support QoS 2 messages. Hence Mainflux inherently does not support QoS 2 messages.
+- MQTT wildcard "#" may cause the NATS server to create two subscriptions.
+- MQTT concurrent sessions may result in the new connection being evicted instead of the existing one.
+
+### Vernemq MQTT Broker
+
+VerneMQ is a powerful MQTT publish/subscribe message broker designed to implement the OASIS industry standard MQTT protocol. It is built to take messaging and IoT applications to the next level by providing a unique set of features related to scalability, reliability, high performance, and operational simplicity.
+
+Key features of VerneMQ include:
+
+- Low Entry and Exit Risk: VerneMQ is open-source and Apache 2 licensed, allowing unrestricted commercial re-use without upfront investment.
+- Carrier-Grade Reliability: Built on OTP (Open Telecom Platform), VerneMQ leverages telecom-grade technology for soft-realtime, distributed control, and messaging applications. It is highly fault-tolerant and capable of continuous operation.
+- Scalability: VerneMQ can scale to handle millions of clients, limited only by the underlying hardware. You can easily add nodes to a VerneMQ cluster for horizontal scalability.
+- Cluster Operations & Monitoring: VerneMQ comes with built-in extensible metrics systems and allows cluster-wide instant live reconfiguration. It focuses on production tooling and enterprise operations for operational peace of mind.
+- Lower Total Cost of Ownership (TCO): VerneMQ offers a favourable TCO compared to many messaging Platform-as-a-Service (PaaS) solutions.
+- Full MQTT Support: VerneMQ implements the full MQTT 3.1, 3.1.1, and 5.0 specifications, including various QoS levels, authentication and authorization options, TLS/SSL encryption, WebSockets support, clustering, and more.
+
+#### Architecture
+
+VerneMQ is designed from the ground up to work as a distributed message broker, ensuring continued operation even in the event of node or network failures. It can easily scale both horizontally and vertically to handle large numbers of concurrent clients.
+
+VerneMQ uses a masterless clustering technology, which means there are no special nodes like masters or slaves to consider when adding or removing nodes, making cluster operation safe and simple. This allows MQTT clients to connect to any cluster node and receive messages from any other node. However, it acknowledges the challenges of fulfilling MQTT specification guarantees in a distributed environment, particularly during network partitions.
+
+## Message Broker
+
+Mainflux supports multiple message brokers for message exchange. Message brokers are used to distribute messages to and from clients connected to the different protocols adapters and writers. Writers, which are responsible for storing messages in the database, are connected to the message broker using wildcard subscriptions. This means that writers will receive all messages published to the message broker. Clients can subscribe to the message broker using topic and subtopic combinations. The message broker will then forward all messages published to the topic and subtopic combination to the client.
+
+Mainflux supports [NATS][nats], [RabbitMQ][rabbitmq] and [Kafka][kafka] as message brokers.
+
+### NATS JetStream
+
+Since Mainflux supports configurable message brokers, you can use Nats with JetStream enabled as a message broker. To do so, you need to set `MF_BROKER_TYPE` to `nats` and set `MF_NATS_URL` to the url of your nats instance. When using `make` command to start Mainflux `MF_BROKER_URL` is automatically set to `MF_NATS_URL`.
+
+Since Mainflux is using `nats:2.9.21-alpine` docker image with the following configuration:
+
+```conf
+max_payload: 1MB
+max_connections: 1M
+port: $MF_NATS_PORT
+http_port: $MF_NATS_HTTP_PORT
+trace: true
+
+jetstream {
+    store_dir: "/data"
+    cipher: "aes"
+    key: $MF_NATS_JETSTREAM_KEY
+    max_mem: 1G
+}
+```
+
+These are the default values but you can change them by editing the configuration file. For more information about nats configuration checkout [official nats documentation][nats-jestream]. The health check endpoint is exposed on `MF_NATS_HTTP_PORT` and its `/healthz` path.
+
+### Architecture
+
+The main reason for using Nats with JetStream enabled is to have a distributed system with high availability and minimal dependencies. Nats is configure to run as the default message broker, but you can use any other message broker supported by Mainflux. Nats is configured to use JetStream, which is a distributed streaming platform built on top of nats. JetStream is used to store messages and to provide high availability. This makes nats to be used as the default event store, but you can use any other event store supported by Mainflux. Nats with JetStream enabled is also used as a key-value store for caching purposes. This makes nats to be used as the default cache store, but you can use any other cache store supported by Mainflux.
+
+This versatile architecture allows you to use nats alone for the MQTT broker, message broker, event store and cache store. This is the default configuration, but you can use any other MQTT broker, message broker, event store and cache store supported by Mainflux.
+
+[nats-jestream]: https://docs.nats.io/nats-concepts/jetstream
 [http-api]: https://github.com/mainflux/mainflux/blob/master/api/openapi/http.yml
 [mosquitto]: https://mosquitto.org
 [paho]: https://www.eclipse.org/paho/
@@ -285,3 +399,5 @@ For more information and examples checkout [official nats.io documentation][nats
 [rabbitmq]: https://www.rabbitmq.com/documentation.html
 [vernemq]: https://docs.vernemq.com/
 [kafka]: https://kafka.apache.org/documentation/
+[nats-mqtt]: https://docs.nats.io/running-a-nats-service/configuration/mqtt
+[mqtt-v3.1.1]: https://docs.oasis-open.org/mqtt/mqtt/v3.1.1/os/mqtt-v3.1.1-os.html
