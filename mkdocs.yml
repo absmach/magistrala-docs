@@ -15,12 +15,19 @@ theme:
   favicon: img/logo.png
   icon:
     repo: fontawesome/brands/github
+plugins:
+  - drawio_file
 
 markdown_extensions:
   - admonition
+  - pymdownx.details
   - toc:
       permalink: "#"
-
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 nav:
   - Overview: index.md
   - Architecture: architecture.md
