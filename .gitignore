@@ -1,4 +1,5 @@
 /site
+<<<<<<< HEAD
 
 # Dependencies
 /node_modules
@@ -20,3 +21,5 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+=======
+>>>>>>> 479f0ab (Fixed Typos)
