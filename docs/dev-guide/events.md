@@ -2,7 +2,6 @@
 title: Events
 ---
 
-
 In order to be easily integratable system, Magistrala is using [Redis Streams][redis-streams] as an event log for event sourcing. Services that are publishing events to Redis Streams are `users` service, `clients` service, `bootstrap` service and `mqtt` adapter.
 
 ## Users Service
@@ -1590,7 +1589,7 @@ Whenever channel instance is updated, `clients` service will generate and publis
    ```json
    Subject: events.magistrala.clients Received: 2023-10-05T16:00:29+03:00
 
-   {"created_at":"2023-10-05T12:41:04.87198Z","id":"5f9d4b76-0717-4859-8ef8-6fcfb81f44d5","metadata":"e30=","name":"hestia","occurred_at":1696510829837578155,"operation":"channel.update","owner":"0a5f2e21-1a8b-460e-bfa9-732e570df095","status":"enabled","updated_at":"2023-10-05T13:00:29.828132Z","updated_by":"97466511-6317-4c98-8d58-7bd78bcaf587"}
+    {"created_at":"2023-10-05T12:41:04.87198Z","id":"5f9d4b76-0717-4859-8ef8-6fcfb81f44d5","metadata":"e30=","name":"hestia","occurred_at":1696510829837578155,"operation":"channel.update","owner":"0a5f2e21-1a8b-460e-bfa9-732e570df095","status":"enabled","updated_at":"2023-10-05T13:00:29.828132Z","updated_by":"97466511-6317-4c98-8d58-7bd78bcaf587"}
    ```
 
 3. In rabbitmq streams
@@ -1653,11 +1652,11 @@ Whenever channel instance is removed from the system, `clients` service will gen
    ```json
    Subject: events.magistrala.clients Received: 2023-10-05T18:38:40+03:00
 
-   {"id":"e4fa015f-bfad-4f41-bebe-142d3e938d3a","occurred_at":1696520320726205997,"operation":"channel.remove","status":"disabled","updated_at":"2023-10-05T15:38:40.702159Z","updated_by":"3264e965-3fe5-4d4e-a857-48de43551d2e"}
+    {"id":"e4fa015f-bfad-4f41-bebe-142d3e938d3a","occurred_at":1696520320726205997,"operation":"channel.remove","status":"disabled","updated_at":"2023-10-05T15:38:40.702159Z","updated_by":"3264e965-3fe5-4d4e-a857-48de43551d2e"}
 
    Subject: events.magistrala.clients Received: 2023-10-05T18:38:40+03:00
 
-   {"id":"e4fa015f-bfad-4f41-bebe-142d3e938d3a","occurred_at":1696520320786154457,"operation":"channel.remove","status":"enabled","updated_at":"2023-10-05T15:38:40.702159Z","updated_by":"3264e965-3fe5-4d4e-a857-48de43551d2e"}
+    {"id":"e4fa015f-bfad-4f41-bebe-142d3e938d3a","occurred_at":1696520320786154457,"operation":"channel.remove","status":"enabled","updated_at":"2023-10-05T15:38:40.702159Z","updated_by":"3264e965-3fe5-4d4e-a857-48de43551d2e"}
    ```
 
 3. In rabbitmq streams
@@ -1704,7 +1703,7 @@ Whenever channel is viewed, `clients` service will generate new `view` event. Th
    ```json
    Subject: events.magistrala.clients Received: 2023-10-05T18:38:40+03:00
 
-   {"created_at":"2023-10-05T15:38:40.31444Z","id":"e4fa015f-bfad-4f41-bebe-142d3e938d3a","metadata":"e30=","name":"-Cech-Hargreaves","occurred_at":1696520320475816826,"operation":"channel.view","owner":"3264e965-3fe5-4d4e-a857-48de43551d2e","status":"enabled"}
+    {"created_at":"2023-10-05T15:38:40.31444Z","id":"e4fa015f-bfad-4f41-bebe-142d3e938d3a","metadata":"e30=","name":"-Cech-Hargreaves","occurred_at":1696520320475816826,"operation":"channel.view","owner":"3264e965-3fe5-4d4e-a857-48de43551d2e","status":"enabled"}
    ```
 
 3. In rabbitmq streams
@@ -1749,7 +1748,7 @@ Whenever channel list is fetched, `clients` service will generate new `list` eve
    ```json
    Subject: events.magistrala.clients Received: 2023-10-05T18:38:40+03:00
 
-   {"limit":10,"occurred_at":1696520320495779280,"offset":0,"operation":"channel.list","status":"enabled","total":0}
+    {"limit":10,"occurred_at":1696520320495779280,"offset":0,"operation":"channel.list","status":"enabled","total":0}
    ```
 
 3. In rabbitmq streams
@@ -1856,7 +1855,7 @@ Whenever policy is added, `clients` service will generate new `add` event. This 
    ```json
    Subject: events.magistrala.clients Received: 2023-10-05T15:41:04+03:00
 
-   {"actions":"[m_write,m_read]","created_at":"2023-10-05T12:41:04.901355Z","object":"5f9d4b76-0717-4859-8ef8-6fcfb81f44d5","occurred_at":1696509664928590911,"operation":"policies.add","owner_id":"0a5f2e21-1a8b-460e-bfa9-732e570df095","subject":"9745f2ea-f776-46b1-9b44-1cfd1ad4c6f1"}
+    {"actions":"[m_write,m_read]","created_at":"2023-10-05T12:41:04.901355Z","object":"5f9d4b76-0717-4859-8ef8-6fcfb81f44d5","occurred_at":1696509664928590911,"operation":"policies.add","owner_id":"0a5f2e21-1a8b-460e-bfa9-732e570df095","subject":"9745f2ea-f776-46b1-9b44-1cfd1ad4c6f1"}
    ```
 
 3. In rabbitmq streams
@@ -1939,7 +1938,7 @@ Whenever policy is removed, `clients` service will generate new `remove` event. 
    ```json
    Subject: events.magistrala.clients Received: 2023-10-05T16:05:15+03:00
 
-   {"actions":"[m_write,m_read]","object":"5f9d4b76-0717-4859-8ef8-6fcfb81f44d5","occurred_at":1696511115507500254,"operation":"policies.delete","subject":"9745f2ea-f776-46b1-9b44-1cfd1ad4c6f1"}
+    {"actions":"[m_write,m_read]","object":"5f9d4b76-0717-4859-8ef8-6fcfb81f44d5","occurred_at":1696511115507500254,"operation":"policies.delete","subject":"9745f2ea-f776-46b1-9b44-1cfd1ad4c6f1"}
    ```
 
 3. In rabbitmq streams
