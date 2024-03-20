@@ -44,7 +44,7 @@ docker-compose -f docker/addons/lora-adapter/docker-compose.yml up -d
 
 **Troubleshouting:** The lora-adapter subscribes to the LoRa Server MQTT broker and will fail if the connection is not established. You must ensure that the environment variable `MF_LORA_ADAPTER_MESSAGES_URL` is propertly configured.
 
-**Remark:** By defaut, `MF_LORA_ADAPTER_MESSAGES_URL` is set as `tcp://lora.mqtt.mainflux.io:1883` in the [docker-compose.yml][lora-docker-compose] file of the adapter. If you run the composition without configure this variable you will start to receive messages from our demo server.
+**Remark:** By defaut, `MF_LORA_ADAPTER_MESSAGES_URL` is set as `tcp://lora.mqtt.magistrala.io:1883` in the [docker-compose.yml][lora-docker-compose] file of the adapter. If you run the composition without configure this variable you will start to receive messages from our demo server.
 
 ### Route Map
 
@@ -83,7 +83,7 @@ The lora-adapter uses the matadata of provision events emitted by Magistrala sys
 
 To forward LoRa messages the lora-adapter subscribes to topics `applications/+/devices/+` of the LoRa Server MQTT broker. It verifies the `app_id` and the `dev_eui` of received messages. If the mapping exists it uses corresponding `Channel ID` and `Thing ID` to sign and forwards the content of the LoRa message to the Magistrala message broker.
 
-[lora-adapter]: https://github.com/absmach/magistrala/terr/main/lora
+[lora-adapter]: https://github.com/absmach/magistrala/tree/main/lora
 [lora-server]: https://www.loraserver.io
 [lora-gateway]: https://www.loraserver.io/lora-gateway-bridge/overview/
 [semtech]: https://github.com/Lora-net/packet_forwarder/blob/master/PROTOCOL.TXT

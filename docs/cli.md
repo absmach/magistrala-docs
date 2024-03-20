@@ -4,76 +4,81 @@ Magistrala CLI makes it easy to manage users, things, channels and messages.
 
 CLI can be downloaded as separate asset from [project realeses][releases] or it can be built with `GNU Make` tool:
 
-Get the mainflux code
+Get the Magistrala code
 
 ```bash
 go get github.com/absmach/magistrala
 ```
 
-Build the mainflux-cli
+Build the magistrala-cli
 
 ```bash
 make cli
 ```
 
-which will build `mainflux-cli` in `<project_root>/build` folder.
+which will build `magistrala-cli` in `<project_root>/build` folder.
 
-Executing `build/mainflux-cli` without any arguments will output help with all available commands and flags:
+Executing `build/magistrala-cli` without any arguments will output help with all available commands and flags:
 
 ```bash
 Usage:
-  mainflux-cli [command]
+  magistrala-cli [command]
 
 Available Commands:
-  bootstrap     Bootstrap management
-  certs         Certificates management
-  channels      Channels management
-  completion    Generate the autocompletion script for the specified shell
-  groups        Groups management
-  health        Health Check
-  help          Help about any command
-  messages      Send or read messages
-  policies      Policies management
-  provision     Provision things and channels from a config file
-  subscription  Subscription management
-  things        Things management
-  users         Users management
+  bootstrap    Bootstrap management
+  certs        Certificates management
+  channels     Channels management
+  completion   Generate the autocompletion script for the specified shell
+  config       CLI local config
+  domains      Domains management
+  groups       Groups management
+  health       Health Check
+  help         Help about any command
+  invitations  Invitations management
+  messages     Send or read messages
+  provision    Provision things and channels from a config file
+  subscription Subscription management
+  things       Things management
+  users        Users management
 
 Flags:
-  -b, --bootstrap-url string   Bootstrap service URL (default "http://localhost")
-  -s, --certs-url string       Certs service URL (default "http://localhost")
-  -c, --config string          Config path
-  -C, --contact string         Subscription contact query parameter
-  -y, --content-type string    Message content type (default "application/senml+json")
-  -e, --email string           User email query parameter
-  -h, --help                   help for mainflux-cli
-  -p, --http-url string        HTTP adapter URL (default "http://localhost/http")
-  -i, --insecure               Do not check for TLS cert
-  -l, --limit uint             Limit query parameter (default 10)
-  -m, --metadata string        Metadata query parameter
-  -n, --name string            Name query parameter
-  -o, --offset uint            Offset query parameter
-  -r, --raw                    Enables raw output mode for easier parsing of output
-  -R, --reader-url string      Reader URL (default "http://localhost")
-  -z, --state string           Bootstrap state query parameter
-  -S, --status string          User status query parameter
-  -t, --things-url string      Things service URL (default "http://localhost")
-  -T, --topic string           Subscription topic query parameter
-  -u, --users-url string       Users service URL (default "http://localhost")
+  -b, --bootstrap-url string     Bootstrap service URL (default "http://localhost:9013")
+  -s, --certs-url string         Certs service URL (default "http://localhost:9019")
+  -c, --config string            Config path
+  -C, --contact string           Subscription contact query parameter
+  -y, --content-type string      Message content type (default "application/senml+json")
+  -d, --domains-url string       Domains service URL (default "http://localhost:8189")
+  -h, --help                     help for magistrala-cli
+  -H, --host-url string          Host URL (default "http://localhost")
+  -p, --http-url string          HTTP adapter URL (default "http://localhost/http")
+  -I, --identity string          User identity query parameter
+  -i, --insecure                 Do not check for TLS cert
+  -v, --invitations-url string   Inivitations URL (default "http://localhost:9020")
+  -l, --limit uint               Limit query parameter (default 10)
+  -m, --metadata string          Metadata query parameter
+  -n, --name string              Name query parameter
+  -o, --offset uint              Offset query parameter
+  -r, --raw                      Enables raw output mode for easier parsing of output
+  -R, --reader-url string        Reader URL (default "http://localhost")
+  -z, --state string             Bootstrap state query parameter
+  -S, --status string            User status query parameter
+  -t, --things-url string        Things service URL (default "http://localhost:9000")
+  -T, --topic string             Subscription topic query parameter
+  -u, --users-url string         Users service URL (default "http://localhost:9002")
 
-Use "mainflux-cli [command] --help" for more information about a command.
+Use "magistrala-cli [command] --help" for more information about a command.
 ```
 
-It is also possible to use the docker image `mainflux/cli` to execute CLI command:
+It is also possible to use the docker image `magistrala/cli` to execute CLI command:
 
 ```bash
-docker run -it --rm mainflux/cli -u http://<IP_SERVER> [command]
+docker run -it --rm magistrala/cli -u http://<IP_SERVER> [command]
 ```
 
 For example:
 
 ```bash
-docker run -it --rm mainflux/cli -u http://192.168.160.1 users token admin@example.com 12345678
+docker run -it --rm magistrala/cli -u http://192.168.160.1 users token admin@example.com 12345678
 
 {
   "access_token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODA2MjEzMDcsImlhdCI6MTY4MDYyMDQwNywiaWRlbnRpdHkiOiJhZG1pbkBleGFtcGxlLmNvbSIsImlzcyI6ImNsaWVudHMuYXV0aCIsInN1YiI6ImYxZTA5Y2YxLTgzY2UtNDE4ZS1iZDBmLWU3M2I3M2MxNDM2NSIsInR5cGUiOiJhY2Nlc3MifQ.iKdBv3Ko7PKuhjTC6Xs-DvqfKScjKted3ZMorTwpXCd4QrRSsz6NK_lARG6LjpE0JkymaCMVMZlzykyQ6ZgwpA",
@@ -85,7 +90,7 @@ docker run -it --rm mainflux/cli -u http://192.168.160.1 users token admin@examp
 You can execute each command with `-h` flag for more information about that command, e.g.
 
 ```bash
-mainflux-cli channels -h
+magistrala-cli channels -h
 ```
 
 Response should look like this:
@@ -94,62 +99,68 @@ Response should look like this:
 Channels management: create, get, update or delete Channel and get list of Things connected or not connected to a Channel
 
 Usage:
-  mainflux-cli channels [command]
+  magistrala-cli channels [command]
 
 Available Commands:
+  assign      Assign users or groups to a channel
   connections Connections list
   create      Create channel
+  delete      Delete channel
   disable     Change channel status to disabled
   enable      Change channel status to enabled
   get         Get channel
+  groups      List groups
+  unassign    Unassign users or groups from a channel
   update      Update channel
+  users       List users
 
 Flags:
   -h, --help   help for channels
 
 Global Flags:
-  -b, --bootstrap-url string   Bootstrap service URL (default "http://localhost")
-  -s, --certs-url string       Certs service URL (default "http://localhost")
-  -c, --config string          Config path
-  -C, --contact string         Subscription contact query parameter
-  -y, --content-type string    Message content type (default "application/senml+json")
-  -e, --email string           User email query parameter
-  -h, --help                   help for mainflux-cli
-  -p, --http-url string        HTTP adapter URL (default "http://localhost/http")
-  -i, --insecure               Do not check for TLS cert
-  -l, --limit uint             Limit query parameter (default 10)
-  -m, --metadata string        Metadata query parameter
-  -n, --name string            Name query parameter
-  -o, --offset uint            Offset query parameter
-  -r, --raw                    Enables raw output mode for easier parsing of output
-  -R, --reader-url string      Reader URL (default "http://localhost")
-  -z, --state string           Bootstrap state query parameter
-  -S, --status string          User status query parameter
-  -t, --things-url string      Things service URL (default "http://localhost")
-  -T, --topic string           Subscription topic query parameter
-  -u, --users-url string       Users service URL (default "http://localhost")
+  -b, --bootstrap-url string     Bootstrap service URL (default "http://localhost:9013")
+  -s, --certs-url string         Certs service URL (default "http://localhost:9019")
+  -c, --config string            Config path
+  -C, --contact string           Subscription contact query parameter
+  -y, --content-type string      Message content type (default "application/senml+json")
+  -d, --domains-url string       Domains service URL (default "http://localhost:8189")
+  -H, --host-url string          Host URL (default "http://localhost")
+  -p, --http-url string          HTTP adapter URL (default "http://localhost/http")
+  -I, --identity string          User identity query parameter
+  -i, --insecure                 Do not check for TLS cert
+  -v, --invitations-url string   Inivitations URL (default "http://localhost:9020")
+  -l, --limit uint               Limit query parameter (default 10)
+  -m, --metadata string          Metadata query parameter
+  -n, --name string              Name query parameter
+  -o, --offset uint              Offset query parameter
+  -r, --raw                      Enables raw output mode for easier parsing of output
+  -R, --reader-url string        Reader URL (default "http://localhost")
+  -z, --state string             Bootstrap state query parameter
+  -S, --status string            User status query parameter
+  -t, --things-url string        Things service URL (default "http://localhost:9000")
+  -T, --topic string             Subscription topic query parameter
+  -u, --users-url string         Users service URL (default "http://localhost:9002")
 
-
-Use "mainflux-cli channels [command] --help" for more information about a command.
+Use "magistrala-cli channels [command] --help" for more information about a command.
 ```
 
 ## Service
 
-### Get Magistrala Things services health check
+### Get Magistrala services health check
 
 ```bash
-mainflux-cli health
+magistrala-cli health <service>
 ```
 
-Response should look like this:
+For "things" service, the response should look like this:
 
 ```json
 {
-  "build_time": "2023-06-26_13:16:16",
-  "commit": "8589ad58f4ac30a198c101a7b8aa7ac2c54b2d05",
+  "build_time": "2024-03-13_16:12:26",
+  "commit": "3bf59689fb74388415d2655eb43b5d736ac82fc2",
   "description": "things service",
   "status": "pass",
-  "version": "0.13.0"
+  "version": "v0.14.0"
 }
 ```
 
@@ -160,81 +171,81 @@ Response should look like this:
 Magistrala has two options for user creation. Either the `<user_token>` is provided or not. If the `<user_token>` is provided then the created user will be owned by the user identified by the `<user_token>`. Otherwise, when the token is not used, since everybody can create new users, the user will not have an owner. However, the token is still required, in order to be consistent. For more details, please see [Authorization page](authorization.md).
 
 ```bash
-mainflux-cli users create <user_name> <user_email> <user_password>
+magistrala-cli users create <user_name> <user_email> <user_password>
 
-mainflux-cli users create <user_name> <user_email> <user_password> <user_token>
+magistrala-cli users create <user_name> <user_email> <user_password> <user_token>
 ```
 
 #### Login User
 
 ```bash
-mainflux-cli users token <user_email> <user_password>
+magistrala-cli users token <user_email> <user_password>
 ```
 
 #### Get User Token From Refresh Token
 
 ```bash
-mainflux-cli users refreshtoken <refresh_token>
+magistrala-cli users refreshtoken <refresh_token>
 ```
 
 #### Get User
 
 ```bash
-mainflux-cli users get <user_id> <user_token>
+magistrala-cli users get <user_id> <user_token>
 ```
 
 #### Get Users
 
 ```bash
-mainflux-cli users get all <user_token>
+magistrala-cli users get all <user_token>
 ```
 
 #### Update User Metadata
 
 ```bash
-mainflux-cli users update <user_id> '{"name":"value1", "metadata":{"value2": "value3"}}' <user_token>
+magistrala-cli users update <user_id> '{"name":"value1", "metadata":{"value2": "value3"}}' <user_token>
 ```
 
 #### Update User Tags
 
 ```bash
-mainflux-cli users update tags <user_id> '["tag1", "tag2"]' <user_token>
+magistrala-cli users update tags <user_id> '["tag1", "tag2"]' <user_token>
 ```
 
 #### Update User Identity
 
 ```bash
-mainflux-cli users update identity <user_id> <user_email> <user_token>
+magistrala-cli users update identity <user_id> <user_email> <user_token>
 ```
 
 #### Update User Owner
 
 ```bash
-mainflux-cli users update owner <user_id> <owner_id> <user_token>
+magistrala-cli users update owner <user_id> <owner_id> <user_token>
 ```
 
 #### Update User Password
 
 ```bash
-mainflux-cli users password <old_password> <password> <user_token>
+magistrala-cli users password <old_password> <password> <user_token>
 ```
 
 #### Enable User
 
 ```bash
-mainflux-cli users enable <user_id> <user_token>
+magistrala-cli users enable <user_id> <user_token>
 ```
 
 #### Disable User
 
 ```bash
-mainflux-cli users disable <user_id> <user_token>
+magistrala-cli users disable <user_id> <user_token>
 ```
 
 #### Get Profile of the User identified by the token
 
 ```bash
-mainflux-cli users profile <user_token>
+magistrala-cli users profile <user_token>
 ```
 
 ### Groups management
@@ -242,61 +253,61 @@ mainflux-cli users profile <user_token>
 #### Create Group
 
 ```bash
-mainflux-cli groups create '{"name":"<group_name>","description":"<description>","parentID":"<parent_id>","metadata":"<metadata>"}' <user_token>
+magistrala-cli groups create '{"name":"<group_name>","description":"<description>","parentID":"<parent_id>","metadata":"<metadata>"}' <user_token>
 ```
 
 #### Get Group
 
 ```bash
-mainflux-cli groups get <group_id> <user_token>
+magistrala-cli groups get <group_id> <user_token>
 ```
 
 #### Get Groups
 
 ```bash
-mainflux-cli groups get all <user_token>
+magistrala-cli groups get all <user_token>
 ```
 
 #### Update Group
 
 ```bash
-mainflux-cli groups update '{"id":"<group_id>","name":"<group_name>","description":"<description>","metadata":"<metadata>"}' <user_token>
+magistrala-cli groups update '{"id":"<group_id>","name":"<group_name>","description":"<description>","metadata":"<metadata>"}' <user_token>
 ```
 
 #### Get Group Members
 
 ```bash
-mainflux-cli groups members <group_id> <user_token>
+magistrala-cli groups members <group_id> <user_token>
 ```
 
 #### Get Memberships
 
 ```bash
-mainflux-cli groups membership <member_id> <user_token>
+magistrala-cli groups membership <member_id> <user_token>
 ```
 
 #### Assign Members to Group
 
 ```bash
-mainflux-cli groups assign <member_ids> <member_type> <group_id> <user_token>
+magistrala-cli groups assign <member_ids> <member_type> <group_id> <user_token>
 ```
 
 #### Unassign Members to Group
 
 ```bash
-mainflux-cli groups unassign <member_ids> <group_id>  <user_token>
+magistrala-cli groups unassign <member_ids> <group_id>  <user_token>
 ```
 
 #### Enable Group
 
 ```bash
-mainflux-cli groups enable <group_id> <user_token>
+magistrala-cli groups enable <group_id> <user_token>
 ```
 
 #### Disable Group
 
 ```bash
-mainflux-cli groups disable <group_id> <user_token>
+magistrala-cli groups disable <group_id> <user_token>
 ```
 
 ### Things management
@@ -304,19 +315,19 @@ mainflux-cli groups disable <group_id> <user_token>
 #### Create Thing
 
 ```bash
-mainflux-cli things create '{"name":"myThing"}' <user_token>
+magistrala-cli things create '{"name":"myThing"}' <user_token>
 ```
 
 #### Create Thing with metadata
 
 ```bash
-mainflux-cli things create '{"name":"myThing", "metadata": {"key1":"value1"}}' <user_token>
+magistrala-cli things create '{"name":"myThing", "metadata": {"key1":"value1"}}' <user_token>
 ```
 
 #### Bulk Provision Things
 
 ```bash
-mainflux-cli provision things <file> <user_token>
+magistrala-cli provision things <file> <user_token>
 ```
 
 - `file` - A CSV or JSON file containing thing names (must have extension `.csv` or `.json`)
@@ -360,67 +371,67 @@ With JSON you can be able to specify more fields of the channels you want to cre
 #### Update Thing
 
 ```bash
-mainflux-cli things update <thing_id> '{"name":"value1", "metadata":{"key1": "value2"}}' <user_token>
+magistrala-cli things update <thing_id> '{"name":"value1", "metadata":{"key1": "value2"}}' <user_token>
 ```
 
 #### Update Thing Tags
 
 ```bash
-mainflux-cli things update tags <thing_id> '["tag1", "tag2"]' <user_token>
+magistrala-cli things update tags <thing_id> '["tag1", "tag2"]' <user_token>
 ```
 
 #### Update Thing Owner
 
 ```bash
-mainflux-cli things update owner <thing_id> <owner_id> <user_token>
+magistrala-cli things update owner <thing_id> <owner_id> <user_token>
 ```
 
 #### Update Thing Secret
 
 ```bash
-mainflux-cli things update secret <thing_id> <secet> <user_token>
+magistrala-cli things update secret <thing_id> <secet> <user_token>
 ```
 
 #### Identify Thing
 
 ```bash
-mainflux-cli things identify <thing_secret>
+magistrala-cli things identify <thing_secret>
 ```
 
 #### Enable Thing
 
 ```bash
-mainflux-cli things enable <thing_id> <user_token>
+magistrala-cli things enable <thing_id> <user_token>
 ```
 
 #### Disable Thing
 
 ```bash
-mainflux-cli things disable <thing_id> <user_token>
+magistrala-cli things disable <thing_id> <user_token>
 ```
 
 #### Get Thing
 
 ```bash
-mainflux-cli things get <thing_id> <user_token>
+magistrala-cli things get <thing_id> <user_token>
 ```
 
 #### Get Things
 
 ```bash
-mainflux-cli things get all <user_token>
+magistrala-cli things get all <user_token>
 ```
 
 #### Get a subset list of provisioned Things
 
 ```bash
-mainflux-cli things get all --offset=1 --limit=5 <user_token>
+magistrala-cli things get all --offset=1 --limit=5 <user_token>
 ```
 
 #### Share Thing
 
 ```bash
-mainflux-cli things share <channel_id> <user_id> <allowed_actions> <user_token>
+magistrala-cli things share <channel_id> <user_id> <allowed_actions> <user_token>
 ```
 
 ### Channels management
@@ -428,13 +439,13 @@ mainflux-cli things share <channel_id> <user_id> <allowed_actions> <user_token>
 #### Create Channel
 
 ```bash
-mainflux-cli channels create '{"name":"myChannel"}' <user_token>
+magistrala-cli channels create '{"name":"myChannel"}' <user_token>
 ```
 
 #### Bulk Provision Channels
 
 ```bash
-mainflux-cli provision channels <file> <user_token>
+magistrala-cli provision channels <file> <user_token>
 ```
 
 - `file` - A CSV or JSON file containing channel names (must have extension `.csv` or `.json`)
@@ -477,49 +488,49 @@ With JSON you can be able to specify more fields of the channels you want to cre
 #### Update Channel
 
 ```bash
-mainflux-cli channels update '{"id":"<channel_id>","name":"myNewName"}' <user_token>
+magistrala-cli channels update '{"id":"<channel_id>","name":"myNewName"}' <user_token>
 ```
 
 #### Enable Channel
 
 ```bash
-mainflux-cli channels enable <channel_id> <user_token>
+magistrala-cli channels enable <channel_id> <user_token>
 ```
 
 #### Disable Channel
 
 ```bash
-mainflux-cli channels disable <channel_id> <user_token>
+magistrala-cli channels disable <channel_id> <user_token>
 ```
 
 #### Get Channel
 
 ```bash
-mainflux-cli channels get <channel_id> <user_token>
+magistrala-cli channels get <channel_id> <user_token>
 ```
 
 #### Get Channels
 
 ```bash
-mainflux-cli channels get all <user_token>
+magistrala-cli channels get all <user_token>
 ```
 
 #### Get a subset list of provisioned Channels
 
 ```bash
-mainflux-cli channels get all --offset=1 --limit=5 <user_token>
+magistrala-cli channels get all --offset=1 --limit=5 <user_token>
 ```
 
 #### Connect Thing to Channel
 
 ```bash
-mainflux-cli things connect <thing_id> <channel_id> <user_token>
+magistrala-cli things connect <thing_id> <channel_id> <user_token>
 ```
 
 #### Bulk Connect Things to Channels
 
 ```bash
-mainflux-cli provision connect <file> <user_token>
+magistrala-cli provision connect <file> <user_token>
 ```
 
 - `file` - A CSV or JSON file containing thing and channel ids (must have extension `.csv` or `.json`)
@@ -546,19 +557,19 @@ A comparable JSON file would be
 #### Disconnect Thing from Channel
 
 ```bash
-mainflux-cli things disconnect <thing_id> <channel_id> <user_token>
+magistrala-cli things disconnect <thing_id> <channel_id> <user_token>
 ```
 
 #### Get a subset list of Channels connected to Thing
 
 ```bash
-mainflux-cli things connections <thing_id> <user_token>
+magistrala-cli things connections <thing_id> <user_token>
 ```
 
 #### Get a subset list of Things connected to Channel
 
 ```bash
-mainflux-cli channels connections <channel_id> <user_token>
+magistrala-cli channels connections <channel_id> <user_token>
 ```
 
 ### Messaging
@@ -566,13 +577,13 @@ mainflux-cli channels connections <channel_id> <user_token>
 #### Send a message over HTTP
 
 ```bash
-mainflux-cli messages send <channel_id> '[{"bn":"Dev1","n":"temp","v":20}, {"n":"hum","v":40}, {"bn":"Dev2", "n":"temp","v":20}, {"n":"hum","v":40}]' <thing_secret>
+magistrala-cli messages send <channel_id> '[{"bn":"Dev1","n":"temp","v":20}, {"n":"hum","v":40}, {"bn":"Dev2", "n":"temp","v":20}, {"n":"hum","v":40}]' <thing_secret>
 ```
 
 #### Read messages over HTTP
 
 ```bash
-mainflux-cli messages read <channel_id> <user_token> -R <reader_url>
+magistrala-cli messages read <channel_id> <user_token> -R <reader_url>
 ```
 
 ### Bootstrap
@@ -580,74 +591,74 @@ mainflux-cli messages read <channel_id> <user_token> -R <reader_url>
 #### Add configuration
 
 ```bash
-mainflux-cli bootstrap create '{"external_id": "myExtID", "external_key": "myExtKey", "name": "myName", "content": "myContent"}' <user_token> -b <bootstrap-url>
+magistrala-cli bootstrap create '{"external_id": "myExtID", "external_key": "myExtKey", "name": "myName", "content": "myContent"}' <user_token> -b <bootstrap-url>
 ```
 
 #### View configuration
 
 ```bash
-mainflux-cli bootstrap get <thing_id> <user_token> -b <bootstrap-url>
+magistrala-cli bootstrap get <thing_id> <user_token> -b <bootstrap-url>
 ```
 
 #### Update configuration
 
 ```bash
-mainflux-cli bootstrap update '{"mainflux_id":"<thing_id>", "name": "newName", "content": "newContent"}' <user_token> -b <bootstrap-url>
+magistrala-cli bootstrap update '{"magistrala_id":"<thing_id>", "name": "newName", "content": "newContent"}' <user_token> -b <bootstrap-url>
 ```
 
 #### Remove configuration
 
 ```bash
-mainflux-cli bootstrap remove <thing_id> <user_token> -b <bootstrap-url>
+magistrala-cli bootstrap remove <thing_id> <user_token> -b <bootstrap-url>
 ```
 
 #### Bootstrap configuration
 
 ```bash
-mainflux-cli bootstrap bootstrap <external_id> <external_key> -b <bootstrap-url>
+magistrala-cli bootstrap bootstrap <external_id> <external_key> -b <bootstrap-url>
 ```
 
 ## Config
+
 Magistrala CLI tool supports configuration files that contain some of the basic settings so you don't have to specify them through flags. Once you set the settings, they remain stored locally.
 
 ```bash
-mainflux-cli config <parameter> <value>
+magistrala-cli config <parameter> <value>
 ```
 
 Response should look like this:
 
 ```bash
-  ok 
+  ok
 ```
 
 This command is used to set the flags to be used by CLI in a local TOML file. The default location of the TOML file is in the same directory as the CLI binary. To change the location of the TOML file you can run the command:
 
 ```
-  mainflux-cli config <parameter> <value> -c "cli/file_name.toml"
+  magistrala-cli config <parameter> <value> -c "cli/file_name.toml"
 ```
-
 
 The possible parameters that can be set using the config command are:
 
-| Flag                | Description                                          | Default                                |
-|---------------------|------------------------------------------------------|----------------------------------------|
-| bootstrap_url       | Bootstrap service URL                                | "http://localhost:9013"                |
-| certs_url           | Certs service URL                                    | "http://localhost:9019"                |
-| http_adapter_url    | HTTP adapter URL                                     | "http://localhost/http"                |
-| msg_content_type    | Message content type                                 | "application/senml+json"               |
-| reader_url          | Reader URL                                           | "http://localhost"                     |
-| things_url          | Things service URL                                   | "http://localhost:9000"                |
-| tls_verification    | Do not check for TLS cert                            |                                        |
-| users_url           | Users service URL                                    | "http://localhost:9002"                |
-| state               | Bootstrap state query parameter                      |                                        |
-| status              | User status query parameter                          |                                        |
-| topic               | Subscription topic query parameter                   |                                        |
-| contact             | Subscription contact query parameter                 |                                        |
-| email               | User email query parameter                           |                                        |
-| limit               | Limit query parameter                                | 10                                     |
-| metadata            | Metadata query parameter                             |                                        |
-| name                | Name query parameter                                 |                                        |
-| offset              | Offset query parameter                               |                                        |
-| raw_output          | Enables raw output mode for easier parsing of output |                                        |
+| Flag             | Description                                          | Default                  |
+| ---------------- | ---------------------------------------------------- | ------------------------ |
+| bootstrap_url    | Bootstrap service URL                                | "http://localhost:9013"  |
+| certs_url        | Certs service URL                                    | "http://localhost:9019"  |
+| http_adapter_url | HTTP adapter URL                                     | "http://localhost/http"  |
+| msg_content_type | Message content type                                 | "application/senml+json" |
+| reader_url       | Reader URL                                           | "http://localhost"       |
+| things_url       | Things service URL                                   | "http://localhost:9000"  |
+| tls_verification | Do not check for TLS cert                            |                          |
+| users_url        | Users service URL                                    | "http://localhost:9002"  |
+| state            | Bootstrap state query parameter                      |                          |
+| status           | User status query parameter                          |                          |
+| topic            | Subscription topic query parameter                   |                          |
+| contact          | Subscription contact query parameter                 |                          |
+| email            | User email query parameter                           |                          |
+| limit            | Limit query parameter                                | 10                       |
+| metadata         | Metadata query parameter                             |                          |
+| name             | Name query parameter                                 |                          |
+| offset           | Offset query parameter                               |                          |
+| raw_output       | Enables raw output mode for easier parsing of output |                          |
 
 [releases]: https://github.com/absmach/magistrala/releases
