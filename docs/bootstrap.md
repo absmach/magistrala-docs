@@ -118,6 +118,137 @@ curl -s -S -i -X PUT -H "Authorization: Bearer <user_token>" -H "Content-Type: a
 
 In order to disconnect, the same request should be sent with the value of `state` set to 0.
 
+### Using curl request for secure bootstrap configuration
+
+- *Encrypt the external key.*
+
+First, encrypt the external key of your thing using AES encryption. The encryption key is specified by the `MG_BOOTSTRAP_ENCRYPT_KEY` environment variable. Use a library or utility that supports AES encryption to do this. Here's an example of how to encrypt using Go:
+
+```go
+package main
+
+import (
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
+	"fmt"
+	"io"
+)
+
+type reader struct {
+	encKey []byte
+}
+
+func (r reader) encrypt(in []byte) ([]byte, error) {
+	block, err := aes.NewCipher(r.encKey)
+	if err != nil {
+		return nil, err
+	}
+	ciphertext := make([]byte, aes.BlockSize+len(in))
+	iv := ciphertext[:aes.BlockSize]
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+		return nil, err
+	}
+	stream := cipher.NewCFBEncrypter(block, iv)
+	stream.XORKeyStream(ciphertext[aes.BlockSize:], in)
+	return ciphertext, nil
+}
+
+func main() {
+	data := []byte("<external_key>")
+
+	r := reader{
+		encKey: []byte("<crypto_key>"),
+	}
+
+	encryptedData, err := r.encrypt(data)
+	if err != nil {
+		fmt.Println("Error encrypting data:", err)
+		return
+	}
+
+	fmt.Printf("%x\n", encryptedData)
+}
+```
+
+Replace `<external_key>` and `<crypto_key>` with the thing's external key and `MG_BOOTSTRAP_ENCRYPT_KEY` respectively.
+
+- *Make a request to the bootstrap service.*
+
+
+Once the key is encrypted, make a request to the Bootstrap service. Here's how to do this using `curl`:
+
+```bash
+curl --location 'http://localhost:9013/things/bootstrap/secure/<external_id>' \
+--header 'Accept: application/json' \
+--header 'authorization: Thing <encyrpted_external_key>' --output -
+```
+
+The response from the Bootstrap service will be in encrypted binary format. Store this response in a file for later use.
+
+```bash
+curl --location 'http://localhost:9013/things/bootstrap/secure/<external_id>' \
+--header 'Accept: application/json' \
+--header 'authorization: Thing <encyrpted_external_key>' --output ~/<desired\>/<path\>/<file_name.txt>
+```
+
+- *Decrypt the response*
+
+Finally, decrypt the response using a function. Here's an example of how to do this using Go:
+
+```go
+package main
+
+import (
+	"crypto/aes"
+	"crypto/cipher"
+	"log"
+	"os"
+)
+
+func main() {
+	encodedData, err := os.ReadFile("~/<desired\>/<path\>/<enc_file_name.txt>")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	key := []byte("<crypto_key>")
+
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if len(encodedData) < aes.BlockSize {
+		log.Fatal("ciphertext too short")
+	}
+
+	iv := encodedData[:aes.BlockSize]
+	encodedData = encodedData[aes.BlockSize:]
+	stream := cipher.NewCFBDecrypter(block, iv)
+	stream.XORKeyStream(encodedData, encodedData)
+
+	err = os.WriteFile("~/<desired\>/<path\>/<decry_file_name.txt>", encodedData, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Using Magistrala CLI for secure bootstrap configuration
+
+To use Magistrala CLI for the secure bootstrap configuration, use the following command:
+
+```bash
+magistrala_cli bootstrap secure <external_id> <external_key> <crypto_key>
+```
+for example
+
+```bash
+cli bootstrap bootstrap secure '09:6:0:sb:sa' 'key' 'v7aT0HGxJxt2gULzr3RHwf4WIf6DusPp'
+```
+
+
 For more information about the Bootstrap service API, please check out the [API documentation][api-docs].
 
 [image-1]: img/bootstrap/1.png
