@@ -12,7 +12,7 @@ edit_uri: ""
 theme:
   name: material
   logo: img/logo.png
-  favicon: img/logo.png
+  favicon: img/favicon.png
   icon:
     repo: fontawesome/brands/github
 
