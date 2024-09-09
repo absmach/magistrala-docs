@@ -1,153 +1,347 @@
 # Kubernetes
 
-Magistrala can be easily deployed on Kubernetes platform by using Helm Chart from official [Magistrala DevOps GitHub repository][devops-repo].
+Magistrala can be easily deployed on the Kubernetes platform using Helm Charts from the official [Magistrala DevOps GitHub repository](https://github.com/absmach/devops).
 
 ## Prerequisites
 
-- Kubernetes
-- kubectl
-- Helm v3
-- Stable Helm repository
-- Nginx Ingress Controller
+### 1. Install Docker
 
-### Kubernetes
+K3d requires Docker to run Kubernetes clusters inside Docker containers. Follow the official [Docker installation guide](https://docs.docker.com/get-docker/) to install Docker.
 
-Kubernetes is an open source container orchestration engine for automating deployment, scaling, and management of containerised applications. Install it locally or have access to a cluster. Follow [these instructions][kubernetes-setup] if you need more information.
+Once installed, verify the installation:
 
-### Kubectl
+```bash
+docker --version
+```
 
-Kubectl is official Kubernetes command line client. Follow [these instructions][kubectl-setup] to install it.
+---
 
-Regarding the cluster control with `kubectl`, default config `.yaml` file should be `~/.kube/config`.
+### 2. Install Kubernetes via K3d
 
-### Helm v3
+K3d is a lightweight Kubernetes distribution that runs inside Docker, ideal for local development.
 
-Helm is the package manager for Kubernetes. Follow [these instructions][helm-setup] to install it.
+#### Steps to install K3d:
 
-### Stable Helm Repository
+```bash
+curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+```
 
-Add a stable chart repository:
+For more information on K3d, refer to the official [K3d documentation](https://k3d.io/).
+
+### 3. Install kubectl
+
+`kubectl` is the command-line tool used to interact with your Kubernetes cluster.
+
+#### Steps to install kubectl:
+
+```bash
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+```
+
+Verify the installation:
+
+```bash
+kubectl version --client
+```
+
+---
+
+### 4. Install Helm v3
+
+Helm is a package manager for Kubernetes, simplifying application installation and management.
+
+#### Steps to install Helm:
+
+```bash
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+```
+
+Verify the installation:
+
+```bash
+helm version
+```
+
+---
+
+### 5. Add Helm Repositories
+
+#### Add Stable Helm Repository:
+
+The **Helm stable repository** contains Helm charts that you can use to install applications on Kubernetes.
 
 ```bash
 helm repo add stable https://charts.helm.sh/stable
+helm repo update
 ```
 
-Add a bitnami chart repository:
+#### Add Bitnami Helm Repository:
+
+Bitnami offers a collection of popular Helm charts for various applications.
 
 ```bash
 helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
 ```
 
-### Nginx Ingress Controller
+---
 
-Follow [these instructions][nginx-ingress] to install it or:
+### 6. Install Nginx Ingress Controller
+
+The Nginx Ingress Controller manages external access to services within your Kubernetes cluster.
+
+#### Install Nginx Ingress Controller using Helm:
 
 ```bash
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+
+kubectl create namespace ingress-nginx
+
 helm install ingress-nginx ingress-nginx/ingress-nginx --version 3.26.0 --create-namespace -n ingress-nginx
 ```
 
-## Deploying Magistrala
+Verify the installation:
 
-Get Helm charts from [Magistrala DevOps GitHub repository][devops-repo]:
+```bash
+kubectl get pods -n ingress-nginx
+```
+
+---
+
+## Deploying Magistrala (Manual Local Deployment)
+
+This method involves **manually deploying Magistrala** by cloning the Helm chart repository to your local machine, making any necessary customizations, and installing the chart from the local directory.
+
+#### Use Case:
+
+This approach is useful if you want to:
+
+- Directly interact with the chart source files.
+- Modify the chart before installation.
+- Perform development or testing on the chart.
+
+### Steps:
+
+#### 1. Clone the Helm Chart Repository:
 
 ```bash
 git clone https://github.com/absmach/devops.git
-cd devops/charts/mainflux
+cd devops/charts/magistrala
 ```
 
-Update the on-disk dependencies to mirror Chart.yaml:
+#### 2. Update Dependencies:
+
+Update the on-disk dependencies to match the `Chart.yaml` file:
 
 ```bash
 helm dependency update
 ```
 
-If you didn't already have namespace created you should do it with:
+If you encounter errors related to missing repositories, add the required repositories:
+
+```bash
+helm repo add nats https://nats-io.github.io/k8s/helm/charts/
+helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
+helm repo add hashicorp https://helm.releases.hashicorp.com
+helm repo update
+```
+
+Run `helm dependency update` again after adding the repositories.
+
+---
+
+### 3. Create a Namespace (if needed):
 
 ```bash
 kubectl create namespace mg
 ```
 
-Deploying release named `magistrala` in namespace named `mg` is done with just:
+---
+
+### 4. Deploy Magistrala:
+
+Deploy the Magistrala Helm chart into the `mg` namespace:
 
 ```bash
 helm install magistrala . -n mg
 ```
 
-Magistrala is now deployed on your Kubernetes.
+If you encounter an error related to snippet annotations in Nginx, enable them with:
 
-### Customizing Installation
+```bash
+helm upgrade ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --set controller.allowSnippetAnnotations=true
+```
 
-You can override default values while installing with `--set` option. For example, if you want to specify ingress hostname and pull `latest` tag of `users` image:
+Ensure you have the Nginx Ingress repository added:
+
+```bash
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+```
+
+### 5. Verifying the Deployment
+
+After deploying Magistrala, verify the services and pods using `kubectl` commands:
+
+**List all pods:**
+
+```bash
+kubectl get pods -n mg
+```
+
+**List all services:**
+
+```bash
+kubectl get services -n mg
+```
+
+**View logs of a pod:**
+
+```bash
+kubectl logs <pod-name> -n mg
+```
+
+---
+
+## Installing the Magistrala Chart (From Published Helm Repository)
+
+This method is the **standard installation** approach, where you install the Magistrala chart directly from a Helm repository. This is quicker and ideal for end-users who do not need to modify the chart manually.
+
+#### Use Case:
+
+This approach is suitable for:
+
+- End-users who simply want to install Magistrala without modifying the source code.
+- Production environments where the chart is deployed directly from a hosted Helm repository.
+
+### Steps:
+
+#### 1. Add the Magistrala Helm Repository:
+
+The Helm charts are published via GitHub Pages. Add the repository to your Helm configuration:
+
+```bash
+helm repo add devops-charts https://absmach.github.io/devops/
+helm repo update
+```
+
+---
+
+#### 2. Install the Magistrala Chart:
+
+After adding the repository, install the Magistrala chart using Helm:
+
+```bash
+helm install <release-name> devops-charts/magistrala
+```
+
+Replace `<release-name>` with your desired release name.
+
+---
+
+#### 3. Upgrading the Magistrala Chart:
+
+To upgrade the chart to a new version or update configurations:
+
+```bash
+helm upgrade <release-name> devops-charts/magistrala
+```
+
+This command upgrades the existing release while retaining custom settings.
+
+---
+
+#### 4. Uninstalling Magistrala:
+
+To uninstall the Magistrala release:
+
+```bash
+helm uninstall <release-name> -n mg
+```
+
+This will remove the Magistrala release from the `mg` namespace.
+
+---
+
+### Customizing Magistrala Installation:
+
+You can customize Magistrala by overriding default values during installation. For example, if you want to set a custom hostname for the ingress (like `example.com`) and ensure you're using the latest version of the `users` image, you can do this during installation with the following command::
 
 ```bash
 helm install magistrala -n mg --set ingress.hostname='example.com' --set users.image.tag='latest'
 ```
 
-Or if release is already installed, you can update it:
+To update an existing installation with new settings:
 
 ```bash
 helm upgrade magistrala -n mg --set ingress.hostname='example.com' --set users.image.tag='latest'
 ```
 
-The following table lists the configurable parameters and their default values.
+You can easily customize Magistrala during installation by overriding the default settings using the `--set` option in Helm.
 
-| Parameter                          | Description                                                                                     | Default          |
-| ---------------------------------- | ----------------------------------------------------------------------------------------------- | ---------------- |
-| defaults.logLevel                  | Log level                                                                                       | debug            |
-| defaults.image.pullPolicy          | Docker Image Pull Policy                                                                        | IfNotPresent     |
-| defaults.image.repository          | Docker Image Repository                                                                         | magistrala       |
-| defaults.image.tag                 | Docker Image Tag                                                                                | 0.13.0           |
-| defaults.replicaCount              | Replicas of MQTT adapter, Things, Envoy and Authn                                               | 3                |
-| defaults.messageBrokerUrl          | Message broker URL, the default is NATS Url                                                     | nats://nats:4222 |
-| defaults.jaegerPort                | Jaeger port                                                                                     | 6831             |
-| nginxInternal.mtls.tls             | TLS secret which contains the server cert/key                                                   |                  |
-| nginxInternal.mtls.intermediateCrt | Generic secret which contains the intermediate cert used to verify clients                      |                  |
-| ingress.enabled                    | Should the Nginx Ingress be created                                                             | true             |
-| ingress.hostname                   | Hostname for the Nginx Ingress                                                                  |                  |
-| ingress.tls.hostname               | Hostname of the Nginx Ingress certificate                                                       |                  |
-| ingress.tls.secret                 | TLS secret for the Nginx Ingress                                                                |                  |
-| messageBroker.maxPayload           | Maximum payload size in bytes that the Message Broker server, if it is NATS, server will accept | 268435456        |
-| messageBroker.replicaCount         | Message Broker replicas                                                                         | 3                |
-| users.dbPort                       | Users service DB port                                                                           | 5432             |
-| users.httpPort                     | Users service HTTP port                                                                         | 9000             |
-| things.dbPort                      | Things service DB port                                                                          | 5432             |
-| things.httpPort                    | Things service HTTP port                                                                        | 9001             |
-| things.authGrpcPort                | Things service Auth gRPC port                                                                   | 7000             |
-| things.authHttpPort                | Things service Auth HTTP port                                                                   | 9002             |
-| things.redisESPort                 | Things service Redis Event Store port                                                           | 6379             |
-| things.redisCachePort              | Things service Redis Auth Cache port                                                            | 6379             |
-| adapter_http.httpPort              | HTTP adapter port                                                                               | 8185             |
-| mqtt.proxy.mqttPort                | MQTT adapter proxy port                                                                         | 1884             |
-| mqtt.proxy.wsPort                  | MQTT adapter proxy WS port                                                                      | 8081             |
-| mqtt.broker.mqttPort               | MQTT adapter broker port                                                                        | 1883             |
-| mqtt.broker.wsPort                 | MQTT adapter broker WS port                                                                     | 8080             |
-| mqtt.broker.persistentVolume.size  | MQTT adapter broker data Persistent Volume size                                                 | 5Gi              |
-| mqtt.redisESPort                   | MQTT adapter Event Store port                                                                   | 6379             |
-| mqtt.redisCachePort                | MQTT adapter Redis Auth Cache port                                                              | 6379             |
-| adapter_coap.udpPort               | CoAP adapter UDP port                                                                           | 5683             |
-| ui.port                            | UI port                                                                                         | 3000             |
-| bootstrap.enabled                  | Enable bootstrap service                                                                        | false            |
-| bootstrap.dbPort                   | Bootstrap service DB port                                                                       | 5432             |
-| bootstrap.httpPort                 | Bootstrap service HTTP port                                                                     | 9013             |
-| bootstrap.redisESPort              | Bootstrap service Redis Event Store port                                                        | 6379             |
-| influxdb.enabled                   | Enable InfluxDB reader & writer                                                                 | false            |
-| influxdb.dbPort                    | InfluxDB port                                                                                   | 8086             |
-| influxdb.writer.httpPort           | InfluxDB writer HTTP port                                                                       | 9006             |
-| influxdb.reader.httpPort           | InfluxDB reader HTTP port                                                                       | 9005             |
-| adapter_opcua.enabled              | Enable OPC-UA adapter                                                                           | false            |
-| adapter_opcua.httpPort             | OPC-UA adapter HTTP port                                                                        | 8188             |
-| adapter_opcua.redisRouteMapPort    | OPC-UA adapter Redis Auth Cache port                                                            | 6379             |
-| adapter_lora.enabled               | Enable LoRa adapter                                                                             | false            |
-| adapter_lora.httpPort              | LoRa adapter HTTP port                                                                          | 8187             |
-| adapter_lora.redisRouteMapPort     | LoRa adapter Redis Auth Cache port                                                              | 6379             |
-| twins.enabled                      | Enable twins service                                                                            | false            |
-| twins.dbPort                       | Twins service DB port                                                                           | 27017            |
-| twins.httpPort                     | Twins service HTTP port                                                                         | 9021             |
-| twins.redisCachePort               | Twins service Redis Cache port                                                                  | 6379             |
+For example, if you want to set a custom hostname for the ingress (like `example.com`) and ensure you're using the latest version of the `users` image, you can do this during installation with the following command:
 
-All Magistrala services (both core and add-ons) can have their `logLevel`, `image.pullPolicy`, `image.repository` and `image.tag` overridden.
+```bash
+helm install magistrala -n mg --set ingress.hostname='example.com' --set users.image.tag='latest'
+```
 
-Magistrala Core is a minimalistic set of required Magistrala services. They are all installed by default:
+If Magistrala is already installed and you want to update it with new settings (for example, changing the ingress hostname or image tag), you can use the `helm upgrade` command:
+
+```bash
+helm upgrade magistrala -n mg --set ingress.hostname='example.com' --set users.image.tag='latest'
+```
+
+This will apply your changes to the existing installation. The following table lists the configurable parameters and their default values.
+
+| Parameter                          | Description                                                                                     | Default              |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------- | -------------------- |
+| defaults.logLevel                  | Log level                                                                                       | info                 |
+| defaults.image.pullPolicy          | Docker Image Pull Policy                                                                        | IfNotPresent         |
+| defaults.image.rootRepository      | Docker Image Root Repository                                                                    | magistrala           |
+| defaults.image.repository          | Docker Image Repository                                                                         | magistrala           |
+| defaults.image.tag                 | Docker Image Tag                                                                                | latest               |
+| defaults.replicaCount              | Replicas of MQTT adapter, Things, Envoy and Authn                                               | 3                    |
+| defaults.eventStreamURL            | Message broker URL, the default is NATS Url                                                     | magistrala-nats:4222 |
+| defaults.jaegerCollectorPort       | Jaeger port                                                                                     | 4318                 |
+| defaults.jaegerTraceRatio          | jaegerTraceRatio                                                                                | 10                   |
+| nginxInternal.image.pullPolicy     | Docker Image Pull Policy                                                                        | IfNotPresent         |
+| nginxInternal.image.repository     | Docker Image Repository                                                                         | nginx                |
+| nginxInternal.image.tag            | Docker Image Tag                                                                                | 1.19.1-alpine        |
+| nginxInternal.mtls.tls             | TLS secret which contains the server cert/key                                                   |                      |
+| nginxInternal.mtls.intermediateCrt | Generic secret which contains the intermediate cert used to verify clients                      |                      |
+| ingress.enabled                    | Should the Nginx Ingress be created                                                             | true                 |
+| ingress.hostname                   | Hostname for the Nginx Ingress                                                                  |                      |
+| ingress.tls.hostname               | Hostname of the Nginx Ingress certificate                                                       |                      |
+| ingress.tls.secret                 | TLS secret for the Nginx Ingress                                                                |                      |
+| messageBroker.maxPayload           | Maximum payload size in bytes that the Message Broker server, if it is NATS, server will accept | 2Gi                  |
+| messageBroker.replicaCount         | Message Broker replicas                                                                         | 3                    |
+| users.dbPort                       | Users service DB port                                                                           | 5432                 |
+| users.httpPort                     | Users service HTTP port                                                                         | 9000                 |
+| things.dbPort                      | Things service DB port                                                                          | 5432                 |
+| things.httpPort                    | Things service HTTP port                                                                        | 9000                 |
+| things.authGrpcPort                | Things service Auth gRPC port                                                                   | 7000                 |
+| things.authHttpPort                | Things service Auth HTTP port                                                                   | 9001                 |
+| things.redisESPort                 | Things service Redis Event Store port                                                           | 6379                 |
+| things.redisCachePort              | Things service Redis Auth Cache port                                                            | 6379                 |
+| adapter_http.httpPort              | HTTP adapter port                                                                               | 8008                 |
+| mqtt.proxy.mqttPort                | MQTT adapter proxy port                                                                         | 1884                 |
+| mqtt.proxy.wsPort                  | MQTT adapter proxy WS port                                                                      | 8081                 |
+| mqtt.broker.mqttPort               | MQTT adapter broker port                                                                        | 1883                 |
+| mqtt.broker.wsPort                 | MQTT adapter broker WS port                                                                     | 8080                 |
+| mqtt.broker.persistentVolume.size  | MQTT adapter broker data Persistent Volume size                                                 | 5Gi                  |
+| mqtt.redisESPort                   | MQTT adapter Event Store port                                                                   | 6379                 |
+| mqtt.redisCachePort                | MQTT adapter Redis Auth Cache port                                                              | 6379                 |
+| adapter_coap.udpPort               | CoAP adapter UDP port                                                                           | 5683                 |
+| ui.port                            | UI port                                                                                         | 3000                 |
+| bootstrap.enabled                  | Enable bootstrap service                                                                        | true                 |
+| bootstrap.dbPort                   | Bootstrap service DB port                                                                       | 5432                 |
+| bootstrap.httpPort                 | Bootstrap service HTTP port                                                                     | 9013                 |
+| bootstrap.redisESPort              | Bootstrap service Redis Event Store port                                                        | 6379                 |
+
+#### Magistrala Core
+
+The Magistrala Core includes the essential services that are installed by default:
 
 - authn
 - users
@@ -157,8 +351,17 @@ Magistrala Core is a minimalistic set of required Magistrala services. They are 
 - adapter_coap
 - ui
 
-Magistrala Add-ons are optional services that are disabled by default. Find in Configuration table parameters for enabling them, i.e. to enable influxdb reader & writer you should run `helm install` with `--set influxdb=true`.
-List of add-ons services in charts:
+These are the minimum required services to run Magistrala.
+
+#### Magistrala Add-ons
+
+Magistrala Add-ons are optional services that are not installed by default. To enable an add-on, you need to specify it during installation. For example, to enable the InfluxDB reader and writer, you would use the following command:
+
+```bash
+helm install magistrala . -n mg --set influxdb=true
+```
+
+Here’s a list of available add-ons:
 
 - bootstrap
 - influxdb.writer
@@ -167,15 +370,27 @@ List of add-ons services in charts:
 - adapter_lora
 - twins
 
-By default scale of MQTT adapter, Things, Envoy, Authn and the Message Broker will be set to 3. It's recommended that you set this values to number of your nodes in Kubernetes cluster, i.e. `--set defaults.replicaCount=3 --set messageBroker.replicaCount=3`
+#### Scaling Services
+
+By default, the MQTT adapter, Things, Envoy, Authn, and the Message Broker services are set to scale with a replica count of 3. It’s recommended to set these values according to the number of nodes in your Kubernetes cluster. For example, you can adjust the replica count with the following command:
+
+```bash
+helm install magistrala . -n mg --set defaults.replicaCount=3 --set messageBroker.replicaCount=3
+```
+
+This ensures that your services scale appropriately for your environment.
 
 ### Additional Steps to Configure Ingress Controller
 
-To send MQTT messages to your host on ports `1883` and `8883` some additional steps are required in configuring NGINX Ingress Controller.
+To allow your host to send MQTT messages on ports `1883` and `8883`, you need to configure the NGINX Ingress Controller with some additional steps.
 
-NGINX Ingress Controller uses ConfigMap to expose TCP and UDP services. That ConfigMaps are included in helm chart in [ingress.yaml][ingress-yaml] file assuming that location of ConfigMaps should be `ingress-nginx/tcp-services` and `ingress-nginx/udp-services`. These locations was set with `--tcp-services-configmap` and `--udp-services-configmap` flags and you can check it in deployment of Ingress Controller or add it there in [args section for nginx-ingress-controller][ingress-controller-args] if it's not already specified. This is explained in [NGINX Ingress documentation][ingress-controller-tcp-udp]
+#### Step 1: Configure TCP and UDP Services
 
-Also, these three ports need to be exposed in the Service defined for the Ingress. You can do that with command that edit your service:
+The NGINX Ingress Controller uses ConfigMaps to expose TCP and UDP services. The necessary ConfigMaps are included in the Helm chart in the [ingress.yaml][ingress-yaml] file assuming that location of ConfigMaps should be `ingress-nginx/tcp-services` and `ingress-nginx/udp-services`. These locations are set with `--tcp-services-configmap` and `--udp-services-configmap` flags and you can check it in deployment of Ingress Controller or add it there in [args section for nginx-ingress-controller][ingress-controller-args] if it's not already specified. This is explained in [NGINX Ingress documentation][ingress-controller-tcp-udp]
+
+#### Step 2: Expose the Required Ports in the Ingress Service
+
+You need to expose the MQTT ports (`1883` for unencrypted and `8883` for encrypted messages) and the CoAP port (`5683` for UDP) in the NGINX Ingress Controller service. You can do that with the following command that edits your service:
 
 `kubectl edit svc -n ingress-nginx nginx-ingress-ingress-nginx-controller`
 
@@ -196,9 +411,11 @@ and add in spec->ports:
   targetPort: 5683
 ```
 
-## TLS & mTLS
+## Configuring TLS & mTLS
 
-For testing purposes you can generate certificates as explained in detail in [authentication][authentication] chapter of this document. So, you can use [this script][makefile] and after replacing all `localhost` with your hostname, run:
+### Generating Certificates
+
+For testing purposes, you can generate the necessary TLS certificates. Detailed instructions are provided in the [authentication][authentication] chapter of this document. You can use [this script][makefile] to generate the certificates. After replacing all instances of `localhost` with your actual hostname, run the following commands:
 
 ```bash
 make ca
@@ -206,7 +423,7 @@ make server_cert
 make thing_cert KEY=<thing_secret>
 ```
 
-you should get in `certs` folder these certificates that we will use for setting up TLS and mTLS:
+This will generate the following certificates in the `certs` folder, which you’ll use to set up TLS and mTLS:
 
 ```bash
 ca.crt
@@ -218,7 +435,9 @@ thing.crt
 thing.key
 ```
 
-Create kubernetes secrets using those certificates with running commands from [secrets script][secrets]. In this example secrets are created in `mg` namespace:
+### Creating Kubernetes Secrets
+
+Create kubernetes secrets using those certificates by running commands from [secrets script][secrets]. In this example secrets are created in `mg` namespace:
 
 ```bash
 kubectl -n mg create secret tls magistrala-server --key magistrala-server.key --cert magistrala-server.crt
@@ -232,11 +451,23 @@ You can check if they are succesfully created:
 kubectl get secrets -n mg
 ```
 
-And now set ingress.hostname, ingress.tls.hostname to your hostname and ingress.tls.secret to `magistrala-server` and after helm update you have secured ingress with TLS certificate.
+### Configuring Ingress for TLS
+
+To secure your ingress with a TLS certificate, set the following values in your Helm configuration:
+
+- `ingress.hostname` to your hostname
+- `ingress.tls.hostname` to your hostname
+- `ingress.tls.secret` to `magistrala-server`
+
+After updating your Helm chart, your ingress will be secured with the TLS certificate.
+
+### Configuring Ingress for mTLS
 
 For mTLS you need to set `nginx_internal.mtls.tls="magistrala-server"` and `nginx_internal.mtls.intermediate_crt="ca"`.
 
-Now you can test sending mqtt message with this parameters:
+### Testing MQTT with mTLS
+
+You can test sending an MQTT message with the following command:
 
 ```bash
 mosquitto_pub -d -L mqtts://<thing_id>:<thing_secret>@example.com:8883/channels/<channel_id>/messages  --cert  thing.crt --key thing.key --cafile ca.crt  -m "test-message"
