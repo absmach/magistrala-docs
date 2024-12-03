@@ -1,6 +1,6 @@
 # Authorization
 
-Magistrala allows for fine-grained control over user permissions, taking into account hierarchical relationships between entities domains, groups, channels, and things. The structure and functionality of an authorization system implemented using [SpiceDB](https://github.com/authzed/spicedb) and its associated [schema language](https://authzed.com/docs/reference/schema-lang). `auth` service backed by SpiceDB manages permissions for users, domains, groups, channels, and things.
+SuperMQ allows for fine-grained control over user permissions, taking into account hierarchical relationships between entities domains, groups, channels, and things. The structure and functionality of an authorization system implemented using [SpiceDB](https://github.com/authzed/spicedb) and its associated [schema language](https://authzed.com/docs/reference/schema-lang). `auth` service backed by SpiceDB manages permissions for users, domains, groups, channels, and things.
 
 ## Domains
 
@@ -10,7 +10,7 @@ Domain contains **Things**, **Channels**, and **Groups**. A **User** can be a me
 
 #### Overview
 
-In Magistrala, **things**, **channels**, and **groups** are inherently associated with one particular domain. This means that every **group**, including its sub-groups, every **thing**, and every **channel** is owned by and belongs to a specific domain. Domain acts like a kind of namespace.
+In SuperMQ, **things**, **channels**, and **groups** are inherently associated with one particular domain. This means that every **group**, including its sub-groups, every **thing**, and every **channel** is owned by and belongs to a specific domain. Domain acts like a kind of namespace.
 
 ```mermaid
 graph TD
@@ -70,7 +70,7 @@ graph
 
 ##### Channel Thing Connect/Disconnect
 
-`Thing` represents a device (or an application) connected to Magistrala that uses the platform for message exchange with other `things`.
+`Thing` represents a device (or an application) connected to SuperMQ that uses the platform for message exchange with other `things`.
 
 `Channel` is a message conduit between things connected to it. It serves as a message topic that can be consumed by all of the things connected to it.
 Things can publish or subscribe to the channel.
@@ -111,7 +111,7 @@ graph
 
 ##### Channel Group Relation
 
-A group serves as a parent entity that can contain both groups and channels as children. Child groups, in turn, can consist of further child groups or channels, forming a nested hierarchy. Notably, channels, which are distinct entities, cannot have child channels but can connect to multiple things. The concept of parentage signifies the relationship between higher-level entities and their subordinate components. Ancestors in this system refer to entities higher up in the hierarchy, and while a child group can have multiple ancestors, a channel can only belong to a single parent group. This hierarchical arrangement provides a structured and organized framework for managing information within the Magistrala.
+A group serves as a parent entity that can contain both groups and channels as children. Child groups, in turn, can consist of further child groups or channels, forming a nested hierarchy. Notably, channels, which are distinct entities, cannot have child channels but can connect to multiple things. The concept of parentage signifies the relationship between higher-level entities and their subordinate components. Ancestors in this system refer to entities higher up in the hierarchy, and while a child group can have multiple ancestors, a channel can only belong to a single parent group. This hierarchical arrangement provides a structured and organized framework for managing information within the SuperMQ.
 
 Assigning a group as the parent of a channel can be achieved through the following request.
 
@@ -295,13 +295,13 @@ graph
 
 ## User Domain Relationship
 
-In Magistrala, when a new user registers, they don't automatically have access to domains.
+In SuperMQ, when a new user registers, they don't automatically have access to domains.
 The domain administrator must invite the user to the domain and assign them a role, such as administrator, editor, viewer, or member.
 
-Domain administrator can invite an existing user in Magistrala or invite new users to the domain by e-mail ID.
-After the user registers with Magistrala, the user can accept the invitations to the domain.
+Domain administrator can invite an existing user in SuperMQ or invite new users to the domain by e-mail ID.
+After the user registers with SuperMQ, the user can accept the invitations to the domain.
 
-All the users in Magistrala are allowed to create a new domain.
+All the users in SuperMQ are allowed to create a new domain.
 The user who creates a domain automatically becomes the domain administrator.
 
 Users can have any one of the following relations with a domain
@@ -353,7 +353,7 @@ Domain members will not have access by default to any of the entities in the Dom
 
 ![domain_users_member](diagrams/domain_users_member.drawio)
 
-After the user sign-up to Magistrala, the user is allowed to create a new domain or join an existing domain via invitations, without domain user could not create _things_, _channels_, _groups_.
+After the user sign-up to SuperMQ, the user is allowed to create a new domain or join an existing domain via invitations, without domain user could not create _things_, _channels_, _groups_.
 
 All operations, including creating, updating, and deleting things, channels, and groups, occur at the domain level. For instance, when a user creates a new thing using an access token, the newly created thing automatically becomes associated with a specific domain. The domain information is extracted from the access token. When the user obtains a token, the user should specify the domain for which they want to operate.
 
@@ -361,7 +361,7 @@ So to do operations on a domain, an access token for the domain is required. Thi
 
 ## Tokens and Domain Tokens
 
-JWT token are used in Magistrala for authentication and authorization. The JWT token has domain, exp, iat, iss, sub, type, and user fields.
+JWT token are used in SuperMQ for authentication and authorization. The JWT token has domain, exp, iat, iss, sub, type, and user fields.
 
 Example JWT Token:
 
@@ -370,7 +370,7 @@ Example JWT Token:
   "domain": "",
   "exp": 1706544967,
   "iat": 1706541367,
-  "iss": "magistrala.auth",
+  "iss": "supermq.auth",
   "sub": "",
   "type": 0,
   "user": "266d00f8-2284-4613-b732-3bd16e7cf8f2"
@@ -385,7 +385,7 @@ If the domain field is empty, then with that JWT token following actions are per
 - Domain creation & listing,
 - Accept domain invitations
 
-Actions related to the creation, update, and deletion of things, channels, and groups are not permitted, requests will fail in authorization. Magistrala operations related to things, channels, and groups take place in domain level. So for these kinds of operations, a JWT token with a domain field containing the operating domain ID is required.
+Actions related to the creation, update, and deletion of things, channels, and groups are not permitted, requests will fail in authorization. SuperMQ operations related to things, channels, and groups take place in domain level. So for these kinds of operations, a JWT token with a domain field containing the operating domain ID is required.
 
 There are two ways to obtain JWT token for a particular domain
 
@@ -446,7 +446,7 @@ EOF
   "domain": "",
   "exp": 1706603526,
   "iat": 1706599926,
-  "iss": "magistrala.auth",
+  "iss": "supermq.auth",
   "sub": "",
   "type": 0,
   "user": "5748de69-2a66-40da-a829-1b47f02e9adb"
@@ -460,7 +460,7 @@ EOF
   "domain": "",
   "exp": 1706686326,
   "iat": 1706599926,
-  "iss": "magistrala.auth",
+  "iss": "supermq.auth",
   "sub": "",
   "type": 1,
   "user": "5748de69-2a66-40da-a829-1b47f02e9adb"
@@ -528,7 +528,7 @@ EOF
   "domain": "903f7ede-3308-4206-89c2-e99688b612f7",
   "exp": 1706603706,
   "iat": 1706600106,
-  "iss": "magistrala.auth",
+  "iss": "supermq.auth",
   "sub": "903f7ede-3308-4206-89c2-e99688b612f7_5748de69-2a66-40da-a829-1b47f02e9adb",
   "type": 0,
   "user": "5748de69-2a66-40da-a829-1b47f02e9adb"
@@ -542,7 +542,7 @@ EOF
   "domain": "903f7ede-3308-4206-89c2-e99688b612f7",
   "exp": 1706686506,
   "iat": 1706600106,
-  "iss": "magistrala.auth",
+  "iss": "supermq.auth",
   "sub": "903f7ede-3308-4206-89c2-e99688b612f7_5748de69-2a66-40da-a829-1b47f02e9adb",
   "type": 1,
   "user": "5748de69-2a66-40da-a829-1b47f02e9adb"
@@ -763,7 +763,7 @@ user_8 has administrator access only to group_301 and its child entities channel
 
 ## User Registration
 
-There are two ways to user get registered to Magistrala, self-register and register new users by super admin.
+There are two ways to user get registered to SuperMQ, self-register and register new users by super admin.
 User registration is self register default which can be changed by following environment variable:
 
 ```env

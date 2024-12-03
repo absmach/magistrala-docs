@@ -1,10 +1,10 @@
 # Tracing
 
-Distributed tracing is a method of profiling and monitoring applications. It can provide valuable insight when optimizing and debugging an application. Magistrala includes the [Jaeger][jaegertracing] open tracing framework as a service with its stack by default.
+Distributed tracing is a method of profiling and monitoring applications. It can provide valuable insight when optimizing and debugging an application. SuperMQ includes the [Jaeger][jaegertracing] open tracing framework as a service with its stack by default.
 
 ## Launch
 
-The Jaeger service will launch with the rest of the Magistrala services. All services can be launched using:
+The Jaeger service will launch with the rest of the SuperMQ services. All services can be launched using:
 
 ```bash
 make run
@@ -20,7 +20,7 @@ The Jaeger service can be disabled by using the `scale` flag with `docker-compos
 --scale jaeger=0
 ```
 
-Jaeger uses 5 ports within the Magistrala framework. These ports can be edited in the `.env` file.
+Jaeger uses 5 ports within the SuperMQ framework. These ports can be edited in the `.env` file.
 
 | Variable            | Description                                       | Default     |
 | ------------------- | ------------------------------------------------- | ----------- |
@@ -28,11 +28,11 @@ Jaeger uses 5 ports within the Magistrala framework. These ports can be edited i
 | MG_JAEGER_FRONTEND  | UI port                                           | 16686       |
 | MG_JAEGER_COLLECTOR | Collector for jaeger.thrift directly from clients | 14268       |
 | MG_JAEGER_CONFIGS   | Configuration server                              | 5778        |
-| MG_JAEGER_URL       | Jaeger access from within Magistrala              | jaeger:6831 |
+| MG_JAEGER_URL       | Jaeger access from within SuperMQ              | jaeger:6831 |
 
 ## Message Tracing
 
-Magistrala provides for tracing of messages ingested into the Magistrala platform. The message metadata such as topic, sub-topic, subscriber and publisher is also included in traces. ![HTTP Message Publishing trace][message-trace].
+SuperMQ provides for tracing of messages ingested into the SuperMQ platform. The message metadata such as topic, sub-topic, subscriber and publisher is also included in traces. ![HTTP Message Publishing trace][message-trace].
 
 The messages are tracked from end to end from the point they are published to the consumers where they are stored. ![Influx DB consumer trace][consumer-trace]
 

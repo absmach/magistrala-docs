@@ -1,43 +1,43 @@
-# Magistrala: Revolutionizing Industrial IoT with an Open Source Platform
+# SuperMQ: Revolutionizing Industrial IoT with an Open Source Platform
 
-In the world of Industrial Internet of Things (IIoT), businesses are always on the lookout for reliable, scalable, and secure ways to handle their connected devices and data. That's where Magistrala comes in—an open-source IIoT platform that's transforming the way we approach industrial automation and remote monitoring.
+In the world of Industrial Internet of Things (IIoT), businesses are always on the lookout for reliable, scalable, and secure ways to handle their connected devices and data. That's where SuperMQ comes in—an open-source IIoT platform that's transforming the way we approach industrial automation and remote monitoring.
 
-## Key Advantages of Magistrala
+## Key Advantages of SuperMQ
 
-1. **Protocol Flexibility**: Magistrala's support for multiple protocols ensures that devices with different communication methods can easily connect and interact within the same ecosystem.
+1. **Protocol Flexibility**: SuperMQ's support for multiple protocols ensures that devices with different communication methods can easily connect and interact within the same ecosystem.
 
 2. **Comprehensive Device Management**: The platform excels in handling large-scale device deployments, simplifying the process of provisioning and maintaining numerous connected devices.
 
-3. **Enhanced Security**: With fine-grained access control, Magistrala ensures that only authorized entities can access sensitive data and system functionalities.
+3. **Enhanced Security**: With fine-grained access control, SuperMQ ensures that only authorized entities can access sensitive data and system functionalities.
 
 4. **Insightful Monitoring**: Extensive logging and instrumentation support allows for detailed system analysis, facilitating efficient troubleshooting and performance optimization.
 
-5. **Efficient Deployment**: Leveraging container-based deployment with Docker, Magistrala enables quick and consistent setup across various environments.
+5. **Efficient Deployment**: Leveraging container-based deployment with Docker, SuperMQ enables quick and consistent setup across various environments.
 
 6. **Robust Data Handling**: The platform's efficient data ingestion, processing, and storage capabilities support real-time analytics and informed decision-making.
 
-7. **Scalability and Reliability**: Designed to be scalable and distributed, Magistrala maintains high availability even as demands increase.
+7. **Scalability and Reliability**: Designed to be scalable and distributed, SuperMQ maintains high availability even as demands increase.
 
 8. **Multi-Tenancy Support**: Multiple users can operate independently within the same platform, enhancing flexibility and resource utilization.
 
-9. **Customizable and Extensible**: Magistrala's architecture allows for easy customization and extension to meet specific business needs.
+9. **Customizable and Extensible**: SuperMQ's architecture allows for easy customization and extension to meet specific business needs.
 
-**Please note:** Magistrala offers a variety of services, each detailed comprehensively in the [architecture documentation][architecture].
+**Please note:** SuperMQ offers a variety of services, each detailed comprehensively in the [architecture documentation][architecture].
 
-## Getting Started with Magistrala
+## Getting Started with SuperMQ
 
-Setting up Magistrala is straightforward. First, the following are needed:
+Setting up SuperMQ is straightforward. First, the following are needed:
 
 - [Docker](https://docs.docker.com/install/) (version 26.0.0 and above)
 - [Go](https://golang.org/doc/install) (version 1.21 and above)
 
-With Docker (version 26.0.0 and above) and Go (version 1.21 and above) installed on your system, you clone the official Magistrala GitHub repository and have the platform up and running in no time. Here's a quick guide to get you started:
+With Docker (version 26.0.0 and above) and Go (version 1.21 and above) installed on your system, you clone the official SuperMQ GitHub repository and have the platform up and running in no time. Here's a quick guide to get you started:
 
-- From the terminal, clone the Magistrala repository and navigate to the newly created directory:
+- From the terminal, clone the SuperMQ repository and navigate to the newly created directory:
 
   ```bash
-  git clone https://github.com/absmach/magistrala.git
-  cd magistrala
+  git clone https://github.com/absmach/supermq.git
+  cd supermq
   ```
 
 - Build and install the binaries:
@@ -48,17 +48,17 @@ With Docker (version 26.0.0 and above) and Go (version 1.21 and above) installed
 
 **Note:** This process will compile the binaries into the `<project_root>/build` directory. If the `$GOBIN` environment variable is set, the binaries will also be copied to the `go/bin` directory.
 
-To start Magistrala Docker services, execute the following command from the project's root directory:
+To start SuperMQ Docker services, execute the following command from the project's root directory:
 
 ```bash
 make run
 ```
 
-Magistrala offers multiple interaction options, including a CLI, SDK, HTTP API, and UI, catering to different user preferences and use cases.
+SuperMQ offers multiple interaction options, including a CLI, SDK, HTTP API, and UI, catering to different user preferences and use cases.
 
 ### Using the CLI
 
-Magistrala's Command Line Interface (CLI) provides a powerful way to interact with the platform. There are many commands available through the CLI. For more information, refer to the [Magistrala CLI Documentation](https://docs.magistrala.abstractmachines.fr/cli/). To explore available commands and get usage details, run:
+SuperMQ's Command Line Interface (CLI) provides a powerful way to interact with the platform. There are many commands available through the CLI. For more information, refer to the [SuperMQ CLI Documentation](https://docs.magistrala.abstractmachines.fr/cli/). To explore available commands and get usage details, run:
 
 ```bash
 magistrala-cli --help
@@ -175,7 +175,7 @@ While logged into your domain, you can perform a variety of operations. Some of 
 - Channel Management: Configure and manage channels for data communication within the domain.
 - Domain Management: Handle domain-specific settings and configurations.
 
-For more detailed information on these operations, refer to the [Magistrala CLI Documentation](https://docs.magistrala.abstractmachines.fr/cli/). Let us go through some of the operations.
+For more detailed information on these operations, refer to the [SuperMQ CLI Documentation](https://docs.magistrala.abstractmachines.fr/cli/). Let us go through some of the operations.
 
 - Create a thing (device):
 
@@ -263,7 +263,7 @@ Please note that appropriate access control is required to view the thing's cred
 magistrala-cli messages read $CHANNELID $ACCESSTOKEN -R <reader_url>
 ```
 
-**Note:** Magistrala implements various message readers that consume magistrala messages. There are five readers that magistrala implements: - InfluxDB Reader - Cassandra Reader - MongoDB Reader - PostgreSQL Reader - Timescale Reader
+**Note:** SuperMQ implements various message readers that consume magistrala messages. There are five readers that magistrala implements: - InfluxDB Reader - Cassandra Reader - MongoDB Reader - PostgreSQL Reader - Timescale Reader
 
 For more information on how to install and run readers and writers, please refer to the [documentation][storage].
 
@@ -291,7 +291,7 @@ magistrala-cli domains assign users member '["2e8a9cda-5085-45cb-81fe-c9c7b938c2
 
 ### Using the API
 
-Magistrala also provides RESTful API access for seamless integration with web services and applications. You can use standard HTTP methods to interact with the platform, making it easy to integrate with existing web-based systems.No additional installation is required for this, as you can use tools like curl or any HTTP client library in your preferred programming language.
+SuperMQ also provides RESTful API access for seamless integration with web services and applications. You can use standard HTTP methods to interact with the platform, making it easy to integrate with existing web-based systems.No additional installation is required for this, as you can use tools like curl or any HTTP client library in your preferred programming language.
 
 Let's revisit the CLI process, but this time using the API. Here's how to achieve the same results with API commands.
 
@@ -454,7 +454,7 @@ Note: While the CLI and API endpoints are powerful, they can be more tedious. Ma
 
 ## Adapters
 
-Magistrala provides various adapters for clients to publish and subscribe, including CoAP, HTTP, HTTPS, MQTT, MQTTS, WS, and WSS. Let's explore how to utilize some of these adapters.
+SuperMQ provides various adapters for clients to publish and subscribe, including CoAP, HTTP, HTTPS, MQTT, MQTTS, WS, and WSS. Let's explore how to utilize some of these adapters.
 
 ### MQTT
 
@@ -478,9 +478,9 @@ sudo apt-get install mosquitto mosquitto-clients
 mosquitto_pub --help
 ```
 
-#### Using MQTT with Magistrala
+#### Using MQTT with SuperMQ
 
-Once Mosquitto is installed, you can use it with Magistrala:
+Once Mosquitto is installed, you can use it with SuperMQ:
 
 - Subscribe to a channel:
 
@@ -527,9 +527,9 @@ sudo chmod +x /usr/local/bin/coap-cli
 coap-cli --help
 ```
 
-#### Using CoAP with Magistrala
+#### Using CoAP with SuperMQ
 
-Once the CoAP CLI is installed, you can use it with Magistrala:
+Once the CoAP CLI is installed, you can use it with SuperMQ:
 
 - Subscribe to a channel:
 
@@ -575,9 +575,9 @@ sudo chmod +x /usr/local/bin/websocat
 websocat --help
 ```
 
-#### Using WebSocket with Magistrala
+#### Using WebSocket with SuperMQ
 
-Once Websocat is installed, you can use it with Magistrala:
+Once Websocat is installed, you can use it with SuperMQ:
 
 ```bash
 websocat "ws://localhost:8186/channels/$CHANNELID/messages?authorization=$THINGSECRET" <<< '[{"bn": "DS-5000-AL1-001", "n": "Distance_AssemblyLine1", "u": "mm","v": 152.3}, { "n": "BatteryLevel", "u": "%", "v": 95}, { "n": "SignalStrength", "u": "dBm", "v": -65}]'
@@ -593,19 +593,19 @@ Here’s an example of how you can send a message using the HTTP adapter. To ill
 curl -X POST -H "Content-Type: application/senml+json" -H "Authorization: Thing $THINGSECRET" -d '[{"bn": "DS-5000-AL1-001", "n": "Distance_AssemblyLine1", "u": "mm","v": 152.3}, { "n": "BatteryLevel", "u": "%", "v": 95}, { "n": "SignalStrength", "u": "dBm", "v": -65}]' http://localhost:8008/http/channels/$CHANNELID/messages
 ```
 
-This command sends a POST request to the Magistrala HTTP adapter, publishing a temperature reading to a specific channel. The Thing secret is used for authentication.
+This command sends a POST request to the SuperMQ HTTP adapter, publishing a temperature reading to a specific channel. The Thing secret is used for authentication.
 
 ## Summary
 
-Magistrala stands out as a comprehensive, flexible, and powerful open source IIoT platform. Its multi-protocol support, robust security features, and scalable architecture make it an excellent choice for businesses looking to implement or upgrade their IIoT infrastructure. Whether you're managing a small network of sensors or a large-scale industrial automation system, Magistrala provides the tools and capabilities to streamline your IoT operations and drive innovation in your industry.
+SuperMQ stands out as a comprehensive, flexible, and powerful open source IIoT platform. Its multi-protocol support, robust security features, and scalable architecture make it an excellent choice for businesses looking to implement or upgrade their IIoT infrastructure. Whether you're managing a small network of sensors or a large-scale industrial automation system, SuperMQ provides the tools and capabilities to streamline your IoT operations and drive innovation in your industry.
 
-The platform's ease of use, from initial setup to ongoing management, combined with its versatile connectivity options, positions Magistrala as a top contender in the IIoT space. By offering support for MQTT, CoAP, WebSocket, and HTTP/HTTPS, Magistrala ensures that developers can choose the most appropriate protocol for their specific use case, whether it's real-time data streaming, efficient communication for battery-powered devices, or integration with web services.
+The platform's ease of use, from initial setup to ongoing management, combined with its versatile connectivity options, positions SuperMQ as a top contender in the IIoT space. By offering support for MQTT, CoAP, WebSocket, and HTTP/HTTPS, SuperMQ ensures that developers can choose the most appropriate protocol for their specific use case, whether it's real-time data streaming, efficient communication for battery-powered devices, or integration with web services.
 
-As the IIoT landscape continues to evolve, Magistrala's open-source nature and extensible architecture provide a future-proof solution that can adapt to emerging technologies and changing business needs. By choosing Magistrala, organizations can build a solid foundation for their IIoT initiatives, enabling them to harness the full potential of connected devices and data-driven insights in their industrial operations.
+As the IIoT landscape continues to evolve, SuperMQ's open-source nature and extensible architecture provide a future-proof solution that can adapt to emerging technologies and changing business needs. By choosing SuperMQ, organizations can build a solid foundation for their IIoT initiatives, enabling them to harness the full potential of connected devices and data-driven insights in their industrial operations.
 
 ## Contact Us
 
-We're here to support you in your journey with Magistrala. Whether you have questions, need assistance, or want to contribute to the project, we encourage you to reach out through the following channels:
+We're here to support you in your journey with SuperMQ. Whether you have questions, need assistance, or want to contribute to the project, we encourage you to reach out through the following channels:
 
 1. **GitHub Repository**:
    For bug reports, feature requests, or code contributions, please visit our [GitHub repository][magistrala-repo]
@@ -623,7 +623,7 @@ We're here to support you in your journey with Magistrala. Whether you have ques
    For enterprise support, custom development, or consulting services, please contact:
    [@drasko][drasko] directly, and he will point you out to the best-matching support team.
 
-We value your feedback and are committed to continually improving Magistrala to meet the evolving needs of the IIoT community. Don't hesitate to get in touch – we're excited to hear from you and support your IIoT initiatives!
+We value your feedback and are committed to continually improving SuperMQ to meet the evolving needs of the IIoT community. Don't hesitate to get in touch – we're excited to hear from you and support your IIoT initiatives!
 
 ## Keywords
 
@@ -632,7 +632,7 @@ IIoT, Open Source, IoT Platform, Industrial Automation, Remote Monitoring, MQTT,
 [architecture]: https://docs.magistrala.abstractmachines.fr/architecture/
 [authorization]: https://docs.magistrala.abstractmachines.fr/authorization/#domain-viewer-with-channel-thing
 [storage]: https://docs.magistrala.abstractmachines.fr/storage/#readers
-[magistrala-repo]: https://github.com/absmach/magistrala
+[supermq-repo]: https://github.com/absmach/supermq
 [mosquitto-site]: https://mosquitto.org/download/
 [swagger-docs]: https://docs.api.magistrala.abstractmachines.fr/
 [coap-repo]: https://github.com/absmach/coap-cli/releases/tag/v0.3.3

@@ -1,6 +1,6 @@
-# Integrating OAuth2.0 with Magistrala
+# Integrating OAuth2.0 with SuperMQ
 
-Over the past months, we have been working on integrating OAuth2.0 with Magistrala. We are happy to announce that we have completed the integration and it is [now available](https://github.com/absmach/magistrala/pull/2103). We believe that this will open up a lot of possibilities for Magistrala and we are very excited about the future of Magistrala. We are planning to add more features to the OAuth2.0 integration in future releases. We are also planning to add support for more OAuth2.0 providers. This will enable users to use their preferred OAuth2.0 provider to authenticate with Magistrala.
+Over the past months, we have been working on integrating OAuth2.0 with SuperMQ. We are happy to announce that we have completed the integration and it is [now available](https://github.com/absmach/magistrala/pull/2103). We believe that this will open up a lot of possibilities for SuperMQ and we are very excited about the future of SuperMQ. We are planning to add more features to the OAuth2.0 integration in future releases. We are also planning to add support for more OAuth2.0 providers. This will enable users to use their preferred OAuth2.0 provider to authenticate with SuperMQ.
 
 [OAuth2.0](https://datatracker.ietf.org/doc/html/rfc6749) is an authorization framework that facilitates a third-party application to gain restricted access to another HTTP service. This can occur either by mediating an approval process between the resource owner and the HTTP service or by enabling the third-party application to autonomously acquire access. In OAuth2.0, a client requests access to a resource controlled by the resource owner and hosted by the resource server and is issued a different set of credentials than those of the resource owner. Instead of using the resource owner's credentials to access the resource, the client obtains an access token - a string representing the grant issued to the client by the resource owner. The client uses the access token to access the protected resources hosted by the resource server.
 
@@ -11,7 +11,7 @@ In OAuth2.0, there are four roles:
 - **Authorization Server**: The server issues access tokens to the client after successfully authenticating the resource owner and obtaining authorization.
 - **Client**: An application making protected resource requests on behalf of the resource owner and with its authorization. The client is not necessarily part of the resource owner's domain.
 
-In the context of Magistrala, the resource owner is the user, the resource server is the Magistrala service, the authorization server is the OAuth2.0 provider, and the client is the UI service. The UI service is the client because it is making protected resource requests on behalf of the user and with the user's authorization.
+In the context of SuperMQ, the resource owner is the user, the resource server is the SuperMQ service, the authorization server is the OAuth2.0 provider, and the client is the UI service. The UI service is the client because it is making protected resource requests on behalf of the user and with the user's authorization.
 
 In OAuth2.0, there are different scopes. A scope is a mechanism in OAuth2.0 to limit an application's access to a user's account. A scope is a string that represents the access level that the application is requesting. The scope is included in the request to the authorization server. The scope is used to specify the access level that the application is requesting. The scope is a required parameter in the request to the authorization server.
 
@@ -31,7 +31,7 @@ This flow is demonstrated in the following diagram:
 
 ![Generic OAuth2.0 flow](../img/blogs/oauth/genericflow.png)
 
-Magistrala can now be the resource server and Google as one of the authorization servers. We have implemented the OAuth2.0 [authorization code flow](https://datatracker.ietf.org/doc/html/rfc6749#section-4.1). The authorization code flow is used to obtain an access and refresh token to authorize API requests. The UI client initiates the flow by redirecting the user to the authorization server(Google). The user authenticates and authorizes the client(Magistrala). The authorization server(Google) redirects the user back to the client(Magistrala users service) with an authorization code. The client(Magistrala users service) exchanges the authorization code for an access token and a refresh token. The access token is used to authenticate API requests(get user details). The refresh token is used to obtain a new access token when the current access token becomes invalid or expires. This flow is demonstrated in the following diagram:
+SuperMQ can now be the resource server and Google as one of the authorization servers. We have implemented the OAuth2.0 [authorization code flow](https://datatracker.ietf.org/doc/html/rfc6749#section-4.1). The authorization code flow is used to obtain an access and refresh token to authorize API requests. The UI client initiates the flow by redirecting the user to the authorization server(Google). The user authenticates and authorizes the client(SuperMQ). The authorization server(Google) redirects the user back to the client(SuperMQ users service) with an authorization code. The client(SuperMQ users service) exchanges the authorization code for an access token and a refresh token. The access token is used to authenticate API requests(get user details). The refresh token is used to obtain a new access token when the current access token becomes invalid or expires. This flow is demonstrated in the following diagram:
 
 ![authorization code flow](../img/blogs/oauth/codeflow.png)
 _The authorization code flow(from https://medium.com/javarevisited/oauth-2-0-authorization-code-flow-in-spring-boot-d8ff393f316d)_
@@ -45,13 +45,13 @@ There are different grant types in OAuth2.0. The grant type is a string represen
 
 This flow conforms to [OpenID Connect](https://openid.net/connect/) specification, which is an identity layer on top of the OAuth2.0 protocol. OpenID Connect is a simple identity layer on top of the OAuth2.0 protocol, which allows clients to verify the identity of the end-user based on the authentication performed by an authorization server, as well as to obtain basic profile information about the end-user in an interoperable and REST-like manner. We are planning to add support for OpenID Connect in future releases.
 
-## How to use OAuth2.0 with Magistrala
+## How to use OAuth2.0 with SuperMQ
 
-Currently, we have implemented the OAuth2.0 authorization code flow with Google as the authorization server. We are planning to add support for more OAuth2.0 providers in future releases. To use OAuth2.0 with Magistrala, you need to follow the steps below:
+Currently, we have implemented the OAuth2.0 authorization code flow with Google as the authorization server. We are planning to add support for more OAuth2.0 providers in future releases. To use OAuth2.0 with SuperMQ, you need to follow the steps below:
 
 1. You need to obtain the client ID and client secret from Google. You can obtain the client ID and client secret by creating a new project in the [Google Cloud Console](https://console.cloud.google.com/). You can find the client ID and client secret in the [credentials section](https://console.developers.google.com/apis/credentials) of the project.
-2. Click on the `Create credentials` button and select `OAuth client ID`. When setting up the OAuth client, the application type should be `Web application`. Under authorized redirect URIs, you need to provide the redirect URI of the Magistrala users service. This should be something like `https://<domain>/oauth/callback/google`. The `<domain>` should be replaced with the domain of the Magistrala users service or nginix ingress. For local development, you can use `http://localhost/oauth/callback/google`.
-3. Copy the client ID and client secret and provide them to the Magistrala users service. The values should be something like:
+2. Click on the `Create credentials` button and select `OAuth client ID`. When setting up the OAuth client, the application type should be `Web application`. Under authorized redirect URIs, you need to provide the redirect URI of the SuperMQ users service. This should be something like `https://<domain>/oauth/callback/google`. The `<domain>` should be replaced with the domain of the SuperMQ users service or nginix ingress. For local development, you can use `http://localhost/oauth/callback/google`.
+3. Copy the client ID and client secret and provide them to the SuperMQ users service. The values should be something like:
 
    ```env
    ### Google OAuth2
@@ -76,7 +76,7 @@ Here is an example of the OAuth2.0 authorization code flow with Google as the au
 
 This is split into two parts:
 
-### 1. Magistrala UI Service
+### 1. SuperMQ UI Service
 
 The UI service is the client in the OAuth2.0 flow. The UI service initiates the flow by redirecting the user to the authorization server(Google).
 
@@ -192,7 +192,7 @@ func oauth2Handler(state oauth2.State, provider oauth2.Provider) http.HandlerFun
 }
 ```
 
-### 2. Magistrala Users Service
+### 2. SuperMQ Users Service
 
 The users service is the resource server in the OAuth2.0 flow. The users service receives the authorization code from the authorization server(Google) and exchanges the authorization code for an access and refresh token. The users service then uses the access token to obtain the user's details.
 
@@ -390,6 +390,6 @@ We don't store the access token or refresh token since they are only used once t
 
 ## Conclusion
 
-In conclusion, the successful integration of OAuth2.0 with Magistrala represents a significant milestone in enhancing the security and functionality of our platform. By leveraging OAuth2.0, we enable seamless authentication and authorization processes, empowering users to securely access Magistrala services with their preferred OAuth2.0 provider. With OAuth2.0, users can grant access to their protected resources hosted on Magistrala, facilitating secure interactions between third-party applications and Magistrala services. Through the OAuth2.0 authorization code flow, users can obtain access and refresh tokens, ensuring secure and authenticated API requests.
+In conclusion, the successful integration of OAuth2.0 with SuperMQ represents a significant milestone in enhancing the security and functionality of our platform. By leveraging OAuth2.0, we enable seamless authentication and authorization processes, empowering users to securely access SuperMQ services with their preferred OAuth2.0 provider. With OAuth2.0, users can grant access to their protected resources hosted on SuperMQ, facilitating secure interactions between third-party applications and SuperMQ services. Through the OAuth2.0 authorization code flow, users can obtain access and refresh tokens, ensuring secure and authenticated API requests.
 
-Moving forward, we are dedicated to expanding our OAuth2.0 integration by adding support for additional providers and implementing new features to enrich the user experience. This integration not only enhances the security and usability of Magistrala but also lays the foundation for future innovations and integrations. We are excited about the opportunities that OAuth2.0 integration brings and look forward to the continued evolution of Magistrala.
+Moving forward, we are dedicated to expanding our OAuth2.0 integration by adding support for additional providers and implementing new features to enrich the user experience. This integration not only enhances the security and usability of SuperMQ but also lays the foundation for future innovations and integrations. We are excited about the opportunities that OAuth2.0 integration brings and look forward to the continued evolution of SuperMQ.
