@@ -333,7 +333,7 @@ Before running `Export` service edit `configs/config.toml` and provide `username
 
 - `username` - matches `thing_id` in SuperMQ cloud instance
 - `password` - matches `thing_secret`
-- `channel` - MQTT part of the topic where to publish MQTT data (`channel/<channel_id>/messages` is format of magistrala MQTT topic) and plays a part in authorization.
+- `channel` - MQTT part of the topic where to publish MQTT data (`channel/<channel_id>/messages` is format of supermq MQTT topic) and plays a part in authorization.
 
 If SuperMQ and Export service are deployed on same gateway `Export` can be configured to send messages from SuperMQ internal Message Broker bus to SuperMQ in a cloud. In order for `Export` service to listen on SuperMQ Message Broker deployed on the same machine Message Broker port must be exposed. Edit SuperMQ [docker-compose.yml][docker-compose]. Default Message Broker, NATS, section must look like below:
 
@@ -409,13 +409,13 @@ docker-compose -f docker/addons/provision/docker-compose.yml up
 Create user:
 
 ```bash
-magistrala-cli -m http://localhost:9002 users create test test@email.com 12345678
+supermq-cli -m http://localhost:9002 users create test test@email.com 12345678
 ```
 
 Obtain user token:
 
 ```bash
-magistrala-cli -m http://localhost:9002 users token test@email.com 12345678
+supermq-cli -m http://localhost:9002 users token test@email.com 12345678
 
 {
   "access_token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODY3NTEzNTIsImlhdCI6MTY4Njc1MDQ1MiwiaWRlbnRpdHkiOiJqb2huLmRvZUBlbWFpbC5jb20iLCJpc3MiOiJjbGllbnRzLmF1dGgiLCJzdWIiOiI5NDkzOTE1OS1kMTI5LTRmMTctOWU0ZS1jYzJkNjE1NTM5ZDciLCJ0eXBlIjoiYWNjZXNzIn0.AND1sm6mN2wgUxVkDhpipCoNa87KPMghGaS5-4dU0iZaqGIUhWScrEJwOahT9ts1TZSd1qEcANTIffJ_y2Pbsg",
@@ -555,7 +555,7 @@ In terminal where export is started you should see following message:
 In SuperMQ `mqtt` service:
 
 ```log
-magistrala-mqtt   | {"level":"info","message":"Publish - client ID export-88529fb2-6c1e-4b60-b9ab-73b5d89f7404 to the topic: channels/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/messages/export/test","ts":"2020-05-08T15:16:02.999684791Z"}
+supermq-mqtt   | {"level":"info","message":"Publish - client ID export-88529fb2-6c1e-4b60-b9ab-73b5d89f7404 to the topic: channels/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/messages/export/test","ts":"2020-05-08T15:16:02.999684791Z"}
 ```
 
 [agent]: /edge/#agent

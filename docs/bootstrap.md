@@ -240,12 +240,12 @@ func main() {
 To use SuperMQ CLI for the secure bootstrap configuration, use the following command:
 
 ```bash
-magistrala-cli bootstrap secure <external_id> <external_key> <crypto_key>
+supermq-cli bootstrap secure <external_id> <external_key> <crypto_key>
 ```
 for example
 
 ```bash
-magistrala-cli bootstrap bootstrap secure '09:6:0:sb:sa' 'key' 'v7aT0HGxJxt2gULzr3RHwf4WIf6DusPp'
+supermq-cli bootstrap bootstrap secure '09:6:0:sb:sa' 'key' 'v7aT0HGxJxt2gULzr3RHwf4WIf6DusPp'
 ```
 
 

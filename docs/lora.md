@@ -29,7 +29,7 @@ Now that both systems are running you must provision LoRa Server, which offers f
 - **Create a Gateways-Profile:** In this profile you can select the radio LoRa channels and the LoRa Network Server to use.
 - **Create a Service-profile:** A service-profile connects an organization to a network-server and defines the features that an organization can use on this Network-Server.
 - **Create a Gateway:** You must set proper ID in order to be discovered by LoRa Server.
-- **Create an Application:** This will allows you to create Devices by connecting them to this application. This is equivalent to Devices connected to channels in Magistrala.
+- **Create an Application:** This will allows you to create Devices by connecting them to this application. This is equivalent to Devices connected to channels in SuperMQ.
 - **Create a Device-Profile:** Before creating Device you must create Device profile where you will define some parameter as LoRaWAN MAC version (format of the device address) and the LoRaWAN regional parameter (frequency band). This will allow you to create many devices using this profile.
 - **Create a Device:** Finally, you can create a Device. You must configure the `network session key` and `application session key` of your Device. You can generate and copy them on your device configuration or you can use your own pre generated keys and set them using the LoRa App Server UI.
   Device connect through OTAA. Make sure that loraserver device-profile is using same release as device. If MAC version is 1.0.X, `application key = app_key` and `app_eui = deviceEUI`. If MAC version is 1.1 or ABP both parameters will be needed, APP_key and Network key.
@@ -44,7 +44,7 @@ docker-compose -f docker/addons/lora-adapter/docker-compose.yml up -d
 
 **Troubleshouting:** The lora-adapter subscribes to the LoRa Server MQTT broker and will fail if the connection is not established. You must ensure that the environment variable `MG_LORA_ADAPTER_MESSAGES_URL` is propertly configured.
 
-**Remark:** By defaut, `MG_LORA_ADAPTER_MESSAGES_URL` is set as `tcp://lora.mqtt.magistrala.io:1883` in the [docker-compose.yml][lora-docker-compose] file of the adapter. If you run the composition without configure this variable you will start to receive messages from our demo server.
+**Remark:** By defaut, `MG_LORA_ADAPTER_MESSAGES_URL` is set as `tcp://lora.mqtt.supermq.io:1883` in the [docker-compose.yml][lora-docker-compose] file of the adapter. If you run the composition without configure this variable you will start to receive messages from our demo server.
 
 ### Route Map
 

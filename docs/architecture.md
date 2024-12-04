@@ -14,7 +14,7 @@ SuperMQ IoT platform is comprised of the following services:
 | [coap-adapter][coap-adapter]     | Provides a CoAP interface for sending and receiving messages via CoAP                   |
 | [opcua-adapter][opcua-adapter]   | Provides an OPC-UA interface for sending and receiving messages via OPC-UA              |
 | [lora-adapter][lora-adapter]     | Provides a LoRa Server forwarder for sending and receiving messages via LoRa            |
-| [magistrala-cli][magistrala-cli] | Command line interface                                                                  |
+| [supermq-cli][supermq-cli] | Command line interface                                                                  |
 
 ![arch][architecture]
 
@@ -55,7 +55,7 @@ Running SuperMQ on gateway moves computation from cloud towards the edge thus de
 [ws-adapter]: https://github.com/absmach/supermq/tree/main/ws
 [opcua-adapter]: https://github.com/absmach/supermq/tree/main/opcua
 [lora-adapter]: https://github.com/absmach/supermq/tree/main/lora
-[magistrala-cli]: https://github.com/absmach/supermq/tree/main/cli
+[supermq-cli]: https://github.com/absmach/supermq/tree/main/cli
 [architecture]: img/architecture.jpg
 [nats]: https://nats.io/
 [rabbitmq]: https://www.rabbitmq.com/

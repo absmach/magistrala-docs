@@ -118,7 +118,7 @@ Those new services will take some additional ports:
 - 8086 by InfluxDB
 - 9006 by InfluxDB writer service
 
-To access Influx-UI, navigate to `http://localhost:8086` and login with: `magistrala`, password: `magistrala`
+To access Influx-UI, navigate to `http://localhost:8086` and login with: `supermq`, password: `supermq`
 
 ### Cassandra and Cassandra Writer
 
@@ -251,4 +251,4 @@ docker-compose -f docker/addons/timescale-reader/docker-compose.yml up -d
 [nats-wildcards]: https://docs.nats.io/nats-concepts/subjects#wildcards
 [writers]: /storage/#writers
 [influxdb]: https://docs.influxdata.com/influxdb
-[readers-api]: https://github.com/absmach/magistrala/blob/master/api/readers.yml
+[readers-api]: https://github.com/absmach/supermq/blob/master/api/readers.yml

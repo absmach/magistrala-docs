@@ -72,7 +72,7 @@ access-control-allow-headers: *
 }
 ```
 
-For more information about the Users service API, please check out the [API documentation](https://absmach.github.io/magistrala/?urls.primaryName=users.yml).
+For more information about the Users service API, please check out the [API documentation](https://absmach.github.io/supermq/?urls.primaryName=users.yml).
 
 ### System Provisioning
 
@@ -521,7 +521,7 @@ date: Tue, 04 Apr 2023 09:57:53 GMT
 access-control-expose-headers: Location
 ```
 
-For more information about the Things service API, please check out the [API documentation](https://absmach.github.io/magistrala/?urls.primaryName=things.yml).
+For more information about the Things service API, please check out the [API documentation](https://absmach.github.io/supermq/?urls.primaryName=things.yml).
 
 ## Provision Service
 
@@ -749,10 +749,10 @@ docker-compose -f docker/docker-compose.yml up
 Create user and obtain access token
 
 ```bash
-magistrala-cli users create john.doe@email.com 12345678
+supermq-cli users create john.doe@email.com 12345678
 
 # Retrieve token
-magistrala-cli users token john.doe@email.com 12345678
+supermq-cli users token john.doe@email.com 12345678
 
 created: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTY1ODU3MDUsImlhdCI6MTU5NjU0OTcwNSwiaXNzIjoibWFpbmZsdXguYXV0aG4iLCJzdWIiOiJtaXJrYXNoQGdtYWlsLmNvbSIsInR5cGUiOjB9._vq0zJzFc9tQqc8x74kpn7dXYefUtG9IB0Cb-X2KMK8
 ```
@@ -799,4 +799,4 @@ For more information about the Provision service API, please check out the [API 
 [exp]: https://github.com/absmach/export
 [cli]: https://github.com/absmach/supermq/tree/main/cli
 [auth]: authentication.md
-[provision-api]: https://absmach.github.io/magistrala/?urls.primaryName=provision.yml
+[provision-api]: https://absmach.github.io/supermq/?urls.primaryName=provision.yml

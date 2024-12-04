@@ -1,6 +1,6 @@
-# Extending SuperMQ Users Repository
+# Extending Magistrala Users Repository
 
-For the past few months, we have been working on integrating SuperMQ with [Ory Kratos](https://www.ory.sh/docs/kratos/ory-kratos-intro) as the user management service. Ory Kratos is a cloud-native identity and user management system, which can be used as the user management service for SuperMQ. Let's delve deeper into the myriad capabilities that Kratos brings to the forefront:
+For the past few months, we have been working on integrating Magistrala with [Ory Kratos](https://www.ory.sh/docs/kratos/ory-kratos-intro) as the user management service. Ory Kratos is a cloud-native identity and user management system, which can be used as the user management service for Magistrala. Let's delve deeper into the myriad capabilities that Kratos brings to the forefront:
 
 - self-service user login and registration. This is the ability to register and log in to the system without the need for an administrator.
 - multi-factor authentication with Time-based One-time Passwords (TOTP).
@@ -191,4 +191,4 @@ With the same service layer with minimal change in logic, the functionality rema
 
 As we explored the rich capabilities that Kratos brings to the forefront, including self-service user operations, multi-factor authentication, and comprehensive admin APIs, we also encountered several challenges and pitfalls along the way.
 
-In essence, our integration with Ory Kratos exemplifies our commitment to adaptability, flexibility, and resilience. By embracing challenges as opportunities for growth and refinement, we pave the way for a robust and scalable user management solution that meets the evolving needs of SuperMQ and its users.
+In essence, our integration with Ory Kratos exemplifies our commitment to adaptability, flexibility, and resilience. By embracing challenges as opportunities for growth and refinement, we pave the way for a robust and scalable user management solution that meets the evolving needs of Magistrala and its users.
