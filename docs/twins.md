@@ -1,3 +1,7 @@
+---
+sidebar_position: 19
+---
+
 # Twins Service
 
 SuperMQ twins service is built on top of the SuperMQ platform. In order to fully understand what follows, be sure to get acquainted with [overall SuperMQ architecture][architecture]._

@@ -1,3 +1,8 @@
+---
+sidebar_position: 12
+---
+
+
 # Edge
 
 SuperMQ IoT platform provides services for supporting management of devices on the edge. Typically, IoT solution includes devices (sensors/actuators) deployed in far edge and connected through some proxy gateway. Although most devices could be connected to the SuperMQ directly, using gateways decentralizes system, decreases load on the cloud and makes setup less difficult. Also, gateways can provide additional data processing, filtering and storage.
@@ -307,8 +312,8 @@ curl -X GET http://localhost:8170/health
 
 To establish connection to MQTT broker following settings are needed:
 
-- `username` - SuperMQ <thing_id>
-- `password` - SuperMQ <thing_secret>
+- `username` - SuperMQ [thing_id]
+- `password` - SuperMQ [thing_secret]
 - `url` - url of MQTT broker
 
 Additionally, you will need MQTT client certificates if you enable mTLS. To obtain certificates `ca.crt`, `thing.crt` and key `thing.key` follow instructions [here][mutual-tls] or [here][certs-service].
@@ -466,7 +471,7 @@ curl -s -S  -X POST  http://localhost:9016/mapping -H "Authorization: Bearer $US
 }
 ```
 
-Parameters <external_id> and <external_key> are representing the gateway. `Provision` will use them to create a bootstrap configuration that will make a relation with SuperMQ entities used for connection, authentication and authorization `thing` and `channel`. These parameters will be used by `Agent` service on the gateway to retrieve that information and establish a connection with the cloud.
+Parameters `external_id` and `external_key` are representing the gateway. `Provision` will use them to create a bootstrap configuration that will make a relation with SuperMQ entities used for connection, authentication and authorization `thing` and `channel`. These parameters will be used by `Agent` service on the gateway to retrieve that information and establish a connection with the cloud.
 
 ## Services on the Edge
 

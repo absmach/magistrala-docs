@@ -1,3 +1,7 @@
+---
+sidebar_position: 16
+---
+
 # OPC-UA
 
 OPC Unified Architecture (OPC-UA) is a communication protocol and framework that is widely used in industrial automation and the Industrial Internet of Things (IIoT). It provides a standard platform for connecting industrial devices and systems, allowing them to share data and information seamlessly. Data from the devices is sent to the OPC-UA Server where a client can consume it.
@@ -22,7 +26,7 @@ The OPC-UA adapter can connect to multiple OPC-UA servers and subscribe to multi
 
 ### Architecture
 
-|       ![OPC-UA][opcua-diagram]           |
+|       ![OPC-UA](./img/opcua/opcua.png)           |
 | :--------------------------------------: |
 | Figure 1 - OPC-UA Adapter Architecture   |
 
@@ -72,7 +76,7 @@ Similar to a channel, when a thing is created, metadata should be created and it
 
 To create an OPC-UA subscription, the user should connect the Thing to the Channel. This triggers an event through the event store which in turn causes the adapter to automatically create the connection, enable the redis route-map and run a subscription to the `server_uri` and `node_id` defined in the Thing and Channel metadata.
 
-The subscription details are stored locally and will be maintained until the Thing or Channel is deleted, or the channel <-> thing connection is disabled. The adapter will also listen for any changes in the Thing and Channel metadata and update the subscription accordingly. Once data is available from the OPC-UA server, it is published to the OPC-UA adapter which then forwards it to the NATS message broker.
+The subscription details are stored locally and will be maintained until the Thing or Channel is deleted, or the channel-thing connection is disabled. The adapter will also listen for any changes in the Thing and Channel metadata and update the subscription accordingly. Once data is available from the OPC-UA server, it is published to the OPC-UA adapter which then forwards it to the NATS message broker.
 
 ### Browse
 

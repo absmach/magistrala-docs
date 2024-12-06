@@ -1,3 +1,7 @@
+---
+sidebar_position: 21
+---
+
 # Developer's guide
 
 ## Getting SuperMQ

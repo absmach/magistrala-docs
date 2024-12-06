@@ -1,3 +1,7 @@
+---
+sidebar_position: 22
+---
+
 # Kubernetes
 
 SuperMQ can be easily deployed on the Kubernetes platform using Helm Charts from the official [SuperMQ DevOps GitHub repository](https://github.com/absmach/devops).

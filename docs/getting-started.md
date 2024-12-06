@@ -1,3 +1,7 @@
+---
+sidebar_position: 3
+---
+
 # Getting Started
 
 ## Step 1 - Run the System

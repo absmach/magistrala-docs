@@ -1,3 +1,7 @@
+---
+sidebar_position: 20
+---
+
 # Tracing
 
 Distributed tracing is a method of profiling and monitoring applications. It can provide valuable insight when optimizing and debugging an application. SuperMQ includes the [Jaeger][jaegertracing] open tracing framework as a service with its stack by default.

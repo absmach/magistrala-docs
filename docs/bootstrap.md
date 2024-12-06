@@ -1,3 +1,7 @@
+---
+sidebar_position: 14
+---
+
 # Bootstrap
 
 `Bootstrapping` refers to a self-starting process that is supposed to proceed without external input. SuperMQ platform supports bootstrapping process, but some of the preconditions need to be fulfilled in advance. The device can trigger a bootstrap when:s

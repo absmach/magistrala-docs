@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # Overview
 
 ## About
@@ -8,7 +12,7 @@ SuperMQ is modern, scalable, secure open source and patent-free IoT cloud platfo
 
 It accepts user and thing connections over various network protocols (i.e. HTTP, MQTT, WebSocket, CoAP), thus making a seamless bridge between them. It is used as the IoT middleware for building complex IoT solutions.
 
-![banner][gopher]
+![banner](img/gopherBanner.jpg)
 
 ### Features
 

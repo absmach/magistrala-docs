@@ -1,3 +1,7 @@
+---
+sidebar_position: 8
+---
+
 # Authorization
 
 SuperMQ allows for fine-grained control over user permissions, taking into account hierarchical relationships between entities domains, groups, channels, and things. The structure and functionality of an authorization system implemented using [SpiceDB](https://github.com/authzed/spicedb) and its associated [schema language](https://authzed.com/docs/reference/schema-lang). `auth` service backed by SpiceDB manages permissions for users, domains, groups, channels, and things.
@@ -313,7 +317,7 @@ Users can have any one of the following relations with a domain
 
 **Let's take the below domain_1 with entities for explaining about user domain relationship.**
 
-![domain_users](diagrams/domain_users.drawio)
+<Drawio src="/diagrams/domain_users.drawio" />
 
 ### Domain Administrator
 
@@ -338,7 +342,7 @@ Users with editor relations have access to update all entities (things, channels
 Users with viewer relations have access to view all entities (things, channels, groups) created by others within the domain. Viewer are also allowed to create their own entities and can view and update the ones they have created.
 
 **Example:**
-**user_3** is **viewer** of **domain_1**. **user_3 can only view entities that are created by others in the domain and <span style="color:blue"> also able to create & manage new things, channels & groups** </span>
+**user_3 can only view entities that are created by others in the domain and <span style="color:blue">also able to create & manage new things, channels & groups</span>**
 
 ![domain_users_viewer](diagrams/domain_users_viewer.drawio)
 

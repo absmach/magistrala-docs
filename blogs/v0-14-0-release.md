@@ -72,9 +72,9 @@ Logical deletion is a way to mark an entity as deleted without actually deleting
 
 Distributed tracing is a way to trace a request as it goes through the system. We enhanced support for distributed tracing in Magistrala. We added support for distributed tracing over NATS and gRPC.
 
-![Tracing HTTP publish operation](../img/blogs/v0-14-0-release/tracing1.png)
+![Tracing HTTP publish operation](docs/img/blogs/v0-14-0-release/tracing1.png)
 
-![Tracing update group operation](../img/blogs/v0-14-0-release/tracing2.png)
+![Tracing update group operation](docs/img/blogs/v0-14-0-release/tracing2.png)
 
 ### Improved event sourcing
 
