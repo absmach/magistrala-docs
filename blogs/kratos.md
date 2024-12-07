@@ -21,7 +21,7 @@ Go kit is a collection of Go packages that help you build robust, reliable, main
 
 we added an extra layer to most of our services called the `repository layer`. This crucial layer acts as the intermediary responsible for interfacing with the database, thus fostering a clean separation of concerns wherein the repository layer remains blissfully unaware of the intricacies of the transport layer.
 
-![Users Service Architecture](../img/blogs/kratos/architecture.png)
+![Users Service Architecture](docs/img/blogs/kratos/architecture.png)
 
 With this architecture, we can decouple the services from the database and make it easier to switch between different databases.
 
