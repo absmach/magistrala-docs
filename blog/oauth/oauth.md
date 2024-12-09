@@ -1,3 +1,12 @@
+---
+slug: integrating-oauth2
+title: Integrating OAuth2.0 with Magistrala
+authors: osodo
+description: Explore how Magistrala integrates OAuth2.0 to enhance authentication with support for Google and other providers.
+tags: ['OAuth2.0', 'Authentication', 'Magistrala', 'Google OAuth']
+---
+
+
 # Integrating OAuth2.0 with Magistrala
 
 Over the past months, we have been working on integrating OAuth2.0 with Magistrala. We are happy to announce that we have completed the integration and it is [now available](https://github.com/absmach/magistrala/pull/2103). We believe that this will open up a lot of possibilities for Magistrala and we are very excited about the future of Magistrala. We are planning to add more features to the OAuth2.0 integration in future releases. We are also planning to add support for more OAuth2.0 providers. This will enable users to use their preferred OAuth2.0 provider to authenticate with Magistrala.
@@ -29,11 +38,11 @@ The abstract OAuth2.0 flow is as follows:
 
 This flow is demonstrated in the following diagram:
 
-![Generic OAuth2.0 flow](docs/img/blogs/oauth/genericflow.png)
+![Generic OAuth2.0 flow](./genericflow.png)
 
 Magistrala can now be the resource server and Google as one of the authorization servers. We have implemented the OAuth2.0 [authorization code flow](https://datatracker.ietf.org/doc/html/rfc6749#section-4.1). The authorization code flow is used to obtain an access and refresh token to authorize API requests. The UI client initiates the flow by redirecting the user to the authorization server(Google). The user authenticates and authorizes the client(Magistrala). The authorization server(Google) redirects the user back to the client(Magistrala users service) with an authorization code. The client(Magistrala users service) exchanges the authorization code for an access token and a refresh token. The access token is used to authenticate API requests(get user details). The refresh token is used to obtain a new access token when the current access token becomes invalid or expires. This flow is demonstrated in the following diagram:
 
-![authorization code flow](docs/img/blogs/oauth/codeflow.png)
+![authorization code flow](./codeflow.png)
 _The authorization code flow(from https://medium.com/javarevisited/oauth-2-0-authorization-code-flow-in-spring-boot-d8ff393f316d)_
 
 There are different grant types in OAuth2.0. The grant type is a string representing the authorization grant type that the client is using to request the access token. It is included in the request to the token endpoint. It is used to specify the method of obtaining the access token. It is a required parameter in the request to the token endpoint. The grant types are:

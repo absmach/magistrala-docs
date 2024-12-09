@@ -16,7 +16,7 @@ const FeatureList: FeatureItem[] = [
   {
     title: "Scalable IoT Middleware",
 
-    Svg: require("@site/static/img/undraw_docusaurus_mountain.svg").default,
+    Svg: require("@site/static/img/scalability.svg").default,
 
     description: (
       <>
@@ -28,7 +28,7 @@ const FeatureList: FeatureItem[] = [
   {
     title: "Device Management",
 
-    Svg: require("@site/static/img/undraw_docusaurus_tree.svg").default,
+    Svg: require("@site/static/img/device_management.svg").default,
 
     description: (
       <>
@@ -40,7 +40,7 @@ const FeatureList: FeatureItem[] = [
   {
     title: "Open Source",
 
-    Svg: require("@site/static/img/undraw_docusaurus_react.svg").default,
+    Svg: require("@site/static/img/open_source.svg").default,
 
     description: (
       <>

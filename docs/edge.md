@@ -13,7 +13,7 @@ Services that can be used on gateway to enable data and control plane for edge:
 - [Export][export]
 - [SuperMQ][supermq]
 
-|       ![Edge1][edge-diagram]        |
+|       ![Edge1](img/edge/edge.png)        |
 | :---------------------------------: |
 | Figure 1 - Edge services deployment |
 
@@ -566,7 +566,6 @@ supermq-mqtt   | {"level":"info","message":"Publish - client ID export-88529fb2-
 [agent]: /edge/#agent
 [export]: /edge/#export
 [supermq]: /architecture/
-[edge-diagram]: img/edge/edge.png
 [bootstrap]: /bootstrap/
 [bootstraping]: /bootstrap/#bootstrapping
 [provision]: /provision/

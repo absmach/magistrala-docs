@@ -14,24 +14,24 @@ sidebar_position: 14
 
 Bootstrapping procedure is the following:
 
-![Configure device][image-1]
+![Configure device](img/bootstrap/1.png)
 _1) Configure device with Bootstrap service URL, an external key and external ID_
 
-> ![Provision SuperMQ channels][image-2]
+> ![Provision SuperMQ channels](img/bootstrap/2.png)
 >
 > _Optionally create SuperMQ channels if they don't exist_
 >
-> ![Provision SuperMQ things][image-3]
+> ![Provision SuperMQ things](img/bootstrap/3.png)
 >
 > _Optionally create SuperMQ thing if it doesn't exist_
 
-![Upload configuration][image-4]
+![Upload configuration](img/bootstrap/4.png)
 _2) Upload configuration for the SuperMQ thing_
 
-![Bootstrap][image-5]
+![Bootstrap](img/bootstrap/5.png)
 _3) Bootstrap - send a request for the configuration_
 
-![Update, enable/disable, remove][image-6]
+![Update, enable/disable, remove](img/bootstrap/6.png)
 _4) Connect/disconnect thing from channels, update or remove configuration_
 
 ## Configuration
@@ -255,10 +255,4 @@ supermq-cli bootstrap bootstrap secure '09:6:0:sb:sa' 'key' 'v7aT0HGxJxt2gULzr3R
 
 For more information about the Bootstrap service API, please check out the [API documentation][api-docs].
 
-[image-1]: img/bootstrap/1.png
-[image-2]: img/bootstrap/2.png
-[image-3]: img/bootstrap/3.png
-[image-4]: img/bootstrap/4.png
-[image-5]: img/bootstrap/5.png
-[image-6]: img/bootstrap/6.png
 [api-docs]: https://github.com/absmach/supermq/blob/master/api/openapi/bootstrap.yml

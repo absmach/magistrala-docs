@@ -20,7 +20,7 @@ SuperMQ IoT platform is comprised of the following services:
 | [lora-adapter][lora-adapter]     | Provides a LoRa Server forwarder for sending and receiving messages via LoRa            |
 | [supermq-cli][supermq-cli] | Command line interface                                                                  |
 
-![arch][architecture]
+![arch](img/architecture.jpg)
 
 ## Domain Model
 
@@ -60,7 +60,6 @@ Running SuperMQ on gateway moves computation from cloud towards the edge thus de
 [opcua-adapter]: https://github.com/absmach/supermq/tree/main/opcua
 [lora-adapter]: https://github.com/absmach/supermq/tree/main/lora
 [supermq-cli]: https://github.com/absmach/supermq/tree/main/cli
-[architecture]: img/architecture.jpg
 [nats]: https://nats.io/
 [rabbitmq]: https://www.rabbitmq.com/
 [vernemq]: https://vernemq.com/

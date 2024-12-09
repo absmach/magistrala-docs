@@ -36,10 +36,12 @@ const config: Config = {
           //   xslt: true,
           // },
           editUrl:
-            'https://github.com/absmach/magistrala-docs/blob/master',
+            'https://github.com/absmach/magistrala-docs/blob/main',
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
+          blogSidebarTitle: 'All Blog Posts',
+          blogSidebarCount: 'ALL',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -54,7 +56,7 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card - what is a social card?
-    image: 'img/docusaurus-social-card.jpg',
+    // image: 'img/docusaurus-social-card.jpg',
     navbar: {
       title: 'SuperMQ',
       logo: {
@@ -84,7 +86,7 @@ const config: Config = {
           items: [
             {
               label: 'Overview',
-              to: '/docs/index.md',
+              to: '/docs/',
             },
           ],
         },

@@ -32,7 +32,7 @@ To overcome these problems, SuperMQ comes with a **digital twin service**. The t
 
 SuperMQ Twins service depends on the SuperMQ IoT platform. The following diagram shows the place of the twins service in the overall [SuperMQ architecture][architecture]:
 
-![SuperMQ Twins service architecture][twins-arch]
+![SuperMQ Twins service architecture](img/twins/architecture.png)
 
 You use an HTTP client to communicate with the twins service. Every request sent to the twins service is authenticated by users service. Twins service handles CRUD requests and creates, retrieves, updates and deletes twins. The CRUD operations depend on the database to persist and fetch already saved twins.
 
@@ -342,7 +342,6 @@ Since messages published on message broker are republished on any other protocol
 
 [architecture]: /architecture/#architecture
 [provision]: /provision/#provision
-[twins-arch]: img/twins/architecture.png
 [writer]: /storage/#writers
 [senml]: https://tools.ietf.org/html/rfc8428#section-4.3
 [authentication]: /authentication/#authentication

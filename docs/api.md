@@ -2686,7 +2686,7 @@ Access-Control-Expose-Headers: Location
 
 ### Delete policies
 
-Only policies defined on [Predefined Policies section][predefined-policies] are allowed.
+Only policies defined on Predefined Policies section are allowed.
 
 ```bash
 curl -sSiX DELETE http://localhost/users/policies/<user_id>/<channel_id> -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
@@ -2710,4 +2710,3 @@ Access-Control-Expose-Headers: Location
 ```
 
 [api]: https://absmach.github.io/magistrala
-[predefined-policies]: /authorization/#summary-of-defined-policies
