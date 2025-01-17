@@ -316,7 +316,7 @@ Users can have any one of the following relations with a domain
 
 **Let's take the below domain_1 with entities for explaining about user domain relationship.**
 
-![domain_users](diagrams/domain_users.drawio)
+![domain_users](diagrams/domain_users.svg)
 
 ### Domain Administrator
 
@@ -325,7 +325,7 @@ Users with administrator relations have full control over all entities (things, 
 **Example:**
 **user_1** is **administrator** of **domain_1**. **user_1 can view all entities created by others and have administrator access to all entities in the domain**.
 
-![domain_users_administrator](diagrams/domain_users_administrator.drawio)
+![domain_users_administrator](diagrams/domain_users_administrator.svg)
 
 ### Domain Editor
 
@@ -334,16 +334,16 @@ Users with editor relations have access to update all entities (things, channels
 **Example:**
 **user_2** is **editor** of **domain_1**. **user_2 can view all entities and have edit access to groups and channel entities, view access to thing entities in the domain, and also able to create & manage new things, channels & groups**.
 
-![domain_users_editor](diagrams/domain_users_editor.drawio)
+![domain_users_editor](diagrams/domain_users_editor.svg)
 
 ### Domain Viewer
 
 Users with viewer relations have access to view all entities (things, channels, groups) created by others within the domain. Viewer are also allowed to create their own entities and can view and update the ones they have created.
 
 **Example:**
-**user_3** is **viewer** of **domain_1**. **user_3 can only view entities that are created by others in the domain and <span style="color:blue"> also able to create & manage new things, channels & groups** </span>
+**user_3 can only view entities that are created by others in the domain and <span style={{ color:'blue' }}>also able to create & manage new things, channels & groups</span>**
 
-![domain_users_viewer](diagrams/domain_users_viewer.drawio)
+![domain_users_viewer](diagrams/domain_users_viewer.svg)
 
 ### Domain Member
 
@@ -354,7 +354,7 @@ Domain members will not have access by default to any of the entities in the Dom
 **user_4 , user_5, user_6, user_7, user_8, user_9** is **member** of **domain_1**. **These member relation users can able to create & manage new things, channels & groups in the domain. They can have access to the entities to which they have a relation in the domain. They could not view and manage other entities to which they don't have any relation in domain**.
 !!! note "Note: All other users having administrator, editor, viewer relation with domain will also have member relation inherit with domain, which allows them to create new things, channels & groups."
 
-![domain_users_member](diagrams/domain_users_member.drawio)
+![domain_users_member](diagrams/domain_users_member.svg)
 
 After the user sign-up to Magistrala, the user is allowed to create a new domain or join an existing domain via invitations, without domain user could not create _things_, _channels_, _groups_.
 
@@ -622,7 +622,7 @@ Like domains, groups also have four types of relations
 
 Group administrator users have access to update, delete, assign, and unassign to the group and also have access to update, delete, assign, and unassign all of its child entities
 
-From the [previous viewer example](#domain-viewer), let's take **user_3** who has **viewer relation** with **domain_1**, which means **user_3 will be able to view all the entities created by others but cannot make any edits or updates on them.** ***<span style="color:blue">user_3 will have access to create entities in domain_1 </span>***
+From the [previous viewer example](#domain-viewer), let's take **user_3** who has **viewer relation** with **domain_1**, which means **user_3 will be able to view all the entities created by others but cannot make any edits or updates on them.** **<span style={{ color:'blue' }}>user_3 will have access to create entities in domain_1 </span>**
 
 **user_3 creates new thing_101, channel_101, and group_101**.
 
@@ -662,7 +662,7 @@ EOF
 The user who creates the entity will be the administrator of the entity by default.
 So **user_3** is **administrator** of **thing_101, channel_101 and group_101.**
 
-![group_users_administrator_1](diagrams/group_users_administrator_1.drawio)
+![group_users_administrator_1](diagrams/group_users_administrator_1.svg)
 
 !!! Note "user_3 will also have domain viewer relation to thing_101, channel_101, and group_101"
 
@@ -690,9 +690,9 @@ curl -sSiX POST 'http://localhost/channels/<channel_101_id>/groups/assign' -H "C
 EOF
 ```
 
-![group_users_administrator_2](diagrams/group_users_administrator_2.drawio)
+![group_users_administrator_2](diagrams/group_users_administrator_2.svg)
 
-***Members of domain 1 will not have access by default to any of the entities in domain 1, access shall be granted for specific entities by domain administrator or individual entity administrator.***
+**Members of domain 1 will not have access by default to any of the entities in domain 1, access shall be granted for specific entities by domain administrator or individual entity administrator.**
 
 **Administrator of group_101 (user_3), assigns user_4 with administrator relation.**
 **When domain member user_4 becomes an administrator of group_101, user_4 can able to update, delete, assign, and unassign to group_101. Since group_101 has channel_101 and thing_101 as children. The user_5 has administrator access on group_101 child entities channel_101 and thing_101.**
@@ -707,7 +707,7 @@ curl -sSiX POST 'http://localhost/domains/<DOMINA_1_ID>/users/assign'  -H "Conte
 }
 ```
 
-![group_users_administrator_3](diagrams/group_users_administrator_3.drawio)
+![group_users_administrator_3](diagrams/group_users_administrator_3.svg)
 
 ### Group Editor
 
@@ -716,7 +716,7 @@ Group editor users have access to view, update, assign, and unassign to the grou
 **Administrator of group_101 (user_3/user_4), assigns user_5 with editor relation.**
 **When domain member user_5 becomes an editor of group_101, user_5 can able to update, assign, and unassign to group_101. Since group_101 has channel_101 and thing_101 as children. The user_5 has editor access to the group child entities channels, things, and groups. In this case, user_5 has editor access to group_101, and also has edit access to its child entities channel_101 and thing_101**
 
-![group_users_editor](diagrams/group_users_editor.drawio)
+![group_users_editor](diagrams/group_users_editor.svg)
 
 ### Group Viewer
 
@@ -724,7 +724,7 @@ Group viewer users have access to view group and also have access to view all of
 
 **When domain member user_6 becomes a viewer of group_101, user_6 can able to view all the child and nested child entities in group_101. user_6 can assign child entities under group_101 and also assign child entities under any other group and channels that are children of group_101.**
 
-![group_users_viewer](diagrams/group_users_viewer.drawio)
+![group_users_viewer](diagrams/group_users_viewer.svg)
 
 ## Examples
 
@@ -732,37 +732,37 @@ Group viewer users have access to view group and also have access to view all of
 
 user_6 creates new channel and thing with the names channel_201 and thing_201 respectively. Then connects both channel_201 and thing_201.
 
-![group_users_viewer_1](diagrams/group_users_viewer_1.drawio)
+![group_users_viewer_1](diagrams/group_users_viewer_1.svg)
 
 Now user_5 can able to assign group_101 as a parent for channel_201
 
-![group_users_viewer_2](diagrams/group_users_viewer_2.drawio)
+![group_users_viewer_2](diagrams/group_users_viewer_2.svg)
 
 When channel_201 was assigned as a child of group_101, all the administrators, editors, and viewers of group_101 got the same access (relation) to channel_201 and thing_201
 
-![group_users_viewer_3](diagrams/group_users_viewer_3.drawio)
+![group_users_viewer_3](diagrams/group_users_viewer_3.svg)
 
 ### Multiple Domain Members with Group, Channel & Thing
 
 user_8 creates a new group with the name group_301
 user_9 creates a new thing and channel with the names thing_301 and channel_301 respectively, then connects both thing and channel.
-![group_users_member_11](diagrams/group_users_member_11.drawio)
+![group_users_member_11](diagrams/group_users_member_11.svg)
 
 user_8 can able to assign channel_301 as a child of group_301
-![group_users_member_12](diagrams/group_users_member_12.drawio)
+![group_users_member_12](diagrams/group_users_member_12.svg)
 When channel_301 is assigned as a child of group_301, then the administrators, editors, and viewers of group_301 get the same respective access to channel_301.
 The administrator, editor, and viewer of channel_301 get the same respective access to thing_301.
 So here user_8 becomes the administrator of both channel_301 and thing_301
 
 user_5 can able to assign group_301 as a child of group_101
-![group_users_member_13](diagrams/group_users_member_13.drawio)
+![group_users_member_13](diagrams/group_users_member_13.svg)
 
 When group_301 becomes a child of group_101, then the administrator, editor, and viewer of group_101 get the same respective access to group_301.
 The administrator, editor, and viewer of group_301 get the same respective access to channel_301.
 The administrator, editor, and viewer of channel_301 get the same respective access to thing_301.
 So here user_5 becomes the editor of group_301, channel_301, and thing_301, user_4 becomes administrator of group_301, channel_301, and thing_301.
 user_8 has administrator access only to group_301 and its child entities channel_301 and thing_301.
-![group_users_member_14](diagrams/group_users_member_14.drawio)
+![group_users_member_14](diagrams/group_users_member_14.svg)
 
 ## User Registration
 
@@ -770,5 +770,325 @@ There are two ways to user get registered to Magistrala, self-register and regis
 User registration is self register default which can be changed by following environment variable:
 
 ```env
-MG_USERS_ALLOW_SELF_REGISTER=true
+SMQ_USERS_ALLOW_SELF_REGISTER=true
+```
+
+## Magistrala Personal Access Token (PAT) Authentication
+
+### PAT Overview
+
+Personal Access Tokens (PATs) in Magistrala provide a secure method for authentication and authorization, similar to JSON Web Tokens (JWTs). PATs enable fine-grained access control with customizable scopes and permissions.
+
+### PAT Fields
+
+PATs have the following fields:
+
+- ID: Unique identifier for the token
+- User: User ID associated with the token
+- Name: User-defined name for easy identification
+- Description: Explanation of the token's purpose
+- Secret: Securely hashed token for authentication
+- Scope: Defines the precise permissions and access levels
+- IssuedAt: Timestamp of token creation
+- ExpiresAt: Timestamp when the token becomes invalid
+- UpdatedAt: Last modification timestamp
+- LastUsedAt: Timestamp of most recent token usage
+- Revoked: Boolean indicating token's active/inactive status
+- RevokedAt: Timestamp of token revocation
+
+### Scope Structure
+
+  The PAT scope defines granular permissions across different system components:
+
+- Users: Operations that can be performed by users
+- Domains: Permissions for entities within domains (groups, channels, clients)
+- Dashboard: Dashboard-related operations
+- Messaging: Publish and subscribe permissions
+
+### Example Scope JSON
+
+```json
+{
+  "users": {
+          "create": ["*"],
+          "read": ["*"],
+          "list": ["*"],
+          "update": ["*"],
+          "delete": ["*"]
+  },
+  "domains": {
+      "domain_1": {
+          "entities": {
+              "groups": {
+                  "create": ["*"] // this for all groups in domain
+              },
+              "channels": {
+                  // for particular channel in domain
+                  "delete": [
+                      "0241e6fe-2113-4731-9cfa-5c74626652b8",
+                  ]
+              },
+              "clients": {
+                  "update": ["*"] // this for all clients in domain
+              }
+          }
+      }
+  }
+}
+```
+
+### PAT Endpoint Operations
+
+Magistrala exposes a couple of endpoints that allow the user to create,retrieve, update, delete and list pats.
+
+- **Create PAT**:
+
+Endpoint: `POST http://localhost:9001/pats`
+
+Example Request:
+
+```bash
+curl --location 'http://localhost:9001/pats' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {JWT Token}' \
+--data '{
+    "name": "clients pat",
+    "description": "for creating any client",
+    "duration": "20h",
+    "scope": {
+        "domains": {
+            "{domainID}": {
+                "entities": {
+                    "clients": {
+                      "create": [
+                          "*"
+                      ]
+                    }
+                }
+            }
+        }
+    }
+}'
+```
+
+Expected response:
+
+```bash
+{
+    "id": "ec562a21-3341-4776-81ea-165afc2a8a57",
+    "user": "1e16c130-6f65-4ee8-80ac-e3ee76854878",
+    "name": "clients pat",
+    "description": "for creating any client",
+    "secret": "pat_HhbBMG9lTuiArOPudoVIeOxWKiEzQUd2geoWWvwqilc=_ZdO$M3-DT3Kz32nrLJ2IPY!jakoT9qTlEQ=1mgQC5^Y+hMxtkH%w$mJ5MOy2*Q-^4aTn148n$Zd|fwZssxgaW5@wv=lv!v4EJK%|",
+    "scope": {
+        "domains": {
+            "71133f11-8763-4c43-93b8-852ba7313109": {
+                "entities": {
+                    "clients": {
+                        "create": "*"
+                    }
+                }
+            }
+        }
+    },
+    "issued_at": "2024-12-06T12:57:32.239599201Z",
+    "expires_at": "2024-12-07T08:57:32.239599201Z",
+    "updated_at": "0001-01-01T00:00:00Z",
+    "last_used_at": "0001-01-01T00:00:00Z",
+    "revoked_at": "0001-01-01T00:00:00Z"
+}
+```
+
+- **Retrieve PAT**:
+
+Endpoint: `GET http://localhost:9001/pats/{patID}`
+
+Example Request:
+
+```bash
+curl --location 'http://localhost:9001/pats/{patID}' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {JWT Token}'
+```
+
+Expected response:
+
+```bash
+{
+    "id": "ec562a21-3341-4776-81ea-165afc2a8a57",
+    "user": "1e16c130-6f65-4ee8-80ac-e3ee76854878",
+    "name": "clients pat",
+    "description": "for creating any client",
+    "scope": {
+        "domains": {
+            "71133f11-8763-4c43-93b8-852ba7313109": {
+                "entities": {
+                    "clients": {
+                        "create": "*"
+                    }
+                }
+            }
+        }
+    },
+    "issued_at": "2024-12-06T12:57:32Z",
+    "expires_at": "2024-12-07T08:57:32Z",
+    "updated_at": "0001-01-01T00:00:00Z",
+    "last_used_at": "0001-01-01T00:00:00Z",
+    "revoked_at": "0001-01-01T00:00:00Z"
+}
+```
+
+- **Update PAT**:
+
+Endpoint: `PATCH http://localhost:9001/pats/{patID}/name`
+
+Example Request:
+
+```bash
+curl --location --request PATCH 'http://localhost:9001/pats/{patID}/name' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {JWT Token}' \
+--data '{
+    "name": "new client pat"
+}'
+```
+
+Expected response:
+
+```bash
+{
+    "id": "ec562a21-3341-4776-81ea-165afc2a8a57",
+    "user": "1e16c130-6f65-4ee8-80ac-e3ee76854878",
+    "name": "new client pat",
+    "description": "for creating any client",
+    "scope": {
+        "domains": {
+            "71133f11-8763-4c43-93b8-852ba7313109": {
+                "entities": {
+                    "clients": {
+                        "create": "*"
+                    }
+                }
+            }
+        }
+    },
+    "issued_at": "2024-12-06T12:57:32Z",
+    "expires_at": "2024-12-07T08:57:32Z",
+    "updated_at": "2024-12-06T16:42:18Z",
+    "last_used_at": "0001-01-01T00:00:00Z",
+    "revoked_at": "0001-01-01T00:00:00Z"
+}
+```
+
+- **Delete PAT**:
+
+Example Request:
+
+Endpoint: DELETE `http://localhost:9001/pats/{patID}`
+
+```bash
+curl --location --request DELETE 'http://localhost:9001/pats/{patID}' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {JWT Token}'
+```
+
+With this lets use the PAT token/secret in platform to create a client and channel and connect them.
+
+lets create a PAT that can create any client and channel:
+
+```bash
+curl --location 'http://localhost:9001/pats' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {JWT Token}' \
+--data '{
+    "name": "clients & channels pat",
+    "description": "for creating any client or channel",
+    "duration": "20h",
+    "scope": {
+        "domains": {
+            "{domainID}": {
+                "entities": {
+                    "clients": {
+                      "create": [
+                          "*"
+                      ]
+                    }
+                    "channels": {
+                      "create": [
+                          "*"
+                      ]
+                    }
+                }
+            }
+        }
+    }
+}'
+```
+
+### Authentication and Authorization Process
+
+1. **Authentication**: The system first verifies that the PAT was legitimately issued by the platform.
+2. **Authorization**: The system then checks if the requested API operation is permitted by the token's defined scope.
+
+Example of Using PAT
+
+- Creating a client using PATs:
+
+```bash
+curl --location 'http://localhost:9006/{domainID}/clients' \
+--header 'accept: application/json' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer pat_HhbBMG9lTuiArOPudoVIeEvY94LEeE86jgoIzvk3vDs=_wdRegJONu9SpmfjS^tDy0$fG-2jp&$^yLgQr5Fse@eb6IBCatDv-R+4#Tpc%dHomiWN%NKYe6|J40KTYnmXmG-NAVNlogw*U4%!Q' \
+--data '{
+  "name": "client",
+  "tags": [
+    "tag1",
+    "tag2"
+  ],
+  "metadata":{"units":"km"},
+  "status": "enabled"
+}'
+```
+
+- Creating a channel using PATs:
+
+```bash
+curl --location 'http://localhost:9005/{domainID}/channels' \
+--header 'accept: application/json' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer pat_HhbBMG9lTuiArOPudoVIeEvY94LEeE86jgoIzvk3vDs=_wdRegJONu9SpmfjS^tDy0$fG-2jp&$^yLgQr5Fse@eb6IBCatDv-R+4#Tpc%dHomiWN%NKYe6|J40KTYnmXmG-NAVNlogw*U4%!Q' \
+--data '{
+  "name": "channel",
+  "description": "long channel description",
+  "metadata": {
+    "location": "London"
+  },
+  "status": "enabled"
+}'
+```
+
+- Connecting both using the created PAT:
+
+```bash
+curl --location 'http://localhost:9005/{domainID}/channels/connect' \
+--header 'accept: */*' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer pat_6ofqnFdFTH2qbgzDl8Dhn07ode5Sgk4BsCR1qgzFJoo=_9u=^tyQn0aJ$Jco1ZvJnPizYaN1W|Ij5F4y0A=MQr&cBQ*Woa4DI7GBn&E6BDFLgXDpb-Og@h1rWshzFtn7K4PTq|A*5+g1aiwQj' \
+--data '{
+    "client_ids": ["{clientID}"],
+    "channel_ids": ["{channelID}"],
+    "types": "publish"
+}'
+```
+
+#### Example of Authorization Failure
+
+If the PAT used above with client and channel creation permissions attempts to create a group, the request will be denied and
+the expected is error:
+
+```bash
+{
+    "error": "",
+    "message": "failed to authorize PAT"
+}
 ```

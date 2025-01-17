@@ -3,6 +3,7 @@ title: Overview
 slug: /
 ---
 
+
 ## About
 
 ### What is Magistrala?
@@ -11,7 +12,7 @@ Magistrala is modern, scalable, secure open source and patent-free IoT cloud pla
 
 It accepts user and thing connections over various network protocols (i.e. HTTP, MQTT, WebSocket, CoAP), thus making a seamless bridge between them. It is used as the IoT middleware for building complex IoT solutions.
 
-![banner][gopher]
+![banner](img/gopherBanner.jpg)
 
 ### Features
 
@@ -35,8 +36,7 @@ Take a look at our [open issues][open-issues]. The [good-first-issue][good-first
 
 [Apache-2.0][license]
 
-[gopher]: img/gopherBanner.jpg
 [open-issues]: https://github.com/absmach/magistrala/issues
 [good-first-issue]: https://github.com/absmach/magistrala/labels/good-first-issue
-[contribution-guide]: https://github.com/absmach/magistrala/blob/master/CONTRIBUTING.md
-[license]: https://github.com/absmach/magistrala/blob/master/LICENSE
+[contribution-guide]: https://github.com/absmach/magistrala/blob/main/CONTRIBUTING.md
+[license]: https://github.com/absmach/magistrala/blob/main/LICENSE

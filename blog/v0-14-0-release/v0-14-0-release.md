@@ -2,8 +2,8 @@
 slug: v0-14-0-release
 title: What's New in Magistrala v0.14.0
 authors: osodo
-description: Discover the latest updates in SuperMQ v0.14.0, featuring enhanced scalability, improved access control, and UI upgrades.
-tags: [release, SuperMQ, update]
+description: Discover the latest updates in Magistrala v0.14.0, featuring enhanced scalability, improved access control, and UI upgrades.
+tags: [release, Magistrala, update]
 ---
 
 # What's New in Magistrala v0.14.0

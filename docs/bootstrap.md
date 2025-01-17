@@ -13,24 +13,24 @@ title: Bootstrap
 
 Bootstrapping procedure is the following:
 
-![Configure device][image-1]
+![Configure device](img/bootstrap/1.png)
 _1) Configure device with Bootstrap service URL, an external key and external ID_
 
-> ![Provision Magistrala channels][image-2]
+> ![Provision Magistrala channels](img/bootstrap/2.png)
 >
 > _Optionally create Magistrala channels if they don't exist_
 >
-> ![Provision Magistrala things][image-3]
+> ![Provision Magistrala things](img/bootstrap/3.png)
 >
 > _Optionally create Magistrala thing if it doesn't exist_
 
-![Upload configuration][image-4]
+![Upload configuration](img/bootstrap/4.png)
 _2) Upload configuration for the Magistrala thing_
 
-![Bootstrap][image-5]
+![Bootstrap](img/bootstrap/5.png)
 _3) Bootstrap - send a request for the configuration_
 
-![Update, enable/disable, remove][image-6]
+![Update, enable/disable, remove](img/bootstrap/6.png)
 _4) Connect/disconnect thing from channels, update or remove configuration_
 
 ## Configuration
@@ -123,7 +123,7 @@ In order to disconnect, the same request should be sent with the value of `state
 
 ### Using curl request for secure bootstrap configuration
 
-- *Encrypt the external key.*
+- _Encrypt the external key._
 
 First, encrypt the external key of your thing using AES encryption. The encryption key is specified by the `MG_BOOTSTRAP_ENCRYPT_KEY` environment variable. Use a library or utility that supports AES encryption to do this. Here's an example of how to encrypt using Go:
 
@@ -131,53 +131,52 @@ First, encrypt the external key of your thing using AES encryption. The encrypti
 package main
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
-	"crypto/rand"
-	"fmt"
-	"io"
+ "crypto/aes"
+ "crypto/cipher"
+ "crypto/rand"
+ "fmt"
+ "io"
 )
 
 type reader struct {
-	encKey []byte
+ encKey []byte
 }
 
 func (r reader) encrypt(in []byte) ([]byte, error) {
-	block, err := aes.NewCipher(r.encKey)
-	if err != nil {
-		return nil, err
-	}
-	ciphertext := make([]byte, aes.BlockSize+len(in))
-	iv := ciphertext[:aes.BlockSize]
-	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		return nil, err
-	}
-	stream := cipher.NewCFBEncrypter(block, iv)
-	stream.XORKeyStream(ciphertext[aes.BlockSize:], in)
-	return ciphertext, nil
+ block, err := aes.NewCipher(r.encKey)
+ if err != nil {
+  return nil, err
+ }
+ ciphertext := make([]byte, aes.BlockSize+len(in))
+ iv := ciphertext[:aes.BlockSize]
+ if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+  return nil, err
+ }
+ stream := cipher.NewCFBEncrypter(block, iv)
+ stream.XORKeyStream(ciphertext[aes.BlockSize:], in)
+ return ciphertext, nil
 }
 
 func main() {
-	data := []byte("<external_key>")
+ data := []byte("<external_key>")
 
-	r := reader{
-		encKey: []byte("<crypto_key>"),
-	}
+ r := reader{
+  encKey: []byte("<crypto_key>"),
+ }
 
-	encryptedData, err := r.encrypt(data)
-	if err != nil {
-		fmt.Println("Error encrypting data:", err)
-		return
-	}
+ encryptedData, err := r.encrypt(data)
+ if err != nil {
+  fmt.Println("Error encrypting data:", err)
+  return
+ }
 
-	fmt.Printf("%x\n", encryptedData)
+ fmt.Printf("%x\n", encryptedData)
 }
 ```
 
-Replace `<external_key>` and `<crypto_key>` with the thing's external key and `MG_BOOTSTRAP_ENCRYPT_KEY` respectively.
+Replace `<external_key>` and `<crypto_key>` with the thing's external key and `SMQ_BOOTSTRAP_ENCRYPT_KEY` respectively.
 
-- *Make a request to the bootstrap service.*
-
+- _Make a request to the bootstrap service._
 
 Once the key is encrypted, make a request to the Bootstrap service. Here's how to do this using `curl`:
 
@@ -195,7 +194,7 @@ curl --location 'http://localhost:9013/things/bootstrap/secure/<external_id>' \
 --header 'authorization: Thing <encyrpted_external_key>' --output ~/<desired\>/<path\>/<file_name.txt>
 ```
 
-- *Decrypt the response*
+- _Decrypt the response_
 
 Finally, decrypt the response using a function. Here's an example of how to do this using Go:
 
@@ -203,38 +202,38 @@ Finally, decrypt the response using a function. Here's an example of how to do t
 package main
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
-	"log"
-	"os"
+ "crypto/aes"
+ "crypto/cipher"
+ "log"
+ "os"
 )
 
 func main() {
-	encodedData, err := os.ReadFile("~/<desired\>/<path\>/<enc_file_name.txt>")
-	if err != nil {
-		log.Fatal(err)
-	}
+ encodedData, err := os.ReadFile("~/<desired\>/<path\>/<enc_file_name.txt>")
+ if err != nil {
+  log.Fatal(err)
+ }
 
-	key := []byte("<crypto_key>")
+ key := []byte("<crypto_key>")
 
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		log.Fatal(err)
-	}
+ block, err := aes.NewCipher(key)
+ if err != nil {
+  log.Fatal(err)
+ }
 
-	if len(encodedData) < aes.BlockSize {
-		log.Fatal("ciphertext too short")
-	}
+ if len(encodedData) < aes.BlockSize {
+  log.Fatal("ciphertext too short")
+ }
 
-	iv := encodedData[:aes.BlockSize]
-	encodedData = encodedData[aes.BlockSize:]
-	stream := cipher.NewCFBDecrypter(block, iv)
-	stream.XORKeyStream(encodedData, encodedData)
+ iv := encodedData[:aes.BlockSize]
+ encodedData = encodedData[aes.BlockSize:]
+ stream := cipher.NewCFBDecrypter(block, iv)
+ stream.XORKeyStream(encodedData, encodedData)
 
-	err = os.WriteFile("~/<desired\>/<path\>/<decry_file_name.txt>", encodedData, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
+ err = os.WriteFile("~/<desired\>/<path\>/<decry_file_name.txt>", encodedData, 0644)
+ if err != nil {
+  log.Fatal(err)
+ }
 }
 ```
 
@@ -245,19 +244,13 @@ To use Magistrala CLI for the secure bootstrap configuration, use the following 
 ```bash
 magistrala-cli bootstrap secure <external_id> <external_key> <crypto_key>
 ```
+
 for example
 
 ```bash
 magistrala-cli bootstrap bootstrap secure '09:6:0:sb:sa' 'key' 'v7aT0HGxJxt2gULzr3RHwf4WIf6DusPp'
 ```
 
-
 For more information about the Bootstrap service API, please check out the [API documentation][api-docs].
 
-[image-1]: img/bootstrap/1.png
-[image-2]: img/bootstrap/2.png
-[image-3]: img/bootstrap/3.png
-[image-4]: img/bootstrap/4.png
-[image-5]: img/bootstrap/5.png
-[image-6]: img/bootstrap/6.png
-[api-docs]: https://github.com/absmach/magistrala/blob/master/api/openapi/bootstrap.yml
+[api-docs]: https://github.com/absmach/magistrala/blob/main/api/openapi/bootstrap.yml

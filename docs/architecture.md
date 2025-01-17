@@ -2,7 +2,6 @@
 title: Architecture
 ---
 
-
 ## Components
 
 Magistrala IoT platform is comprised of the following services:
@@ -19,7 +18,7 @@ Magistrala IoT platform is comprised of the following services:
 | [lora-adapter][lora-adapter]     | Provides a LoRa Server forwarder for sending and receiving messages via LoRa            |
 | [magistrala-cli][magistrala-cli] | Command line interface                                                                  |
 
-![arch][architecture]
+![arch](img/architecture.jpg)
 
 ## Domain Model
 
@@ -59,11 +58,10 @@ Running Magistrala on gateway moves computation from cloud towards the edge thus
 [opcua-adapter]: https://github.com/absmach/magistrala/tree/main/opcua
 [lora-adapter]: https://github.com/absmach/magistrala/tree/main/lora
 [magistrala-cli]: https://github.com/absmach/magistrala/tree/main/cli
-[architecture]: img/architecture.jpg
 [nats]: https://nats.io/
 [rabbitmq]: https://www.rabbitmq.com/
 [vernemq]: https://vernemq.com/
 [kafka]: https://kafka.apache.org/
 [senml]: https://tools.ietf.org/html/draft-ietf-core-senml-08
-[agent]: /edge/#agent
-[export]: /edge/#export
+[agent]: ./edge.md#agent
+[export]: ./edge.md#export

@@ -2,6 +2,7 @@
 title: Edge
 ---
 
+
 Magistrala IoT platform provides services for supporting management of devices on the edge. Typically, IoT solution includes devices (sensors/actuators) deployed in far edge and connected through some proxy gateway. Although most devices could be connected to the Magistrala directly, using gateways decentralizes system, decreases load on the cloud and makes setup less difficult. Also, gateways can provide additional data processing, filtering and storage.
 
 Services that can be used on gateway to enable data and control plane for edge:
@@ -10,7 +11,7 @@ Services that can be used on gateway to enable data and control plane for edge:
 - [Export][export]
 - [Magistrala][magistrala]
 
-|       ![Edge1][edge-diagram]        |
+|       ![Edge1](img/edge/edge.png)        |
 | :---------------------------------: |
 | Figure 1 - Edge services deployment |
 
@@ -26,7 +27,7 @@ Agent service has following features:
 
 - Remote execution of commands
 - Remote terminal, remote session to `bash` managed by `Agent`
-- Heartbeat - listening to Message Broker topic `heartbeat.>` it can remotely provide info on running services, if services are publishing heartbeat ( like [Export](/edge/#export))
+- Heartbeat - listening to Message Broker topic `heartbeat.>` it can remotely provide info on running services, if services are publishing heartbeat ( like [Export](./edge.md#export))
 - Proxying commands to other gateway services
 - Edgex SMA - remotely making requests to EdgeX endpoints and fetching results, if EdgeX is deployed.
 
@@ -309,8 +310,8 @@ curl -X GET http://localhost:8170/health
 
 To establish connection to MQTT broker following settings are needed:
 
-- `username` - Magistrala <thing_id>
-- `password` - Magistrala <thing_secret>
+- `username` - Magistrala [thing_id]
+- `password` - Magistrala [thing_secret]
 - `url` - url of MQTT broker
 
 Additionally, you will need MQTT client certificates if you enable mTLS. To obtain certificates `ca.crt`, `thing.crt` and key `thing.key` follow instructions [here][mutual-tls] or [here][certs-service].
@@ -468,7 +469,7 @@ curl -s -S  -X POST  http://localhost:9016/mapping -H "Authorization: Bearer $US
 }
 ```
 
-Parameters <external_id> and <external_key> are representing the gateway. `Provision` will use them to create a bootstrap configuration that will make a relation with Magistrala entities used for connection, authentication and authorization `thing` and `channel`. These parameters will be used by `Agent` service on the gateway to retrieve that information and establish a connection with the cloud.
+Parameters `external_id` and `external_key` are representing the gateway. `Provision` will use them to create a bootstrap configuration that will make a relation with Magistrala entities used for connection, authentication and authorization `thing` and `channel`. These parameters will be used by `Agent` service on the gateway to retrieve that information and establish a connection with the cloud.
 
 ## Services on the Edge
 
@@ -560,21 +561,20 @@ In Magistrala `mqtt` service:
 magistrala-mqtt   | {"level":"info","message":"Publish - client ID export-88529fb2-6c1e-4b60-b9ab-73b5d89f7404 to the topic: channels/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/messages/export/test","ts":"2020-05-08T15:16:02.999684791Z"}
 ```
 
-[agent]: /edge/#agent
-[export]: /edge/#export
-[magistrala]: /architecture/
-[edge-diagram]: img/edge/edge.png
-[bootstrap]: /bootstrap/
-[bootstraping]: /bootstrap/#bootstrapping
-[provision]: /provision/
+[agent]: ./edge.md#agent
+[export]: ./edge.md#export
+[magistrala]: ./architecture.md
+[bootstrap]: ./bootstrap.md
+[bootstraping]: ./bootstrap.md#bootstrapping
+[provision]: ./provision.md
 [edgex-repo]: https://github.com/edgexfoundry/edgex-go
 [edgex-raml]: https://github.com/edgexfoundry/edgex-go/blob/master/api/raml/system-agent.raml
 [conftoml]: https://github.com/absmach/export/blob/master/configs/config.toml
 [docker-compose]: https://github.com/absmach/magistrala/blob/main/docker/docker-compose.yml
 [env]: https://github.com/absmach/export#environmet-variables
-[mutual-tls]: /authentication/#mutual-tls-authentication-with-x509-certificates
-[certs-service]: /certs/#certs-service
-[protomsg]: https://github.com/absmach/magistrala/blob/master/pkg/messaging/message.proto
-[back-to-edge]: /edge/#edge
+[mutual-tls]: ./authentication.md#mutual-tls-authentication-with-x509-certificates
+[certs-service]: ./certs.md#certs-service
+[protomsg]: https://github.com/absmach/magistrala/blob/main/pkg/messaging/message.proto
+[back-to-edge]: ./edge.md
 [nats]: https://nats.io/
-[dev-guide]: /dev-guide
+[dev-guide]: ./dev-guide.md

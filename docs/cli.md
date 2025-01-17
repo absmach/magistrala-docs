@@ -174,9 +174,9 @@ For "things" service, the response should look like this:
 Magistrala has two options for user creation. Either the `<user_token>` is provided or not. If the `<user_token>` is provided then the created user will be owned by the user identified by the `<user_token>`. Otherwise, when the token is not used, since everybody can create new users, the user will not have an owner. However, the token is still required, in order to be consistent. For more details, please see [Authorization page](authorization.md).
 
 ```bash
-magistrala-cli users create <user_name> <user_email> <user_password>
 
-magistrala-cli users create <user_name> <user_email> <user_password> <user_token>
+magistrala-cli users create <first_name> <last_name> <email> <username> <password> <user_token>
+
 ```
 
 #### Login User
@@ -222,16 +222,10 @@ magistrala-cli users update <user_id> '{"name":"value1", "metadata":{"value2": "
 magistrala-cli users update tags <user_id> '["tag1", "tag2"]' <user_token>
 ```
 
-#### Update User Identity
+#### Update User Email
 
 ```bash
-magistrala-cli users update identity <user_id> <user_email> <user_token>
-```
-
-#### Update User Owner
-
-```bash
-magistrala-cli users update owner <user_id> <owner_id> <user_token>
+magistrala-cli users update email <user_id> <user_email> <user_token>
 ```
 
 #### Update User Password
@@ -910,7 +904,7 @@ Response should look like this:
 
 This command is used to set the flags to be used by CLI in a local TOML file. The default location of the TOML file is in the same directory as the CLI binary. To change the location of the TOML file you can run the command:
 
-```
+```bash
   magistrala-cli config <parameter> <value> -c "cli/file_name.toml"
 ```
 
@@ -918,14 +912,14 @@ The possible parameters that can be set using the config command are:
 
 | Flag             | Description                                          | Default                  |
 | ---------------- | ---------------------------------------------------- | ------------------------ |
-| bootstrap_url    | Bootstrap service URL                                | "http://localhost:9013"  |
-| certs_url        | Certs service URL                                    | "http://localhost:9019"  |
-| http_adapter_url | HTTP adapter URL                                     | "http://localhost/http"  |
+| bootstrap_url    | Bootstrap service URL                                |   [bootstrap_url][bootstrap]|
+| certs_url        | Certs service URL                                    | [certs_url][certs]  |
+| http_adapter_url | HTTP adapter URL                                     |  [http_adapter_url][http_adapter] |
 | msg_content_type | Message content type                                 | "application/senml+json" |
-| reader_url       | Reader URL                                           | "http://localhost"       |
-| things_url       | Things service URL                                   | "http://localhost:9000"  |
+| reader_url       | Reader URL                                           | [reader_url][reader]       |
+| things_url       | Things service URL                                   | [things_url][things]  |
 | tls_verification | Do not check for TLS cert                            |                          |
-| users_url        | Users service URL                                    | "http://localhost:9002"  |
+| users_url        | Users service URL                                    | [users_url][users]  |
 | state            | Bootstrap state query parameter                      |                          |
 | status           | User status query parameter                          |                          |
 | topic            | Subscription topic query parameter                   |                          |
@@ -938,3 +932,9 @@ The possible parameters that can be set using the config command are:
 | raw_output       | Enables raw output mode for easier parsing of output |                          |
 
 [releases]: https://github.com/absmach/magistrala/releases
+[bootstrap]: http://localhost:9013
+[certs]: http://localhost:9019
+[http_adapter]:http://localhost/http
+[reader]: http://localhost
+[things]: http://localhost:9000
+[users]:http://localhost:9002

@@ -534,7 +534,7 @@ Provision service provides an HTTP API to interact with [Magistrala][provision-a
 
 For gateways to communicate with [Magistrala][magistrala] configuration is required (MQTT host, thing, channels, certificates...). Gateway will send a request to [Bootstrap][bootstrap] service providing `<external_id>` and `<external_key>` in HTTP request to get the configuration. To make a request to [Bootstrap][bootstrap] service you can use [Agent][agent] service on a gateway.
 
-To create bootstrap configuration you can use [Bootstrap][bootstrap] or `Provision` service. [Magistrala UI][mfxui] uses [Bootstrap][bootstrap] service for creating gateway configurations. `Provision` service should provide an easy way of provisioning your gateways i.e creating bootstrap configuration and as many things and channels that your setup requires.
+To create bootstrap configuration you can use [Bootstrap][bootstrap] or `Provision` service. [Magistrala UI][mgui] uses [Bootstrap][bootstrap] service for creating gateway configurations. `Provision` service should provide an easy way of provisioning your gateways i.e creating bootstrap configuration and as many things and channels that your setup requires.
 
 Also, you may use provision service to create certificates for each thing. Each service running on gateway may require more than one thing and channel for communication.
 If, for example, you are using services [Agent][agent] and [Export][exp] on a gateway you will need two channels for `Agent` (`data` and `control`) and one thing for `Export`.
@@ -547,7 +547,7 @@ Provision service provides a way of specifying this `provision layout` and creat
 
 The service is configured using the environment variables presented in the following [table][config]. Note that any unset variables will be replaced with their default values.
 
-By default, call to `/mapping` endpoint will create one thing and two channels (`control` and `data`) and connect it as this is typical setup required by [Agent](/edge/#agent). If there is a requirement for different provision layout we can use [config][conftoml] file in addition to environment variables.
+By default, call to `/mapping` endpoint will create one thing and two channels (`control` and `data`) and connect it as this is typical setup required by [Agent](./edge.md#agent). If there is a requirement for different provision layout we can use [config][conftoml] file in addition to environment variables.
 
 For the purposes of running provision as an add-on in docker composition environment variables seems more suitable. Environment variables are set in [.env][env].
 
@@ -794,11 +794,11 @@ For more information about the Provision service API, please check out the [API 
 [magistrala]: https://github.com/absmach/magistrala
 [bootstrap]: https://github.com/absmach/magistrala/tree/main/bootstrap
 [agent]: https://github.com/absmach/agent
-[mgui]: https://github.com/absmach/magistrala-ui
 [config]: https://github.com/absmach/magistrala/tree/main/provision#configuration
-[env]: https://github.com/absmach/magistrala/blob/master/.env
-[conftoml]: https://github.com/absmach/magistrala/blob/master/docker/addons/provision/configs/config.toml
-[users]: https://github.com/absmach/magistrala/blob/master/users/README.md
+[env]: https://github.com/absmach/magistrala/blob/main/docker/.env
+[mgui]: https://github.com/absmach/magistrala-ui-new
+[conftoml]: https://github.com/absmach/magistrala/blob/main/docker/addons/provision/configs/config.toml
+[users]: https://github.com/absmach/magistrala/blob/main/users/README.md
 [exp]: https://github.com/absmach/export
 [cli]: https://github.com/absmach/magistrala/tree/main/cli
 [auth]: authentication.md

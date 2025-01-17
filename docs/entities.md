@@ -9,7 +9,7 @@ Client is a component that will replace and unify the Magistrala Things and User
 
 The client entity is represented by the Client struct in Go. The fields of this struct are as follows:
 
-```golang
+```go
 // Credentials represent client credentials: its
 // "identity" which can be a username, email, generated name;
 // and "secret" which can be a password or access token.
@@ -81,11 +81,11 @@ Things Service manages `things` and `channel`. `Thing` represents a device (or a
 - The API endpoint for interacting with channels are described in the [channels API][channels-api].
 - The CLI for interacting with channels are described in the [channels CLI][channels-cli].
 
-[users-api]: /api/#users
-[groups-api]: /api/#groups
-[things-api]: /api/#things
-[channels-api]: /api/#channels
-[users-cli]: /cli/#users-management
-[groups-cli]: /cli/#groups-management
-[things-cli]: /cli/#things-management
-[channels-cli]: /cli/#channels-management
+[users-api]: ./api.md#users
+[groups-api]: ./api.md#groups
+[things-api]: ./api.md#things
+[channels-api]: ./api.md#channels
+[users-cli]: ./cli.md#users-management
+[groups-cli]: ./cli.md#groups-management
+[things-cli]: ./cli.md#things-management
+[channels-cli]: ./cli.md#channels-management
