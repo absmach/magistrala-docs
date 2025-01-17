@@ -1,4 +1,6 @@
-# Events
+---
+title: Events
+---
 
 In order to be easily integratable system, Magistrala is using [Redis Streams][redis-streams] as an event log for event sourcing. Services that are publishing events to Redis Streams are `users` service, `things` service, `bootstrap` service and `mqtt` adapter.
 

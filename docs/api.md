@@ -1,4 +1,7 @@
-# API
+---
+title: API
+---
+
 
 ## Reference
 

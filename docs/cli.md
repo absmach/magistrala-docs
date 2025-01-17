@@ -1,4 +1,7 @@
-# CLI
+---
+title: CLI
+---
+
 
 Magistrala CLI makes it easy to manage users, things, channels and messages.
 

@@ -1,4 +1,6 @@
-# Tracing
+---
+title: Tracing
+---
 
 Distributed tracing is a method of profiling and monitoring applications. It can provide valuable insight when optimizing and debugging an application. Magistrala includes the [Jaeger][jaegertracing] open tracing framework as a service with its stack by default.
 

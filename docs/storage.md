@@ -1,4 +1,6 @@
-# Storage
+---
+title: Storage
+---
 
 Magistrala supports various storage databases in which messages are stored:
 

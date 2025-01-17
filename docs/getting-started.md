@@ -1,4 +1,6 @@
-# Getting Started
+---
+title: Getting Started
+---
 
 ## Step 1 - Run the System
 

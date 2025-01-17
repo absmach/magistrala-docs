@@ -1,4 +1,7 @@
-# Authentication
+---
+title: Authentication
+---
+
 
 ## User authentication
 

@@ -1,4 +1,6 @@
-# Twins Service
+---
+title: Twins Service
+---
 
 _Magistrala twins service is built on top of the Magistrala platform. In order to fully understand what follows, be sure to get acquainted with [overall Magistrala architecture][architecture]._
 

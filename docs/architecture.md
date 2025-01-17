@@ -1,4 +1,7 @@
-# Architecture
+---
+title: Architecture
+---
+
 
 ## Components
 

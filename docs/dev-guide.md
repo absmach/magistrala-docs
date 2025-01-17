@@ -1,4 +1,6 @@
-# Developer's guide
+---
+title: Developer's Guide
+---
 
 ## Getting Magistrala
 

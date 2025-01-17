@@ -1,4 +1,6 @@
-# Kubernetes
+---
+title: Kubernetes
+---
 
 Magistrala can be easily deployed on the Kubernetes platform using Helm Charts from the official [Magistrala DevOps GitHub repository](https://github.com/absmach/devops).
 

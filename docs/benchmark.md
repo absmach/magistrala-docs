@@ -1,4 +1,6 @@
-# Test spec
+---
+title: Test Spec
+---
 
 ## Tools
 

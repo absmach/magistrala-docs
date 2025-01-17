@@ -1,4 +1,6 @@
-# Edge
+---
+title: Edge
+---
 
 Magistrala IoT platform provides services for supporting management of devices on the edge. Typically, IoT solution includes devices (sensors/actuators) deployed in far edge and connected through some proxy gateway. Although most devices could be connected to the Magistrala directly, using gateways decentralizes system, decreases load on the cloud and makes setup less difficult. Also, gateways can provide additional data processing, filtering and storage.
 
