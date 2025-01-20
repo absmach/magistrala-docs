@@ -60,8 +60,8 @@ const config: Config = {
     navbar: {
       logo: {
         alt: 'Magistrala Logo',
-        src: 'img/logo-dark.png',
-        srcDark: 'img/logo-light1.png',
+        srcDark: 'img/logo-dark.png',
+        src: 'img/logo-light1.png',
       },
       items: [
         {
