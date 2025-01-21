@@ -1,4 +1,7 @@
-# Events
+---
+title: Events
+---
+
 
 In order to be easily integratable system, Magistrala is using [Redis Streams][redis-streams] as an event log for event sourcing. Services that are publishing events to Redis Streams are `users` service, `things` service, `bootstrap` service and `mqtt` adapter.
 
@@ -59,7 +62,7 @@ Whenever user is created, `users` service will generate new `create` event. This
        16) "-small-flower@email.com"
    ```
 
-As you can see from this example, every odd field represents field name while every even field represents field value. This is standard event format for Redis Streams. If you want to extract `metadata` field from this event, you'll have to read it as string first and then you can deserialize it to some structured format.
+   As you can see from this example, every odd field represents field name while every even field represents field value. This is standard event format for Redis Streams. If you want to extract `metadata` field from this event, you'll have to read it as string first and then you can deserialize it to some structured format.
 
 2. In Nats JetStream
 
@@ -70,6 +73,7 @@ As you can see from this example, every odd field represents field name while ev
    ```
 
 3. In RabbitMQ Streams
+
    ```json
    {
      "created_at": "2023-10-17T08:43:52.329385Z",
@@ -609,7 +613,7 @@ Whenever group is created, `users` service will generate new `create` event. Thi
        16) "e1b982d8-a332-4bc2-aaff-4bbaa86880fc"
    ```
 
-As you can see from this example, every odd field represents field name while every even field represents field value. This is standard event format for Redis Streams. If you want to extract `metadata` field from this event, you'll have to read it as string first and then you can deserialize it to some structured format.
+   As you can see from this example, every odd field represents field name while every even field represents field value. This is standard event format for Redis Streams. If you want to extract `metadata` field from this event, you'll have to read it as string first and then you can deserialize it to some structured format.
 
 2. In Nats JetStream
 
@@ -1110,7 +1114,7 @@ Whenever thing is created, `things` service will generate new `create` event. Th
        16) "1693311470576589894"
    ```
 
-As you can see from this example, every odd field represents field name while every even field represents field value. This is standard event format for Redis Streams. If you want to extract `metadata` field from this event, you'll have to read it as string first and then you can deserialize it to some structured format.
+   As you can see from this example, every odd field represents field name while every even field represents field value. This is standard event format for Redis Streams. If you want to extract `metadata` field from this event, you'll have to read it as string first and then you can deserialize it to some structured format.
 
 2. In Nats JetStreams
 
@@ -1783,7 +1787,7 @@ Whenever channel list by thing is fetched, `things` service will generate new `l
     14) "enabled"
 ```
 
-### Policy authorize event
+### Thing Policy authorize event
 
 Whenever policy is authorized, `things` service will generate new `authorize` event. This event will have the following format:
 
@@ -1823,7 +1827,7 @@ Whenever policy is authorized, `things` service will generate new `authorize` ev
    }
    ```
 
-### Policy add event
+### Thing Policy add event
 
 Whenever policy is added, `things` service will generate new `add` event. This event will have the following format:
 
@@ -1869,7 +1873,7 @@ Whenever policy is added, `things` service will generate new `add` event. This e
    }
    ```
 
-### Policy update event
+### Thing Policy update event
 
 Whenever policy is updated, `things` service will generate new `update` event. This event will have the following format:
 
@@ -1910,7 +1914,7 @@ Whenever policy is updated, `things` service will generate new `update` event. T
    }
    ```
 
-### Policy remove event
+### Thing Policy remove event
 
 Whenever policy is removed, `things` service will generate new `remove` event. This event will have the following format:
 
@@ -1950,7 +1954,7 @@ Whenever policy is removed, `things` service will generate new `remove` event. T
    }
    ```
 
-### Policy list event
+### Thing Policy list event
 
 Whenever policy list is fetched, `things` service will generate new `list` event. This event will have the following format:
 

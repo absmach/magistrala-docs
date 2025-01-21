@@ -1,4 +1,7 @@
-# Developer's guide
+---
+title: Developer's Guide
+---
+
 
 ## Getting Magistrala
 
@@ -13,7 +16,7 @@ cd $SOMEPATH/magistrala
 
 ## Building
 
-### Prerequisites
+### Building Prerequisites
 
 Make sure that you have [Protocol Buffers][protocol-buffers] (version 21.12) compiler (`protoc`) installed.
 
@@ -210,7 +213,7 @@ which will do this copying of the binaries.
 
 ## Deployment
 
-### Prerequisites
+### Deployment Prerequisites
 
 Magistrala depends on several infrastructural services, notably the default message broker, [NATS][nats] and [PostgreSQL][postgresql] database.
 
@@ -284,7 +287,6 @@ Please assure that MQTT microservice has `node_modules` installed, as explained 
 [cleanup-docker]: #cleaning-up-your-dockerized-magistrala-setup
 [docker-compose-ref]: https://docs.docker.com/compose/reference/overview/
 [docker-compose-extend]: https://docs.docker.com/compose/extends/
-[increase-nodes-memory]: https://medium.com/tomincode/increasing-nodes-memory-337dfb1a60dd
 [go-cross-compile]: https://dave.cheney.net/2015/08/22/cross-compilation-with-go-1-5
 [go-arm]: https://www.alexruf.net/golang/arm/raspberrypi/2016/01/16/cross-compile-with-go-1-5-for-raspberry-pi.html
 [wiki-go-arm]: https://go.dev/wiki/GoArm

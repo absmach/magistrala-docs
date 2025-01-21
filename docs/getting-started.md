@@ -1,4 +1,7 @@
-# Getting Started
+---
+title: Getting Started
+---
+
 
 ## Step 1 - Run the System
 
@@ -166,4 +169,4 @@ This proves that messages have been correctly sent through the system via the pr
 [docker-compose]: https://docs.docker.com/compose/install/
 [mg-releases]: https://github.com/absmach/magistrala/releases
 [cli]: cli.md
-[provisioning]: /provision/#platform-management
+[provisioning]: ./provision.md#platform-management

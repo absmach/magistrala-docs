@@ -1,6 +1,9 @@
-# Twins Service
+---
+title: Twins Service
+---
 
-_Magistrala twins service is built on top of the Magistrala platform. In order to fully understand what follows, be sure to get acquainted with [overall Magistrala architecture][architecture]._
+
+Magistrala twins service is built on top of the Magistrala platform. In order to fully understand what follows, be sure to get acquainted with [overall Magistrala architecture][architecture].
 
 ## What is Digital Twin
 
@@ -28,7 +31,7 @@ To overcome these problems, Magistrala comes with a **digital twin service**. Th
 
 Magistrala Twins service depends on the Magistrala IoT platform. The following diagram shows the place of the twins service in the overall [Magistrala architecture][architecture]:
 
-![Magistrala Twins service architecture][twins-arch]
+![Magistrala Twins service architecture](img/twins/architecture.png)
 
 You use an HTTP client to communicate with the twins service. Every request sent to the twins service is authenticated by users service. Twins service handles CRUD requests and creates, retrieves, updates and deletes twins. The CRUD operations depend on the database to persist and fetch already saved twins.
 
@@ -287,7 +290,7 @@ curl -s -S -i -X DELETE -H "Authorization: Bearer <user_token>" http://localhost
 
 ## STATES operations
 
-### List
+### STATES List
 
 ```bash
 curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost:9018/states/<twin_id>
@@ -336,11 +339,10 @@ Normally, you can use the default message broker, NATS, wildcards. In order to l
 
 Since messages published on message broker are republished on any other protocol supported by Magistrala - HTTP, MQTT, CoAP and WS - you can use any supported protocol client to pick up notifications.
 
-[architecture]: /architecture/#architecture
-[provision]: /provision/#provision
-[twins-arch]: img/twins/architecture.png
-[writer]: /storage/#writers
+[architecture]: ./architecture.md
+[provision]: ./provision.md
+[writer]: ./storage.md
 [senml]: https://tools.ietf.org/html/rfc8428#section-4.3
-[authentication]: /authentication/#authentication
-[twins-api]: https://github.com/absmach/magistrala/blob/master/api/openapi/twins.yml
-[messaging]: /messaging/#messaging
+[authentication]: ./authentication.md
+[twins-api]: https://github.com/absmach/magistrala/blob/main/api/openapi/twins.yml
+[messaging]: ./messaging.md

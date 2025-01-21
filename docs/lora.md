@@ -1,4 +1,6 @@
-# LoRa
+---
+title: LoRa
+---
 
 Bridging with LoRaWAN Networks can be done over the [lora-adapter][lora-adapter]. This service sits between Magistrala and [LoRa Server][lora-server] and just forwards the messages from one system to another via MQTT protocol, using the adequate MQTT topics and in the good message format (JSON and SenML), i.e. respecting the APIs of both systems.
 
