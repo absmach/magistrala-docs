@@ -1,5 +1,5 @@
-import {themes as prismThemes} from 'prism-react-renderer';
-import type {Config} from '@docusaurus/types';
+import { themes as prismThemes } from 'prism-react-renderer';
+import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
@@ -66,11 +66,18 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'mgSidebar',
+          sidebarId: 'userSidebar',
           position: 'left',
-          label: 'Docs',
+          label: 'User Documentation',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
+        // {
+        //   type: 'docSidebar',
+        //   sidebarId: 'devSidebar',
+        //   position: 'right',
+        //   label: 'Developer Documentation',
+        //   docsPluginId: 'dev-docs',
+        // },
+        { to: '/blog', label: 'Blog', position: 'right' },
         {
           href: 'https://github.com/absmach/magistrala',
           label: 'GitHub',
