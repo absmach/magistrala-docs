@@ -2,13 +2,13 @@
 title: Channels
 ---
 
-## **Creating a Channel**
-
 Channels are considered as message conduits.
 
 They are responsible for the messages exchange between Clients and act as message topic that can be be **published** or **subscribed** to by multiple Clients.
 
 Each Client can **publish or subscribe** to a Channel, facilitating seamless device-to-device communication. Although subtopics can exist, they are not required for basic interactions.
+
+## **Create a Channel**
 
 To create a channel, navigate to the fourth tab under the groups and click on `+ Create`. This will open a dialog box which will take in a unique Channel name. Much like the Clients, clicking on `+ Create Channels` will allow a user to upload a _.CSV_ file with multiple channels.
 
@@ -16,7 +16,7 @@ To create a channel, navigate to the fourth tab under the groups and click on `+
 
 ### Viewing a Channel
 
-After the Channel is created, clicking on it while it is on the Channel's table leads to the Channel View Page.
+After the Channel is created, clicking on it while it is on the Channel's table leads to the **Channel View** Page.
 
 ![View Group Channel](../docs/img/users-guide/group-channel-view.png)
 
@@ -26,6 +26,10 @@ Clients can be connected to channels in groups. This is done in the **Connection
 - **Publish**
 
 ![Connect Group Channel Clients](../docs/img/users-guide/group-channel-connections.png)
+
+This is required to send messages via the channels and has been discussed in [QuickStart Guide][users-quick-start]
+
+### Assign a User and Role to a Channel
 
 **User Management** in group-channels is pretty much the same as in the group-clients. A user can add roles and role actions to the channel.
 
@@ -46,3 +50,5 @@ Role Actions present include but are not limited to:
 - view_role_users
 
 > Channel Users are an upcoming feature to Magistrala.
+
+[users-quick-start]: users-quick-start.md

@@ -9,7 +9,7 @@ This guide will take you through the core services for a quick set up of Magistr
 
 After cloning and launching Magistrala, head to `localhost:3000` for the Magistrala UI platform.
 
-## **Signing Up**
+## **Sign Up**
 
 To create a new user with **standard permissions**, navigate to the **Register** page. The new user must provide:
 
@@ -25,13 +25,13 @@ Once registered, the user will receive a unique authentication token and be redi
 
 Tokens tend to expire after some time which will lead to the user being kicked out of the session. Do not be alarmed if this happens. Simply back log in through the Login page with the user's **username** or **email address** as well as password.
 
-## **Logging In**
+## **Log In**
 
 To access the platform, log in with your email or username and password.
 
 ![Login](../docs/img/users-guide/main-login.png)
 
-## **Logging into a Domain**
+## **Log into a Domain**
 
 Upon logging in, users are redirected to the **Domain Selection Page**.
 
@@ -45,7 +45,7 @@ Once you create a domain, you are given **Administrator** permission over the do
 
 We will delve deeper into Domains in another section. For now you need to be able to log into a Domain to move on to **Groups**.
 
-## **Creating a Group**
+## **Create a Group**
 
 Once logged in, you will be directed to the **Homepage** where you can view all the available entities in the domain.
 
@@ -63,7 +63,7 @@ You can also create multiple groups at the same time using a _.CSV_ file which h
 
 ![Create Groups](../docs/img/users-guide/jdoe-groups-page.png)
 
-## **Creating a Client**
+## **Create a Client**
 
 A **Client** represents a device connected to Magistrala, capable of communication with other devices.
 
@@ -82,7 +82,7 @@ A user can also create bulk clients by clicking on the `+ Create Clients` button
 
 ![Create Clients](../docs/img/users-guide/group-clients-create.png)
 
-### Viewing a Client
+### View a Client
 
 Once created, a **group-client** can be viewed and updated in the unique Client's ID page.
 To access the page, click on the Client in the Clients' table.
@@ -93,7 +93,7 @@ The client's data can be updated in this page and its ID copied as well.
 
 There **Connections** tab in the **group-client page** is where a User can connect a Client to a Channel.
 
-## **Creating a Channel**
+## **Create a Channel**
 
 Channels are considered as message conduits.
 
@@ -105,7 +105,7 @@ To create a channel, navigate to the fourth tab under the groups and click on `+
 
 ![Create Group Channel](../docs/img/users-guide/group-channel-create.png)
 
-### Viewing a Channel
+### View a Channel
 
 After the Channel is created, clicking on it while it is on the Channel's table leads to the Channel View Page.
 
@@ -118,7 +118,7 @@ Clients can be connected to channels in groups. This is done in the **Connection
 
 ![Connect Group Channel Clients](../docs/img/users-guide/group-channel-connections.png)
 
-## **Messaging**
+## **Send a Message**
 
 Once a Channel and Client are connected, a user is able to send messages. Navigate to the `Messages` tab of the Group-Channel and click on `**Send Messages**`.
 

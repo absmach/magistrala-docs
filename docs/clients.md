@@ -58,38 +58,17 @@ type Credentials struct {
 
 This means any physical device with an embedded system can be assigned a unique key, which acts as a token for publishing and subscribing to a Channel.
 
-A registered new client is of the form:
-
-```json
-{
-  "id": "bb7edb32-2eac-4aad-aebe-ed96fe073879",
-  "name": "clientName",
-  "tags": ["tag1", "tag2"],
-  "domain_id": "bb7edb32-2eac-4aad-aebe-ed96fe073879",
-  "credentials": {
-    "identity": "clientIdentity",
-    "secret": "bb7edb32-2eac-4aad-aebe-ed96fe073879"
-  },
-  "metadata": {
-    "model": "example"
-  },
-  "status": "enabled",
-  "created_at": "2019-11-26 13:31:52",
-  "updated_at": "2019-11-26 13:31:52"
-}
-```
-
 The **clientName** is not unique but its **ID** and **secret** are.
 The client ID is used during the connecting and assigning of clients while the **Key** is used primarily in sending and reading messages.
 
-### Creating a Client
+### Create a Client
 
-A **new client** can be created by navigating to the **Clients Page** and clicking the `+ Create Client` button.
-A dialog box will open, requiring fields such as **Name**.
+A **new client** can be created by navigating to the **Clients** section of the group ID page and clicking the `+ Create` button.
+A dialog box will open, requiring fields such as **Name** , **Key** which will be useful in messaging and **Metadata** which can be used in mapping.
 You can add a unique key for the thing, although one is automatically generated.
 Additionally, **tags** can be assigned to Clients for better organization and filtering.
 
-![Create Client](../docs/img/users-guide/client-create.png)
+![Create Client](../docs/img/users-guide/create-client.png)
 
 Any Client created while in the group can be connected to any channel within the group.
 
@@ -97,15 +76,15 @@ A user can also create bulk clients by clicking on the `+ Create Clients` button
 
 ![Create Clients](../docs/img/users-guide/clients-create.png)
 
-### Viewing a Client
+### View a Client
 
 Once created, a **client** can be viewed and updated in the unique Client's ID page. To access the page, click on the Client in the Clients' table.
 
 The client's data can be updated in this page and its ID copied as well.
 
-![View Client](../docs/img/users-guide/client-view.png)
+![View Client](../docs/img/users-guide/group-client-view.png)
 
-There is a section of **Bootstrap** under the Client details. We will delve deeper into Bootstrap Configurations later on. It is an addon that must be started from Magistrala to work on the UI.
+There is a section of **Bootstrap** under the Client details. We will delve deeper into [Bootstrap Configurations][Bootstraps] later on. It is an addon that must be started from Magistrala to work on the UI.
 
 The client can also be **disabled** which will have it present on the database with a status of 0. The user can also **enable** the client should they wish to.
 
@@ -121,14 +100,28 @@ A user can view the roles and role actions available to the client as well as cr
 
 ![View Client Role](../docs/img/users-guide/group-client-role-view.png)
 
+The available role actions that a client can have include:
+
+- update
+- read
+- delete
+- set_parent_group
+- connect_to_channel
+- manage_role
+- add_role_users
+- view_role_users
+- remove_role_users
+
 ![Create Client Role](../docs/img/users-guide/group-client-role-create.png)
 
 > A Group-Client can also have members present but this is an upcoming feature
 
-### Connecting a Client and Channel
+### Connect a Client and Channel
 
 Creating a channel pretty much follows the same steps as creating a Client. These Channels can then be connected to a Client with either `subscribe` or `publish` connection types or both.
 
 ![Connect Client](../docs/img/users-guide/client-connect.png)
 
 This will allow the Client to send messages or recieve messages from the Channel.
+
+[Bootstraps]: bootstraps.md

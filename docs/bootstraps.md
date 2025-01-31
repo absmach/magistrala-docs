@@ -2,7 +2,7 @@
 title: Bootstraps Service
 ---
 
-Bootstrapping is the process of automatically configuring a device to connect with the Magistrala platform without external input.
+**Bootstrapping** is the process of automatically configuring a device to connect with the Magistrala platform without external input.
 It is essential when devices need to establish or update their configuration due to various reasons such as failure to connect with Magistrala services or a need to refresh device credentials.
 Magistrala supports this self-starting bootstrapping process, but certain prerequisites must be met before the process can proceed.
 
@@ -18,11 +18,11 @@ A device can initiate a bootstrap when:
 
 ### Configuration Details
 
-The configuration of a Magistrala device (referred to as a "thing") consists of three main components:
+The configuration of a Magistrala device (referred to as a "client") consists of three main components:
 
 1. **Channels**: A list of Magistrala channels to which the device is connected. These channels must be pre-provisioned.
 2. **Custom Configuration**: Specific parameters that set up the device or can be left empty if no extra setup is required.
-3. **Thing Secret and Certificate Data**: Security information related to the device (such as client certificates and CA certificates).
+3. **Client Secret and Certificate Data**: Security information related to the device (such as client certificates and CA certificates).
 
 Additionally, the configuration includes an **external ID** and an **external key**, both of which are crucial for authenticating the device during the bootstrap process.
 
@@ -31,7 +31,7 @@ Additionally, the configuration includes an **external ID** and an **external ke
 To create a bootstrap configuration via the UI:
 
 1. **Access the Bootstraps Section**:
-   - Navigate to the **Bootstraps** option in the **Things Management** panel.
+   - Navigate to the **Bootstraps** option in the **Clients Management** panel.
    - Click on the **+ Create** button to open the **Create Bootstrap Configuration** dialog.
 
     ![Create Bootstrap Configuration](../docs/img/bootstraps/create-bootstrap.png)
@@ -41,9 +41,9 @@ To create a bootstrap configuration via the UI:
    - **External ID**: Provide a unique identifier for the device (e.g., MAC address or serial number).
    - **External Key**: Enter a secret key securely stored on the device, used for authentication during the bootstrap process.
    - **Channel(s)**: Select the channels to which the device will connect. These must be provisioned before setting up the configuration.
-   - **Thing**: Optionally, choose an existing thing or leave this field empty. If left empty, a new thing will be created with the configuration ID.
+   - **Client**: Optionally, choose an existing client or leave this field empty. If left empty, a new client will be created with the configuration ID.
 
-    ![Bootstrap Configuration Details](../docs/img/bootstraps/config-without-thing.png)
+    ![Bootstrap Configuration Details](../docs/img/bootstraps/config-without-client.png)
 
 3. **Encryption Settings**:
    - Expand the **Encryption Settings** section to enter optional encryption credentials.
@@ -64,17 +64,17 @@ To create a bootstrap configuration via the UI:
 
 1. **Bootstrap Configuration Details**:
    - Click on any configuration in the list to view its details.
-   - The configuration will show all fields, including the name, thing ID, channels, and state (enabled or disabled). It will also provide options to view and edit the custom content and encryption settings.
+   - The configuration will show all fields, including the name, client ID, channels, and state (enabled or disabled). It will also provide options to view and edit the custom content and encryption settings.
 
-   ![Bootstrap Configuration Details](../docs/img/bootstraps/thing-bootstrap-config.png)
+   ![Bootstrap Configuration Details](../docs/img/bootstraps/client-bootstrap-config.png)
 
-2. **Automatically Generated Things**:
-   - If a bootstrap configuration is created without specifying a thing, a new thing will be automatically generated using the configuration ID. This can be seen in the **Things** section.
-   - The new thing will appear in the things list with its status set to **Enabled**.
+2. **Automatically Generated Clients**:
+   - If a bootstrap configuration is created without specifying a client, a new client will be automatically generated using the configuration ID. This can be seen in the **Clients** section.
+   - The new client will appear in the clients list with its status set to **Enabled**.
 
-   ![Auto-Generated Thing](../docs/img/bootstraps/thing-less-config.png)
+   ![Auto-Generated Client](../docs/img/bootstraps/thing-less-config.png)
 
-    ![Auto-Generated Thing Things Page](../docs/img/bootstraps/new-bootstrap-thing-config.png)
+    ![Auto-Generated Client Clients Page](../docs/img/bootstraps/new-bootstrap-thing-config.png)
 
 ### Fields Overview
 

@@ -125,3 +125,21 @@ Role Actions present include but are not limited to:
   - subgroup_manage_role
   - subgroup_remove_role_users
   - subgroup_view_role_users
+
+### Assigning Clients to Groups
+
+Clients present in the domain can be assigned to the group.
+
+A user can also create clients specific to the group while on the fourth tab of the view group page. Any group member can then have permissions over the client as specified by their roles.
+
+![View Group Clients](../docs/img/users-guide/group-view-clients-create.png)
+
+### Assigning Channels to Groups
+
+A user can create a channel or channels specific to the group while on the view group channels page. Any group member can then be specified to have certain roles over the channel.
+
+![Assign Channel to Groups](../docs/img/users-guide/group-view-channels-create.png)
+
+### Audit Logs
+
+Audit logs track all **group events**, from **creation** to **updates** and **disabling**.
