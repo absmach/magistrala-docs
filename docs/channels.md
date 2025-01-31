@@ -55,4 +55,17 @@ Role Actions present include but are not limited to:
 
 > Channel Users are an upcoming feature to Magistrala.
 
+## Send a Message
+
+Once a Channel and Client are connected, a user can send messages with the channel as a topic and the client unique key. Messages sent are typically in SeNML format.
+
+![View Messages Page](../docs/img/users-guide/group-messages-view.png)
+
+fields bear an asterisk. Messages are sent via _HTTP_ protocol in the UI.
+
+![Send Message](../docs/img/users-guide/group-send-message.png)
+
+The messages table will then update to include the message sent with the latest message appearing first.
+Using the filter options, you can filter through a wide range of messages based on the protocol, publisher or even value.
+
 [users-quick-start]: users-quick-start.md

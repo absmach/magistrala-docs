@@ -18,7 +18,7 @@ To create a new user with **standard permissions**, navigate to the **Register**
 - **A unique email address**
 - **A username**
 
-![Sign Up](../docs/img/users-guide/registeruser.png)
+![Sign Up](../docs/img/users-guide/registeruser2.png)
 
 Once registered, the user will receive a unique authentication token and be redirected to the **Domains Homepage**, where they can create and manage multiple domains.
 
@@ -77,7 +77,7 @@ If a user forgets their password, they can use the **Forgot Password** link. Thi
 
 > **Important:** To enable email notifications, ensure the **mailing functionality** is correctly configured in [Magistrala’s environment file](https://github.com/absmach/magistrala/blob/main/docker/.env#L199-#L206). This setup is crucial for password recovery and other email-based functionalities.
 
-![Forgot Password](../docs/img/users-guide/forgot-password.png)
+![Forgot Password](../docs/img/users-guide/forgot-password2.png)
 
 > Always ensure you have set up your email as discussed before to ensure that the email is received.
 
