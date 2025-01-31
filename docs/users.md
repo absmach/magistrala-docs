@@ -67,13 +67,13 @@ Magistrala supports **English, German, and Serbian** languages and offers **four
 ### Log Out
 
 Finally, there is the logout option which kills the current session and logs the user out.
-This does not result in deletion of the user but will just redirect you to the main l**Login Page**. Ensure any updated settings are saved before logging out.
+This does not result in deletion of the user but will just redirect you to the main **Login Page**. Ensure any updated settings are saved before logging out.
 
 If the session expires while on the **Domains Homepage** or within a domain, attempting any action may result in a **"Failed to perform authorization"** error. Logging out and back in will resolve this.
 
 ### Password Recovery
 
-If a user forgets their password, they can use the **Forgot Password** link. This will direct them to a page where they enter their email address, and a reset link will be sent to their email.
+If a user forgets their password, they can use the **Forgot Password** link. This will direct them to a page where they will enter their email address, and a reset link will be sent to their email.
 
 > **Important:** To enable email notifications, ensure the **mailing functionality** is correctly configured in [Magistrala’s environment file](https://github.com/absmach/magistrala/blob/main/docker/.env#L199-#L206). This setup is crucial for password recovery and other email-based functionalities.
 

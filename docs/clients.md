@@ -90,7 +90,7 @@ The client can also be **disabled** which will have it present on the database w
 
 ### Connect a Client
 
-There **Connections** tab in the **client page** is where a User can connect a Client to a Channel.
+There is a **Connections** tab in the **client page** is where a User can connect a Client to a Channel.
 
 > This tab is currently inactive
 
@@ -98,7 +98,7 @@ There **Connections** tab in the **client page** is where a User can connect a C
 
 A user can view the roles and role actions available to the client as well as create new roles and role actions.
 
-![View Client Role](../docs/img/users-guide/group-client-role-view3.png)
+![View Client Role](../docs/img/users-guide/group-client-role-view4.png)
 
 The available role actions that a client can have include:
 

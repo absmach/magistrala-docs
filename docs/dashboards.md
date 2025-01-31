@@ -2,7 +2,6 @@
 title: Dashboards
 ---
 
-## Dashboards Introduction
 
 Magistrala provides a powerful feature in **Dashboards**.
 Dashboards allows a user to create as well as customise instruments for monitoring and managing their data and devices efficiently.
