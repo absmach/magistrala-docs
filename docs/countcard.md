@@ -6,13 +6,15 @@ title: Count Card
 A **Count Card** displays the total number of entities (such as devices, channels, members, or groups) within a domain.
 It provides a quick snapshot of how many entities are currently available, based on the selected entity type and status.
 
+## Create a Count Card
+
 To create a Count Card, ensure your dashboard is in **Edit Mode**.
 Click the **+ Add Widget** button and select **Count Card** from the list of available widgets.
 This will open the **Create Count Card** dialog, where you can configure the card's data source and appearance.
 
 ![Count Card Dialog](../docs/img/dashboards/generic-countcard-dialog.png)
 
-#### Configuring the Count Card
+### Configuring the Count Card
 
 1. **Entity Type**: Select the type of entity you wish to count in the card. The available options include:
    - **Thing** (device)
@@ -36,7 +38,7 @@ The card will immediately display the total count of entities based on the selec
 
 You can edit a Count Card by clicking the **Pencil Icon** in the top-right corner of the widget. This will open a sheet on the right, allowing you to adjust the data source, entity status, tag, and other settings.
 
-#### Editing the Count Card
+## Edit the Count Card
 
 1. **Data Source**: Modify the **Entity Type**, **Status**, or **Tag** to change the entities being counted.
 2. **Update Interval**: Adjust how often the card should refresh with the latest count.
@@ -48,7 +50,7 @@ Once the updates are made, click **Update** to save the changes. The count card 
 
   ![Updated Count Card](../docs/img/dashboards/edited-countcard.png)
 
-#### Customizing Count Cards
+### Customizing Count Cards
 
 Count Cards are versatile and can be customized to suit your needs. You can easily change the title, status, tags, and icons displayed on the card. The image below highlights the key customizable features:
 

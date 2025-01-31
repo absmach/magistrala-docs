@@ -23,7 +23,7 @@ Each gauge widget can be configured to show specific values based on the connect
 The **Simple Gauge** widget displays the latest value from a selected data source, like voltage, pressure, or other metrics.
 The gauge is customizable, allowing you to set the minimum and maximum value range, update intervals, and title.
 
-### **Steps to Create a Simple Gauge**
+### Create a Simple Gauge
 
 1. Ensure the dashboard is in **Edit Mode**.
 2. Click the **+ Add Widget** button and select **Simple Gauge** from the widget list. This will open the gauge configuration dialog.
@@ -56,11 +56,11 @@ You can edit the gauge later by clicking the **Pencil Icon** on the widget, allo
 
 ---
 
-### 6.2 Temperature Gauge
+## Temperature Gauge
 
 The **Temperature Gauge** widget functions similarly to the Simple Gauge but is tailored for temperature values. It displays the latest temperature data from a connected device.
 
-#### **Steps to Create a Temperature Gauge**
+### Create a Temperature Gauge
 
 1. Start by putting the dashboard in **Edit Mode**.
 2. Click **+ Add Widget** and select **Temperature Gauge** from the list. This will open the temperature gauge configuration dialog.
@@ -86,11 +86,11 @@ You can modify the gauge by clicking the **Pencil Icon** on the widget, allowing
 
 ---
 
-### 6.3 Speed Gauge
+## Speed Gauge
 
 The **Speed Gauge** widget tracks speed or velocity values from connected devices. It functions similarly to the Simple and Temperature Gauges, but the units and appearance are tailored for speed data.
 
-#### **Steps to Create a Speed Gauge**
+### Create a Speed Gauge
 
 1. Ensure the dashboard is in **Edit Mode**.
 2. Click **+ Add Widget** and select **Speed Gauge** from the list of available widgets.
@@ -114,7 +114,7 @@ The **Speed Gauge** widget tracks speed or velocity values from connected device
 
 ---
 
-### **Conclusion**
+#### **Conclusion**
 
 Gauges provide a highly visual, intuitive way to track live data for a variety of metrics.
 Whether you're monitoring voltage, temperature, or speed, these widgets offer flexibility in displaying the most important data from your connected IoT devices.

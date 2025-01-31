@@ -2,7 +2,7 @@
 title: Line Chart
 ---
 
-### **1. Line Chart**
+### Create a Line Chart
 
 To create a Line Chart, first ensure that the dashboard is in **Edit Mode**.
 Click on the '+ Add Widget' button, which will open a dialog box displaying all the available widgets.
@@ -26,6 +26,8 @@ Once you're satisfied with your settings, click the **Create** button to save th
 This will close the dialog and add the new Line Chart to your dashboard.
 
 ![LineChart Created](../docs/img/dashboards/created-linechart.png)
+
+### Edit the Line Chart
 
 You can edit the chart at any time by clicking the **Pencil Icon** on the widget. This will open a settings sheet on the right, where you can modify the chart’s data sources, labels, intervals, and title.
 

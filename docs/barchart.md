@@ -4,6 +4,9 @@ title: Bar Chart
 
 
 Much like the Line Chart the Bar Chart has a similar Timeseries form in its dialogbox.
+
+### Create a Bar Chart
+
 To create a Bar Chart, first ensure that the dashboard is in **Edit Mode**.
 Click on the '+ Add Widget' button, which will open a dialog box displaying all the available widgets.
 Select the **Bar Chart** option from the list.
@@ -19,6 +22,8 @@ After configuring your chart, click the **Create** button to save the Bar Chart 
 This will close the dialog and add the Bar Chart to your dashboard.
 
 ![Created Bar Chart](../docs/img/dashboards/new-barchart.png)
+
+### Edit the Bar Chart
 
 You can edit an existing Bar Chart by clicking the **Pencil Icon** on the top-right corner of the chart. This will open an edit sheet to the right, where you can modify the data sources, labels, time window, and other settings.
 

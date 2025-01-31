@@ -26,7 +26,7 @@ The configuration of a Magistrala device (referred to as a "client") consists of
 
 Additionally, the configuration includes an **external ID** and an **external key**, both of which are crucial for authenticating the device during the bootstrap process.
 
-### Creating a Bootstrap Configuration
+### Create a Bootstrap Configuration
 
 To create a bootstrap configuration via the UI:
 
@@ -60,7 +60,7 @@ To create a bootstrap configuration via the UI:
 
     ![Created Bootstrap Configuration](../docs/img/bootstraps/new-bootstrap.png)
 
-### Viewing and Managing Bootstrap Configurations
+### View and Manage Bootstrap Configurations
 
 1. **Bootstrap Configuration Details**:
    - Click on any configuration in the list to view its details.
@@ -84,7 +84,7 @@ To create a bootstrap configuration via the UI:
 4. **Content**: Custom parameters that configure the device. It can be empty if no additional setup is needed.
 5. **Encryption Settings**: Includes fields for client certificates and CA certificates, necessary for secure bootstrapping using TLS.
 
-### Enabling and Managing Bootstraps
+### Enable and Manage Bootstraps
 
 - After creating a bootstrap configuration, you can enable or disable it. Enabling the configuration allows the device to start the bootstrapping process.
 - You can edit or delete the configuration using the icons next to each field. Changes can include updating channels, modifying encryption settings, or editing custom content.

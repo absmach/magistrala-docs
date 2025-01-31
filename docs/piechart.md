@@ -6,6 +6,8 @@ title: Pie Chart
 Pie Charts offer a simple yet effective way to compare different data points by visualizing them as proportions of a whole.
 Unlike other timeseries charts, Pie Charts only display the **latest value** from each data source, making them ideal for showing the most recent data from multiple sources in a comparative manner.
 
+## Create a Pie Chart
+
 To create a Pie Chart, ensure that your dashboard is in **Edit Mode**.
 Click the '+ Add Widget' button, and from the list of available widgets, select **Pie Chart**.
 
@@ -31,6 +33,8 @@ Once everything is set, click the **Create** button to save the Pie Chart widget
 
 ![New Pie Chart](../docs/img/dashboards/new-piechart.png)
 
+## Edit the Pie Chart
+
 To edit a Pie Chart, click the **Pencil Icon** on the top-right corner of the widget.
 This will open the edit sheet on the right, where you can adjust the data sources, labels, colors, time window, and other settings.
 
@@ -55,7 +59,7 @@ For example, setting the aggregation to **Maximum** will display the highest val
 
 ![Maximum Pie Chart](../docs/img/dashboards/max-piechart.png)
 
-#### Customizing Pie Charts
+### Customize Pie Charts
 
 - **Multiple Data Sources**: To get the most out of Pie Charts, it’s recommended to add multiple data sources. This way, you can easily compare how different data points relate to each other.
 - **Color Customization**: Each slice in the pie chart represents a different data source, and the color picker allows you to easily distinguish between them.

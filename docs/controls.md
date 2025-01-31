@@ -15,7 +15,7 @@ There are two main types of **Control Cards**:
 
 A **Switch Card** sends **boolean** values (`true` or `false`, equivalent to `ON` and `OFF`) to a connected **client** through a **channel**. It is useful for controlling devices like lights, motors, or sensors.
 
-### Creating a Switch Card
+### Create a Switch Card
 
 To create a **Switch Card**, follow these steps:
 
@@ -25,7 +25,7 @@ To create a **Switch Card**, follow these steps:
 
 ![Create Switch Dialog](../docs/img/dashboards/create-switch.png)
 
-### Configuring the Switch Card
+### Configure the Switch Card
 
 The **Create Switch** dialog box contains the following settings:
 
@@ -40,7 +40,7 @@ Once the required fields are filled in, click **"Create"** to add the switch to 
 
 ---
 
-### **Using the Switch Card**
+#### **Using the Switch Card**
 
 Once created, the switch card appears on the dashboard with the configured **title** and **value name**.
 
@@ -51,7 +51,7 @@ Once created, the switch card appears on the dashboard with the configured **tit
 
 ---
 
-### **Editing a Switch Card**
+### Edit a Switch Card
 
 You can edit the **Switch Card** settings by clicking the **pencil icon** in the top-right corner of the widget. This will open the **Update Switch** dialog.
 
@@ -68,7 +68,7 @@ Once changes are made, click **"Update"** to save them.
 
 ---
 
-### **Using the Switch Card (ON State)**
+#### **Using the Switch Card (ON State)**
 
 After editing, the switch can be toggled to the **ON** (`true`) state, sending a command to the connected device.
 
@@ -90,7 +90,7 @@ Key benefits of **Switch Cards**:
 
 A **Slider Card** sends **numeric values** to a connected **client** through a **channel**. It allows for adjustable input, making it useful for controlling settings like **temperature, voltage, or airflow**.
 
-### **Creating a Slider Card**
+### Create a Slider Card
 
 To create a **Slider Card**, follow these steps:
 
@@ -100,7 +100,7 @@ To create a **Slider Card**, follow these steps:
 
 ![Create Slider Dialog](../docs/img/dashboards/create-slider.png)
 
-### **Configuring the Slider Card**
+### Configure the Slider Card
 
 The **Create Slider** dialog contains the following settings:
 
@@ -118,7 +118,7 @@ Once the required fields are filled in, click **"Create"** to add the slider to 
 
 ---
 
-### **Using the Slider Card**
+#### **Using the Slider Card**
 
 Once created, the slider card appears on the dashboard with the configured **title** and **value name**.
 
@@ -129,7 +129,7 @@ Once created, the slider card appears on the dashboard with the configured **tit
 
 ---
 
-### **Editing a Slider Card**
+### Edit a Slider Card
 
 You can edit the **Slider Card** settings by clicking the **pencil icon** in the top-right corner of the widget. This will open the **Update Slider** dialog.
 

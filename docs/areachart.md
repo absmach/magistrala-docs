@@ -4,6 +4,9 @@ title: Area Chart
 
 
 Creating an Area Chart follows a process similar to other timeseries charts, but it offers a visually distinct way to represent data trends over time.
+
+### Create an Area Chart
+
 To create an Area Chart, ensure your dashboard is in **Edit Mode**.
 Click the '+ Add Widget' button, then select the **Area Chart** option from the widget list.
 This will open the **Create Area Chart** dialog, where you can configure your settings and data sources.
@@ -25,6 +28,8 @@ In the **Settings** tab, you can adjust the **Update Interval** (how often the c
 After configuring everything, click the **Create** button to add the Area Chart to your dashboard.
 
 ![Created Area Chart](../docs/img/dashboards/new-areachart1.png)
+
+### Edit an Area Chart
 
 You can edit your Area Chart anytime by clicking the **Pencil Icon** on the top-right corner of the widget. This will open the edit sheet on the right, where you can modify data sources, the chart title, and adjust settings like the time window.
 

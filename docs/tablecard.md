@@ -6,12 +6,14 @@ title: Table Card
 A **Table Card** displays a list of entities (such as devices, members, or groups) within a domain, showing both enabled and disabled entities.
 It also includes pagination to help manage large lists effectively.
 
+## Create a Table Card
+
 To create a Table Card, ensure your dashboard is in **Edit Mode**.
 Click the **+ Add Widget** button and select **Table Card** from the list of available widgets.
 
 This will open the **Create Table Card** dialog, where you can configure the card's data source and appearance.
 
-#### Configuring the Table Card
+### Configuring the Table Card
 
 1. **Entity Type**: Select the type of entity you wish to display in the table. The available options include:
    - **Client** (device)
@@ -43,7 +45,7 @@ The card also includes pagination at the bottom, allowing you to navigate throug
 You can edit a Table Card by clicking the **Pencil Icon** in the top-right corner of the widget.
 This will open a sheet on the right, allowing you to adjust the data source, entity status, tag, and other settings.
 
-#### Editing the Table Card
+## Edit the Table Card
 
 1. **Data Source**: Modify the **Entity Type**, **Status**, or **Tag** to change the entities displayed in the table.
 2. **Update Interval**: Adjust how often the table should refresh with the latest data.
@@ -57,7 +59,7 @@ The table card will refresh with the new data and settings.
 
    ![Updated Table Card](../docs/img/dashboards/edited-tablecard.png)
 
-#### Customizing Table Cards
+### Customizing Table Cards
 
 - **Entity Types**: Table Cards are versatile because they can display a variety of entities (Clients, Channels, Members, Groups). Each selection offers relevant insights into your domain's structure and activity.
 

@@ -2,8 +2,6 @@
 title: Domains Service
 ---
 
-## Domains Introduction
-
 A **Domain** is a workspace that contains **Clients**, **Channels**, **Groups**, **Dashboards** as well as **Roles** and **Rules Engine** Services.
 A user can create as many domains as they please. A **Super Admin** has access to all domains present in the system. But a **User** must be a member or creator of a domain to log into it.
 

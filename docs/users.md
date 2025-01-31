@@ -4,8 +4,6 @@ title: Users Service
 
 Users can be assigned multiple roles, granting them permissions over devices, domains, and channels within the platform.
 
-## User Client Platform
-
 ### Log In
 
 To access the platform, log in with your email and password.
@@ -66,7 +64,7 @@ Magistrala supports **English, German, and Serbian** languages and offers **four
 
 ![Themes](../docs/img/users-guide/jdoe-themes-tab.png)
 
-### Logging Out
+### Log Out
 
 Finally, there is the logout option which kills the current session and logs the user out.
 This does not result in deletion of the user but will just redirect you to the main l**Login Page**. Ensure any updated settings are saved before logging out.

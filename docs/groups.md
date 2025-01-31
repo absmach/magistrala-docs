@@ -4,7 +4,7 @@ title: Groups Service
 
 **Groups** are multiples of Users. By itself, the service can have domain members assigned to groups. These members will have all the roles and permissions that the group has over any other entity present in the group. This allows for ease of management of a multitude of Users making it more efficient.
 
-## Creating a Group
+## Create a Group
 
 To create a group, click on the `+ Create` button present on the top-left corner of the page. This will open a popover with all the required fields for a new group.
 
@@ -16,7 +16,7 @@ You can also create multiple groups at the same time using a _.CSV_ file which h
 
 ![Create Groups](../docs/img/users-guide/jdoe-groups-page.png)
 
-### Viewing a Group
+### View a Group
 
 After creating a group, it will show up on the page as the first group created.
 
@@ -36,7 +36,7 @@ A group can alsp be diabled or enabled by anyone with `edit` privileges. This is
 
 ## User Management in Groups
 
-### Assigning a User to a Group
+### Assign a User to a Group
 
 A user can assign and unassign users to a specific group and provide them with policies over the entities the groups has control over.
 This allows for a more streamlined approach to more than one user.
@@ -48,7 +48,7 @@ A user can be a member of more than one group with different policies over each 
 
 > This feature is currently disabled and will be added with later iterations.
 
-### Assigning Roles to a Group
+### Assign Roles to a Group
 
 A user can assign **Roles** created in the Domain to certain groups. This can be done in the third tab of the groups page. These roles can vary depending on which role actions the user desires the group to have.
 
@@ -126,7 +126,7 @@ Role Actions present include but are not limited to:
   - subgroup_remove_role_users
   - subgroup_view_role_users
 
-### Assigning Clients to Groups
+### Assign Clients to Groups
 
 Clients present in the domain can be assigned to the group.
 
@@ -134,7 +134,7 @@ A user can also create clients specific to the group while on the fourth tab of 
 
 ![View Group Clients](../docs/img/users-guide/group-view-clients-create.png)
 
-### Assigning Channels to Groups
+### Assign Channels to Groups
 
 A user can create a channel or channels specific to the group while on the view group channels page. Any group member can then be specified to have certain roles over the channel.
 

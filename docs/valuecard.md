@@ -6,12 +6,14 @@ title: Value Card
 A **Value Card** displays the latest value of a message from a connected channel, providing a quick snapshot of real-time data.
 Unlike timeseries charts, Value Cards do not need a time interval because they only show the most recent message from the selected data source.
 
+## Create a Value Card
+
 To create a Value Card, ensure your dashboard is in **Edit Mode**.
 Click the '+ Add Widget' button, then select **Value Card** from the list of available widgets.
 
 This will open the **Create Value Card** dialog, where you can configure the card's data source and appearance.
 
-#### Configuring the Value Card
+### Configuring the Value Card
 
 1. **Channel**: Select the channel from which the card will pull data.
 2. **Client**: Choose the connected device (client) that corresponds to the channel.
@@ -30,6 +32,8 @@ The card will immediately display the latest value from the channel, along with 
 
 ![Value Card Created](../docs/img/dashboards/new-valuecard.png)
 
+## Edit the Value Card
+
 You can edit a Value Card by clicking the **Pencil Icon** in the top-right corner of the widget.
 This will open a sheet on the right, allowing you to adjust the data source, title, icon, and other settings.
 
@@ -46,7 +50,7 @@ The card will refresh with the new configuration, showing the updated data and i
 
 ![Updated Value Card](../docs/img/dashboards/edited-valuecard.png)
 
-#### Customizing Value Cards
+### Customizing Value Cards
 
 - **Icons**: The ability to select an icon is crucial for visually representing the type of data displayed. For example, you can choose an "activity" icon for voltage or a "thermometer" icon for temperature.
 - **Display**: The value card displays the value, unit, and the last update time, ensuring that users can quickly grasp the current status of the connected device or channel.

@@ -49,9 +49,9 @@ const sidebars: SidebarsConfig = {
       items: [
         {type: 'doc', id: 'dashboards', label: 'Dashboards'},
         {type: 'doc', id: 'widgets', label: 'Widgets'},
+        {type: 'doc', id: 'linechart', label: 'Line Chart'},
         {type: 'doc', id: 'areachart', label: 'Area Chart'},
         {type: 'doc', id: 'barchart', label: 'Bar Chart'},
-        {type: 'doc', id: 'linechart', label: 'Line Chart'},
         {type: 'doc', id: 'gauges', label: 'Gauges'},
         {type: 'doc', id: 'piechart', label: 'Pie Chart'},
         {type: 'doc', id: 'countcard', label: 'Count Card'},
