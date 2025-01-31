@@ -66,6 +66,11 @@ const sidebars: SidebarsConfig = {
       id: 'users',
       label: 'Profile Management',
     },
+    {
+      type: 'doc',
+      id: 'rules-engine',
+      label: 'Rules Engine',
+    },
   ],
   devSidebar: [
     {
