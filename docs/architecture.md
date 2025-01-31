@@ -8,29 +8,28 @@ Magistrala IoT platform is comprised of the following services:
 
 | Service                          | Description                                                                             |
 | :------------------------------- | :-------------------------------------------------------------------------------------- |
-| [users][users-service]           | Manages platform's users and auth concerns in regards to users and groups               |
-| [things][things-service]         | Manages platform's things, channels and auth concerns in regards to things and channels |
-| [http-adapter][http-adapter]     | Provides an HTTP interface for sending messages via HTTP                                |
 | [mqtt-adapter][mqtt-adapter]     | Provides an MQTT and MQTT over WS interface for sending and receiving messages via MQTT |
-| [ws-adapter][ws-adapter]         | Provides a WebSocket interface for sending and receiving messages via WS                |
-| [coap-adapter][coap-adapter]     | Provides a CoAP interface for sending and receiving messages via CoAP                   |
-| [opcua-adapter][opcua-adapter]   | Provides an OPC-UA interface for sending and receiving messages via OPC-UA              |
-| [lora-adapter][lora-adapter]     | Provides a LoRa Server forwarder for sending and receiving messages via LoRa            |
 | [magistrala-cli][magistrala-cli] | Command line interface                                                                  |
+| [bootstrap][bootstrap]           | Provides basic configuration for newly created clients                                  |
+| [consumers][consumers]           | An abstraction of SuperMQ consumers that receives messages                              |
+| [email][email]                   | Magistrala Email Agent is used for sending emails                                       |
+| [provision][provision]           | Provides a HTTP API to interact with SuperMQ and setup configurations                   |
+| [rules-engine][rules-engine]     | Create rules using LUA script that process incoming messages                            |
+| [readers][readers]               | Implement message readers ie Postgres and Timescale                                     |
 
 ![arch](img/architecture.jpg)
 
 ## Domain Model
 
-The platform is built around 2 main entities: **users** and **things**.
+The platform is built upon [SuperMQ][supermq] which is built around 2 main entities: **users** and **clients**.
 
-`User` represents the real (human) user of the system. Users are represented via their email address used as their identity, and password used as their secret, which they use as platform access credentials in order to obtain an access token. Once logged into the system, a user can manage their resources (i.e. groups, things and channels) in CRUD fashion and define access control policies by connecting them.
+`User` represents the real (human) user of the system. Users are represented via their email address, first and last names, a unique username, and password used as their secret, which they use as platform access credentials in order to obtain an access token. Once logged into the system, a user can manage their resources (i.e. groups, clients and channels) in CRUD fashion and define access control policies by connecting them.
 
-`Group` represents a logical groupping of users. It is used to simplify access control management by allowing users to be grouped together. When assigning a user to a group, we create a policy that defines what that user can do with the resources of the group. This way, a user can be assigned to multiple groups, and each group can have multiple users assigned to it. Users in one group have access to other users in the same group as long as they have the required policy. A group can also be assigned to another group, thus creating a group hierarchy. When assigning a user to a group we create a policy that defines what that user can do with the group and other users in the group.
+`Group` represents a logical grouping of users. It is used to simplify access control management by allowing users to be grouped together. When assigning a user to a group, we create a policy that defines what that user can do with the resources of the group through roles as well as specific role actions. This way, a user can be assigned to multiple groups, and each group can have multiple users assigned to it. Users in one group have access to other users in the same group as long as they have the required roles. A group can also be assigned to another group, thus creating a group hierarchy. When assigning a user to a group we create a policy that defines what that user can do with the group and other users in the group.
 
-`Thing` represents devices (or applications) connected to Magistrala that uses the platform for message exchange with other "things".
+`Client` represents devices (or applications) connected to Magistrala that uses the platform for message exchange with other "clients".
 
-`Channel` represents a communication channel. It serves as a message topic that can be consumed by all of the things connected to it. It also servers as grouping mechanism for things. A thing can be connected to multiple channels, and a channel can have multiple things connected to it. A user can be connected to a channel as well, thus allowing them to have an access to the messages published to that channel and also things connected to that channel with the required policy. A channel can also be assigned to another channel, thus creating a channel hierarchy. Both things and users can be assigned to a channel. When assigning a thing to a channel, we create a policy that defines what that thing can do to the channel, for example reading or writing messages to it. When assigning a user to a channel, we create a policy that defines what that user can do with the channel and things connected to it, hereby enabling the sharing of things between users.
+`Channel` represents a communication channel. It serves as a message topic that can be consumed by all of the clients connected to it. It also servers as grouping mechanism for clients. A client can be connected to multiple channels, and a channel can have multiple clients connected to it. A user can be connected to a channel as well, thus allowing them to have an access to the messages published to that channel and also clients connected to that channel with the required policy. Both clients and users can be assigned to a channel. When assigning a client to a channel, we create a policy that defines what that client can do to the channel, for example reading or writing messages to it. When assigning a user to a channel, we create a policy that defines what that user can do with the channel and clients connected to it, hereby enabling the sharing of clients between users.
 
 ## Messaging
 
@@ -49,14 +48,7 @@ Magistrala platform can be run on the edge as well. Deploying Magistrala on a ga
 
 Running Magistrala on gateway moves computation from cloud towards the edge thus decentralizing IoT system. Since we can deploy same Magistrala code on gateway and in the cloud there are many benefits but the biggest one is easy deployment and adoption - once engineers understand how to deploy and maintain the platform, they will be able to apply those same skills to any part of the edge-fog-cloud continuum. This is because the platform is designed to be consistent, making it easy for engineers to move between them. This consistency will save engineers time and effort, and it will also help to improve the reliability and security of the platform. Same set of tools can be used, same patches and bug fixes can be applied. The whole system is much easier to reason about, and the maintenance is much easier and less costly.
 
-[users-service]: https://github.com/absmach/magistrala/tree/main/users
-[things-service]: https://github.com/absmach/magistrala/tree/main/things
-[http-adapter]: https://github.com/absmach/magistrala/tree/main/http
-[mqtt-adapter]: https://github.com/absmach/magistrala/tree/main/mqtt
-[coap-adapter]: https://github.com/absmach/magistrala/tree/main/coap
-[ws-adapter]: https://github.com/absmach/magistrala/tree/main/ws
-[opcua-adapter]: https://github.com/absmach/magistrala/tree/main/opcua
-[lora-adapter]: https://github.com/absmach/magistrala/tree/main/lora
+[mqtt-adapter]: https://github.com/absmach/magistrala/tree/main/tools/mqtt-benc
 [magistrala-cli]: https://github.com/absmach/magistrala/tree/main/cli
 [nats]: https://nats.io/
 [rabbitmq]: https://www.rabbitmq.com/
@@ -65,3 +57,10 @@ Running Magistrala on gateway moves computation from cloud towards the edge thus
 [senml]: https://tools.ietf.org/html/draft-ietf-core-senml-08
 [agent]: ./edge.md#agent
 [export]: ./edge.md#export
+[bootstrap]: https://github.com/absmach/magistrala/tree/main/bootstrap
+[consumers]: https://github.com/absmach/magistrala/tree/main/consumers
+[email]: https://github.com/absmach/magistrala/tree/main/internal/email
+[provision]: https://github.com/absmach/magistrala/tree/main/provision
+[rules-engine]: https://github.com/absmach/magistrala/tree/main/re
+[readers]: https://github.com/absmach/magistrala/tree/main/readers
+[supermq]: https://github.com/absmach/supermq

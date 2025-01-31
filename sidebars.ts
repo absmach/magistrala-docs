@@ -1,7 +1,7 @@
 import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
 
 const sidebars: SidebarsConfig = {
-  mgSidebar: [
+  userSidebar: [
     {
       type: 'doc',
       id: 'index',
@@ -12,6 +12,62 @@ const sidebars: SidebarsConfig = {
       id: 'architecture',
       label: 'Architecture',
     },
+    {
+      type: 'doc',
+      id: 'users-quick-start',
+      label: 'Getting Started',
+    },
+    {
+      type: 'category',
+      label: 'Domain Management',
+      collapsible: true,
+      collapsed: false,
+      items: [
+        {type: 'doc', id: 'domains', label: 'Domains'},
+        {type: 'doc', id: 'billing', label: 'Billing'},
+        {type: 'doc', id: 'invitations', label: 'Invitations'},
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Client Management',
+      collapsible: true,
+      collapsed: false,
+      items: [
+        {type: 'doc', id: 'intro-to-client-mgmnt', label: 'Introduction'},
+        {type: 'doc', id: 'groups', label: 'Groups'},
+        {type: 'doc', id: 'clients', label: 'Clients'},
+        {type: 'doc', id: 'channels', label: 'Channels'},
+        {type: 'doc', id: 'bootstraps', label: 'Bootstraps'},
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Dashboards',
+      collapsible: true,
+      collapsed: false,
+      items: [
+        {type: 'doc', id: 'dashboards', label: 'Dashboards'},
+        {type: 'doc', id: 'widgets', label: 'Widgets'},
+        {type: 'doc', id: 'linechart', label: 'Line Chart'},
+        {type: 'doc', id: 'areachart', label: 'Area Chart'},
+        {type: 'doc', id: 'barchart', label: 'Bar Chart'},
+        {type: 'doc', id: 'gauges', label: 'Gauges'},
+        {type: 'doc', id: 'piechart', label: 'Pie Chart'},
+        {type: 'doc', id: 'countcard', label: 'Count Card'},
+        {type: 'doc', id: 'tablecard', label: 'Table Card'},
+        {type: 'doc', id: 'valuecard', label: 'Value Card'},
+        {type: 'doc', id: 'maps', label: 'Maps'},
+        {type: 'doc', id: 'controls', label: 'Controls'},
+      ],
+    },
+    {
+      type: 'doc',
+      id: 'users',
+      label: 'Profile Management',
+    },
+  ],
+  devSidebar: [
     {
       type: 'category',
       label: 'Concepts',

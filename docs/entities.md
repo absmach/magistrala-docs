@@ -3,58 +3,61 @@ title: Entities
 ---
 
 
-Client is a component that will replace and unify the Magistrala Things and Users services. The purpose is to represent generic client accounts. Each client is identified using its identity and secret. The client will differ from Things service to Users service but we aim to achieve 1:1 implementation between the clients whilst changing how client secret works. This includes client secret generation, usage, modification and storage
+Users and Client form the base and most important part of Magistrala. Users are identified using their unique email address, username and secret. Clients have unique IDs as well.
 
-## Generic Client Entity
+## Generic User Entity
 
-The client entity is represented by the Client struct in Go. The fields of this struct are as follows:
+A **User** component is used to represent generic user accounts, each having a unique **Username** and **Secret**, currently deployed under Users services. This User entity is structured in Go with specific fields:
 
 ```go
-// Credentials represent client credentials: its
-// "identity" which can be a username, email, generated name;
+
+// Credentials represent user credentials: its
+// "username"  a user's unique username;
 // and "secret" which can be a password or access token.
 type Credentials struct {
-  Identity string `json:"identity,omitempty"` // username or generated login ID
-  Secret   string `json:"secret"`             // password or token
+ Username string `json:"username,omitempty"` // username 
+ Secret   string `json:"secret,omitempty"`   // password or token
 }
 
-// Client represents generic Client.
-type Client struct {
-  ID          string      `json:"id"`
-  Name        string      `json:"name,omitempty"`
-  Tags        []string    `json:"tags,omitempty"`
-  Owner       string      `json:"owner,omitempty"` // nullable
-  Credentials Credentials `json:"credentials"`
-  Metadata    Metadata    `json:"metadata,omitempty"`
-  CreatedAt   time.Time   `json:"created_at"`
-  UpdatedAt   time.Time   `json:"updated_at,omitempty"`
-  UpdatedBy   string      `json:"updated_by,omitempty"`
-  Status      Status      `json:"status"`         // 1 for enabled, 0 for disabled
-  Role        Role        `json:"role,omitempty"` // 1 for admin, 0 for normal user
+// User represents generic User.
+type User struct {
+ ID             string      `json:"id"`
+ FirstName      string      `json:"first_name,omitempty"`
+ LastName       string      `json:"last_name,omitempty"`
+ Tags           []string    `json:"tags,omitempty"`
+ Metadata       Metadata    `json:"metadata,omitempty"`
+ Status         Status      `json:"status"`                    // 0 for enabled, 1 for disabled
+ Role           Role        `json:"role"`                      // 0 for normal user, 1 for admin
+ ProfilePicture string      `json:"profile_picture,omitempty"` // profile picture URL
+ Credentials    Credentials `json:"credentials,omitempty"`
+ Permissions    []string    `json:"permissions,omitempty"`
+ Email          string      `json:"email,omitempty"`
+ CreatedAt      time.Time   `json:"created_at,omitempty"`
+ UpdatedAt      time.Time   `json:"updated_at,omitempty"`
+ UpdatedBy      string      `json:"updated_by,omitempty"`
 }
 ```
 
-- `ID` is a unique identifier for each client. It is a string value.
-- `Name` is an optional field that represents the name of the client.
-- `Tags` is an optional field that represents the tags related to the client. It is a slice of string values.
-- `Owner` is an optional field that represents the owner of the client.
-- `Credentials` is a struct that represents the client credentials. It contains two fields:
-  - `Identity` This is the identity of the client, which can be a username, email, or generated name.
-  - `Secret` This is the secret of the client, which can be a password, secret key, or access token.
-- `Metadata` is an optional field that is used for customized describing of the client.
-- `CreatedAt` is a field that represents the time when the client was created. It is a time.Time value.
-- `UpdatedAt` is a field that represents the time when the client was last updated. It is a time.Time value.
-- `UpdatedBy` is a field that represents the user who last updated the client.
-- `Status` is a field that represents the status for the client. It can be either 1 for enabled or 0 for disabled.
-- `Role` is an optional field that represents the role of the client. It can be either 1 for admin or 0 for the user.
-
-## Usage
-
-Currently, we have the things service and the users service as 2 deployments of the client entity. The things service is used to create, read, update, and delete things. The users service is used to create, read, update, and delete users. The client entity will be used to replace the things and users services. The client entity can be serialized to and from JSON format for communication with other services.
+- `ID` is a unique identifier for each user. It is a string value.
+- `FirstName` is a required field that represents the first name of the user.
+- `LastName` is a required field that represents the last name of the user.
+- `Email` is a required filed that represents the email address of the user which can be used to log them in.
+- `Tags` is an optional field that represents the tags related to the user. It is a slice of string values.
+- `Credentials` is a struct that represents the user credentials. It contains two fields:
+  - `Username` This is the username of the user, which must be unique.
+  - `Secret` This is the secret of the user, which can be a password, secret key, or access token.
+- `Metadata` is an optional field that is used for customized describing of the user.
+- `CreatedAt` is a field that represents the time when the user was created. It is a time.Time value.
+- `UpdatedAt` is a field that represents the time when the user was last updated. It is a time.Time value.
+- `UpdatedBy` is a field that represents the user who last updated the user.
+- `Status` is a field that represents the status for the user. It can be either 1 for enabled or 0 for disabled.
+- `Role` is an optional field that represents the role of the user. It can be either 1 for admin or 0 for the user.
+- `ProfilePicture` is a string url that leads to an image in the database that can be used as the user's profile picture.
 
 ## Users service
 
-For grouping Magistrala entities there are `groups` object in the `users` service. The users groups can be used for grouping `users` only. Groups are organized like a tree, group can have one parent and children. Group with no parent is root of the tree.
+The **Users Service** allows for creating, updating, reading, and deleting **Users** and **Groups**.
+Users can bear multiple permissions that allow them various actions over other services and entities in the platform.
 
 ### Users
 
@@ -64,28 +67,54 @@ For grouping Magistrala entities there are `groups` object in the `users` servic
 ### Groups
 
 - The API endpoint for interacting with groups are described in the [groups API][groups-api].
-- The CLI for interacting with groups are described in the [groups CLI][groups-cli].
+- The CLI for interacting with groups are described in the [groups_CLI][groups-cli].
+Multiple users form a `group`. These groups can be organised in a hierachical manner creating children and parents. Permissions and roles can be shared across the groups.
 
-## Things service
+## Clients service
 
-Things Service manages `things` and `channel`. `Thing` represents a device (or an application) connected to Magistrala that uses the platform for message exchange with other `things`.
-`Channel` is a message conduit between things connected to it. It serves as a message topic that can be consumed by all of the things connected to it. Things can publish or subscribe to the Channel.
+Clients Service manages `clients` and `channel`. `Client` represents a device (or an application) connected to Magistrala that uses the platform for message exchange with other `clients`.
+`Channel` is a message conduit between clients connected to it. It serves as a message topic that can be consumed by all of the clients connected to it. Clients can publish or subscribe to the Channel.
 
-### Things
+```go
+// Client Struct represents a client.
 
-- The API endpoint for interacting with things are described in the [things API][things-api].
-- The CLI for interacting with things are described in the [things CLI][things-cli].
+type Client struct {
+ ID          string      `json:"id"`
+ Name        string      `json:"name,omitempty"`
+ Tags        []string    `json:"tags,omitempty"`
+ Domain      string      `json:"domain_id,omitempty"`
+ Credentials Credentials `json:"credentials,omitempty"`
+ Metadata    Metadata    `json:"metadata,omitempty"`
+ CreatedAt   time.Time   `json:"created_at,omitempty"`
+ UpdatedAt   time.Time   `json:"updated_at,omitempty"`
+ UpdatedBy   string      `json:"updated_by,omitempty"`
+ Status      Status      `json:"status,omitempty"` // 1 for enabled, 0 for disabled
+ Permissions []string    `json:"permissions,omitempty"`
+ Identity    string      `json:"identity,omitempty"`
+}
+
+type Credentials struct {
+ Identity string `json:"identity,omitempty"`
+ Secret   string `json:"secret,omitempty"`   // password or token
+}
+
+Hence any phsical device with an embeded system can be handed a unique key that will be used as a token during publishing and subscribing to a channel can be classified as a thing.
+
+### Clients
+
+- The API endpoint for interacting with clients are described in the [clients API][clients-api].
+- The CLI for interacting with clients are described in the [clients CLI][clients-cli].
 
 ### Channels
 
 - The API endpoint for interacting with channels are described in the [channels API][channels-api].
 - The CLI for interacting with channels are described in the [channels CLI][channels-cli].
 
-[users-api]: ./api.md#users
-[groups-api]: ./api.md#groups
-[things-api]: ./api.md#things
-[channels-api]: ./api.md#channels
+[users-api]: https://github.com/absmach/supermq-docs/blob/main/docs/api.md#users
+[groups-api]: https://github.com/absmach/supermq-docs/blob/main/docs/api.md#groups
+[clients-api]: .https://github.com/absmach/supermq-docs/blob/main/docs/api.md#clients
+[channels-api]: https://github.com/absmach/supermq-docs/blob/main/docs/api.md#channels
 [users-cli]: ./cli.md#users-management
 [groups-cli]: ./cli.md#groups-management
-[things-cli]: ./cli.md#things-management
+[clients-cli]: ./cli.md#clients-management
 [channels-cli]: ./cli.md#channels-management
