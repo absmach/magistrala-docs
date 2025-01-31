@@ -31,46 +31,7 @@ Here we see all the billing plans present. The table first shows enabled and dis
 To edit any Plan, just click on its row.
 To disable it click on the outline button at the end of the table.
 
-## Create a Billing Plan
-
-Clicking on the '+ Create' button opens a dialogbox that has some necessary fields.
-
-![Create Plan](../docs/img/billing/create-public-plan.png)
-
-To create a new billing plan:
-
-1. Click the '+ Create' button. This opens a dialog box with the necessary fields.
-2. Name: Enter a unique name for the plan (required).
-
-3. Amount: Specify the amount in Euros.
-
-4. Plan Type: Choose between a public plan (available to any user across all domains) and a private plan (restricted to a specific domain).
-
-   - Public Plan: Accessible by any user.
-   - Private Plan: Limited to a single domain and will not appear in searches outside that domain.
-5. Limits: These can be set according to the domains entities. They must be in JSON format however for example:
-
-```json
-{
-    "users": 40,
-    "things": 100,
-    "groups": 10
-}
-```
-
-![Public Plan Creation](../docs/img/billing/create-superior=plan.png)
-
-Here is an example of a private plan that will be limited to the Song Domain:
-
-![Private Plan Creation](../docs/img/billing/private-billing-plan.png)
-6. Click Create to make the plan available for subscription. Note that private plans will only be visible to their specified domain.
-They can also be edited if there is any need to change the name, amount or even limits on their page. Clicking on the Update button below ensures that the changes are saved to the Billing Plan.
-
-![Edit Plan](../docs/img/billing/edit-plans.png)
-
-Now that we have our plans, we can subscribe members to them.
-
-### Add a Billing Plan
+### Subscribe to a Billing Plan
 
 Navigate to the Billing tab on the sidenav bar. This tab will only be visible to admin members of a domain.
 

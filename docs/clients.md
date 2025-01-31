@@ -82,13 +82,13 @@ Once created, a **client** can be viewed and updated in the unique Client's ID p
 
 The client's data can be updated in this page and its ID copied as well.
 
-![View Client](../docs/img/users-guide/group-client-view.png)
+![View Client](../docs/img/users-guide/group-client-view2.png)
 
 There is a section of **Bootstrap** under the Client details. We will delve deeper into [Bootstrap Configurations][Bootstraps] later on. It is an addon that must be started from Magistrala to work on the UI.
 
 The client can also be **disabled** which will have it present on the database with a status of 0. The user can also **enable** the client should they wish to.
 
-### Connecting a Client
+### Connect a Client
 
 There **Connections** tab in the **client page** is where a User can connect a Client to a Channel.
 
@@ -98,7 +98,7 @@ There **Connections** tab in the **client page** is where a User can connect a C
 
 A user can view the roles and role actions available to the client as well as create new roles and role actions.
 
-![View Client Role](../docs/img/users-guide/group-client-role-view.png)
+![View Client Role](../docs/img/users-guide/group-client-role-view3.png)
 
 The available role actions that a client can have include:
 
@@ -115,13 +115,5 @@ The available role actions that a client can have include:
 ![Create Client Role](../docs/img/users-guide/group-client-role-create.png)
 
 > A Group-Client can also have members present but this is an upcoming feature
-
-### Connect a Client and Channel
-
-Creating a channel pretty much follows the same steps as creating a Client. These Channels can then be connected to a Client with either `subscribe` or `publish` connection types or both.
-
-![Connect Client](../docs/img/users-guide/client-connect.png)
-
-This will allow the Client to send messages or recieve messages from the Channel.
 
 [Bootstraps]: bootstraps.md

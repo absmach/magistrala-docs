@@ -7,27 +7,23 @@ Users in Magistrala must have **unique credentials**, including a `username`, `s
 
 This guide will take you through the core services for a quick set up of Magistrala and a walkthrough its services and components.
 
-After cloning and launching Magistrala, head to `localhost:3000` for the Magistrala UI platform.
-
 ## **Sign Up**
 
-To create a new user with **standard permissions**, navigate to the **Register** page. The new user must provide:
+To get started, create an account by providing the following details in the sign up page:
 
 - **First and last name**
-- **A unique email address**
+- **An email address**
 - **A username**
 
-![Sign Up](../docs/img/users-guide/registeruser.png)
+![Sign Up](../docs/img/users-guide/registeruser2.png)
 
-Once registered, the user will receive a unique authentication token and be redirected to the **Domains Homepage**, where they can create and manage multiple domains.
+Once registered, the user will be redirected to the **Domains Homepage**, where they can create and manage multiple domains.
 
 ![Domain Homepage](../docs/img/users-guide/janedoe-domainshome.png)
 
-Tokens tend to expire after some time which will lead to the user being kicked out of the session. Do not be alarmed if this happens. Simply back log in through the Login page with the user's **username** or **email address** as well as password.
-
 ## **Log In**
 
-To access the platform, log in with your email or username and password.
+Incase you already have an account, you can log in with your email/username and password.
 
 ![Login](../docs/img/users-guide/main-login.png)
 
@@ -35,13 +31,13 @@ To access the platform, log in with your email or username and password.
 
 Upon logging in, users are redirected to the **Domain Selection Page**.
 
-A **Domain** is a workspace that contains **Clients**, **Channels**, **Groups**, **Dashboards** as well as **Roles** and **Rules Engine** Services. A user can create as many domains as they please. A **Super Admin** has access to all domains present in the system. But a **User** must be a member or creator of a domain to log into it.
+A **Domain** is a workspace that allows you to manage **Clients**, **Channels**, **Groups**, **Dashboards**, **Members**,  **Rules**  and **Bootstrap** services. A user can create as many domains as they please.
 
 Click on the `+ Create` button on the top right to create a new domain. Since multiple domains can have the same name, you must add an **alias** which will be a unique descriptor for the domain.
 
 ![Domain Create](../docs/img/users-guide/jdoe-create-domain.png)
 
-Once you create a domain, you are given **Administrator** permission over the domain. You are able to perform all actions available over the domain and all the entities provisioned inside the domain. You can also assign or invite members to the domain with various levels of permissions.
+Once you create a domain, you are given **admin** role over the domain by default. You are able to perform all actions available over the domain and all the entities provisioned inside the domain. You can also assign or invite members to the domain with various levels of permissions. Click on the respective card to log into a domain of your choice.
 
 We will delve deeper into Domains in another section. For now you need to be able to log into a Domain to move on to **Groups**.
 
@@ -89,7 +85,7 @@ To access the page, click on the Client in the Clients' table.
 
 The client's data can be updated in this page and its ID copied as well.
 
-![View Client](../docs/img/users-guide/group-client-view.png)
+![View Client](../docs/img/users-guide/group-client-view2.png)
 
 There **Connections** tab in the **group-client page** is where a User can connect a Client to a Channel.
 

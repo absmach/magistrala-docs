@@ -1,5 +1,5 @@
 ---
-title: Users Service
+title: Profile Management
 ---
 
 Users can be assigned multiple roles, granting them permissions over devices, domains, and channels within the platform.
@@ -8,7 +8,7 @@ Users can be assigned multiple roles, granting them permissions over devices, do
 
 To access the platform, log in with your email and password.
 
-![Login](../docs/img/users-guide/main-login.png)
+![Login](../docs/img/users-guide/main-login2.png)
 
 ### Sign Up
 

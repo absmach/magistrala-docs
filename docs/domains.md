@@ -46,17 +46,6 @@ The Domain status can also be toggled on or off. A dialog box pops up if you do 
 
 ![Domain Info](../docs/img/users-guide/domian-info.png)
 
-### **User Management**
-
-An admin or a member with the right permissions can assign members to a domain. Members must be assigned with specific roles.
-
-> This feature is currently under maintenance
-
-![Domain Members](../docs/img/users-guide/domain-members.png)
-
-Using the search feature allows a User to easily navigate the Members to find particular users.
-The **Status** button can filter the Members Table and show Enabled, Disabled or all the Members.
-
 ### **Domain Roles**
 
 Domain Management covers the Roles and Role Actions present in a domain as well. From the Roles section of the Domain, the user can create new roles with varying role actions.
@@ -129,3 +118,14 @@ Once created, these domain roles can be edited in their respective ID pages.
 Clicking on the role leads a user to a table with the Domain Role's ID, Name, Role Actions and Role Members. These fields can all be edited accordingly while on the page.
 
 ![Domain Role Page](../docs/img/users-guide/domain-roles-page.png)
+
+### **User Management**
+
+An admin or a member with the right permissions can assign members to a domain. Members must be assigned with specific roles.
+
+> This feature is currently under maintenance
+
+![Domain Members](../docs/img/users-guide/domain-members.png)
+
+Using the search feature allows a User to easily navigate the Members to find particular users.
+The **Status** button can filter the Members Table and show Enabled, Disabled or all the Members.
