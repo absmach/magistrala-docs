@@ -21,7 +21,6 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Domain Management',
       collapsible: true,
-      collapsed: false,
       items: [
         {type: 'doc', id: 'domains', label: 'Domains'},
         {type: 'doc', id: 'billing', label: 'Billing'},
@@ -32,7 +31,6 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Client Management',
       collapsible: true,
-      collapsed: false,
       items: [
         {type: 'doc', id: 'intro-to-client-mgmnt', label: 'Introduction'},
         {type: 'doc', id: 'groups', label: 'Groups'},
@@ -45,7 +43,6 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Dashboards',
       collapsible: true,
-      collapsed: false,
       items: [
         {type: 'doc', id: 'dashboards', label: 'Dashboards'},
         {type: 'doc', id: 'widgets', label: 'Widgets'},
@@ -60,6 +57,11 @@ const sidebars: SidebarsConfig = {
         {type: 'doc', id: 'maps', label: 'Maps'},
         {type: 'doc', id: 'controls', label: 'Controls'},
       ],
+    },
+    {
+      type: 'doc',
+      id: 'rules-engine',
+      label: 'Rules Engine',
     },
     {
       type: 'doc',
