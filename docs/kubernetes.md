@@ -2,7 +2,6 @@
 title: Kubernetes
 ---
 
-
 Magistrala can be easily deployed on the Kubernetes platform using Helm Charts from the official [Magistrala DevOps GitHub repository](https://github.com/absmach/devops).
 
 ## Prerequisites
@@ -330,6 +329,43 @@ helm uninstall <release-name> -n mg
 ```
 
 This will remove the Magistrala release from the previously created `mg` namespace. Use the `--dry-run` flag to see which releases will be uninstalled without actually uninstalling them.
+
+To delete all data and resources from your cluster (or at least from the target namespace), the following two options are available:
+
+##### Option 1: Delete the Entire Namespace
+
+Deleting the entire namespace will remove all resources contained within it in one go. Later you can recreate the namespace.
+
+```sh
+kubectl delete namespace mg
+
+# Wait for deletion to complete (you can check the status with "kubectl get ns")
+# Then recreate the namespace:
+kubectl create namespace mg
+```
+
+##### Option 2: Delete All Resources Within the Namespace
+
+If you prefer to keep the namespace and simply clear out all the resources, run these commands:
+
+```sh
+# Delete all workloads and services (Deployments, Pods, Services, etc.)
+kubectl delete all --all -n mg
+
+# Delete all PersistentVolumeClaims in the namespace
+kubectl delete pvc --all -n mg
+
+# Optionally, delete other resource types if needed (e.g., ConfigMaps, Secrets, ServiceAccounts)
+kubectl delete configmap --all -n mg
+kubectl delete secret --all -n mg
+kubectl delete serviceaccount --all -n mg
+```
+
+If your cluster is dynamically provisioning persistent volumes, the associated PVs may be automatically deleted (if their reclaim policy is set to `Delete`). If you need to manually remove all PVs (and you’re sure no other namespace depends on them), run:
+
+```sh
+kubectl delete pv --all
+```
 
 ---
 
