@@ -367,6 +367,86 @@ If your cluster is dynamically provisioning persistent volumes, the associated P
 kubectl delete pv --all
 ```
 
+### Option 3: Force Clear a Stuck Namespace
+
+Sometimes the namespace may be stuck in the **Terminating** phase because some resources (such as pods or PVCs) still have finalizers. If you encounter an error like:
+
+> `secrets "sh.helm.release.v1.magistrala.v1" is forbidden: unable to create new content in namespace mg because it is being terminated`
+>
+> follow these steps to force-clear the namespace:
+
+#### Step 1. Force-Delete All Pods
+
+Force-delete all pods in the namespace to remove any that might be stuck:
+
+```sh
+kubectl delete pods --all --force --grace-period=0 -n mg
+```
+
+#### Step 2. Remove Finalizers from PersistentVolumeClaims (PVCs)
+
+List the PVCs in the namespace:
+
+```sh
+kubectl get pvc -n mg
+```
+
+For each PVC that is preventing deletion (they often have a finalizer like `kubernetes.io/pvc-protection`), remove the finalizer using:
+
+```sh
+kubectl patch pvc <pvc-name> -p '{"metadata":{"finalizers":null}}' -n mg
+```
+
+For example, if you have PVCs named `pvc-1` and `pvc-2`:
+
+```sh
+kubectl patch pvc pvc-1 -p '{"metadata":{"finalizers":null}}' -n mg
+kubectl patch pvc pvc-2 -p '{"metadata":{"finalizers":null}}' -n mg
+```
+
+#### Step 3. Delete All Remaining Resources (Optional)
+
+To ensure no lingering resources remain:
+
+```sh
+kubectl delete all --all --force --grace-period=0 -n mg
+kubectl delete configmap --all -n mg
+kubectl delete secret --all -n mg
+kubectl delete serviceaccount --all -n mg
+```
+
+#### Step 4. Remove Finalizers from the Namespace
+
+Patch the namespace to remove its finalizers so that it can be fully deleted:
+
+```sh
+kubectl patch namespace mg -p '{"spec":{"finalizers":[]}}'
+```
+
+#### Step 5. Verify and Recreate the Namespace
+
+Check that the namespace is deleted:
+
+```sh
+kubectl get namespace mg
+```
+
+Once deleted, recreate the namespace:
+
+```sh
+kubectl create namespace mg
+```
+
+---
+
+## Final Step: Reinstall Your Helm Release
+
+After clearing the namespace (using any of the options above), you can now install your Helm release into a fresh `mg` namespace:
+
+```sh
+helm install magistrala . -n mg
+```
+
 ---
 
 ### Customizing Magistrala Installation
