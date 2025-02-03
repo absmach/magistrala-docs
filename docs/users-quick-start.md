@@ -51,13 +51,8 @@ On the sidebar navigation, click on **Groups** under the _Client Management_ sec
 
 To create a group, click on the `+ Create` button present on the top-left corner of the page. This will open a popover with all the required fields for a new group.
 
-![Create Group](../docs/img/users-guide/create-group-jdoe.png)
+![Create Group](../docs/img/users-guide/group-information.png)
 
-There is an option to add a parent to the group. This creates a hierachy. Permissions and roles can be shared down this heirachy.
-
-You can also create multiple groups at the same time using a _.CSV_ file which has all the required fields correctly filled in. Click on the `Upload` button and add your csv file. Magistrala provides samples as shown on the popover.
-
-![Create Groups](../docs/img/users-guide/jdoe-groups-page.png)
 
 ## **Create a Client**
 

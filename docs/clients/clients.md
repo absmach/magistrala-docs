@@ -68,13 +68,13 @@ A dialog box will open, requiring fields such as **Name** , **Key** which will b
 You can add a unique key for the thing, although one is automatically generated.
 Additionally, **tags** can be assigned to Clients for better organization and filtering.
 
-![Create Client](../docs/img/users-guide/create-client.png)
+![Create Client](../img/users-guide/create-client.png)
 
 Any Client created while in the group can be connected to any channel within the group.
 
 A user can also create bulk clients by clicking on the `+ Create Clients` button. This will lead to a dialogbox that takes in a _.CSV_  file with the clients' details filled in correctly as seen in these [samples](https://github.com/absmach/magistrala-ui/tree/main/samples).
 
-![Create Clients](../docs/img/users-guide/clients-create.png)
+![Create Clients](../img/users-guide/clients-create.png)
 
 ### View a Client
 
@@ -82,7 +82,7 @@ Once created, a **client** can be viewed and updated in the unique Client's ID p
 
 The client's data can be updated in this page and its ID copied as well.
 
-![View Client](../docs/img/users-guide/group-client-view2.png)
+![View Client](../img/users-guide/group-client-view2.png)
 
 There is a section of **Bootstrap** under the Client details. We will delve deeper into [Bootstrap Configurations][Bootstraps] later on. It is an addon that must be started from Magistrala to work on the UI.
 
@@ -98,7 +98,7 @@ There is a **Connections** tab in the **client page** is where a User can connec
 
 A user can view the roles and role actions available to the client as well as create new roles and role actions.
 
-![View Client Role](../docs/img/users-guide/group-client-role-view4.png)
+![View Client Role](../img/users-guide/group-client-role-view4.png)
 
 The available role actions that a client can have include:
 
@@ -112,7 +112,7 @@ The available role actions that a client can have include:
 - view_role_users
 - remove_role_users
 
-![Create Client Role](../docs/img/users-guide/group-client-role-create.png)
+![Create Client Role](../img/users-guide/group-client-role-create.png)
 
 > A Group-Client can also have members present but this is an upcoming feature
 
