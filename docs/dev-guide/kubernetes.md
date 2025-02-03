@@ -2,8 +2,7 @@
 title: Kubernetes
 ---
 
-
-Magistrala can be easily deployed on the Kubernetes platform using Helm Charts from the official [Magistrala DevOps GitHub repository](https://github.com/absmach/devops).
+Magistrala can be easily deployed on the Kubernetes platform using Helm Charts from the official [Magistrala DevOps GitHub repository](https://github.com/absmach/magistrala-devops).
 
 ## Prerequisites
 
@@ -17,13 +16,9 @@ Once installed, verify the installation:
 docker --version
 ```
 
----
-
 ### 2. Install Kubernetes via K3d
 
 K3d is a lightweight Kubernetes distribution that runs inside Docker, ideal for local development.
-
-#### Steps to install K3d
 
 ```bash
 curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
@@ -34,8 +29,6 @@ For more information on K3d, refer to the official [K3d documentation](https://k
 ### 3. Install kubectl
 
 `kubectl` is the command-line tool used to interact with your Kubernetes cluster.
-
-#### Steps to install kubectl
 
 ```bash
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -48,13 +41,9 @@ Verify the installation:
 kubectl version --client
 ```
 
----
-
 ### 4. Install Helm v3
 
 Helm is a package manager for Kubernetes, simplifying application installation and management.
-
-#### Steps to install Helm
 
 ```bash
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
@@ -66,11 +55,7 @@ Verify the installation:
 helm version
 ```
 
----
-
 ### 5. Add Helm Repositories
-
-#### Add Stable Helm Repository
 
 The **Helm stable repository** contains Helm charts that you can use to install applications on Kubernetes.
 
@@ -79,8 +64,6 @@ helm repo add stable https://charts.helm.sh/stable
 helm repo update
 ```
 
-#### Add Bitnami Helm Repository
-
 Bitnami offers a collection of popular Helm charts for various applications.
 
 ```bash
@@ -88,13 +71,9 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 ```
 
----
-
 ### 6. Install Nginx Ingress Controller
 
 The Nginx Ingress Controller manages external access to services within your Kubernetes cluster.
-
-#### Install Nginx Ingress Controller using Helm
 
 ```bash
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
@@ -113,11 +92,13 @@ kubectl get pods -n ingress-nginx
 
 ---
 
-## Deploying Magistrala (Manual Local Deployment)
+## Deploying Magistrala
 
-This method involves **manually deploying Magistrala** by cloning the Helm chart repository to your local machine, making any necessary customizations, and installing the chart from the local directory.
+There are two primary ways to deploy Magistrala, depending on your needs:
 
-### Deploy Use Case
+### 1. Manual Local Deployment
+
+This method involves **cloning the chart source code** and installing Magistrala from disk.
 
 This approach is useful if you want to:
 
@@ -125,13 +106,11 @@ This approach is useful if you want to:
 - Modify the chart before installation.
 - Perform development or testing on the chart.
 
-### Steps
-
 #### 1. Clone Magistrala Helm Chart Repository
 
 ```bash
-git clone https://github.com/absmach/devops.git
-cd devops/charts/magistrala
+git clone https://github.com/absmach/magistrala-devops.git
+cd magistrala-devops/charts/magistrala # Ensure you're in the directory containing Chart.yaml
 ```
 
 #### 2. Add Required Helm Repositories
@@ -145,7 +124,18 @@ helm repo update
 
 This ensures that all necessary repositories are available for dependencies.
 
-#### 3. Update Dependencies
+#### 3. Authenticate with Private Registry
+
+Magistrala includes **SuperMQ** as a chart dependency, and SuperMQ is hosted in a private OCI registry. This means you must **authenticate with the OCI registry before running `helm dependency update`**, or the SuperMQ chart will not be pulled correctly.
+
+To do so, run:
+
+```bash
+# Replace 'magistrala.example.com' with your actual Private OCI Registry registry IP or domain
+helm registry login magistrala.example.com
+```
+
+#### 4. Update Dependencies
 
 Once the repositories have been added, update the on-disk dependencies to match the `Chart.yaml` file by running:
 
@@ -155,7 +145,17 @@ helm dependency update
 
 If the repositories are set up correctly, this will resolve and download all chart dependencies to `charts/magistrala/charts`.
 
-### 3. Create a Namespace (if needed)
+> **Note**: Make sure you're running this command from within the `charts/magistrala/` directory — the one containing the `Chart.yaml` file.
+
+You can confirm the dependencies were fetched correctly by listing the contents of the `charts/` directory:
+
+```bash
+ls charts/
+```
+
+#### 5. Create Namespace
+
+First, create a namespace for Magistrala (if it doesn’t already exist):
 
 ```bash
 kubectl create namespace mg
@@ -163,71 +163,159 @@ kubectl create namespace mg
 
 ---
 
-### 4. Deploy Magistrala
+#### 6. Provide RE Email Configuration
 
-Deploy the Magistrala Helm chart into the `mg` namespace:
+##### **Option 1: Using a Kubernetes Secret (Recommended)**
+
+1. Create a `.env` file with the required email credentials:
+
+   ```env
+   MG_EMAIL_HOST=smtp.example.com
+   MG_EMAIL_PORT=587
+   MG_EMAIL_USERNAME=user@example.com
+   MG_EMAIL_PASSWORD=yourpassword
+   MG_EMAIL_FROM_ADDRESS=noreply@example.com
+   MG_EMAIL_FROM_NAME=Example Team
+   ```
+
+2. Reference the secret in `values.yaml`:
+
+   ```yaml
+   re:
+     secrets:
+       names:
+         - "re-email-secret"
+   ```
+
+3. Create the Kubernetes Secret:
+
+   ```bash
+   kubectl create secret generic re-email-secret --from-env-file=.env
+   ```
+
+---
+
+##### **Option 2: Inline Configuration (For Dev/Testing Only)**
+
+Define email credentials inline under `re.email`:
+
+```yaml
+re:
+  email:
+    host: smtp.example.com
+    port: 587
+    username: user@example.com
+    password: yourpassword
+    fromAddress: noreply@example.com
+    fromName: Example Team
+```
+
+> **Important**: If `re.secrets.names` is defined as an empty list (i.e., `[]`) and `re.email` is also empty, no email configuration will be applied and the deployment will fail.
+
+---
+#### 7. Deploy Magistrala
+
+Then deploy the Magistrala Helm chart into the `mg` namespace:
 
 ```bash
 helm install magistrala . -n mg
 ```
 
-If you encounter an error related to snippet annotations in Nginx, enable them with:
+> **Note**: Make sure you're in the `charts/magistrala/` directory containing the `Chart.yaml` when running the install command.
+
+If you encounter an error related to **snippet annotations** when using the NGINX Ingress Controller, you can enable them by upgrading the controller with the following flag:
 
 ```bash
 helm upgrade ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --set controller.allowSnippetAnnotations=true
 ```
 
-Ensure you have the Nginx Ingress repository added:
+Make sure the NGINX Ingress repository is added:
 
 ```bash
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
 ```
 
-### 5. Verifying the Deployment
+### **Post-Deployment Verification**
 
-After deploying Magistrala, verify the services and pods using `kubectl` commands:
+Once the chart is installed, you can verify that Magistrala is running correctly:
 
-**List all pods:**
+#### View all resources in the `mg` namespace
+
+```bash
+kubectl get all -n mg
+```
+
+#### List all running pods
 
 ```bash
 kubectl get pods -n mg
 ```
 
-**List all services:**
+#### List all services
 
 ```bash
 kubectl get services -n mg
 ```
 
-**View logs of a pod:**
+#### View logs from a specific pod
 
 ```bash
 kubectl logs <pod-name> -n mg
 ```
 
+Replace `<pod-name>` with the actual name of the pod you want to inspect.
+
 ### Interacting with Magistrala Services After Deployment
 
-Once you have successfully deployed Magistrala, there are three primary ways you can interact with its services:
+Once Magistrala is successfully deployed, you can interact with its services in the following ways:
 
-- web-based User Interface (UI)
-- Magistrala CLI tool (learn more in the [CLI Documentation](https://docs.magistrala.abstractmachines.fr/cli/))
-- HTTP API Clients (e.g., cURL, Postman)
+- **Web-based User Interface (UI)**
+- **Magistrala CLI tool** (see the [CLI Documentation](https://docs.magistrala.abstractmachines.fr/cli/))
+- **HTTP API Clients** (e.g., `curl`, Postman)
 
-The ingress-nginx-controller handles the routing for your deployed services using Kubernetes Ingress resources. To interact with your Magistrala UI or any other service exposed through this load balancer, the first step is to retrieve the Public IP address of this load balancer.
+#### Accessing Services via Ingress
 
-You can usually find this IP address in your DigitalOcean dashboard under the "Networking" or "Load Balancers" section, or by using the following command in your terminal:
+Magistrala uses the `ingress-nginx-controller` to expose services through Kubernetes Ingress resources. Depending on where you're running your cluster, the method for accessing the services differs slightly.
+
+#### **DigitalOcean (DO) Deployment**
+
+If you're deploying on DigitalOcean, a LoadBalancer service is automatically provisioned. To find the public IP address:
 
 ```bash
-    kubectl get svc -A | grep LoadBalancer
+kubectl get svc -A | grep LoadBalancer
 ```
 
 This command searches all namespaces for services of type `LoadBalancer`. The output looks like this:
 
 ```plaintext
-    ingress-nginx           ingress-nginx-controller                         LoadBalancer   10.245.192.202   138.68.126.8   80:30424/TCP,443:31752/TCP                        64d
+ingress-nginx   ingress-nginx-controller   LoadBalancer   10.245.192.202   138.68.126.8   80:30424/TCP,443:31752/TCP   64d
 ```
 
-NOTE: The Public IP in this case is `138.68.126.8`.
+Here, the public IP is **`138.68.126.8`** — this is the address you'll use to access Magistrala services via the web UI, CLI, or API clients.
+
+---
+
+#### **Local Deployment (e.g., with `kind`, `minikube`, or `k3d`)**
+
+If you're running locally, a LoadBalancer may not be automatically available. You can use one of the following approaches:
+
+- **Minikube:**
+
+  ```bash
+  minikube tunnel
+  ```
+
+  This exposes LoadBalancer services on your host network.
+
+- **Kind or k3d:**
+  Port-forward directly to the ingress controller:
+
+  ```bash
+  kubectl port-forward -n ingress-nginx svc/ingress-nginx-controller 8080:80
+  ```
+
+  Then access Magistrala at [http://localhost:8080](http://localhost:8080).
 
 #### Using the Web-Based UI
 
@@ -249,7 +337,7 @@ If you prefer working with APIs, you can also interact with Magistrala services 
 
 This URL points to the endpoint that handles user creation on your Magistrala deployment. Replace `138.68.126.8` with the actual IP address or domain of your deployment if it differs.
 
-###### 2. Set Up the Request Body
+##### 2. Set Up the Request Body
 
 Switch to the `Body` tab in Postman and select `raw` as the format. Choose `JSON` from the dropdown menu, and then enter the following JSON structure in the text area:
 
@@ -271,57 +359,92 @@ Switch to the `Body` tab in Postman and select `raw` as the format. Choose `JSON
 
 For more examples, refer to this [Postman Collection](https://elements.getpostman.com/redirect?entityId=38532610-ef9a0562-b353-4d2c-8aca-a5fae35ad0ad&entityType=collection).
 
-## Install Magistrala Charts (From Published Helm Repository)
-
-This method is the **standard installation** approach, where you install the Magistrala chart directly from a Helm repository. This is quicker and ideal for end-users who do not need to modify the chart manually.
-
-### Install Use Case
-
-This approach is suitable for:
-
-- End-users who simply want to install Magistrala without modifying the source code.
-- Production environments where the chart is deployed directly from a hosted Helm repository.
-
-### Install Steps
-
-#### 1. Add the Magistrala Helm Repository
-
-The Helm charts are published via GitHub Pages. After installing Helm, add the Magistrala DevOps Helm repository by running:
-
-```bash
-helm repo add magistrala-devops https://absmach.github.io/devops/
-helm repo update
-```
-
-For a complete list of all available flags to use with the `helm repo add [NAME] [URL] [flags]` command, run `helm repo add --help`
-
-#### 2. Install the Magistrala Chart
-
-```bash
-helm install <release-name> magistrala-devops/magistrala [flags]
-```
-
-Replace `<release-name>` with your desired release name. For the complete list of available flags to use with the above command, run `helm install --help`.
-
-Example with release name and flag:
-
-```bash
-helm install my-magistrala magistrala-devops/magistrala --version 0.14.0
-```
-
 ---
 
-#### 3. Upgrading the Magistrala Chart
+## Installing Magistrala from Published Chart (with SuperMQ Dependency)
 
-To upgrade the chart to a new version or update configurations:
+The Magistrala Helm chart — along with its dependency, **SuperMQ** — is published to a secure, private OCI registry. This installation method is recommended for **production environments** and **CI/CD pipelines**, offering authentication, RBAC, and chart signature verification.
+
+Since both charts are stored in the **same Private OCI Registry**, you must authenticate to the registry **before attempting to install or upgrade** Magistrala. Helm will otherwise fail to pull the SuperMQ dependency.
+
+### 1. Authenticate with the Private OCI Registry
+
+Replace the domain or IP with your actual Private OCI Registry address:
 
 ```bash
-helm upgrade <release-name> magistrala-devops/magistrala
+helm registry login magistrala.example.com
 ```
 
----
+> Use your Private OCI Registry username/password or a robot account with appropriate project permissions.
 
-#### 4. Uninstalling Magistrala
+### 2. Install Magistrala (Pick One Method)
+
+> This step will automatically pull the `supermq` chart as a dependency. Ensure authentication is done first.
+
+#### **Option A — Pull and install locally**
+
+```bash
+helm pull oci://magistrala.example.com/magistrala --version 0.16.7
+helm install magistrala ./magistrala-0.16.7.tgz -n mg
+```
+
+#### **Option B — Install directly from OCI**
+
+```bash
+helm install magistrala oci://magistrala.example.com/magistrala \
+  --version 0.16.7 \
+  -f custom-values.yaml \
+  -n mg
+```
+
+### 3. Verify the Installation
+
+```bash
+helm list -n mg
+kubectl get pods -n mg
+```
+
+## Upgrading the Magistrala Chart
+
+To upgrade your Magistrala deployment — whether you're:
+
+- updating to a **newer chart version**,
+- applying changes to your `values.yaml`, or
+- overriding individual parameters via `--set` —  
+  use the following command:
+
+```bash
+helm upgrade <release-name> <repo-name>/<chart-name> -f custom-values.yaml
+```
+
+> **Replace `<release-name>`** with the name of your existing Helm release (e.g., `magistrala`), and  
+> **`custom-values.yaml`** with your configuration file (if applicable).
+
+For a complete table of configurable parameters and their default values, see the [configurable parameters reference](https://github.com/absmach/magistrala-devops/blob/master/charts/magistrala/README.md).
+
+> **Note:** You only need to update the documentation at `charts/magistrala/README.md` if you’re making changes to the chart source (e.g., adding or modifying parameters in `values.yaml` or templates).  
+> In such cases, regenerate the docs using `helm-docs` as outlined in [Autogenerating Helm Chart Documentation](https://github.com/absmach/magistrala-devops/blob/master/README.md).
+
+### Optional: Upgrade to a Specific Version
+
+If you want to upgrade to a particular chart version:
+
+```bash
+helm upgrade <release-name> <repo-name>/<chart-name> --version 0.14.0 -f custom-values.yaml
+```
+
+> Use `helm search repo <repo-name>/<chart-name> --versions` to view all available versions.
+
+### Verify the Upgrade
+
+Once the upgrade command runs successfully, verify that your deployment is up-to-date:
+
+```bash
+helm list -n <namespace>
+kubectl get pods -n <namespace>
+```
+
+## Uninstalling Magistrala
 
 To uninstall the Magistrala release:
 
@@ -331,9 +454,129 @@ helm uninstall <release-name> -n mg
 
 This will remove the Magistrala release from the previously created `mg` namespace. Use the `--dry-run` flag to see which releases will be uninstalled without actually uninstalling them.
 
+To delete all data and resources from your cluster (or at least from the target namespace), the following two options are available:
+
+### Option 1: Delete the Entire Namespace
+
+Deleting the entire namespace will remove all resources contained within it in one go. Later you can recreate the namespace.
+
+```sh
+kubectl delete namespace mg
+
+# Wait for deletion to complete (you can check the status with "kubectl get ns")
+# Then recreate the namespace:
+kubectl create namespace mg
+```
+
+### Option 2: Delete All Resources Within the Namespace
+
+If you prefer to keep the namespace and simply clear out all the resources, run these commands:
+
+```sh
+# Delete all workloads and services (Deployments, Pods, Services, etc.)
+kubectl delete all --all -n mg
+
+# Delete all PersistentVolumeClaims in the namespace
+kubectl delete pvc --all -n mg
+
+# Optionally, delete other resource types if needed (e.g., ConfigMaps, Secrets, ServiceAccounts)
+kubectl delete configmap --all -n mg
+kubectl delete secret --all -n mg
+kubectl delete serviceaccount --all -n mg
+```
+
+If your cluster is dynamically provisioning persistent volumes, the associated PVs may be automatically deleted (if their reclaim policy is set to `Delete`). If you need to manually remove all PVs (and you’re sure no other namespace depends on them), run:
+
+```sh
+kubectl delete pv --all
+```
+
+### Option 3: Force Clear a Stuck Namespace
+
+Sometimes the namespace may be stuck in the **Terminating** phase because some resources (such as pods or PVCs) still have finalizers. If you encounter an error like:
+
+> `secrets "sh.helm.release.v1.magistrala.v1" is forbidden: unable to create new content in namespace mg because it is being terminated`
+>
+> follow these steps to force-clear the namespace:
+
+#### 1. Force-Delete All Pods
+
+Force-delete all pods in the namespace to remove any that might be stuck:
+
+```sh
+kubectl delete pods --all --force --grace-period=0 -n mg
+```
+
+#### 2. Remove Finalizers from PersistentVolumeClaims (PVCs)
+
+List the PVCs in the namespace:
+
+```sh
+kubectl get pvc -n mg
+```
+
+For each PVC that is preventing deletion (they often have a finalizer like `kubernetes.io/pvc-protection`), remove the finalizer using:
+
+```sh
+kubectl patch pvc <pvc-name> -p '{"metadata":{"finalizers":null}}' -n mg
+```
+
+For example, if you have PVCs named `pvc-1` and `pvc-2`:
+
+```sh
+kubectl patch pvc pvc-1 -p '{"metadata":{"finalizers":null}}' -n mg
+kubectl patch pvc pvc-2 -p '{"metadata":{"finalizers":null}}' -n mg
+```
+
+To patch all the stuck PVCs in one go, run the follwing command:
+
+```sh
+NAMESPACE="mg"
+
+# Get all Terminating PVCs
+kubectl get pvc -n $NAMESPACE | grep Terminating | awk '{print $1}' | while read pvc; do
+    echo "Patching and deleting PVC: $pvc"
+
+    # Patch to remove finalizers
+    kubectl patch pvc $pvc -n $NAMESPACE --type=json -p '[{"op": "remove", "path": "/metadata/finalizers"}]'
+
+    # Force delete the PVC
+    kubectl delete pvc $pvc -n $NAMESPACE --force --grace-period=0
+done
+```
+
+#### 3. Delete All Remaining Resources (Optional)
+
+To ensure no lingering resources remain:
+
+```sh
+kubectl delete all --all --force --grace-period=0 -n mg
+kubectl delete configmap --all -n mg
+kubectl delete secret --all -n mg
+kubectl delete serviceaccount --all -n mg
+```
+
+#### 4. Remove Finalizers from the Namespace
+
+Patch the namespace to remove its finalizers so that it can be fully deleted:
+
+```sh
+kubectl patch namespace mg -p '{"spec":{"finalizers":[]}}'
+```
+
+#### 5. Verify
+
+Check that the namespace is deleted:
+
+```sh
+kubectl get namespace mg
+```
+
+After clearing the namespace (using any of the options above), you can recreate the namespace and install your Helm release into a fresh `mg` namespace:
+
 ---
 
-### Customizing Magistrala Installation
+## Customizing Magistrala Installation
 
 To override values in the chart, use either the `--values` flag and pass in a file or use the `--set` flag and pass configuration from the command line, to force a string value use `--set-string`. You can use `--set-file` to set individual values from a file when the value itself is too long for the command line or is dynamically generated. You can also use `--set-json` to set json values (scalars/objects/arrays) from the command line.
 
@@ -345,44 +588,134 @@ helm install magistrala -n mg --set ingress.hostname='example.com' --set users.i
 
 If Magistrala is already installed and you want to update it with new settings (for example, changing the ingress hostname or image tag), you can use the `helm upgrade` command:
 
-```bash
-helm upgrade magistrala -n mg --set ingress.hostname='example.com' --set users.image.tag='latest'
-```
+---
 
-This will apply your changes to the existing installation. For a complete table of the configurable parameters and their default values, see [configurable parameters and their default values](https://github.com/absmach/devops/blob/master/charts/magistrala/README.md). For changes to any of the configurable parameters, equally update the documentation at `charts/magistrala/README.md` using `helm-docs` as described in [Autogenerating Helm Chart Documentation](https://github.com/absmach/devops/blob/master/README.md).
+## Magistrala Add-ons
 
-### Magistrala Core
+Magistrala provides a set of **optional services** designed to extend the capabilities of the [**SuperMQ**](https://github.com/absmach/supermq) IoT platform. These services are **not installed by default** and are treated as **add-ons**, each packaged as a sub-chart within the SuperMQ Helm chart.
 
-The Magistrala Core includes the essential services that are installed by default:
+To enable any add-on, pass the appropriate `--set` flags when installing or upgrading the SuperMQ chart.
 
-- authn
-- users
-- clients
-- adapter_http
-- adapter_mqtt
-- adapter_coap
-- ui
+> **Note:** Magistrala add-ons **cannot run standalone**. They depend on the core services provided by the `supermq` base chart (e.g., authentication, messaging, internal APIs).
 
-These are the minimum required services to run Magistrala.
-
-### Magistrala Add-ons
-
-Magistrala Add-ons are optional services that are not installed by default. To enable an add-on, you need to specify it during installation. For example, to enable the InfluxDB reader and writer, you would use the following command:
+Example: Enabling InfluxDB Reader and Writer
 
 ```bash
-helm install magistrala . -n mg --set influxdb=true
+helm install supermq . -n mg \
+  --set influxdb.reader.enabled=true \
+  --set influxdb.writer.enabled=true
 ```
 
-Here’s a list of available add-ons:
+## Available Add-ons
 
-- bootstrap
-- influxdb.writer
-- influxdb.reader
-- adapter_opcua
-- adapter_lora
-- twins
+### 1. **Bootstrap Service**
 
-### Scaling Services
+Provides initial configuration for newly connected devices and services.
+
+- Generates bootstrap tokens
+- Applies provisioning templates
+- Integrates with the provisioning service
+
+```bash
+--set bootstrap.enabled=true
+```
+
+### 2. **InfluxDB Integration**
+
+Stores and retrieves time-series telemetry using InfluxDB.
+
+- **Writer**
+  - Consumes data and writes to InfluxDB.
+
+  ```bash
+  --set influxdb.writer.enabled=true
+  ```
+
+- **Reader**
+  - Serves historical time-series queries.
+
+  ```bash
+  --set influxdb.reader.enabled=true
+  ```
+
+### 3. **Protocol Adapters**
+
+Adapters ingest data from external protocols and systems.
+
+- **OPC-UA Adapter**  
+  Integrates with industrial machines using the OPC-UA protocol.
+
+  ```bash
+  --set adapter.opcua.enabled=true
+  ```
+
+- **LoRa Adapter**  
+  
+
+
+  ```bash
+  --set adapter.lora.enabled=true
+  ```
+
+> _Note: Some adapters may require external credentials or broker configuration._
+
+### 4. **Twins Service**
+
+Creates and manages digital twins of physical devices.
+
+- Tracks device state
+- Simulates device behavior
+- Supports virtual device interactions
+
+```bash
+--set twins.enabled=true
+```
+
+### 5. **PostgreSQL / TimescaleDB Integration**
+
+Support for structured and time-series storage using PostgreSQL or TimescaleDB.
+
+- **Writer**
+
+  ```bash
+  --set postgres.writer.enabled=true
+  ```
+
+- **Reader**
+
+
+  ```bash
+  --set postgres.reader.enabled=true
+  ```
+
+### 6. **Notifier Services**
+
+Delivers alerts or notifications based on system events or rules.
+
+- **SMTP (Email) Notifier**
+
+  ```bash
+  --set notifiers.smtp.enabled=true
+  ```
+
+- **SMPP (SMS) Notifier**
+
+
+  ```bash
+  --set notifiers.smpp.enabled=true
+  ```
+
+### 7. **Rule Engine (RE)**
+
+Evaluates conditions and executes automated actions based on incoming data.
+
+```bash
+--set ruleengine.enabled=true
+```
+
+---
+
+## Scaling Services
 
 By default, the MQTT adapter, Clients, Envoy, Authn, and the Message Broker services are set to scale with a replica count of 3. It’s recommended to set these values according to the number of nodes in your Kubernetes cluster. For example, you can adjust the replica count with the following command:
 
@@ -392,15 +725,15 @@ helm install magistrala . -n mg --set defaults.replicaCount=3 --set messageBroke
 
 This ensures that your services scale appropriately for your environment.
 
-### Additional Steps to Configure Ingress Controller
+## Additional Steps to Configure Ingress Controller
 
 To allow your host to send MQTT messages on ports `1883` and `8883`, you need to configure the NGINX Ingress Controller with some additional steps.
 
-#### Step 1: Configure TCP and UDP Services
+### 1. Configure TCP and UDP Services
 
 The NGINX Ingress Controller uses ConfigMaps to expose TCP and UDP services. The necessary ConfigMaps are included in the Helm chart in the [ingress.yaml][ingress-yaml] file assuming that location of ConfigMaps should be `ingress-nginx/tcp-services` and `ingress-nginx/udp-services`. These locations are set with `--tcp-services-configmap` and `--udp-services-configmap` flags and you can check it in deployment of Ingress Controller or add it there in [args section for nginx-ingress-controller][ingress-controller-args] if it's not already specified. This is explained in [NGINX Ingress documentation][ingress-controller-tcp-udp]
 
-#### Step 2: Expose the Required Ports in the Ingress Service
+### 2. Expose the Required Ports in the Ingress Service
 
 You need to expose the MQTT ports (`1883` for unencrypted and `8883` for encrypted messages) and the CoAP port (`5683` for UDP) in the NGINX Ingress Controller service. You can do that with the following command that edits your service:
 
@@ -425,7 +758,7 @@ and add in spec->ports:
 
 ## Configuring TLS & mTLS
 
-### Generating Certificates
+### 1. Generating Certificates
 
 For testing purposes, you can generate the necessary TLS certificates. Detailed instructions are provided in the [authentication][authentication] chapter of this document. You can use [this script][makefile] to generate the certificates. After replacing all instances of `localhost` with your actual hostname, run the following commands:
 
@@ -447,7 +780,7 @@ client.crt
 client.key
 ```
 
-### Creating Kubernetes Secrets
+### 2. Creating Kubernetes Secrets
 
 Create kubernetes secrets using those certificates by running commands from [secrets script][secrets]. In this example secrets are created in `mg` namespace:
 
@@ -463,7 +796,7 @@ You can check if they are succesfully created:
 kubectl get secrets -n mg
 ```
 
-### Configuring Ingress for TLS
+### 3. Configuring Ingress for TLS
 
 To secure your ingress with a TLS certificate, set the following values in your Helm configuration:
 
@@ -473,11 +806,11 @@ To secure your ingress with a TLS certificate, set the following values in your 
 
 After updating your Helm chart, your ingress will be secured with the TLS certificate.
 
-### Configuring Ingress for mTLS
+### 4. Configuring Ingress for mTLS
 
 For mTLS you need to set `nginx_internal.mtls.tls="magistrala-server"` and `nginx_internal.mtls.intermediate_crt="ca"`.
 
-### Testing MQTT with mTLS
+### 5. Testing MQTT with mTLS
 
 You can test sending an MQTT message with the following command:
 
