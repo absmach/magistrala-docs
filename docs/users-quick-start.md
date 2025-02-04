@@ -51,7 +51,7 @@ On the sidebar navigation, click on **Groups** under the _Client Management_ sec
 
 To create a group, click on the `+ Create` button present on the top-left corner of the page. This will open a popover with all the required fields for a new group.
 
-![Create Group](../docs/img/users-guide/group-information.png)
+![Create Group](../docs/img/clients/group-information.png)
 
 
 ## **Create a Client**
