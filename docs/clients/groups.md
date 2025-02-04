@@ -37,7 +37,7 @@ A group can also be disabled or enabled by toggling the switch on the far end of
 
 ![Disabled Group](../img/clients/group-disabled.png)
 
-## Group Users
+## Group Members
 
 ### Roles
 

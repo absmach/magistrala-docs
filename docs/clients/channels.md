@@ -76,7 +76,7 @@ This will open up a dialog that allows you to select which connection type you w
 
 ![Disconnect client dialog](../img/clients/channel-disc-client-dialog.png)
 
-## User Management
+## Channel Members
 
 ### Roles
 
@@ -124,7 +124,7 @@ You can also delete actions and members by clicking on the `trash` icon. It pops
 ![Delete role actions](../img/clients/channel-role-delete-actions.png)
 ![Delete role members](../img/clients/channel-role-delete-members.png)
 
-### Users
+### Members
 
 > This feature is currently under development :hammer:
 
