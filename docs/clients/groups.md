@@ -37,7 +37,7 @@ A group can also be disabled or enabled by toggling the switch on the far end of
 
 ![Disabled Group](../img/clients/group-disabled.png)
 
-## User Management
+## Group Users
 
 ### Roles
 
@@ -155,14 +155,14 @@ Optionally, we have the capacity to add users by assigning them to a group in th
 
 > This feature is currently under development :hammer:
 
-## Clients
+## Group Clients
 
 Magistrala provides the capacity to create clients directly in the group level.  
 A user is able to **create**, **update**, **disable**, **enable**, **delete**, and **connect** clients on the group level. These functionalities are described better in the [clients](/docs/clients/clients.md) section
 
 ![Group clients](../img/clients/group-clients.png)
 
-## Channels
+## Group Channels
 
 Magistrala provides the capacity to create channels directly in the group level.  
 A user is able to **create**, **update**, **disable**, **enable**, **delete**, and **connect** channels on the group level. These functionalities are described better in the [channels](/docs/clients/channels.md) section
