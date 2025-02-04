@@ -18,13 +18,17 @@ const sidebars: SidebarsConfig = {
       label: "Getting Started",
     },
     {
-      type: "category",
-      label: "Domain Management",
+      type: 'category',
+      label: 'Domain Management',
+      link: {
+        type: "doc",
+        id: "domain-management/introduction",
+      },
       collapsible: true,
       items: [
-        { type: "doc", id: "domains", label: "Domains" },
-        { type: "doc", id: "billing", label: "Billing" },
-        { type: "doc", id: "invitations", label: "Invitations" },
+        {type: "doc", id: "domain-management/domain", label: "Domain"},
+        {type: "doc", id: "domain-management/billing", label: "Billing"},
+        {type: "doc", id: "domain-management/invitations", label: "Invitations"},
       ],
     },
     {
