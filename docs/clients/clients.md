@@ -151,7 +151,7 @@ You can also delete actions and members by clicking on the `trash` icon. It pops
 ![Delete role actions](../img/clients/client-role-delete-actions.png)
 ![Delete role members](../img/clients/client-role-delete-members.png)
 
-### Members
+### Users
 
 > This feature is currently under development :hammer:
 

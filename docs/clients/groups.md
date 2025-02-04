@@ -141,7 +141,7 @@ You can also delete actions and members by clicking on the `trash` icon. It pops
 ![Delete role actions](../img/clients/group-role-delete-actions.png)
 ![Delete role members](../img/clients/group-role-delete-members.png)
 
-### Members
+### Users
 
 We can assign a user to a group by adding them as role members. This allows a user to be able to carry out the actions present in the role over the specific group.  
 To add role members, one can add them when creating a role or in the specific role page.  
