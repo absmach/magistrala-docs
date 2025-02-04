@@ -8,6 +8,8 @@ After clicking on the 'Send Invitation' button, a user can select multiple users
 
 ![Send Invitations](../img/invitations/send-invitation.png)
 
+All invitations sent can be managed in the invitations table which shows who the invite was sent to with the respective relation. A user can also delete an individual invitation.
+
 ![Invitations Table](../img/invitations/invitations-table.png)
 
 ### Accept an Invitation
@@ -18,10 +20,8 @@ The user does have an option of accepting or declining the invitation on the pop
 
 ![Invitations PopUp](../img/invitations/invitations-popup.png)
 
-They can also view more invitations after clicking View all which links them to the Invitations Table.
+They can also view more invitations after clicking 'View all' which links them to the Invitations Table.
 
 ![Invitations Table](../img/invitations/accept-invitations-table.png)
 
-Once the Invitation is accepted, the User will be able to log into the Domain. They can be found on the Members Table in the domain with the right Permissions.
-
-![New Invitations Member](../img/invitations/accepted-invitation-table.png)
+Once the Invitation is accepted, the user will be able to log into the domain. 

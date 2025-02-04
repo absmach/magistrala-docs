@@ -14,7 +14,7 @@ The Domain status can be disabled by clicking the 'Disable' button or enabled by
 
 ### Domain Roles
 
-Domain Management covers the Roles and Role Actions present in a domain as well. From the Roles section of the Domain, the user can create new roles with varying role actions.
+Domain Management covers the Roles and Role Actions present in a domain as well. From the roles section of the domain, the user can create new roles with varying role actions.
 
 By default, an admin role with complete control over the domain is always present and granted to the Domain creator. 
 
@@ -80,7 +80,7 @@ Since currently we cannot assign members to a domain, the only way to get member
 
 ![Create Domain Role](../img/domain/create-role.png)
 
-Once created, these domain roles can be edited in their respective ID pages.
+Once created, these domain roles can be edited in their respective pages.
 A user can edit the domain role id, name, role actions and role members. These fields can all be edited accordingly while on the page or by using the options on the dropdown menu.
 
 ![Domain Role Page](../img/domain/domain-role-id.png)

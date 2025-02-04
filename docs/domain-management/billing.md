@@ -7,7 +7,6 @@ Magistrala employs the use of **Stripe** to handle the User's private informatio
 This means that Magistrala will not have the user's card payment credentials at any point in time.
 
 Navigate to the Billing tab on the sidenav bar. This tab will only be visible to admin members of a domain.
-![Billings Table](../img/billing/billing-sidebar.png)
 
 ### Overview
 The billing page has multiple sections present each important to the billing process.
