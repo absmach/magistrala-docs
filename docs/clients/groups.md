@@ -22,7 +22,7 @@ The parent group would add hierarchy to the group making it a child of the paren
 
 After creating a group, it will show up on the page as the first group created.
 
-![View Group](../img/clients/view-group.png)
+![View Group](../img/clients/group-view.png)
 
 > The family tree section shows a group's parent-child relationship (This feature is still under development :hammer: )
 

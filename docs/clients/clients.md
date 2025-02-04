@@ -8,13 +8,13 @@ title: Clients
 
 To create a client, click on the `+ Create` button present on the top-left corner of the page. You can also create multiple clients by clicking on the `+ Create Clients` button and uploading a _.csv_ file with client **names** and any other fields you would like to add.
 
-![Create client](../img/clients/create-client-buttons.png)
+![Create client](../img/clients/client-create-buttons.png)
 
 ### Client Information
 
-Add a client **_name_** and optionally a **_key_** (has to be unique), a **_tags_** and **_metadata_**.
+Add a client **_name_** and optionally a **_key_** (has to be unique), **_tags_** and **_metadata_**.
 
-![Client information](../img/clients/create-client.png)
+![Client information](../img/clients/client-create.png)
 
 The client **key** will be used to authorize the device to send messages.
 
@@ -29,17 +29,17 @@ You can be able to create clients in bulk by uploading a _.csv_ file with the fo
 
 A sample of the _.csv_ file can be found [here](https://github.com/absmach/magistrala-ui/blob/main/samples/clients.csv).
 
-![Bulk create clients](../img/clients/bulk-create-clients.png)
+![Bulk create clients](../img/clients/clients-bulk-create.png)
 
 ## View a Client
 
 After creating a client, you will be able to see the created client on the clients table. To view that client click on the **row** or the **view** button in the row actions
 
-![View client](../img/clients/view-client.png)
+![View client](../img/clients/client-view.png)
 
 This will lead you to the client configuration page, where you can view all the client configurations.
 
-![View client configurations](../img/clients/view-client-config.png)
+![View client configurations](../img/clients/client-view-config.png)
 
 ## Configurations
 
@@ -55,9 +55,9 @@ This section enables a user to update the following client details:
 4. Metadata
 5. Status
 
-To update a field, click on the `pencil` icon on the far end of the field to edit. Once you have updated the value, click on the `tick` icon to update the changes or the `cross` icon to cancel the change.
+To update a field, click on the `pencil` icon on the far end of the field to edit. Once you have updated the value, click on the `tick` icon to update the changes or the `cross` icon to cancel the change. To update the client status, toggle the switch on the far end of the status field.
 
-![Edit client](../img/clients/update-client.png)
+![Edit client](../img/clients/client-update.png)
 
 ### Bootstrap Configuration
 
@@ -65,7 +65,7 @@ Bootstrap configuration of a client allows bootstrapping of the device (self-sta
 
 To add a bootstrap configuration, click on the `Add Configuration` button.
 
-![Add bootstrap configuration](../img/clients/add-client-bootstrap-button.png)
+![Add bootstrap configuration](../img/clients/client-bootstrap-button.png)
 
 A dialog box will appear allowing you to enter the following fields
 
@@ -89,21 +89,21 @@ Navigate to the `Connections` section of the client navigation. This will lead y
 
 In this page you are able to add a connection by clicking on the `Connect` button on the top right corner.
 
-This opens up a dialog box that allows you to select the channels you want to connect and with which connection type. A client can have both connection types selected.  
+This opens up a dialog box that allows you to select the channels you want to connect to and with which connection type. A client can have both connection types selected.  
 There are two connection type options:
 
 1. **Publish**: Allows the client to send messages in the channel
 2. **Subscribe**: Allows the client to read messages in the channel
 
-![Connect channel](../img/clients/connect-channel.png)
+![Connect channel](../img/clients/client-connect-channel.png)
 
-To disconnect the channel, click on the `Disconnect` button at the end of the channel row.
+To disconnect from the channel, click on the `Disconnect` button at the end of the channel row.
 
-![Disconnect channel button](../img/clients/disconnect-channel-button.png)
+![Disconnect channel button](../img/clients/client-disc-channel.png)
 
 This will open up a dialog that allows you to select which connection type you want to remove. You can remove one or both of the connection types if you have multiple.
 
-![Disconnect channel dialog](../img/clients/disconnect-channel-dialog.png)
+![Disconnect channel dialog](../img/clients/client-disc-channel-dialog.png)
 
 ## User Management
 
@@ -112,11 +112,11 @@ This will open up a dialog that allows you to select which connection type you w
 Roles allow you to group a specific set of actions and allocate them to users.
 To create a role, navigate to the roles section on the client navbar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
 
-![Create client role](../img/clients/create-client-role.png)
+![Create client role](../img/clients/client-create-role.png)
 
 ##### Role Information
 
-![Client role information](../img/clients/create-client-role-dialog.png)
+![Client role information](../img/clients/client-create-role-dialog.png)
 
 The role name is complusory. You can optionally provide the role actions by selecting from the available actions. You can also optionally provide the members by searching for a user with their **username**.
 
@@ -136,7 +136,7 @@ The following is the list of available actions for a client:
 
 To update a role name, click on the `pencil` icon on the far right end of the field, update the value then click on the `tick` icon to update the changes or the `cross` icon to cancel the changes.
 
-![Update role name](../img/clients/update-client-role.png)
+![Update role name](../img/clients/client-role-update.png)
 
 To update the **actions** and **members** click on the `pencil` icon, it will pop up a dialog box allowing you to select the actions and users you want to add.
 
@@ -152,5 +152,11 @@ You can also delete actions and members by clicking on the `trash` icon. It pops
 ![Delete role members](../img/clients/client-role-delete-members.png)
 
 ### Users
+
+> This feature is currently under development :hammer:
+
+## Audit Logs
+
+Audit logs track all **group events**, from **creation** to **updates** and **disabling**.
 
 > This feature is currently under development :hammer:
