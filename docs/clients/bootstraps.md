@@ -34,7 +34,7 @@ To create a bootstrap configuration via the UI:
    - Navigate to the **Bootstraps** option in the **Clients Management** panel.
    - Click on the **+ Create** button to open the **Create Bootstrap Configuration** dialog.
 
-    ![Create Bootstrap Configuration](../docs/img/bootstraps/create-bootstrap.png)
+    ![Create Bootstrap Configuration](../img/bootstraps/create-bootstrap.png)
 
 2. **Enter Configuration Details**:
    - **Name**: Enter a human-readable name for the bootstrap configuration.
@@ -43,7 +43,7 @@ To create a bootstrap configuration via the UI:
    - **Channel(s)**: Select the channels to which the device will connect. These must be provisioned before setting up the configuration.
    - **Client**: Optionally, choose an existing client or leave this field empty. If left empty, a new client will be created with the configuration ID.
 
-    ![Bootstrap Configuration Details](../docs/img/bootstraps/config-without-client.png)
+    ![Bootstrap Configuration Details](../img/bootstraps/config-without-client.png)
 
 3. **Encryption Settings**:
    - Expand the **Encryption Settings** section to enter optional encryption credentials.
@@ -52,13 +52,13 @@ To create a bootstrap configuration via the UI:
      - **CA Cert**: Input the trusted CA certificate.
    - These fields are optional but may be necessary if the device needs to establish a TLS-encrypted connection during bootstrapping.
 
-    ![Encryption Settings](../docs/img/bootstraps/encryption-settings.png)
+    ![Encryption Settings](../img/bootstraps/encryption-settings.png)
 
 4. **Submit the Configuration**:
    - Click the **Create** button to save the bootstrap configuration.
    - A newly created bootstrap configuration will appear in the list as **Disabled** by default. You must manually enable it to activate the bootstrap process.
 
-    ![Created Bootstrap Configuration](../docs/img/bootstraps/new-bootstrap.png)
+    ![Created Bootstrap Configuration](../img/bootstraps/new-bootstrap.png)
 
 ### View and Manage Bootstrap Configurations
 
@@ -66,15 +66,15 @@ To create a bootstrap configuration via the UI:
    - Click on any configuration in the list to view its details.
    - The configuration will show all fields, including the name, client ID, channels, and state (enabled or disabled). It will also provide options to view and edit the custom content and encryption settings.
 
-   ![Bootstrap Configuration Details](../docs/img/bootstraps/client-bootstrap-config.png)
+   ![Bootstrap Configuration Details](../img/bootstraps/client-bootstrap-config.png)
 
 2. **Automatically Generated Clients**:
    - If a bootstrap configuration is created without specifying a client, a new client will be automatically generated using the configuration ID. This can be seen in the **Clients** section.
    - The new client will appear in the clients list with its status set to **Enabled**.
 
-   ![Auto-Generated Client](../docs/img/bootstraps/thing-less-config.png)
+   ![Auto-Generated Client](../img/bootstraps/thing-less-config.png)
 
-    ![Auto-Generated Client Clients Page](../docs/img/bootstraps/new-bootstrap-thing-config.png)
+    ![Auto-Generated Client Clients Page](../img/bootstraps/new-bootstrap-thing-config.png)
 
 ### Fields Overview
 
