@@ -21,13 +21,13 @@ This will open the **Create Area Chart** dialog, where you can configure your se
 
 You can also add multiple data sources by clicking the **Add Source** button.
 
-![Create Area Chart](../docs/img/dashboards/create-areachart.png)
+![Create Area Chart](../img/dashboards/create-areachart.png)
 
 Once the data sources are configured, you can define a **Time Window** by specifying the "From" and "To" dates, which will constrain the data shown to the specified time period.
 In the **Settings** tab, you can adjust the **Update Interval** (how often the chart refreshes) and other chart appearance options.
 After configuring everything, click the **Create** button to add the Area Chart to your dashboard.
 
-![Created Area Chart](../docs/img/dashboards/new-areachart1.png)
+![Created Area Chart](../img/dashboards/new-areachart1.png)
 
 ### Edit an Area Chart
 
@@ -39,19 +39,19 @@ You can edit your Area Chart anytime by clicking the **Pencil Icon** on the top-
 
 For instance ypu can switch to live data for the Area Chart.
 
-![Edit Area Chart](../docs/img/dashboards/edit-areachart.png)
+![Edit Area Chart](../img/dashboards/edit-areachart.png)
 
 Once you've made the necessary changes, click the **Update** button to save and apply the new settings. You'll see the chart automatically refresh with the updated data or appearance.
 
-![Updated Area Chart](../docs/img/dashboards/edited-areachart.png)
+![Updated Area Chart](../img/dashboards/edited-areachart.png)
 
 In many cases, you may want to summarize data by aggregating it over time intervals. For example, setting the **Aggregation Interval** to 10 minutes (600 seconds) and choosing the **Average** aggregation type will display the mean values over each 10-minute period for a 2 hour time window.
 
-![Set Aggregation](../docs/img/dashboards/aggregation-areachart-setting.png)
+![Set Aggregation](../img/dashboards/aggregation-areachart-setting.png)
 
 The result will be an Area Chart that shows the mean value in each time interval, providing an insightful view of your data trends.
 
-![Average Aggregated Area Chart](../docs/img/dashboards/avg-areachart.png)
+![Average Aggregated Area Chart](../img/dashboards/avg-areachart.png)
 
 With Area Charts, you can easily visualize changes in data over time, allowing you to track trends and patterns with a clean, filled-in graphical representation.
 This chart is particularly useful for comparing cumulative values and emphasizing the overall volume of data.

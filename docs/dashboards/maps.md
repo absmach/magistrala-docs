@@ -28,7 +28,7 @@ Click the **+ Add Widget** button, then select **Marker Map** from the list of a
 
 This will open the **Create Marker Map** dialog, where you can configure the data sources and appearance of the map.
 
-![Create Marker Map Dialog](../docs/img/dashboards/markermap-dialog.png)
+![Create Marker Map Dialog](../img/dashboards/markermap-dialog.png)
 
 ### Configure the Marker Map
 
@@ -37,7 +37,7 @@ This will open the **Create Marker Map** dialog, where you can configure the dat
    - **Channel**
    - **Group**
 
-   ![Entity Type Selection](../docs/img/dashboards/markermap-entities.png)
+   ![Entity Type Selection](../img/dashboards/markermap-entities.png)
 
 2. **Channel**: Select the specific entity whose location data will be displayed. Since we have worked with things/ devices a lot of times, we shall plot a channel this time. This channel already has its metadata configured.
 3. **Label**: Provide a label for the marker, which will help identify it on the map.
@@ -45,20 +45,20 @@ This will open the **Create Marker Map** dialog, where you can configure the dat
 5. **Add Source**: You can add multiple data sources (entities) to the map by clicking **Add Source**.
 6. **Delete Source**: You can delete a Data Source by clicking on the `Trash Icon` next to the Data Source.
 
-   ![Create Channel Marker Map](../docs/img/dashboards/datasosurce-markermap.png)
+   ![Create Channel Marker Map](../img/dashboards/datasosurce-markermap.png)
 
 **Settings Section**
 6. **Title**: Set a title for the map (e.g., "Marker Map"). This title will appear at the top of the map.
 7. **Latitude Key**: Specify the metadata key that contains the latitude value. By default, it is set to `latitude`, but you can modify it if your metadata uses a different key.
 8. **Longitude Key**: Similarly, set the metadata key for the longitude. The default value is `longitude`.
 
-  ![Marker Map Settings](../docs/img/dashboards/create-marker-dialog.png)
+  ![Marker Map Settings](../img/dashboards/create-marker-dialog.png)
 
 Once all required fields are completed, click the **Create** button to add the Marker Map to your dashboard.
 
 After creating the Marker Map, it will automatically center on the specified locations based on the metadata.
 
-![Channel Marker Map](../docs/img/dashboards/new-markermap2.png)
+![Channel Marker Map](../img/dashboards/new-markermap2.png)
 
 Each marker on the map has an interactive popup that provides more information about the entity.
 Clicking on a marker will open a popup with the entity details, as shown below:
@@ -68,7 +68,7 @@ Clicking on a marker will open a popup with the entity details, as shown below:
 - **Entity ID**: This is the unique identifier for the entity. It can also be copied onto a clipboard when yo click on the copy icon next to it.
 - **Latitude and Longitude**: The exact coordinates of the entity’s location, which can be copied to the clipboard.
 
-   ![Marker Popup](../docs/img/dashboards/popup-markermap-features.png)
+   ![Marker Popup](../img/dashboards/popup-markermap-features.png)
 
 ### Edit a Marker Map
 
@@ -77,11 +77,11 @@ You can edit the Marker Map by clicking the **Pencil Icon** at the top-right cor
 1. **Add or Delete Data Sources**: Add additional entities to the map or remove existing ones by clicking the **Add Source** or **Trash Icon**, respectively.
 2. **Modify Settings**: You can update the **Latitude Key**, **Longitude Key**, and **Title** to better reflect the data being displayed.
 
-   ![Edit Marker Map](../docs/img/dashboards/edit-channel-markermap2.png)
+   ![Edit Marker Map](../img/dashboards/edit-channel-markermap2.png)
 
 Once you've made your changes, click **Update** to apply the modifications. The updated map will display the new locations or modified settings.
 
-   ![Updated Marker Map](../docs/img/dashboards/edited-markermap.png)
+   ![Updated Marker Map](../img/dashboards/edited-markermap.png)
 
 #### Conclusion
 
@@ -106,7 +106,7 @@ The message should have the location data in the following format (as a string):
 
 `{"latitude":-1.206367, "longitude":36.905012}`
 
-  ![Sending Route Location Messagae](../docs/img/dashboards/send-location-message.png)
+  ![Sending Route Location Messagae](../img/dashboards/send-location-message.png)
 
 These location values will be used to plot the device's movement on the map.
 The latest message will indicate the current location, and previous messages will form the route path.
@@ -117,7 +117,7 @@ To create a Route Map, ensure the dashboard is in **Edit Mode**. Click the **+ A
 
 This will open the **Create Route Map** dialog, where you can configure the data sources and appearance of the map.
 
-  ![Create Route Map Dialog](../docs/img/dashboards/generic-routemap-dialog.png)
+  ![Create Route Map Dialog](../img/dashboards/generic-routemap-dialog.png)
 
 ### Configuring the Route Map
 
@@ -129,7 +129,7 @@ This will open the **Create Route Map** dialog, where you can configure the data
 6. **Add Source**: You can add multiple data sources (things or channels) by clicking **Add Source**.
 7. **Remove Source**: To remove a data source, click the **Trash Icon** next to the specific entry.
 
-  ![Route Map Data Source](../docs/img/dashboards/routemap-datasources.png)
+  ![Route Map Data Source](../img/dashboards/routemap-datasources.png)
 
 ### Settings Section
 
@@ -145,7 +145,7 @@ This will open the **Create Route Map** dialog, where you can configure the data
 
 6. **Route Line Width**: Adjust the thickness of the route line on the map. This allows you to highlight routes or distinguish between different paths visually.
 
-   ![Route Map Settings](../docs/img/dashboards/routemap-advancedsettings.png)
+   ![Route Map Settings](../img/dashboards/routemap-advancedsettings.png)
 
 Once all required fields are completed, click the **Create** button to add the Route Map to your dashboard.
 
@@ -156,7 +156,7 @@ The map will automatically focus on the area covered by the route.
 
 - **Single Message Route**: If only one message has been sent, the map will show a single marker for the location.
   
-   ![Created Route Map](../docs/img/dashboards/new-routemap.png)
+   ![Created Route Map](../img/dashboards/new-routemap.png)
 
 - **Multiple Messages Route**: With more messages, the route will appear longer, showing the movement or changes in location over time.
 
@@ -169,16 +169,16 @@ You can edit the Route Map by clicking the **Pencil Icon** at the top-right corn
 
 We will start by changing the thing present in the map to new device with more points on the map.
 
-  ![Edit Route Map](../docs/img/dashboards/edit-routemap-newthing.png)
+  ![Edit Route Map](../img/dashboards/edit-routemap-newthing.png)
 
 Once you've made your changes, click **Update** to apply the modifications.
 The map will refresh with the new data or settings, and any changes to the route will be displayed.
 
-  ![Updated Route Map](../docs/img/dashboards/edited-routemap.png)
+  ![Updated Route Map](../img/dashboards/edited-routemap.png)
 
 You can also add new data sources and have them show up on the map as well as shown below:
 
-  ![Updated Route Map with 2 Devices](../docs/img/dashboards/edited-routemap-2.png)
+  ![Updated Route Map with 2 Devices](../img/dashboards/edited-routemap-2.png)
 
 ### Route Map Popups
 
@@ -189,7 +189,7 @@ Each point on the map representing a message has an interactive popup with more 
 - **Latitude and Longitude**: The exact coordinates of the location, which can be copied to the clipboard.
 - **View Thing Details**: A link to the specific entity's details page.
 
-  ![Route Map Popup](../docs/img/dashboards/popup-routemap-features.png)
+  ![Route Map Popup](../img/dashboards/popup-routemap-features.png)
 
 #### Summary
 

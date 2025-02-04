@@ -26,7 +26,7 @@ This will open the **Create Table Card** dialog, where you can configure the car
 4. **Update Interval**: Set the interval for how often the table should refresh to show the latest data. For example, an interval of `60` seconds will refresh the table every minute.
 5. **Title**: Provide a title for your table card. This will be displayed at the top of the widget.
 
-   ![Table Card Configuration](../docs/img/dashboards/tablecard-dialog.png)
+   ![Table Card Configuration](../img/dashboards/tablecard-dialog.png)
 
 Once all the necessary fields are completed, click the **Create** button to add the Table Card to your dashboard.
 
@@ -38,7 +38,7 @@ The table will include columns like:
 - **Status**: Whether the entity is enabled or disabled.
 - **Created At**: The timestamp of when the entity was created.
 
-   ![Table Card Created](../docs/img/dashboards/new-tablecard.png)
+   ![Table Card Created](../img/dashboards/new-tablecard.png)
 
 The card also includes pagination at the bottom, allowing you to navigate through multiple pages of entities.
 
@@ -51,13 +51,13 @@ This will open a sheet on the right, allowing you to adjust the data source, ent
 2. **Update Interval**: Adjust how often the table should refresh with the latest data.
 3. **Title**: Update the title of the table card to reflect any new data or focus.
 
-   ![Editing Table Card](../docs/img/dashboards/edit-tablecard2.png)
+   ![Editing Table Card](../img/dashboards/edit-tablecard2.png)
 
 Once the updates are made, click **Update** to save the changes.
 
 The table card will refresh with the new data and settings.
 
-   ![Updated Table Card](../docs/img/dashboards/edited-tablecard.png)
+   ![Updated Table Card](../img/dashboards/edited-tablecard.png)
 
 ### Customizing Table Cards
 

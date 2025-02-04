@@ -23,7 +23,7 @@ To create a **Switch Card**, follow these steps:
 2. Click on **"Add Widget"** and select **"Switch"** from the list.
 3. A **Create Switch** dialog box will appear, as shown below.
 
-![Create Switch Dialog](../docs/img/dashboards/create-switch.png)
+![Create Switch Dialog](../img/dashboards/create-switch.png)
 
 ### Configure the Switch Card
 
@@ -47,7 +47,7 @@ Once created, the switch card appears on the dashboard with the configured **tit
 - The **default state** of the switch is **OFF** (`false`).
 - Clicking on the **toggle button** will change its state to **ON** (`true`), sending a message to the client.
 
-![Switch Card OFF](../docs/img/dashboards/switch-off.png)
+![Switch Card OFF](../img/dashboards/switch-off.png)
 
 ---
 
@@ -62,7 +62,7 @@ You can edit the **Switch Card** settings by clicking the **pencil icon** in the
 - **Value Name** - Modify the controlled value.
 - **Title** - Update the displayed title.
 
-![Edit Switch Dialog](../docs/img/dashboards/edit-switch.png)
+![Edit Switch Dialog](../img/dashboards/edit-switch.png)
 
 Once changes are made, click **"Update"** to save them.
 
@@ -72,7 +72,7 @@ Once changes are made, click **"Update"** to save them.
 
 After editing, the switch can be toggled to the **ON** (`true`) state, sending a command to the connected device.
 
-![Switch Card ON](../docs/img/dashboards/switch-on.png)
+![Switch Card ON](../img/dashboards/switch-on.png)
 
 ---
 
@@ -98,7 +98,7 @@ To create a **Slider Card**, follow these steps:
 2. Click on **"Add Widget"** and select **"Slider"** from the list.
 3. A **Create Slider** dialog box will appear.
 
-![Create Slider Dialog](../docs/img/dashboards/create-slider.png)
+![Create Slider Dialog](../img/dashboards/create-slider.png)
 
 ### Configure the Slider Card
 
@@ -125,7 +125,7 @@ Once created, the slider card appears on the dashboard with the configured **tit
 - The **default value** of the slider is at the minimum value.
 - Dragging the **slider handle** changes the value, which is then sent to the client.
 
-![Slider Card](../docs/img/dashboards/slider-created.png)
+![Slider Card](../img/dashboards/slider-created.png)
 
 ---
 
@@ -142,7 +142,7 @@ You can edit the **Slider Card** settings by clicking the **pencil icon** in the
 - **Minimum & Maximum Values** - Adjust the range of the slider.
 - **Steps** - Define the increment between values.
 
-![Edit Slider Dialog](../docs/img/dashboards/edit-slider.png)
+![Edit Slider Dialog](../img/dashboards/edit-slider.png)
 
 Once changes are made, click **"Update"** to save them.
 
@@ -152,7 +152,7 @@ Once changes are made, click **"Update"** to save them.
 
 After editing, the slider values can be adjusted in defined **steps** (e.g., increments of `10`).
 
-![Slider with Steps](../docs/img/dashboards/slider-updated.png)
+![Slider with Steps](../img/dashboards/slider-updated.png)
 
 ---
 

@@ -23,7 +23,7 @@ These are the required fields to configure the Pie Chart;
 4. **Label**: Provide a label for each data source, as it will help distinguish the different segments of the pie.
 5. **Color**: Select a color for each data source slice in the Pie Chart.
 
-![Create Pie Chart](../docs/img/dashboards/create-piechart.png)
+![Create Pie Chart](../img/dashboards/create-piechart.png)
 
 Once you have configured the data sources, you can define a **Time Window** by specifying the "From" and "To" dates in order to use historical data.
 The Pie Chart will display the latest message within this time window, locking onto the last message received during the specified period.
@@ -31,7 +31,7 @@ In the **Settings** tab, you can adjust the **Update Interval** to determine how
 
 Once everything is set, click the **Create** button to save the Pie Chart widget and add it to your dashboard.
 
-![New Pie Chart](../docs/img/dashboards/new-piechart.png)
+![New Pie Chart](../img/dashboards/new-piechart.png)
 
 ## Edit the Pie Chart
 
@@ -42,22 +42,22 @@ This will open the edit sheet on the right, where you can adjust the data source
 2. **Modifying Time Window**: Adjust the "From" and "To" dates to capture the desired time period for the latest values.
 3. **Delete a Data Source**: Use the **Trash Icon** to remove any data source.
 
-![Edit Pie Chart](../docs/img/dashboards/edit-piechart-times.png)
+![Edit Pie Chart](../img/dashboards/edit-piechart-times.png)
 
 After making the necessary changes, click the **Update** button to apply the modifications.
 The chart will refresh, displaying the updated data and settings.
 This is an edited chart showing live data.
 
-![Edited Pie Chart](../docs/img/dashboards/edited-piechart.png)
+![Edited Pie Chart](../img/dashboards/edited-piechart.png)
 
 Pie Charts also support **Aggregation**, allowing you to show a summary value (such as **Maximum**, **Minimum**, **Sum**, **Count**, or **Average**) from the data in each time window.
 However, unlike other timeseries charts, you don’t need to specify an interval—the time window itself defines the aggregation range, and the chart will only display the aggregated value for each data source.
 
-![Aggregation Pie Chart](../docs/img/dashboards/aggregation-piechart-setting.png)
+![Aggregation Pie Chart](../img/dashboards/aggregation-piechart-setting.png)
 
 For example, setting the aggregation to **Maximum** will display the highest value of each data source within the specified time window, helping you understand the overall distribution of data across different sources.
 
-![Maximum Pie Chart](../docs/img/dashboards/max-piechart.png)
+![Maximum Pie Chart](../img/dashboards/max-piechart.png)
 
 ### Customize Pie Charts
 

@@ -12,7 +12,7 @@ To create a Count Card, ensure your dashboard is in **Edit Mode**.
 Click the **+ Add Widget** button and select **Count Card** from the list of available widgets.
 This will open the **Create Count Card** dialog, where you can configure the card's data source and appearance.
 
-![Count Card Dialog](../docs/img/dashboards/generic-countcard-dialog.png)
+![Count Card Dialog](../img/dashboards/generic-countcard-dialog.png)
 
 ### Configuring the Count Card
 
@@ -34,7 +34,7 @@ The card will immediately display the total count of entities based on the selec
 - **Status**: Whether the entities counted are enabled or disabled.
 - **Tag**: If you specified a tag, it will display the tag value.
 
-   ![New Count Card](../docs/img/dashboards/new-countcard.png)
+   ![New Count Card](../img/dashboards/new-countcard.png)
 
 You can edit a Count Card by clicking the **Pencil Icon** in the top-right corner of the widget. This will open a sheet on the right, allowing you to adjust the data source, entity status, tag, and other settings.
 
@@ -44,17 +44,17 @@ You can edit a Count Card by clicking the **Pencil Icon** in the top-right corne
 2. **Update Interval**: Adjust how often the card should refresh with the latest count.
 3. **Title**: Update the title of the count card to reflect any new data or focus.
 
-  ![Editing Count Card](../docs/img/dashboards/edit-countcard.png)
+  ![Editing Count Card](../img/dashboards/edit-countcard.png)
 
 Once the updates are made, click **Update** to save the changes. The count card will refresh with the new data and settings.
 
-  ![Updated Count Card](../docs/img/dashboards/edited-countcard.png)
+  ![Updated Count Card](../img/dashboards/edited-countcard.png)
 
 ### Customizing Count Cards
 
 Count Cards are versatile and can be customized to suit your needs. You can easily change the title, status, tags, and icons displayed on the card. The image below highlights the key customizable features:
 
-   ![Features of Count Cards](../docs/img/dashboards/countcard-features.png)
+   ![Features of Count Cards](../img/dashboards/countcard-features.png)
 
 1. **Changing Icons**: Each entity type can have its own icon, visually representing the type of entity being counted (e.g., a device icon for "Things").
 2. **Entity Status**: Displays the status (Enabled/Disabled) of the entities.

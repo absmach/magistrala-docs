@@ -22,15 +22,15 @@ This will open the **Create Value Card** dialog, where you can configure the car
 5. **Title**: Provide a title for your value card. This will be displayed at the top of the widget.
 6. **Unit**: Specify the unit of measurement (e.g., V for volts, °C for temperature).
 
-![Value Card Configuration](../docs/img/dashboards/create-valuecard.png)
+![Value Card Configuration](../img/dashboards/create-valuecard.png)
 7. **Icon**: Select an icon that visually represents the data displayed. You can choose from a list of icons to match the context of the value.
 
-![Icon Selection](../docs/img/dashboards/valuecard-icons.png)
+![Icon Selection](../img/dashboards/valuecard-icons.png)
 
 Once all the necessary fields are completed, click the **Create** button to add the Value Card to your dashboard.
 The card will immediately display the latest value from the channel, along with the associated unit and icon.
 
-![Value Card Created](../docs/img/dashboards/new-valuecard.png)
+![Value Card Created](../img/dashboards/new-valuecard.png)
 
 ## Edit the Value Card
 
@@ -43,12 +43,12 @@ This will open a sheet on the right, allowing you to adjust the data source, tit
 4. **Unit**: Update the unit if the data type changes (e.g., from volts to amps).
 5. **Icon**: Select a new icon that matches the updated data context.
 
-![Editing Value Card](../docs/img/dashboards/edit-valuecard.png)
+![Editing Value Card](../img/dashboards/edit-valuecard.png)
 
 Once the updates are made, click **Update** to save the changes.
 The card will refresh with the new configuration, showing the updated data and icon.
 
-![Updated Value Card](../docs/img/dashboards/edited-valuecard.png)
+![Updated Value Card](../img/dashboards/edited-valuecard.png)
 
 ### Customizing Value Cards
 
