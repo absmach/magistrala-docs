@@ -2,27 +2,28 @@
 title: Domain
 ---
 
-### Domain Information
+## Domain Information
 
 Navigate to the `Domain` section in the side navigation under **Domain Management** to find out more about the domain.
 
 Here a user can edit the Domain Name, Alias, Tags and Metadata as well as copy the Domain ID.
 
-The Domain status can be disabled by clicking the 'Disable' button or enabled by the 'Enable' button. Disabling the domain will revoke the access for users who are not domain admins.
+The Domain status can be disabled by clicking the `Disable` button or enabled by the `Enable` button. Disabling the domain will revoke the access for users who are not domain admins.
 
 ![Domain Info](../img/domain/domain-info.png)
 
-### Domain Roles
+## Domain Roles
 
-Domain Management covers the Roles and Role Actions present in a domain as well. From the roles section of the domain, the user can create new roles with varying role actions.
+From the roles section of the domain, the user can create new roles with varying role actions.
 
 By default, an admin role with complete control over the domain is always present and granted to the Domain creator. 
 
 ![Domain Roles](../img/domain/roles.png)
 
-This is a Domain Role Actions Comprehensive List:
+This is a domain role actions comprehensive list:
 
-- **General Actions**
+- **Domain Management**
+
   - update
   - enable
   - disable
@@ -30,24 +31,27 @@ This is a Domain Role Actions Comprehensive List:
   - delete
 
 - **Role Management**
+
   - manage_role
   - add_role_users
   - remove_role_users
   - view_role_users
 
-- **Client Actions**
+- **Client Management**
+
   - client_create
   - client_update
   - client_read
   - client_delete
-  - client_connect_to_channel
   - client_set_parent_group
+  - client_connect_to_channel
   - client_manage_role
   - client_add_role_users
   - client_remove_role_users
   - client_view_role_users
 
-- **Channel Actions**
+- **Channel Management**
+
   - channel_create
   - channel_update
   - channel_read
@@ -61,7 +65,8 @@ This is a Domain Role Actions Comprehensive List:
   - channel_remove_role_users
   - channel_view_role_users
 
-- **Group Actions**
+- **Group Management**
+
   - group_create
   - group_update
   - group_read
@@ -74,9 +79,7 @@ This is a Domain Role Actions Comprehensive List:
   - group_remove_role_users
   - group_view_role_users
 
-To create a new role, click on the `+ Create` button and select from the role actions as well as provide a descsriptive name for the role.
-
-Since currently we cannot assign members to a domain, the only way to get members is by creating roles and selecting users to the roles.
+To create a new role, click on the `+ Create` button, provide a descriptive name for the role, and optionally add users and actions
 
 ![Create Domain Role](../img/domain/create-role.png)
 
@@ -86,13 +89,8 @@ A user can edit the domain role id, name, role actions and role members. These f
 ![Domain Role Page](../img/domain/domain-role-id.png)
 ![Domain Action Buttons](../img/domain/role-actions.png)
 
-### Domain Members
+## Domain Members
 
 An admin or a member with the right permissions can assign users to a domain. Members must be assigned with specific roles.
 
-> This feature is currently under maintenance
-
-![Domain Members](../img/domain/domain-members.png)
-
-Using the search feature allows a user to easily navigate the members to find particular users.
-The **Status** button can filter the members table and show enabled, disabled or all the members.
+> This feature is currently under development :hammer:
