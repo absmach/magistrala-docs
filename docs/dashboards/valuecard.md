@@ -2,15 +2,15 @@
 title: Value Card
 ---
 
-A **Value Card** provides a snapshot of real-time data by displaying the latest value from a message received via a connected channel. Unlike timeseries charts, Value Cards do not require a time interval, as they only show the most recent message from the selected data source.
+A **Value Card** provides a snapshot of real-time data by displaying the latest value from a message received via a connected channel. Unlike timeseries charts, value cards **do not** require a time interval, as they only show the most recent message from the selected data source.
 
 ### Create a Value Card
 
 To create a Value Card, ensure the dashboard is in **Edit Mode**.
-Click the `Add Widget` button, then select **Value Card** from the list of available widgets. This will open the Create Value Card dialog, where the data source and appearance of the card can be configured.
+Click the `Add Widget` button, then select **Value Card** from the list of available widgets. This will open the **Create Value Card** dialog, where the data source and appearance of the card can be configured.
 
 
-### Configuring the Value Card
+#### Configuring the Value Card
 
 1. **Channel**: Select the channel from which the card will pull data.
 2. **Client**: Choose the connected device (client) associated with the channel.
@@ -46,9 +46,10 @@ The card will refresh to show the updated data and icon.
 
 ![Updated Value Card](../img/dashboards/edited-valuecard.png)
 
-### Customizing Value Cards
+#### Customizing Value Cards
 
 - **Icons**: Selecting an appropriate icon is essential for visually representing the type of data displayed. For example, an "activity" icon might represent voltage, while a "thermometer" icon is suitable for temperature data.
 - **Display**: The Value Card shows the value, unit, and the last update time, allowing users to quickly understand the current status of the connected device or channel.
 
+#### **Conclusion**
 With Value Cards, users can effectively monitor the latest value of specific metrics, making them ideal for real-time overviews of critical data from connected devices.

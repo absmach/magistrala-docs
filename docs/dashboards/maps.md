@@ -27,27 +27,25 @@ This will open the **Create Marker Map** dialog, where users can configure the d
 
 ![Create Marker Map Dialog](../img/dashboards/markermap-dialog.png)
 
-### Configure the Marker Map
+#### Configure the Marker Map
 
 1. **Entity Type**: Choose the type of entity whose location data will be visualized. The available options include:
    - **Client** (device)
    - **Channel**
    - **Group**
 
-   ![Entity Type Selection](../img/dashboards/markermap-entities.png)
-
-2. **Channel**: Select the specific entity whose location data will be displayed. For this example, a channel with pre-configured metadata will be plotted.
-3. **Label**: Provide a label for the marker, which will help identify it on the map.
-4. **Color**: Choose a color for the marker to distinguish it from others.
-5. **Add Source**: Multiple data sources (entities) can be added to the map by clicking **Add Source**.
-6. **Delete Source**: A data source can be removed by clicking the `Trash Icon` next to it.
+   ![Entity Type Selection](../img/dashboards/markermap-entities.png)  
+2. **Channel**: Select the specific entity whose location data will be displayed. For this example, a channel with pre-configured metadata will be plotted.  3. **Label**: Provide a label for the marker, which will help identify it on the map.  
+4. **Color**: Choose a color for the marker to distinguish it from others.  
+5. **Add Source**: Multiple data sources (entities) can be added to the map by clicking `Add Source`.  
+6. **Delete Source**: A data source can be removed by clicking the `trash` icon next to it.
 
    ![Create Channel Marker Map](../img/dashboards/datasosurce-markermap.png)
 
-**Settings Section**
-6. **Title**: Set a title for the map (e.g., "Marker Map"). This title will appear at the top of the map.
-7. **Latitude Key**: Specify the metadata key that contains the latitude value. By default, it is set to `latitude`, but it can be modified if a different key is used.
-8. **Longitude Key**: Similarly, set the metadata key for the longitude. The default is `longitude`.
+**Settings Section**  
+7. **Title**: Set a title for the map (e.g., "Marker Map"). This title will appear at the top of the map.  
+8. **Latitude Key**: Specify the metadata key that contains the latitude value. By default, it is set to `latitude`, but it can be modified if a different key is used.  
+9. **Longitude Key**: Similarly, set the metadata key for the longitude. The default is `longitude`.  
 
   ![Marker Map Settings](../img/dashboards/create-marker-dialog.png)
 
@@ -64,11 +62,11 @@ Each marker on the map has an interactive popup that provides more information a
 
    ![Marker Popup](../img/dashboards/popup-markermap-features.png)
 
-### Edit a Marker Map
+### Edit the Marker Map
 
-To edit a Marker Map, click the **Pencil Icon** at the top-right corner of the map widget. This will open the **Update Marker Map** dialog,  where users can adjust the data sources, labels, colors, and other settings.
+To edit a Marker Map, click the `pencil` icon at the top-right corner of the map widget. This will open the **Update Marker Map** dialog,  where users can adjust the data sources, labels, colors, and other settings.
 
-1. **Add or Delete Data Sources**: Add additional entities to the map or remove existing ones by clicking the **Add Source** or **Trash Icon**, respectively.
+1. **Add or Delete Data Sources**: Add additional entities to the map or remove existing ones by clicking the `Add Source` or `trash` icon, respectively.
 2. **Modify Settings**: Update the **Latitude Key**, **Longitude Key**, and **Title** to better reflect the data being displayed.
 
    ![Edit Marker Map](../img/dashboards/edit-channel-markermap2.png)
@@ -104,7 +102,7 @@ This will open the **Create Route Map** dialog, where users can configure the da
 
   ![Create Route Map Dialog](../img/dashboards/generic-routemap-dialog.png)
 
-### Configure the Route Map
+#### Configure the Route Map
 
 1. **Value Name**: Enter the name of the value that will contain the location data. This name should match the key in the message where the location information is stored.
 2. **Channel**: Select the channel that will provide the location messages.
@@ -116,25 +114,20 @@ This will open the **Create Route Map** dialog, where users can configure the da
 
   ![Route Map Data Source](../img/dashboards/routemap-datasources.png)
 
-### Settings Section
+#### Settings Section
 
-1. **Time Window**: In the advanced settings, you can define a time range (`From Date` and `To Date`). This setting will limit the messages displayed on the map to a specific time interval. The route will display all the messages sent within this window, with the pointer indicating the last message before the `To Date` timestamp.
-
-2. **Update Interval**: Set how frequently the map should refresh to display new messages.
-
-3. **Title**: Set a title for the map (e.g., "Device Route"). This title will appear at the top of the map.
-
-4. **Latitude Key**: Specify the key in the message that contains the latitude value. By default, this is set to `latitude`, but you can modify it if your message uses a different key.
-
-5. **Longitude Key**: Specify the key in the message that contains the longitude value. The default is `longitude`, but this can be changed as needed.
-
+1. **Time Window**: In the advanced settings, you can define a time range (`From Date` and `To Date`). This setting will limit the messages displayed on the map to a specific time interval. The route will display all the messages sent within this window, with the pointer indicating the last message before the `To Date` timestamp.  
+2. **Update Interval**: Set how frequently the map should refresh to display new messages.  
+3. **Title**: Set a title for the map (e.g., "Device Route"). This title will appear at the top of the map.  
+4. **Latitude Key**: Specify the key in the message that contains the latitude value. By default, this is set to `latitude`, but you can modify it if your message uses a different key.  
+5. **Longitude Key**: Specify the key in the message that contains the longitude value. The default is `longitude`, but this can be changed as needed.  
 6. **Route Line Width**: Adjust the thickness of the route line on the map. This allows users to highlight routes or distinguish between different paths visually.
 
    ![Route Map Settings](../img/dashboards/routemap-advancedsettings.png)
 
 Once all required fields are completed, click the `Create` button to add the Route Map to the dashboard.
 
-### Created Route Map
+#### Created Route Map
 
 After creating the Route Map, the path will be displayed based on the messages that were sent, with the latest message showing the current location. The map will automatically focus on the area covered by the route.
 
@@ -144,11 +137,11 @@ After creating the Route Map, the path will be displayed based on the messages t
 
 - **Multiple Messages Route**: As more messages are received, the route will appear longer, showing the movement or changes in location over time.
 
-### Edit a Route Map
+### Edit the Route Map
 
-To edit the Route Map, click the **Pencil Icon** at the top-right corner of the map widget. This will open the Update Route Map dialog, where users can adjust the data sources, time window, and other settings.
+To edit the Route Map, click the `pencil` icon at the top-right corner of the map widget. This will open the Update Route Map dialog, where users can adjust the data sources, time window, and other settings.
 
-1. **Add or Delete Data Sources**: Add additional channels or clients to the map, or remove existing ones by clicking `Add Source` or the `Trash Icon`, respectively.
+1. **Add or Delete Data Sources**: Add additional channels or clients to the map, or remove existing ones by clicking `Add Source` or the `trash` icon, respectively.
 2. **Modify Settings**: Update the **Latitude Key**, **Longitude Key**, and **Title**. You can also adjust the **Update Interval** or change the **Route Line Width** to better reflect the data being displayed.
 
 Changes to the map can be made by updating the data or settings and clicking Update to apply them.
@@ -163,7 +156,7 @@ Multiple data sources can also be added, as shown below:
 
   ![Updated Route Map with 2 Devices](../img/dashboards/edited-routemap-2.png)
 
-### Route Map Popups
+#### Route Map Popups
 
 Each point on the map representing a message has an interactive popup with more details about the entity. The popup includes:
 
@@ -174,7 +167,7 @@ Each point on the map representing a message has an interactive popup with more 
 
   ![Route Map Popup](../img/dashboards/popup-routemap-features.png)
 
-#### Summary
+#### Conclusion
 
 Route Maps provide a dynamic way to visualize the movement or changes in location of devices over time. By retrieving location data from messages, these maps enable real-time tracking and historical path analysis. With customizable settings such as update intervals and time windows, Route Maps offer flexibility in monitoring IoT devices' geographical movements. Users can track multiple devices.
 

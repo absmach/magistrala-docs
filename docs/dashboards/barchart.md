@@ -11,8 +11,11 @@ To create a Bar Chart, first ensure that the dashboard is in Edit Mode.
 Click on the `Add Widget` button, which will open a dialog box displaying all available widgets.
 Select the **Bar Chart** option from the list.
 
-This will open the **Create Bar Chart** dialog, where the chart’s settings and data sources can be configured, just like with the Line Chart.
-The fields marked with an asterisk are required and must be filled in before clicking `Create` button.
+This will open the **Create Bar Chart** dialog, where the chart’s settings and data sources can be configured.
+
+#### Configuring the Bar Chart
+
+Just like with the line chart, the fields marked with an asterisk are required and must be filled in before clicking `Create` button.
 
 ![Create Bar Chart](../img/dashboards/create-barchart.png)
 
@@ -25,11 +28,11 @@ The dialog will close, and the Bar Chart will be added to the dashboard.
 
 ### Edit the Bar Chart
 
-An existing Bar Chart can be edited at any time by clicking the **Pencil Icon** in the top-right corner of the chart. This will open an edit sheet on the right, where data sources, labels, time window, and other settings can be modified.
+An existing bar chart can be edited at any time by clicking the `pencil` icon in the top-right corner of the chart. This will open an edit sheet on the right, where data sources, labels, time window, and other settings can be modified.
 
 
-1. **Add Data Sources**: You can add more data sources by clicking the **Add Source** button and providing additional channels, clients, and labels.
-2. **Delete Data Sources**: Remove a data source by clicking the **Trash Icon** next to the specific source to be deleted.
+1. **Add Data Sources**: You can add more data sources by clicking the `Add Source` button and providing additional channels, clients, and labels.
+2. **Delete Data Sources**: Remove a data source by clicking the `trash` icon next to the specific source to be deleted.
 
 ![Edit Bar Chart](../img/dashboards/edit-barchart.png)
 
@@ -48,5 +51,7 @@ For instance, applying aggregation with an interval of 10 minutes and selecting 
 After applying these settings, the resulting chart will show aggregated values based on the specified criteria.
 
 ![Aggregated Bar Chart](../img/dashboards/min-barchart.png)
+
+#### **Conclusion**
 
 With the ability to add, edit, and delete data sources, along with fine-tuning time windows and aggregation, Bar Charts provide a versatile way to visualize data on the dashboard.

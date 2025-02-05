@@ -15,7 +15,7 @@ This will open the **Create Pie Chart** dialog, where the data sources and setti
 
 Once the required fields for value name and data sources are filled, a unique title can be added, and the refresh interval can be adjusted.
 
-### Configuring the Pie Chart
+#### Configuring the Pie Chart
 
 These are the required fields to configure the Pie Chart;
 
@@ -38,12 +38,12 @@ Once all settings are complete, click the `Create` button to add the Pie Chart w
 
 ### Edit the Pie Chart
 
-To edit a Pie Chart, click the **Pencil Icon** in the top-right corner of the widget.
+To edit a Pie Chart, click the `pencil` icon in the top-right corner of the widget.
 This will open the edit sheet on the right, where adjustments can be made to the data sources, labels, colors, time window, and other settings.
 
 1. **Adding More Data Sources**: Additional data sources can be added to compare more metrics.
 2. **Modifying Time Window**: Adjust the "From" and "To" dates to define the desired time period for the latest values.
-3. **Delete a Data Source**: Click the `Trash Icon` to delete any data source.
+3. **Delete a Data Source**: Click the `trash` icon to delete any data source.
 
 ![Edit Pie Chart](../img/dashboards/edit-piechart-times.png)
 
@@ -62,9 +62,10 @@ For example, setting the aggregation to **Maximum** will display the highest val
 
 ![Maximum Pie Chart](../img/dashboards/max-piechart.png)
 
-### Customize Pie Charts
+#### Customize Pie Charts
 
 - **Multiple Data Sources**: To get the most out of Pie Charts, it is recommended to add multiple data sources. This allows for easy comparison of how different data points relate to each other.
 - **Color Customization**: Each slice in the pie chart represents a different data source, and the color picker allows for easy differentiation between them.
 
+#### **Conclusion**
 With the ability to lock onto the latest message within a time window and aggregate data over specific periods, Pie Charts are a powerful tool for comparing real-time or recent data from multiple devices or channels in a visually appealing format.

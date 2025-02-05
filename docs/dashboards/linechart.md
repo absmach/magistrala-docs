@@ -8,13 +8,16 @@ To create a Line Chart, first ensure that the dashboard is in **Edit Mode**.
 Click on the `Add Widget` button, which will open a dialog box displaying all the available widgets.
 Select the **Line Chart** option from the list.
 
-This will open the **Create Line Chart** dialog, where the chart's settings and data sources can be configured. Start by setting up a single data source.
+This will open the **Create Line Chart** dialog, where the chart's settings and data sources can be configured. 
 
-- 1. **Value Name**: Enter the name of the value used to fetch the messages.
-- 2. **Channel**: Choose the channel connected to the device that should be tracked.
-- 3. **Client**: Select the client (device/entity) connected to the specified channel.
-- 4. **Label**: Provide a label to track each data source clearly on the chart.
-- 5. **Line Color**:  Use the color picker to choose a color for the line.
+#### Configuring the Line Chart
+Start by setting up a single data source.
+
+- **Value Name**: Enter the name of the value used to fetch the messages.
+- **Channel**: Choose the channel connected to the device that should be tracked.
+- **Client**: Select the client connected to the specified channel.
+- **Label**: Provide a label to track each data source clearly on the chart.
+- **Line Color**:  Use the color picker to choose a color for the line.
 
 ![Line Chart data Source](../img/dashboards/single-data-linechart.png)
 
@@ -28,12 +31,12 @@ Once satisfied with the settings, click the `Create` button to save the Line Cha
 
 ### Edit the Line Chart
 
-The Line Chart can be edited at any time by clicking the **Pencil Icon** on the widget. This will open a settings sheet on the right, where the chart’s data sources, labels, intervals, and title can be modified.
+The Line Chart can be edited at any time by clicking the `pencil` icon on the widget. This will open a settings sheet on the right, where the chart’s data sources, labels, intervals, and title can be modified.
 
 ![Adjusting Line Chart dataSources](../img/dashboards/edit-linechart-sheet.png)
 
 At this point, the labels, intervals, and chart title can also be edited.
-Clicking the Update button will save the changes and adjust the chart according to the new settings. A confirmation message (toast notification) will appear to confirm that the update has been applied.
+Clicking the `Update` button will save the changes and adjust the chart according to the new settings. A confirmation message (toast notification) will appear to confirm that the update has been applied.
 
 ![Edited Line Chart](../img/dashboards/new-linechart.png)
 
@@ -53,10 +56,7 @@ The resulting chart will look like this:
 
 ![Maximum Aggregates Line Charts](../img/dashboards/max-linechart.png)
 
-Aggregation options include:
 
-- **Maximum**
-- **Minimum**
-- **Sum**
-- **Count**
-- **Average**
+#### **Conclusion**
+
+Line Charts are an effective tool for visualizing trends and changes in data over time. They provide a clear, precise representation of data points, making it easy to track fluctuations, compare multiple data sources, and identify patterns. With customizable settings like data aggregation, time windows, and line styling, line charts offer flexibility for detailed data analysis, helping users make informed decisions based on real-time or historical data insights.

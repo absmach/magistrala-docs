@@ -10,13 +10,13 @@ To create an Area Chart, ensure your dashboard is in **Edit Mode**.
 Click the `Add Widget` button, then select the **Area Chart** option from the widget list.
 This will open the **Create Area Chart** dialog, where the settings and data sources can be configured.
 
-### Configuring the Area Chart
-
-1. **Value Name**: Enter the name of the value you wish to visualize, such as voltage or temperature.
-2. **Channel**: Select the channel that provides the data you want to plot.
-3. **Client**: Choose the entity or device connected to the channel.
-4. **Label**: Provide a meaningful label to differentiate each data source on the chart.
-5. **Area Color**: Pick a color for the filled area of the chart using the color picker.
+#### Configuring the Area Chart
+Start by setting up a single data source.
+- **Value Name**: Enter the name of the value you wish to visualize, such as voltage or temperature.
+- **Channel**: Select the channel that provides the data you want to plot.
+- **Client**: Choose the entity or device connected to the channel.
+- **Label**: Provide a meaningful label to differentiate each data source on the chart.
+- **Area Color**: Pick a color for the filled area of the chart using the color picker.
 
 Multiple data sources can be added by clicking the `Add Source` button.
 
@@ -28,9 +28,9 @@ After configuring everything, click the `Create` button to add the Area Chart to
 
 ![Created Area Chart](../img/dashboards/new-areachart1.png)
 
-### Edit an Area Chart
+### Edit the Area Chart
 
-The Area Chart can be edited at any time by clicking the **Pencil Icon** in the top-right corner of the widget. This will open the edit sheet on the right, where data sources, the chart title and settings such as the time window can be modified.
+The Area Chart can be edited at any time by clicking the `pencil` icon in the top-right corner of the widget. This will open the edit sheet on the right, where data sources, the chart title and settings such as the time window can be modified.
 
 1. **Adding Data Sources**: Click on the `Add Source` button to include additional data streams.
 2. **Modifying Time Window**: Specify the "From" and "To" dates to adjust the time range for the chart.
@@ -52,5 +52,6 @@ The result will be an Area Chart that shows the average value in each time inter
 
 ![Average Aggregated Area Chart](../img/dashboards/avg-areachart.png)
 
+#### **Conclusion**
 Area Charts are a powerful way to visualize changes in data over time. They allow trends and patterns to be easily tracked with a clean, filled-in graphical representation.
 This chart is especially useful for comparing cumulative values and emphasizing the overall volume of data.

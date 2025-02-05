@@ -12,7 +12,7 @@ Click the `Add Widget` button and select **Count Card** from the list of availab
 
 ![Count Card Dialog](../img/dashboards/generic-countcard-dialog.png)
 
-### Configuring the Count Card
+#### Configuring the Count Card
 
 1. **Entity Type**: Select the type of entity to count in the card. The available  options are:
    - **Client** (device)
@@ -35,9 +35,10 @@ The card will immediately display the total count of entities based on the selec
 
    ![New Count Card](../img/dashboards/new-countcard.png)
 
-The **Pencil Icon** in the top-right corner of the widget allows for editing. Clicking this icon will open a settings panel where the data source, entity status, tag, and other settings can be adjusted.
+
 
 ### Edit the Count Card
+The `pencil` icon in the top-right corner of the widget allows for editing. Clicking this icon will open a settings panel where the data source, entity status, tag, and other settings can be adjusted.
 
 1. **Data Source**: Modify the **Entity Type**, **Status**, or **Tag** to change the entities being counted.
 2. **Update Interval**: Adjust the frequency with which the card refreshes.
@@ -49,7 +50,7 @@ Once the updates are made, click `Update` to save the changes. The count card wi
 
   ![Updated Count Card](../img/dashboards/edited-countcard.png)
 
-### Customizing Count Cards
+#### Customizing Count Cards
 
 Count Cards are versatile and can be customized to meet specific needs. Customizable features include the title, status, tags, and icons displayed on the card. Below is an image that highlights these key features:
 
@@ -58,7 +59,9 @@ Count Cards are versatile and can be customized to meet specific needs. Customiz
 1. **Changing Icons**: Each entity type can have a unique icon, visually representing the type of entity being counted (e.g., a device icon for "Clients").
 2. **Entity Status**: The status of the entities (Enabled/Disabled) is displayed.
 3. **Deleting a Card**: To delete a count card, click the **Trash Icon**. A confirmation popup will appear.
-4. **Popup**: Click `Delete`  in the popup to confirm the deletion.
+4. **Popup**: Click `Delete` in the popup to confirm the deletion.
 5. **Titles**: Titles of the count card can be customized for clarity.
+
+#### **Conclusion**
 
 With Count Cards, users can effectively monitor the total number of devices, channels, members, or groups in their domain. These cards are ideal for quickly assessing critical metrics at a glance.
