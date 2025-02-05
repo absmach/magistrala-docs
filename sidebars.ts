@@ -68,7 +68,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: "doc",
-      id: "users",
+      id: "profile-management/users",
       label: "Profile Management",
     },
   ],
