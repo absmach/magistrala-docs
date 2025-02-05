@@ -1,11 +1,11 @@
 ---
-title: Widgets
+title: Widget Guide
 ---
 
-**Widgets** are the building blocks of a dashboard, allowing users to visualize and interact with their IoT data.
-Each widget provides a specific way to display or control the data flowing from connected devices.
-Whether you're monitoring live sensor readings or interacting with devices remotely, widgets offer the flexibility to suit your specific needs.
-We currently do not support real time monitoring but that is under the works and will be included in later installments.
+### Introduction to Widgets
+Widgets are interactive components designed to display data visually. They enable real-time monitoring and historical data analysis, providing valuable insights through customizable dashboards. Widgets can be tailored to meet specific requirements, making them essential tools for data-driven decision-making.
+
+Widgets come in various types, each serving different purposes. Charts, such as line, bar, area and pie are ideal for representing trends and comparisons. Cards, including value, table and count cards, highlight key metrics at a glance. Gauges, like simple gauge, temperature gauge, and speed gauge, are effective for visualizing performance metrics with thresholds. Maps such as route and marker maps offer geospatial data visualization, and controls, such as switches and sliders, add interactivity to dashboards.
 
 Magistrala offers a variety of widgets, including charts, data cards, and control elements:
 
@@ -44,34 +44,19 @@ Widgets rely on messages sent from devices in the following `SeNML` format:
 }
 ```
 
-## Add a new widget
+### Add a new widget
 
-Dashboards are built using **Widgets** that visualize data and facilitate control over other devices.
-These widgets can host a variety of charts and controls.
+To add a new widget to your dashboard, start by opening the desired dashboard. Click on "Add Widget" to open the widget selection dialog box. Choose the widget type that best suits your needs, whether it's a chart, card, gauge, map, or control. Customize the widget's appearance, configure data sources, and adjust display options to fit your preferences. Once you've completed the setup, click "Save" to add the widget to your dashboard.
+
+Charts are perfect for time-series data and comparisons, while cards are designed to showcase key metrics prominently. Gauges help visualize performance against predefined thresholds, and maps provide a spatial context for your data. Controls enhance dashboard interactivity, allowing users to filter and manipulate data views dynamically.
+
+Dashboards are built using **Widgets** that visualize data and facilitate control over other devices. These widgets can host a variety of charts and controls.
 To ensure that timeseries charts function correctly, you need to have connected channels and entities that actively send messages.
 
-The available timeseries charts include:
-
-- Line Charts
-- Bar Charts
-- Area Charts
-- Pie Charts
-
-In addition to charts, you can add various cards and control elements to your dashboard:
-
-- Value Card
-- Count Card
-- Table Card
-- Switch
-- Slider
-- Gauge Chart
-- Route Map
-
-To add a widget, select your desired chart or control from the dialpgbox. This action opens a dialog box where you can configure the necessary data sources, set additional options, and apply filters. Once you've configured the settings, click the 'Create' button to add the widget to your dashboard.
 
 ![Edit Dashboard](../img/dashboards/dashboard-id-page.png)
 
-### Features of each Widget Chart
+### Widget Chart Features
 
 There are some standard features of the charts that ensure better visualisation and customisation of their performance and appearance.
 
@@ -85,47 +70,35 @@ These features include:
 
 #### 1. Time Window
 
-This represents the time interval which will be used to fetch the timeseries data of the charts.
-TIme windows are used especially for timeseries charts such as Area, Line, Bar and Pie charts.
+The time window represents the interval used to fetch time-series data for charts. It is especially useful for time-series charts like Area, Line, Bar, Pie charts, and Route Maps.
 
 ![Calender Option](../img/dashboards/date-picker.png)
 
-Using the calender present, the query sent to the database will then include a from and to time.
+The selected "from" and "to" times are included in the query sent to the database. Users can choose between Realtime and History modes:
 
-The date-time calender also has slots for times.
-Clicking on the first box will allow you to enter a number within 24 hours.
-If the box stays idle it wil automatically move to the minute section and then to the seconds section.
+    - History: Displays data within a specific time range set using the calendar.
 
-If you do not specify a date and time the charts will keep on reloading to the latest values present from the channel and client connected.
+    - Realtime: Shows data as it is updated in real-time.
 
-This ensures that the chart always has **Real Time** data showing. You can notice this with the live data red blinking button that is present in each real time widget.
+The date-time calendar also includes time slots. Clicking on the first box allows you to enter the time using a 24-hour clock format. When live data is selected, a red blinking button appears on each real-time widget, ensuring the chart always displays Real-Time data.
 
-Here is an image of the time-series Area chart we have created that uses Live Data:
+Here is an example of a time-series Area chart using live data:
 
 ![Time series area chart](../img/dashboards/area-chart-created.png)
 
 #### 2. Chart Appearance Settings
 
-These settings adjust the appearance of the Chart Widget through title names, axes names as well as the refresh rate.
-Each chart has its own settings that differ at a level with the others.
-They generally appear as a tab on the dialog that pops open once a user clicks on the chart they need.
+Chart Appearance Settings allow you to adjust how your charts look, including titles, axis labels, and refresh rates. Each chart type has unique settings accessible through the dialog that opens when you click on a specific chart.
 
-To customise the title on a chart futher, click on the pencil icon on the widget after creation. This will open a sheet with the current settings.
+To further customize a chart's title, click the pencil icon on the widget after creation. This opens a panel displaying current settings. While titles default to the chart name, they can be edited to fit your preferences.
 
-The title has a default setting with the chart name but can be edited to your preference.
-
-For Timeseries charts, the settings are typically the same across the board except for the pie chart.
-The update Interval determines when the api request is sent to the database and is set to 60s by default. Its basically the refresh rate.
-If the time window is not set, this means the chart will show the latest data after the update.
-The x and y axes labels can also be altered to feature any labels needed.
+For time-series charts, settings are generally consistent except for pie charts. The Update Interval determines how often the API requests new data from the database, with a default of 60 seconds. If no time window is set, charts will display the latest data after each update. Additionally, a user can modify the x and y-axis labels as needed.
 
 ![Settings](../img/dashboards/settings-xyaxes.png)
 
-For the pie-chart, the settings are unique since pie-charts require more than one data source and have no need for axes. You can only edit the title and the Update Interval
+For pie charts, settings are unique as they require multiple data sources and do not use axes. A user can only modify the title and update interval.
 
-The gauge-chart also has some diverse settings that include a **minimum** and **maximum** value which controls the gauge-chart scale.
-These values are set to *0* and *100* by default.
-The user can also specify the Unit they desire to show up on the gauge chart from the list provided:
+Gauge charts offer additional options, such as setting **minimum** and **maximum** values to control the scale. These default to *0* and *100*. Users can also select a unit from a provided list, including:
 
 1. Kilometer (km)
 2. Meter (m)
@@ -176,39 +149,34 @@ Here is an example of a chart with the unit set to *km* :
 
 ![Gauge-chart example](../img/dashboards/gauge-chartexample.png)
 
-Quite similar to the Gauge Chart, Control Sliders also require a **minimum** and **maximum** value for the scale.
-The steps determine the increments and decreases of each move.
-They are set to *10* by default.
+For control sliders, similar to gauge charts, you'll need to define minimum and maximum values to set the scale. The step value, which determines the increment or decrement per move, defaults to *10*.
 
 ![Slider chart settings](../img/dashboards/settings-slider.png)
 
-For maps, the **Latitude Key** and **Longitude Key** tags are essential for retrieving data from entities. These tags specifically set the latitude and longitude keys required to determine the position of the entities. By default, these tags are set to *latitude* and *longitude*.
+For maps, the **Latitude Key** and **Longitude Key** tags are essential for retrieving geospatial data. These tags define the latitude and longitude attributes required to pinpoint entity positions. By default, these are set to *latitude* and *longitude*.
 
-Route maps also feature an adjustable line width, allowing the line to be modified to a suitable thickness.
+Route maps allow you to adjust the **line width**, making it easy to modify the thickness of route lines.
 
 ![Route Map settings](../img/dashboards/settings-routemap.png)
 
-The value card settings offer options to configure the update interval, unit, and title.
+Value cards provide options to configure the **update interval**, **unit**, and **title**, allowing for quick adjustments to how data is displayed.
 
 ![Value Card Settings](../img/dashboards/settings-valuecard.png)
 
 #### 3. Icons
 
 The icons section provides a variety of icons that can enhance the value card's visualization.
-Simply type the name of the desired icon, and it will appear on the card
+Simply type the name of the desired icon and it will appear on the card
 
 ![Icons select](../img/dashboards/icons-select.png)
 
 #### 4. Filters
 
-Each map has certain fields that can help filter out the data that will be displayed.
-Time windows are examples of such filters.
-The dataSources are also filters when it comes to the Client IDs and Channel IDs.
-Currently, most charts allow multiple data Sources to be used at an instance.
+Filters play a crucial role in refining the data displayed in widgets. Each map contains specific fields that help filter the data presented. Time windows serve as a fundamental filter, defining the period of data retrieval.
 
-Once a channel is selected, the client selected must be one that is connected to the channel to be able to fetch data from the backend.
+Data sources act as filters, particularly concerning client IDs and channel IDs. Most charts currently support multiple data sources simultaneously. When a channel is selected, the associated client must be connected to that channel to enable data retrieval from the backend.
 
-**ValueName** is also considered a filter since it limits the request to a specific column. Valuenames typically hold the topic that the message is in:
+The **ValueName** parameter functions as an additional filter by restricting requests to specific data columns. Typically, valuenames correspond to message topics, as illustrated below:
 
 ```json
 {
@@ -222,19 +190,16 @@ Once a channel is selected, the client selected must be one that is connected to
 }
 ```
 
-The status of an entity is also a major filter for charts such as the entity table which will limit the entities to show either the enabled or disabled status.
+The status of an entity also serves as a key filter, especially in charts like the entity table and count card. This filter limits displayed entities based on their status: enabled, disabled, or all statuses.
 
 ![Status check](../img/dashboards/status-filter-charts.png)
 
-Gauge charts can also be filtered as Simple gauges, Temperature gauges and Speed gauges.
 
 ![Gauge type](../img/dashboards/gauge-type-filter.png)
 
 #### 5. Data Aggregation
+Data aggregation is a powerful feature that enables the summarization of data over specific time periods. This is particularly useful for time-series charts where you want to visualize trends or patterns over a defined period. Magistrala currently supports the following aggregation methods:
 
-Data aggregation is a powerful feature that enables the summarization of data over specific time periods.
-This is particularly useful for time-series charts where you want to visualize trends or patterns over a defined period.
-Magistrala currently supports the following aggregation methods:
 
 - **Maximum**: Retrieves the highest value within the specified time window.
 - **Minimum**: Retrieves the lowest value within the specified time window.
@@ -242,54 +207,67 @@ Magistrala currently supports the following aggregation methods:
 - **Sum**: Computes the total sum of values for the given time window.
 - **Count**: Counts the number of entries in the specified interval.
 
-For aggregation to work effectively, a **Time Window** needs to be set. The **Time Window** consists of a "From Date" and a "To Date," defining the range of time over which the aggregation will be performed.
-Additionally, an **Aggregation Interval** must be specified, indicating the frequency at which the data points should be aggregated (e.g. every 10 seconds).
+For aggregation to work effectively, a **Time Window** needs to be set. The time window consists of a "From Date" and a "To Date," defining the range of time over which the aggregation will be performed.
+
+For aggregation to work correctly:
+
+- In History mode, users must select both a From Date and a To Date, along with the Aggregation Interval.
+
+- In Realtime mode, users must select a From Date, specify the Last duration, and set the Aggregation Interval.
+
+
+The **Aggregation Interval** indicates the frequency at which the data points are aggregated (e.g. every 10 seconds).
 
 ![Aggregation Settings](../img/dashboards/aggregation-setting.png)
 
-The combination of these settings allows you to customize how your data is aggregated and displayed on the dashboard.
-For example, if you want to see the average temperature readings of a sensor every 10 minutes over the past 24 hours, you would set the "From Date" to 24 hours ago, the "To Date" to the current time, and the "Aggregation Interval" to 10 minutes.
-The result will be a clear visual representation of the temperature trend.
+For example, to view the average temperature readings of a sensor every 10 minutes over the past 24 hours:
+
+- Set the From Date to 24 hours ago.
+
+- Set the To Date to the current time (or use Last = 24 hours in Realtime mode).
+
+- Set the Aggregation Interval to 10 minutes.
+
+
+This setup provides a clear visual representation of temperature trends.
 
 By using data aggregation, you can gain deeper insights into your data, making it easier to monitor and analyze the performance and behavior of your IoT devices.
 
-## Edit the Widgets
+### Edit the Widgets
 
-Once a widget is created, it can be easily modified to suit changing requirements. While in **Edit Mode**, simply click on the pencil icon located on the top right corner of the widget you wish to modify. This action opens a settings panel from the right side of the screen, as shown below:
+Once you've created a widget, you can easily modify it to suit changing requirements. While in **Edit Mode**, click the pencil icon located at the top right corner of the widget you want to edit. This action opens a settings panel from the right side of the screen, as shown below:
 
 ![Chart showing edit icon](../img/dashboards/edit-icon-chart.png)
 
-In this panel, you will find all the previously configured settings and data sources. Here, you can:
+In this panel, you'll find all the previously configured settings and data sources. You can:
 
 - Change the **Value Name** to target a different data metric.
-- Select a different **Channel** and **Thing** to pull data from another source.
+- Select a different **Channel** and **Client** to pull data from another source.
 - Modify the **Label** and **Color** for better visualization.
-- Add additional data sources by clicking on the **Add Source** button, allowing the widget to visualize multiple data streams at once.
-- Adjust the **Time Window** and other **Settings** like chart appearance, filters, and aggregation intervals as needed.
+- Add additional data sources by clicking on the `Add Source` button, allowing the widget to visualize multiple data streams simultaneously.
+- Adjust the **Time Window** and other **Settings** such as chart appearance, filters and aggregation intervals as needed.
 
 ![Edit Chart Sheet ](../img/dashboards/edit-chartsheet.png)
 
-After making your desired changes, click the **Update** button to apply them. The widget will automatically refresh to display the new configuration, giving you a real-time view of the updated data.
+After making your changes, click the `Update` button to apply them. The widget will automatically refresh to display the new configuration, providing a real-time view of the updated data.
 
-For example, if you want to add two more data sources to your existing bar chart, click the **Add Source** button and select the desired channels and things. You can also change the title for the chart to reflect these new sources, making your dashboard even more informative.
+For example, if you want to add two more data sources to an existing bar chart, click the `Add Source` button and select the desired channels and clients. You can also update the chart title to reflect these new sources, making your dashboard more informative.
 
-These changes result in a new chart.
+This flexibility allows you to keep your dashboard stays up-to-date with the latest data allowing you to make adjustments on the fly to meet your monitoring and management needs.
 
-This flexibility allows you to keep your dashboard up-to-date with the latest data and make adjustments on the fly, ensuring that the visualizations always meet your monitoring and management needs.
 
-## Delete a Widget
+### Add Dummy Data
 
-A widget card also has a vertical menu used for deleting the widget and toggling dummy data.
-Deleting the widget is as simple as clicking the `delete` button and confirming that you would like to delete the widget.
+From the widget menu, you can select `Dummy Data` to populate the chart with sample data. This feature provides a quick and easy way to create dummy charts, helping you understand the data structure needed for your visualizations.
+
+![Widget Menu](../img/dashboards/widget-menu.png)
+
+### Delete a Widget
+
+To delete a widget, click the `Delete` button in the widget menu on the widget card. Confirm the deletion when prompted to permanently remove the widget.
 
 ![Widget Menu](../img/dashboards/widget-menu.png)
 
 ![Deleting a Widget](../img/dashboards/delete-widget.png)
-
-## Dummy Data Toggle
-
-From the widget menu, a user can elect to use Dummy Data that provides the chart data as samples. This is a quick and easy way to create dummy charts that can be used to learn the data needed for the charts.
-
-![Widget Menu](../img/dashboards/widget-menu.png)
 
 [users-quick-start]: users-quick-start.md

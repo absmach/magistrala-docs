@@ -2,20 +2,20 @@
 title: Controls
 ---
 
-Control cards are interactive widgets that allow users to **send commands** to connected devices via a channel. These cards help control IoT devices directly from the dashboard.
+Control cards are interactive widgets that allow users to **send commands** to connected devices through a channel. These cards facilitate direct control of IoT devices from the dashboard.
 
 There are two main types of **Control Cards**:
 
 1. **Switch Cards** - Used for **boolean values** (ON/OFF).
-2. **Slider Cards** - Used for **numeric values** (e.g., adjusting voltage or temperature).
+2. **Slider Cards** - Used for **numeric values** (e.g. adjusting voltage or temperature).
 
 ---
 
-## **Switch Card**
+### **Switch Card**
 
 A **Switch Card** sends **boolean** values (`true` or `false`, equivalent to `ON` and `OFF`) to a connected **client** through a **channel**. It is useful for controlling devices like lights, motors, or sensors.
 
-### Create a Switch Card
+#### Create a Switch Card
 
 To create a **Switch Card**, follow these steps:
 
@@ -25,7 +25,7 @@ To create a **Switch Card**, follow these steps:
 
 ![Create Switch Dialog](../img/dashboards/create-switch.png)
 
-### Configure the Switch Card
+#### Configure the Switch Card
 
 The **Create Switch** dialog box contains the following settings:
 
@@ -36,11 +36,11 @@ The **Create Switch** dialog box contains the following settings:
 - **Advanced Settings**
   - **Title** - A custom name for the switch card on the dashboard.
 
-Once the required fields are filled in, click **"Create"** to add the switch to the dashboard.
+Once the required fields are filled in, click `Create` to add the switch to the dashboard.
 
 ---
 
-#### **Using the Switch Card**
+#### **Use a Switch Card**
 
 Once created, the switch card appears on the dashboard with the configured **title** and **value name**.
 
@@ -51,11 +51,11 @@ Once created, the switch card appears on the dashboard with the configured **tit
 
 ---
 
-### Edit a Switch Card
+#### Edit a Switch Card
 
-You can edit the **Switch Card** settings by clicking the **pencil icon** in the top-right corner of the widget. This will open the **Update Switch** dialog.
+To edit a **Switch Card**, click the **Pencil Icon** in the top-right corner of the widget. This will open the Update Switch dialog.
 
-#### **Editable Fields**
+##### **Editable Fields**
 
 - **Channel** - Change the assigned communication channel.
 - **Client** - Select a different connected device.
@@ -64,7 +64,7 @@ You can edit the **Switch Card** settings by clicking the **pencil icon** in the
 
 ![Edit Switch Dialog](../img/dashboards/edit-switch.png)
 
-Once changes are made, click **"Update"** to save them.
+After making the necessary changes, click `Update` to save them.
 
 ---
 
@@ -78,20 +78,18 @@ After editing, the switch can be toggled to the **ON** (`true`) state, sending a
 
 #### **Conclusion**
 
-Switch Cards are an essential part of IoT control, allowing users to interact with devices directly from the dashboard. They provide an easy-to-use interface for toggling **boolean values** and sending real-time commands.
+Switch Cards are essential for IoT control, allowing users to interact with devices directly from the dashboard. They offer an intuitive interface for toggling **boolean values** and sending real-time commands.
 
-Key benefits of **Switch Cards**:
-
+Key benefits of **Switch Cards** include:
 - Simple **ON/OFF** functionality for **boolean-based control**.
 - Real-time interaction with connected **IoT devices**.
 - Customizable settings for **channels, clients, and value names**.
 
-## **Slider Control**
+### **Slider Control**
 
 A **Slider Card** sends **numeric values** to a connected **client** through a **channel**. It allows for adjustable input, making it useful for controlling settings like **temperature, voltage, or airflow**.
 
-### Create a Slider Card
-
+#### Create a Slider Card
 To create a **Slider Card**, follow these steps:
 
 1. **Enable Edit Mode** on the dashboard.
@@ -100,7 +98,7 @@ To create a **Slider Card**, follow these steps:
 
 ![Create Slider Dialog](../img/dashboards/create-slider.png)
 
-### Configure the Slider Card
+#### Configure the Slider Card
 
 The **Create Slider** dialog contains the following settings:
 
@@ -114,11 +112,11 @@ The **Create Slider** dialog contains the following settings:
   - **Maximum Value** - The highest value that can be selected.
   - **Steps** - The increment between selectable values.
 
-Once the required fields are filled in, click **"Create"** to add the slider to the dashboard.
+After filling in the required fields, click `Create` to add the slider to the dashboard.
 
 ---
 
-#### **Using the Slider Card**
+#### **Use the Slider Card**
 
 Once created, the slider card appears on the dashboard with the configured **title** and **value name**.
 
@@ -129,22 +127,22 @@ Once created, the slider card appears on the dashboard with the configured **tit
 
 ---
 
-### Edit a Slider Card
+#### Edit a Slider Card
 
-You can edit the **Slider Card** settings by clicking the **pencil icon** in the top-right corner of the widget. This will open the **Update Slider** dialog.
+To edit a Slider Card, click the **Pencil Icon** in the top-right corner of the widget. This will open the **Update Slider** dialog.
 
-#### **Editable Slider Fields**
+##### **Editable Slider Fields**
 
 - **Channel** - Change the assigned communication channel.
 - **Client** - Select a different connected device.
-- **Value Name** - Modify the controlled value.
+- **Value Name** - Modify the value being controlled.
 - **Title** - Update the displayed title.
-- **Minimum & Maximum Values** - Adjust the range of the slider.
+- **Minimum & Maximum Values** - Adjust the slider range.
 - **Steps** - Define the increment between values.
 
 ![Edit Slider Dialog](../img/dashboards/edit-slider.png)
 
-Once changes are made, click **"Update"** to save them.
+After making the necessary changes, click `Update` to save them.
 
 ---
 
@@ -158,9 +156,9 @@ After editing, the slider values can be adjusted in defined **steps** (e.g., inc
 
 #### **Slider Conclusion**
 
-Control Cards provide a user-friendly way to **interact with IoT devices** directly from the dashboard.
+Control Cards offer a user-friendly way to **interact with IoT devices** directly from the dashboard.
 
-**Key features:**
+Key features of Control Cards include:
 
 - **Switch Cards** for simple **ON/OFF control**.
 - **Slider Cards** for **precise numeric adjustments**.
