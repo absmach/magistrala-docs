@@ -52,7 +52,7 @@ Dashboards are built using **Widgets** that visualize data and facilitate contro
 To ensure that timeseries charts function correctly, you need to have connected channels and clients that actively send messages.
 
 
-![Edit Dashboard](../img/dashboards/dashboard-id-page.png)
+![Edit Dashboard](../img/dashboards/editmode-checked.png)
 
 ### Widget Chart Features
 

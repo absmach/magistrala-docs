@@ -47,7 +47,7 @@ Once created, the switch card appears on the dashboard with the configured **tit
 - The **default state** of the switch is **OFF** (`false`).
 - Clicking on the **toggle button** will change its state to **ON** (`true`), sending a message to the client.
 
-![Switch Card OFF](../img/dashboards/switch-off.png)
+![Switch Card OFF](../img/dashboards/updated-switch.png)
 
 ---
 
@@ -72,7 +72,7 @@ After making the necessary changes, click `Update` to save them.
 
 After editing, the switch can be toggled to the **ON** (`true`) state, sending a command to the connected device.
 
-![Switch Card ON](../img/dashboards/switch-on.png)
+![Switch Card ON](../img/dashboards/created-switch.png)
 
 ---
 
@@ -123,7 +123,7 @@ Once created, the slider card appears on the dashboard with the configured **tit
 - The **default value** of the slider is at the minimum value.
 - Dragging the **slider handle** changes the value, which is then sent to the client.
 
-![Slider Card](../img/dashboards/slider-created.png)
+![Slider Card](../img/dashboards/created-slider.png)
 
 ---
 

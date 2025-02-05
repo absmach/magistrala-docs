@@ -42,7 +42,7 @@ For example, the chart can be switched to live data.
 
 Once the changes have been made, click the `Update` button to save and apply the new settings. The chart will automatically refresh with the updated data or appearance.
 
-![Updated Area Chart](../img/dashboards/edited-areachart.png)
+![Updated Area Chart](../img/dashboards/area-chart-created.png)
 
 In many cases, data is aggregated over time intervals. For instance, setting the **Aggregation Interval** to 10 minutes (600 seconds) and selecting the **Average** aggregation type will display the mean values over each 10-minute period for a 2-hour time window.
 

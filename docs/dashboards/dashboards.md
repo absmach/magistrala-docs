@@ -6,7 +6,7 @@ title: Dashboards
 
 After loging into a **Domain**, navigate to **Dashboards** tab and click on the `+ Create` button. The dialog box prompts you to enter a Dashboard name. While Tags and Description are optional, adding them is good practice for easier filtering.
 
-![Dasboard Creation](../img/dashboards/dashboard-create.png)
+![Dasboard Creation](../img/dashboards/create-dash.png)
 
 ### View Dashboards
 Dashboards are initially displayed as cards after creation. To switch to a table view, click the `Show Table` button at the top right. This displays the same dashboards in a table format.
@@ -21,7 +21,7 @@ To switch back to card view, click the `Show Cards` button.
 ### Edit Dashboard
 
 A user can edit the dashboard either by using the `edit` icon on the cards which will open a sheet on the right side navigation bar or using the options dropdown menu in table view. 
-![Dasboard Editting](../img/dashboards/edit-dashboard.png)
+![Dasboard Editting](../img/dashboards/edit-dash.png)
 In the editing panel, you can modify the dashboard's **name**, **description**, and **tags**.
 ![Dasboard Action Buttons](../img/dashboards/dash-actions.png)
 
@@ -38,7 +38,7 @@ Magistrala allows dashboards to be uploaded in .JSON format.
 
 By clicking the `Upload` button at the top of the dashboard table, a dialog box will open, allowing users to select and upload a _.JSON_ file containing the required fields for a complete dashboard. The uploaded dashboard will then appear in the list with new IDs. 
 
-![Upload Dashboard](../img/dashboards/upload-dashboard.png)
+![Upload Dashboard](../img/dashboards/dash-upload.png)
 
 Sample templates to support real-life use cases can be found [here](https://github.com/absmach/magistrala-ui/tree/main/samples/dashboard-templates).
 
