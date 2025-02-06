@@ -1,10 +1,10 @@
 ---
-title: Dashboards
+title: Dashboard
 ---
 
 ### Create a New Dashboard
 
-After loging into a **Domain**, navigate to **Dashboards** tab and click on the `+ Create` button. The dialog box prompts you to enter a Dashboard name. While Tags and Description are optional, adding them is good practice for easier filtering.
+After loging into a **Domain**, navigate to **Dashboards** tab and click on the `+ Create` button. The dialog box prompts you to enter a dashboard name, and optionally a description and tags.
 
 ![Dasboard Creation](../img/dashboards/create-dash.png)
 
@@ -20,23 +20,27 @@ To switch back to card view, click the `Show Cards` button.
 
 ### Edit Dashboard
 
-A user can edit the dashboard either by using the `edit` icon on the cards which will open a sheet on the right side navigation bar or using the options dropdown menu in table view. 
+A user can edit the dashboard either by using the `edit` icon on the cards which will open a sheet on the right side navigation bar. 
+
 ![Dasboard Editting](../img/dashboards/edit-dash.png)
-In the editing panel, you can modify the dashboard's **name**, **description**, and **tags**.
-![Dasboard Action Buttons](../img/dashboards/dash-actions.png)
+In the editing panel, a user can modify the dashboard's **name**, **description**, and **tags**.  
+
 
 ### Delete Dashboard
 
 A user can delete a dashboard by clicking the `trash` icon on the card or clicking **delete** in the options on the dropdown menu in table view.
-An alert that pops up to confirm if you'd like to have the Dashboard deleted.
+An alert will pop up to confirm if you'd like to have the dashboard deleted.
 
-![Dashboard Delete](../img/dashboards/delet-dashboard.png)
+![Dasboard Action Buttons](../img/dashboards/dash-actions.png)
 
 ### Upload Dashboard
 
 Magistrala allows dashboards to be uploaded in .JSON format.
 
-By clicking the `Upload` button at the top of the dashboard table, a dialog box will open, allowing users to select and upload a _.JSON_ file containing the required fields for a complete dashboard. The uploaded dashboard will then appear in the list with new IDs. 
+By clicking the `Upload` button at the top of the dashboard table, a dialog box will open, allowing users to select and upload a _.JSON_ file containing the required fields for a complete dashboard.
+> Ensure the file contains dashboard **name**, **layout**, and **metadata**.  
+
+The uploaded dashboard will then appear in the list with the uploaded data. 
 
 ![Upload Dashboard](../img/dashboards/dash-upload.png)
 
