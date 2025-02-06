@@ -2,7 +2,7 @@
 title: Widget Guide
 ---
 
-### Introduction to Widgets
+#### Introduction to Widgets
 Widgets are interactive components designed to display data visually. They enable real-time monitoring and historical data analysis, providing valuable insights through customizable dashboards. Widgets can be tailored to meet specific requirements, making them essential tools for data-driven decision-making.
 
 Magistrala offers a variety of widgets, including charts, data cards, gauges, maps and control elements:

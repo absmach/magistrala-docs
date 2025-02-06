@@ -2,9 +2,6 @@
 title: Dashboard Guide
 ---
 
-### Introduction
-Manage dashboards in Magistrala with ease by **creating**, **viewing**, **editing**, and **deleting** them. Customize dashboards by selecting different layouts, adding widgets, and configuring various settings. Advanced features like full-screen mode, JSON uploads, and exporting dashboards in multiple formats ensure flexibility and efficiency.
-
 ### Create a New Dashboard
 
 After loging into a **Domain**, navigate to **Dashboards** tab and click on the `+ Create` button. The dialog box prompts you to enter a dashboard name, and optionally a description and tags.
