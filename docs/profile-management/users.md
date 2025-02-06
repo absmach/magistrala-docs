@@ -2,7 +2,7 @@
 title: Profile Management
 ---
 
-### User Profile
+## User Profile
 
 Each user has access to a **Profile Page**, where personal information, security settings, and preferences can be updated.
 
@@ -19,20 +19,18 @@ Clicking on the `user profile picture` or `avatar` at the top right opens a popo
 
 Selecting the Profile option reveals three main tabs:
 
-- **Account**
-- **Password**
-- **Preferences**
-
-The **Account** tab allows users to update their names and upload a profile picture.
+### Account
+The **Account** tab allows users to update their names, email and upload a profile picture.
 
 ![Profile Tab 1](../img/profile-management/jdoe-profile.png)
 
+### Password
 The **Password** tab focuses on security. Users can change their password by entering their current password, followed by the new password (which MUST pass verification) and its confirmation.
 > **Note:** After updating the password, the current session will be terminated, requiring the user to log in again with the new credentials.
 
 ![Profile Tab 2](../img/profile-management/jdoe-password-tab.png)
 
-
+### Preferences
 The **Preferences** tab enables users to customize language and theme settings.
 
 ![Profile Tab 3](../img/profile-management/jdoe-preferences-tab.png)
@@ -43,9 +41,9 @@ Magistrala currently supports **English**, **German**, and **Serbian** languages
 
 
 
-### Password Recovery
+## Password Recovery
 
-If a user forgets their password, they can click the `Forgot Password` link. This directs them to a page where they enter their email address to receive a password reset link.
+If a user forgets their password, they can click the `Forgot Password` link on the login page. This directs them to a page where they enter their email address to receive a password reset link.
 
 ![Forgot Password](../img/profile-management/forgot-password2.png)
 
