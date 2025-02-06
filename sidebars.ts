@@ -51,7 +51,7 @@ const sidebars: SidebarsConfig = {
       },
       collapsible: true,
       items: [
-        {type: "doc", id: "dashboards/dashboards", label: "Dashboards"},
+        {type: "doc", id: "dashboards/dashboards", label: "Dashboard"},
         {type: "doc", id: "dashboards/widgets", label: "Widgets"},
         {type: "doc", id: "dashboards/linechart", label: "Line Chart"},
         {type: "doc", id: "dashboards/areachart", label: "Area Chart"},
