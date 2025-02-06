@@ -83,10 +83,12 @@ To create a new role, click on the `+ Create` button, provide a descriptive name
 
 ![Create Domain Role](../img/domain/create-role.png)
 
-Once created, these domain roles can be edited in their respective pages.
-A user can edit the domain role id, name, role actions and role members. These fields can all be edited accordingly while on the page or by using the options on the dropdown menu.
+Once created, domain roles can be edited in their respective pages.
+A user can edit the domain role name, role actions and role members. 
 
 ![Domain Role Page](../img/domain/domain-role-id.png)
+
+These fields can be updated directly on the page or via the dropdown menu options.
 ![Domain Action Buttons](../img/domain/role-actions.png)
 
 ## Domain Members
