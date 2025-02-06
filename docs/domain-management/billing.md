@@ -5,7 +5,7 @@ title: Billing
 > Please note that this service is only available to **Magistrala Cloud** users.
 
 This service allows users to view and subscribe to billing plans, manage payment methods and billing information, and download generated invoices and receipts.  
-Magistrala employs the use of [Stripe](https://docs.stripe.com/) to handle the user's private information.
+Magistrala employs the use of 3rd-party payment processor to handle the user's private information.
 This means that Magistrala will not have the user's card payment credentials at any point in time.
 
 Navigate to the Billing tab on the sidenav bar. This tab will only be visible to admin members of a domain.
@@ -41,13 +41,13 @@ The subscription status can be either **completed**, where the user has already 
 The **plan details** generally show the user the limits of their subscribed plan. This ensures they are aware of their restrictions at all times. These limits define what can be accessed in terms of domains, users, groups, and devices.
 
 ## Add a Payment Method
-Click on the `Add` button to gain access to the stripe page where you will fill in your card information.
+Click on the `Add` button to gain access to the page where you will fill in your card information.
 A succesful update will lead you back to the Magistrala billing page with an active payment method.
 
 ![Adding the Card](../img/billing/add-card.png)
 
 You can add as many payment cards as needed.
-Each card will be verified by stripe to prevent any fraudulent cards from being accepted. Ensure that the card has sufficient funds to cover the subscription cost.
+Each card will be verified to prevent any fraudulent cards from being accepted. Ensure that the card has sufficient funds to cover the subscription cost.
 You can also edit payment methods, set a default card and delete any payment method.  
 
 ![Add multiple cards](../img/billing/pm-table.png)
