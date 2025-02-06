@@ -121,28 +121,30 @@ Flags:
   -h, --help   help for channels
 
 Global Flags:
-  -b, --bootstrap-url string     Bootstrap service URL (default "http://localhost:9013")
-  -s, --certs-url string         Certs service URL (default "http://localhost:9019")
+  -b, --bootstrap-url string     Bootstrap service URL
+  -s, --certs-url string         Certs service URL
   -c, --config string            Config path
   -C, --contact string           Subscription contact query parameter
   -y, --content-type string      Message content type (default "application/senml+json")
-  -d, --domains-url string       Domains service URL (default "http://localhost:8189")
-  -H, --host-url string          Host URL (default "http://localhost")
-  -p, --http-url string          HTTP adapter URL (default "http://localhost/http")
+  -x, --curl                     Convert HTTP request to cURL command
+  -d, --domains-url string       Domains service URL
+  -H, --host-url string          Host URL
+  -p, --http-url string          HTTP adapter URL
   -I, --identity string          User identity query parameter
   -i, --insecure                 Do not check for TLS cert
-  -v, --invitations-url string   Inivitations URL (default "http://localhost:9020")
+  -v, --invitations-url string   Inivitations URL
+  -a, --journal-url string       Journal Log URL
   -l, --limit uint               Limit query parameter (default 10)
   -m, --metadata string          Metadata query parameter
   -n, --name string              Name query parameter
   -o, --offset uint              Offset query parameter
   -r, --raw                      Enables raw output mode for easier parsing of output
-  -R, --reader-url string        Reader URL (default "http://localhost")
+  -R, --reader-url string        Reader URL
   -z, --state string             Bootstrap state query parameter
   -S, --status string            User status query parameter
-  -t, --things-url string        Things service URL (default "http://localhost:9000")
+  -t, --things-url string        Things service URL
   -T, --topic string             Subscription topic query parameter
-  -u, --users-url string         Users service URL (default "http://localhost:9002")
+  -u, --users-url string         Users service URL
 
 Use "magistrala-cli channels [command] --help" for more information about a command.
 ```
@@ -155,15 +157,15 @@ Use "magistrala-cli channels [command] --help" for more information about a comm
 magistrala-cli health <service>
 ```
 
-For "things" service, the response should look like this:
+For "users" service, the response should look like this:
 
 ```json
 {
-  "build_time": "2024-03-13_16:12:26",
-  "commit": "3bf59689fb74388415d2655eb43b5d736ac82fc2",
-  "description": "things service",
+  "build_time": "2025-02-04_10:04:48",
+  "commit": "cff6e7f0858c07fffdeafccf6a73f8a87c7d9e45",
+  "description": "users service",
   "status": "pass",
-  "version": "v0.14.0"
+  "version": "v0.15.1"
 }
 ```
 
@@ -171,7 +173,7 @@ For "things" service, the response should look like this:
 
 #### Create User
 
-Magistrala has two options for user creation. Either the `<user_token>` is provided or not. If the `<user_token>` is provided then the created user will be owned by the user identified by the `<user_token>`. Otherwise, when the token is not used, since everybody can create new users, the user will not have an owner. However, the token is still required, in order to be consistent. For more details, please see [Authorization page](authorization.md).
+Magistrala has two options for user creation. Either the `<user_token>` is provided or not. For more details, please see [Authorization page](authorization.md).
 
 ```bash
 
@@ -182,11 +184,13 @@ magistrala-cli users create <first_name> <last_name> <email> <username> <passwor
 #### Login User
 
 ```bash
-magistrala-cli users token <user_email> <user_password>
+magistrala-cli users token [<user_email>|<username>] <user_password>
 ```
 
-Since v0.14.0, Magistrala supports domains. Domains are used to separate different tenants, and almost all the activities in Magistrala happen under a particular domain. Only two types of actions do not happen within a domain: login where you get to list domains and log in to them, and invitations management to accept domain membership sent by other users.
-An access token with a domain is required for all the other actions on Things, Channels, and Groups. To obtain token within the domain, use the following command:
+Since v0.14.0, Magistrala supports domains. **Domains** are used to separate different tenants, and almost all the activities in Magistrala happen under a particular domain.
+Only three major types of actions do not happen within a domain: login where you get to list domains and log in to them, and invitations management to accept domain membership sent by other users as well the creation of new users.
+An access token with a domain is required for all the other actions on Clients, Channels, and Groups.
+To obtain token within the domain, use the following command:
 
 ```bash
 magistrala-cli users token <user_email> <user_password> <domain_id>
