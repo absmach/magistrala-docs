@@ -173,12 +173,32 @@ For "users" service, the response should look like this:
 
 #### Create User
 
-Magistrala has two options for user creation. Either the `<user_token>` is provided or not. For more details, please see [Authorization page](authorization.md).
+To create a user with `Magistrala-CLI` simply run:
 
 ```bash
 
-magistrala-cli users create <first_name> <last_name> <email> <username> <password> <user_token>
+magistrala-cli users create <first_name> <last_name> <email> <username> <password>
 
+```
+
+This will result in the creation of the user as shown in this example:
+
+```json
+ magistrala-cli users create jane doe janedoe@example.com janedoe 12345678 
+
+{
+  "created_at": "2025-02-10T14:09:35.574114Z",
+  "credentials": {
+    "username": "janedoe"
+  },
+  "email": "janedoe@example.com",
+  "first_name": "jane",
+  "id": "981fd120-f0e1-4561-8c0b-cdb4094bc985",
+  "last_name": "doe",
+  "role": "user",
+  "status": "enabled",
+  "updated_at": "0001-01-01T00:00:00Z"
+}
 ```
 
 #### Login User
