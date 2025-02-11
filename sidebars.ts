@@ -104,8 +104,14 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "Services",
+      label: "Developers Guide",
+      link: {
+        type: "doc",
+        id: "dev-guide/introduction",
+      },
+      collapsible: true,
       items: [
+        { type: "doc", id: "dev-guide/dev-guide", label: "Get Started" },
         { type: "doc", id: "bootstrap", label: "Bootstrap" },
         { type: "doc", id: "consumers", label: "Consumers" },
         { type: "doc", id: "provision", label: "Provisioning" },
