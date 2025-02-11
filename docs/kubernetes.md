@@ -2,7 +2,6 @@
 title: Kubernetes
 ---
 
-
 Magistrala can be easily deployed on the Kubernetes platform using Helm Charts from the official [Magistrala DevOps GitHub repository](https://github.com/absmach/devops).
 
 ## Prerequisites
@@ -331,6 +330,123 @@ helm uninstall <release-name> -n mg
 
 This will remove the Magistrala release from the previously created `mg` namespace. Use the `--dry-run` flag to see which releases will be uninstalled without actually uninstalling them.
 
+To delete all data and resources from your cluster (or at least from the target namespace), the following two options are available:
+
+##### Option 1: Delete the Entire Namespace
+
+Deleting the entire namespace will remove all resources contained within it in one go. Later you can recreate the namespace.
+
+```sh
+kubectl delete namespace mg
+
+# Wait for deletion to complete (you can check the status with "kubectl get ns")
+# Then recreate the namespace:
+kubectl create namespace mg
+```
+
+##### Option 2: Delete All Resources Within the Namespace
+
+If you prefer to keep the namespace and simply clear out all the resources, run these commands:
+
+```sh
+# Delete all workloads and services (Deployments, Pods, Services, etc.)
+kubectl delete all --all -n mg
+
+# Delete all PersistentVolumeClaims in the namespace
+kubectl delete pvc --all -n mg
+
+# Optionally, delete other resource types if needed (e.g., ConfigMaps, Secrets, ServiceAccounts)
+kubectl delete configmap --all -n mg
+kubectl delete secret --all -n mg
+kubectl delete serviceaccount --all -n mg
+```
+
+If your cluster is dynamically provisioning persistent volumes, the associated PVs may be automatically deleted (if their reclaim policy is set to `Delete`). If you need to manually remove all PVs (and you’re sure no other namespace depends on them), run:
+
+```sh
+kubectl delete pv --all
+```
+
+### Option 3: Force Clear a Stuck Namespace
+
+Sometimes the namespace may be stuck in the **Terminating** phase because some resources (such as pods or PVCs) still have finalizers. If you encounter an error like:
+
+> `secrets "sh.helm.release.v1.magistrala.v1" is forbidden: unable to create new content in namespace mg because it is being terminated`
+>
+> follow these steps to force-clear the namespace:
+
+#### Step 1. Force-Delete All Pods
+
+Force-delete all pods in the namespace to remove any that might be stuck:
+
+```sh
+kubectl delete pods --all --force --grace-period=0 -n mg
+```
+
+#### Step 2. Remove Finalizers from PersistentVolumeClaims (PVCs)
+
+List the PVCs in the namespace:
+
+```sh
+kubectl get pvc -n mg
+```
+
+For each PVC that is preventing deletion (they often have a finalizer like `kubernetes.io/pvc-protection`), remove the finalizer using:
+
+```sh
+kubectl patch pvc <pvc-name> -p '{"metadata":{"finalizers":null}}' -n mg
+```
+
+For example, if you have PVCs named `pvc-1` and `pvc-2`:
+
+```sh
+kubectl patch pvc pvc-1 -p '{"metadata":{"finalizers":null}}' -n mg
+kubectl patch pvc pvc-2 -p '{"metadata":{"finalizers":null}}' -n mg
+```
+
+#### Step 3. Delete All Remaining Resources (Optional)
+
+To ensure no lingering resources remain:
+
+```sh
+kubectl delete all --all --force --grace-period=0 -n mg
+kubectl delete configmap --all -n mg
+kubectl delete secret --all -n mg
+kubectl delete serviceaccount --all -n mg
+```
+
+#### Step 4. Remove Finalizers from the Namespace
+
+Patch the namespace to remove its finalizers so that it can be fully deleted:
+
+```sh
+kubectl patch namespace mg -p '{"spec":{"finalizers":[]}}'
+```
+
+#### Step 5. Verify and Recreate the Namespace
+
+Check that the namespace is deleted:
+
+```sh
+kubectl get namespace mg
+```
+
+Once deleted, recreate the namespace:
+
+```sh
+kubectl create namespace mg
+```
+
+---
+
+## Final Step: Reinstall Your Helm Release
+
+After clearing the namespace (using any of the options above), you can now install your Helm release into a fresh `mg` namespace:
+
+```sh
+helm install magistrala . -n mg
+```
+
 ---
 
 ### Customizing Magistrala Installation
@@ -484,6 +600,296 @@ You can test sending an MQTT message with the following command:
 ```bash
 mosquitto_pub -d -L mqtts://<thing_id>:<thing_secret>@example.com:8883/channels/<channel_id>/messages  --cert  thing.crt --key thing.key --cafile ca.crt  -m "test-message"
 ```
+
+# **Setting Up Metric and Logging in Kubernetes**
+
+## **1. Setting Up Helm Repositories**
+
+Before installing the logging and monitoring stack, add the necessary Helm repositories:
+
+```sh
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add fluent https://fluent.github.io/helm-charts
+helm repo update
+```
+
+This command adds:
+
+- **Grafana** for visualization
+- **Prometheus** for metrics collection
+- **Fluent Bit** for log forwarding
+
+---
+
+## **2. Configuring `values.yaml`**
+
+The `values.yaml` file defines configurations for **Loki, Fluent Bit, and Prometheus**.
+
+**Location:** `helm/<your-chart>/values.yaml`
+
+Modify the configuration:
+
+```yaml
+loki:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+  persistence:
+    enabled: true
+    size: 10Gi
+  config:
+    auth_enabled: false
+    storage_config:
+      boltdb_shipper:
+        active_index_directory: /data/loki/index
+        cache_location: /data/loki/cache
+        shared_store: filesystem
+      filesystem:
+        directory: /data/loki/chunks
+    schema_config:
+      configs:
+        - from: 2024-01-01
+          store: boltdb-shipper
+          object_store: filesystem
+          schema: v11
+          index:
+            prefix: index_
+            period: 24h
+    limits_config:
+      retention_period: 168h # 7 days retention
+
+fluent-bit:
+  enabled: true
+  image: fluent/fluent-bit:latest
+  resources:
+    limits:
+      memory: 200Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi
+
+prometheus:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+  scrapeInterval: 30s
+```
+
+This configuration:
+
+- Enables **Loki** with a 7-day log retention period
+- Configures **Fluent Bit** as a lightweight log forwarder
+- Sets up **Prometheus** to scrape metrics every 30 seconds
+
+---
+
+## **3. Deploying Fluent Bit**
+
+Fluent Bit collects logs from all Kubernetes nodes.
+
+**Location:** `helm/<your-chart>/templates/deployment-fluentbit.yaml`
+
+Create a file named `deployment-fluentbit.yaml` with the following configuration:
+
+```yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluent-bit
+  labels:
+    app: fluent-bit
+spec:
+  selector:
+    matchLabels:
+      app: fluent-bit
+  template:
+    metadata:
+      labels:
+        app: fluent-bit
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2020"
+    spec:
+      serviceAccountName: fluent-bit
+      containers:
+        - name: fluent-bit
+          image: "{{ .Values.fluent-bit.image }}"
+          resources:
+            limits:
+              memory: "{{ .Values.fluent-bit.resources.limits.memory }}"
+            requests:
+              cpu: "{{ .Values.fluent-bit.resources.requests.cpu }}"
+              memory: "{{ .Values.fluent-bit.resources.requests.memory }}"
+          volumeMounts:
+            - name: varlog
+              mountPath: /var/log
+            - name: varlibdockercontainers
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+      volumes:
+        - name: varlog
+          hostPath:
+            path: /var/log
+        - name: varlibdockercontainers
+          hostPath:
+            path: /var/lib/docker/containers
+```
+
+This configuration:
+
+- Deploys **Fluent Bit** as a **DaemonSet** to collect logs from all nodes
+- Mounts log directories for access
+- Exposes metrics for Prometheus on port 2020
+
+---
+
+## **4. Creating a Loki Service**
+
+Loki stores and serves logs.
+
+**Location:** `helm/<your-chart>/templates/service-loki.yaml`
+
+Create a file named `service-loki.yaml` with the following configuration:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: loki
+spec:
+  selector:
+    app: loki
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3100
+      targetPort: 3100
+```
+
+This exposes Loki’s HTTP API for log retrieval.
+
+---
+
+## **5. Installing Loki, Fluent Bit, Prometheus, and Grafana**
+
+Deploy all components using Helm:
+
+```sh
+helm install loki grafana/loki-stack --set promtail.enabled=false
+helm install fluent-bit fluent/fluent-bit
+helm install prometheus prometheus-community/kube-prometheus-stack
+helm install grafana grafana/grafana
+```
+
+This installs:
+
+- **Loki** for log aggregation
+- **Fluent Bit** for log collection and forwarding
+- **Prometheus** for monitoring
+- **Grafana** for visualization
+
+---
+
+## **6. Common Error: Fluent Bit Fails to Connect to Loki**
+
+After deploying Fluent Bit, you might see errors in the logs:
+
+```plaintext
+[error] [output:loki:loki.0] no upstream connections available
+[warn] [net] getaddrinfo(host='loki', err=4): Domain name not found
+```
+
+This indicates that Fluent Bit **cannot reach Loki**.
+
+### **Cause**
+
+Fluent Bit is configured with an incorrect **Host** value. The default setting:
+
+```yaml
+[OUTPUT]
+    Name         loki
+    Match        *
+    Host         loki
+    Port         3100
+```
+
+assumes that the Loki service is simply `loki`. However, when Loki is installed via Helm, the service name might be prefixed, such as `loki-gateway` or `supermq-loki-gateway`.
+
+To find the correct service name, run:
+
+```sh
+kubectl get svc -n smq | grep loki
+```
+
+If the output shows:
+
+```plaintext
+supermq-loki-gateway   ClusterIP   10.1.1.10   3100/TCP
+```
+
+then Fluent Bit should be configured with:
+
+```yaml
+Host         supermq-loki-gateway
+```
+
+---
+
+## **7. Fixing the Fluent Bit ConfigMap**
+
+To fix this issue, update the Fluent Bit ConfigMap.
+
+### **Step 1: Edit the ConfigMap**
+
+Run:
+
+```sh
+kubectl edit cm supermq-fluent-bit -n smq
+```
+
+### **Step 2: Update the Loki Host**
+
+Find the following section:
+
+```yaml
+[OUTPUT]
+    Name         loki
+    Match        *
+    Host         loki  # Incorrect
+    Port         3100
+```
+
+Modify `Host` to match the correct **Loki Gateway service name**:
+
+```yaml
+Host         supermq-loki-gateway # Correct
+```
+
+### **Step 3: Save and Exit**
+
+- Press `ESC`
+- Type `:wq` and press `ENTER`
+
+### **Step 4: Restart Fluent Bit Pods**
+
+Since ConfigMaps **do not auto-reload**, restart Fluent Bit pods:
+
+```sh
+kubectl delete pods -l app.kubernetes.io/name=fluent-bit -n smq
+```
+
+Kubernetes will automatically recreate the pods with the updated configuration.
+
+### **Step 5: Verify the Fix**
+
+Monitor Fluent Bit logs:
+
+```sh
+kubectl logs -l app.kubernetes.io/name=fluent-bit -n smq --tail=50 -f
+```
+
+If the issue is resolved, logs should start flowing into Loki.
 
 [ingress-yaml]: https://github.com/absmach/devops/blob/master/charts/mainflux/templates/ingress.yaml#L141
 [ingress-controller-args]: https://kubernetes.github.io/ingress-nginx/user-guide/cli-arguments/
