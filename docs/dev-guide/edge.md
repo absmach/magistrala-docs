@@ -577,4 +577,4 @@ magistrala-mqtt   | {"level":"info","message":"Publish - client ID export-88529f
 [protomsg]: https://github.com/absmach/magistrala/blob/main/pkg/messaging/message.proto
 [back-to-edge]: ./edge.md
 [nats]: https://nats.io/
-[dev-guide]: ./dev-guide.md
+[dev-guide]: ./dev-guide/dev-guide.md
