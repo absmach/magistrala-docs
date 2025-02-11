@@ -102,7 +102,18 @@ const sidebars: SidebarsConfig = {
         { type: "doc", id: "dev-guide/cli/provision-cli", label: "Provisioning Management" },
       ],
     },
-    { type: 'doc', id: 'dev-guide/api', label: 'API' },
+    {
+      type: "category",
+      label: "Services",
+      items: [
+        { type: "doc", id: "bootstrap", label: "Bootstrap" },
+        { type: "doc", id: "consumers", label: "Consumers" },
+        { type: "doc", id: "provision", label: "Provisioning" },
+        { type: "doc", id: "readers", label: "Readers" },
+        { type: "doc", id: "twins", label: "Twins Service" },
+      ],
+    },
+    { type: 'doc', id: 'api', label: 'API' },
     {
       type: "category",
       label: "Concepts",
