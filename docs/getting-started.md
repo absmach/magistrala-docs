@@ -7,8 +7,8 @@ title: Getting Started
 
 Before proceeding, install the following prerequisites:
 
-- [Docker][docker] (version 20.10.16)
-- [Docker compose][docker-compose] (version 1.29.2)
+- [Docker][docker] (version 20.10.16 or later)
+- [Docker compose][docker-compose] (version 1.29.2 or later)
 
 Once everything is installed, execute the following command from project root:
 
@@ -40,7 +40,7 @@ Once installed, you can use the CLI to quick-provision the system for testing:
 magistrala-cli provision test
 ```
 
-This command actually creates a temporary testing user, logs it in, then creates two things and two channels on behalf of this user.
+This command actually creates a temporary testing user, logs it in, then creates two clients and two channels on behalf of this user.
 This quickly provisions a Magistrala system with one simple testing scenario.
 
 You can read more about system provisioning in the dedicated [Provisioning][provisioning] chapter
@@ -139,10 +139,10 @@ This proves that these provisioning commands were sent from the CLI to the Magis
 
 ## Step 4 - Send Messages
 
-Once system is provisioned, a `thing` can start sending messages on a `channel`:
+Once system is provisioned, a `client` can start sending messages on a `channel`:
 
 ```bash
-magistrala-cli messages send <channel_id> '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]' <thing_secret>
+magistrala-cli messages send <channel_id> <JSON_string> <client_secret>
 ```
 
 For example:
@@ -168,5 +168,5 @@ This proves that messages have been correctly sent through the system via the pr
 [docker]: https://docs.docker.com/install/
 [docker-compose]: https://docs.docker.com/compose/install/
 [mg-releases]: https://github.com/absmach/magistrala/releases
-[cli]: cli.md
-[provisioning]: ./provision.md#platform-management
+[cli]: ./cli/introduction-to-cli.md
+[provisioning]: ./cli/provision-cli.md
