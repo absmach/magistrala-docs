@@ -2,7 +2,7 @@
 title: Clients
 ---
 
-**Clients** in Magistrala can be a **device** or an **application** that can be used to publish or subscribe to messages.
+**A Client** in Magistrala can be a **device** or an **application** that can be used to publish or subscribe to messages.
 
 ## Create a Client
 

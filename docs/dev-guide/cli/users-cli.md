@@ -20,7 +20,7 @@ This command registers a new user with the provided details.
 Example usage:
 
 ```bash
- magistrala-cli users create jane doe janedoe@example.com janedoe 12345678 
+ magistrala-cli users create jane doe janicedoe@example.com janicedoe 12345678 
 ```
 
 Expected response:
@@ -29,9 +29,9 @@ Expected response:
 {
   "created_at": "2025-02-11T16:15:12.607701Z",
   "credentials": {
-    "username": "janedoe"
+    "username": "janicedoe"
   },
-  "email": "janedoe@example.com",
+  "email": "janicedoe@example.com",
   "first_name": "jane",
   "id": "26ae3198-6060-4308-824c-c846953b9898",
   "last_name": "doe",
@@ -118,9 +118,9 @@ Expected response:
 {
   "created_at": "2025-02-11T16:15:12.607701Z",
   "credentials": {
-    "username": "janedoe"
+    "username": "janicedoe"
   },
-  "email": "janedoe@example.com",
+  "email": "janicedoe@example.com",
   "first_name": "jane",
   "id": "26ae3198-6060-4308-824c-c846953b9898",
   "last_name": "doe",
@@ -171,9 +171,9 @@ Expected response:
     {
       "created_at": "2025-02-11T16:15:12.607701Z",
       "credentials": {
-        "username": "janedoe"
+        "username": "janicedoe"
       },
-      "email": "janedoe@example.com",
+      "email": "janicedoe@example.com",
       "first_name": "jane",
       "id": "26ae3198-6060-4308-824c-c846953b9898",
       "last_name": "doe",
@@ -200,7 +200,7 @@ magistrala-cli users update <user_id> '{"first_name":"new first_name", "last_nam
 Example usage:
 
 ```bash
-magistrala-cli users update 26ae3198-6060-4308-824c-c846953b9898 '{"first_name":"Beyonce", "last_name":"Knowles"}' token
+magistrala-cli users update 26ae3198-6060-4308-824c-c846953b9898 '{"first_name":"Janice", "last_name":"Doe"}' token
 ```
 
 Expected response:
@@ -209,12 +209,12 @@ Expected response:
 {
   "created_at": "2025-02-11T16:15:12.607701Z",
   "credentials": {
-    "username": "janedoe"
+    "username": "janicedoe"
   },
-  "email": "janedoe@example.com",
-  "first_name": "Beyonce",
+  "email": "janicedoe@example.com",
+  "first_name": "Janice",
   "id": "26ae3198-6060-4308-824c-c846953b9898",
-  "last_name": "Knowles",
+  "last_name": "Doe",
   "role": "user",
   "status": "enabled",
   "updated_at": "2025-02-11T16:34:52.377144Z"
@@ -241,12 +241,12 @@ Expected response:
 {
   "created_at": "2025-02-11T16:15:12.607701Z",
   "credentials": {
-    "username": "janedoe"
+    "username": "janicedoe"
   },
-  "email": "janedoe@example.com",
-  "first_name": "Beyonce",
+  "email": "janicedoe@example.com",
+  "first_name": "Janice",
   "id": "26ae3198-6060-4308-824c-c846953b9898",
-  "last_name": "Knowles",
+  "last_name": "Doe",
   "metadata": {
     "aoty": "1"
   },
@@ -267,7 +267,7 @@ magistrala-cli users update tags <user_id> '["tag1", "tag2"]' <user_token>
 Example usage:
 
 ```bash
-magistrala-cli users update tags 26ae3198-6060-4308-824c-c846953b9898 '["lemonade", "renaissance"]' token
+magistrala-cli users update tags 26ae3198-6060-4308-824c-c846953b9898 '["light 1", "light 2"]' token
 ```
 
 Expected response:
@@ -276,20 +276,20 @@ Expected response:
 {
   "created_at": "2025-02-11T16:15:12.607701Z",
   "credentials": {
-    "username": "janedoe"
+    "username": "janicedoe"
   },
-  "email": "janedoe@example.com",
-  "first_name": "Beyonce",
+  "email": "janicedoe@example.com",
+  "first_name": "Janice",
   "id": "26ae3198-6060-4308-824c-c846953b9898",
-  "last_name": "Knowles",
+  "last_name": "Doe",
   "metadata": {
     "aoty": "1"
   },
   "role": "user",
   "status": "enabled",
   "tags": [
-    "lemonade",
-    "renaissance"
+    "light 1",
+    "light 2"
   ],
   "updated_at": "2025-02-11T16:44:11.670547Z"
 }
@@ -306,7 +306,7 @@ magistrala-cli users update email <user_id> <user_email> <user_token>
 Example usage:
 
 ```bash
-magistrala-cli users update email 26ae3198-6060-4308-824c-c846953b9898 beyonce@example.com  token
+magistrala-cli users update email 26ae3198-6060-4308-824c-c846953b9898 Janice@example.com  token
 ```
 
 Expected response:
@@ -315,12 +315,12 @@ Expected response:
 {
   "created_at": "2025-02-11T16:15:12.607701Z",
   "credentials": {
-    "username": "janedoe"
+    "username": "janicedoe"
   },
-  "email": "beyonce@example.com",
-  "first_name": "Beyonce",
+  "email": "Janice@example.com",
+  "first_name": "Janice",
   "id": "26ae3198-6060-4308-824c-c846953b9898",
-  "last_name": "Knowles",
+  "last_name": "Doe",
   "metadata": {
     "aoty": "1"
   },
@@ -345,7 +345,7 @@ magistrala-cli users update username <user_id> <new_username> <user_token>
 Example usage:
 
 ```bash
-magistrala-cli users update username 26ae3198-6060-4308-824c-c846953b9898 beyonce  token
+magistrala-cli users update username 26ae3198-6060-4308-824c-c846953b9898 Janice  token
 ```
 
 Expected response:
@@ -354,12 +354,12 @@ Expected response:
 {
   "created_at": "2025-02-11T16:15:12.607701Z",
   "credentials": {
-    "username": "beyonce"
+    "username": "Janice"
   },
-  "email": "beyonce@example.com",
-  "first_name": "Beyonce",
+  "email": "Janice@example.com",
+  "first_name": "Janice",
   "id": "26ae3198-6060-4308-824c-c846953b9898",
-  "last_name": "Knowles",
+  "last_name": "Doe",
   "metadata": {
     "aoty": "1"
   },
@@ -393,12 +393,12 @@ Expected response:
 {
   "created_at": "2025-02-11T16:15:12.607701Z",
   "credentials": {
-    "username": "beyonce"
+    "username": "Janice"
   },
-  "email": "beyonce@example.com",
-  "first_name": "Beyonce",
+  "email": "Janice@example.com",
+  "first_name": "Janice",
   "id": "26ae3198-6060-4308-824c-c846953b9898",
-  "last_name": "Knowles",
+  "last_name": "Doe",
   "metadata": {
     "aoty": "1"
   },
@@ -448,12 +448,12 @@ Expected response:
 {
   "created_at": "2025-02-11T16:15:12.607701Z",
   "credentials": {
-    "username": "beyonce"
+    "username": "Janice"
   },
-  "email": "beyonce@example.com",
-  "first_name": "Beyonce",
+  "email": "Janice@example.com",
+  "first_name": "Janice",
   "id": "26ae3198-6060-4308-824c-c846953b9898",
-  "last_name": "Knowles",
+  "last_name": "Doe",
   "metadata": {
     "aoty": "1"
   },
@@ -487,12 +487,12 @@ Expected response:
 {
   "created_at": "2025-02-11T16:15:12.607701Z",
   "credentials": {
-    "username": "beyonce"
+    "username": "Janice"
   },
-  "email": "beyonce@example.com",
-  "first_name": "Beyonce",
+  "email": "Janice@example.com",
+  "first_name": "Janice",
   "id": "26ae3198-6060-4308-824c-c846953b9898",
-  "last_name": "Knowles",
+  "last_name": "Doe",
   "metadata": {
     "aoty": "1"
   },
@@ -542,12 +542,12 @@ Expected response:
 {
   "created_at": "2025-02-11T16:15:12.607701Z",
   "credentials": {
-    "username": "beyonce"
+    "username": "Janice"
   },
-  "email": "beyonce@example.com",
-  "first_name": "Beyonce",
+  "email": "Janice@example.com",
+  "first_name": "Janice",
   "id": "26ae3198-6060-4308-824c-c846953b9898",
-  "last_name": "Knowles",
+  "last_name": "Doe",
   "metadata": {
     "aoty": "1"
   },
