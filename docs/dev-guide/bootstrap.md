@@ -76,7 +76,7 @@ There are two more fields: `external_id` and `external_key`. External ID represe
 5. Bootstrap service compares value from 4 with the external key of the config from 3 and proceeds to 6 if they're equal
 6. Bootstrap service uses the secret encryption key to encrypt the content of the bootstrap response
 
-> Please have on mind that secret key is passed to the Bootstrap service as an environment variable. As security measurement, Bootstrap service removes this variable once it reads it on startup. However, depending on your deployment, this variable can still be visible as a part of your configuration or terminal emulator environment.
+> Please bear in mind that secret key is passed to the Bootstrap service as an environment variable. As security measurement, Bootstrap service removes this variable once it reads it on startup. However, depending on your deployment, this variable can still be visible as a part of your configuration or terminal emulator environment.
 
 For more details on which encryption mechanisms are used, please take a look at the implementation.
 
