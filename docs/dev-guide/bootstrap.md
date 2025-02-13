@@ -92,22 +92,13 @@ The response body should look something like:
 
 ```json
 {
-   "client_id":"7d63b564-3092-4cda-b441-e65fc1f285f0",
-   "client_key":"d0f6ff22-f521-4674-9065-e265a9376a78",
-   "channels":[
-      {
-         "id":"c4d6edb2-4e23-49f2-b6ea-df8bc6769591",
-         "name":"c1",
-         "metadata":null
-      },
-      {
-         "id":"78c9b88c-b2c4-4d58-a973-725c32194fb3",
-         "name":"c0",
-         "metadata":null
-      }
-   ],
-   "content":"cofig...",
-   "client_cert":"PEM cert"
+  "client_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "client_key": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "channels": [
+    "string"
+  ],
+  "content": "string",
+  "client_cert": "string"
 }
 ```
 
