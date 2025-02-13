@@ -117,49 +117,6 @@ A `domain` represents an independent namespace within the system.
 - `remove_role_users_permission`: Grants permission to remove users from domain roles.
 - `view_role_users_permission`: Grants permission to view users in domain roles.
 
-### **Teams**
-
-A `team` is a structured unit within an **organization** that can manage domains, groups, channels, and clients.
-
-#### Team Relations
-
-- `organization`: Associates a team with an **organization**.
-- `parent_team`: Associates a team with another **team**.
-
-#### Team Permissions
-
-- `delete_permission`: Allows deleting a team.
-- `update_permission`: Allows updating team details.
-- `read_permission`: Allows reading team details.
-- `set_parent_permission`: Allows setting the parent team.
-- `set_child_permission`: Allows assigning a sub-team to a parent team.
-- `manage_role_permission`: Grants permission to manage team-related roles.
-- `add_role_users_permission`: Grants permission to assign users to team roles.
-- `remove_role_users_permission`: Grants permission to remove users from team roles.
-- `view_role_users_permission`: Grants permission to view users in team roles.
-
-### **Organizations**
-
-An `organization` represents the top-level entity that manages **teams, domains,** and **users**.
-
-#### Organizations Relations
-
-- `platform`: Associates an organization with the platform.
-- `administrator`: Represents the administrator of the organization.
-
-#### Organizations Permissions
-
-- `admin`: Grants full administrative access.
-- `delete_permission`: Allows deleting an organization.
-- `update_permission`: Allows updating organization details.
-- `read_permission`: Allows reading organization details.
-- `membership`: Allows managing organization membership.
-- `team_create_permission`: Allows creating teams within the organization.
-- `manage_role_permission`: Grants permission to manage organization-wide roles.
-- `add_role_users_permission`: Grants permission to assign users to organization roles.
-- `remove_role_users_permission`: Grants permission to remove users from organization roles.
-- `view_role_users_permission`: Grants permission to view users in organization roles.
-
 ### **Platform**
 
 A `platform` is the highest-level entity that manages multiple organizations.
