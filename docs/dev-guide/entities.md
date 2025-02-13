@@ -1,5 +1,5 @@
 ---
-title: Entities Overview
+title: Overview
 ---
 
 
@@ -62,9 +62,9 @@ Users can bear multiple permissions that allow them various actions over other s
 The API endpoint for interacting with users are described in the [Users API](https://github.com/absmach/supermq-docs/blob/main/docs/api.md#users).
 The CLI for interacting with users are described in the [Users CLI](./cli/users-cli.md).
 
-### Role
+## Role
 
-A **Role** defines a set of permissions that a user, client, or group can have within the system. Roles allow for fine-grained access control by associating entities with actions they are allowed to perform.
+A **Role** defines a set of permissions that a user can have within the system. Roles allow for fine-grained access control by associating users with actions they are allowed to perform.
 
 ```go
 type Role struct {
@@ -78,11 +78,11 @@ type Role struct {
 }
 ```
 
-#### Role Attributes
+### Role Attributes
 
 - `ID` is a unique identifier for each role. It is a string value.
 - `Name` is a required field representing the name of the role. It is a string value.
-- `EntityID` is the ID of the entity (user, client, or group) associated with the role. It is a string value.
+- `EntityID` is the ID of the user associated with the role. It is a string value.
 - `CreatedBy` is the ID of the user who created the role. It is a string value.
 - `CreatedAt` is a field that represents the time when the role was created. It is a `time.Time` value.
 - `UpdatedBy` is an optional field representing the user who last updated the role. It is a string value.
@@ -218,7 +218,7 @@ The CLI for interacting with clients are described in the [clients CLI][clients-
 
 ## Channel
 
-A **Channel**is a message conduit between clients connected to it.
+A **Channel** is a message conduit between clients connected to it.
 It serves as a message topic that can be consumed by all of the clients connected to it.
 Clients can publish or subscribe to the Channel.
 

@@ -82,6 +82,7 @@ const sidebars: SidebarsConfig = {
   ],
   devSidebar: [
     { type: 'doc', id: 'dev-guide/getting-started', label: 'Getting Started' },
+    { type: 'doc', id: 'dev-guide/entities', label: 'Entities' },
     {
       type: "category",
       label: "CLI",
@@ -101,7 +102,6 @@ const sidebars: SidebarsConfig = {
         { type: "doc", id: "dev-guide/cli/provision-cli", label: "Provisioning Management" },
       ],
     },
-    { type: 'doc', id: 'dev-guide/entities', label: 'Entities' },
     { type: 'doc', id: 'dev-guide/api', label: 'API' },
     {
       type: "category",
