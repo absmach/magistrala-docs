@@ -102,6 +102,23 @@ const sidebars: SidebarsConfig = {
         { type: "doc", id: "dev-guide/cli/provision-cli", label: "Provisioning Management" },
       ],
     },
+    {
+      type: "category",
+      label: "Developers Guide",
+      link: {
+        type: "doc",
+        id: "dev-guide/introduction",
+      },
+      collapsible: true,
+      items: [
+        { type: "doc", id: "dev-guide/dev-guide", label: "Get Started" },
+        { type: "doc", id: "dev-guide/bootstrap", label: "Bootstrap" },
+        { type: "doc", id: "dev-guide/consumers", label: "Consumers" },
+        { type: "doc", id: "dev-guide/provision", label: "Provisioning" },
+        { type: "doc", id: "dev-guide/readers", label: "Readers" },
+        { type: "doc", id: "dev-guide/twins", label: "Twins Service" },
+      ],
+    },
     { type: 'doc', id: 'dev-guide/api', label: 'API' },
     { type: 'doc', id: 'dev-guide/roles-schema', label: 'Roles' },
     {
@@ -118,7 +135,6 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "Development Tools",
       items: [
-        { type: "doc", id: "dev-guide/dev-guide", label: "Developers Guide" },
         { type: "doc", id: "dev-guide/events", label: "Events" },
         { type: "doc", id: "dev-guide/tracing", label: "Tracing" },
       ],
@@ -149,9 +165,7 @@ const sidebars: SidebarsConfig = {
       items: [
         { type: "doc", id: "dev-guide/lora", label: "LoRa" },
         { type: "doc", id: "dev-guide/opcua", label: "OPC-UA" },
-        { type: "doc", id: "dev-guide/provision", label: "Provisioning" },
         { type: "doc", id: "dev-guide/twins", label: "Twins Service" },
-        { type: "doc", id: "dev-guide/bootstrap", label: "Bootstrap" },
       ],
     },
     {
