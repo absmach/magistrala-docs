@@ -103,6 +103,7 @@ const sidebars: SidebarsConfig = {
       ],
     },
     { type: 'doc', id: 'dev-guide/api', label: 'API' },
+    { type: 'doc', id: 'dev-guide/roles-schema', label: 'Roles' },
     {
       type: "category",
       label: "Concepts",
