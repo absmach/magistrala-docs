@@ -93,6 +93,9 @@ const sidebars: SidebarsConfig = {
       items: [
         { type: "doc", id: "dev-guide/cli/users-cli", label: "Users Management" },
         { type: "doc", id: "dev-guide/cli/groups-cli", label: "Groups Management" },
+        { type: "doc", id: "dev-guide/cli/domains-cli", label: "Domains Management" },
+        { type: "doc", id: "dev-guide/cli/clients-cli", label: "Clients Management" },
+        { type: "doc", id: "dev-guide/cli/channels-cli", label: "Channels Management" },
         { type: "doc", id: "dev-guide/cli/bootstrap-cli", label: "Bootstrap Management" },
         { type: "doc", id: "dev-guide/cli/consumers-cli", label: "Consumers Management" },
         { type: "doc", id: "dev-guide/cli/provision-cli", label: "Provisioning Management" },
