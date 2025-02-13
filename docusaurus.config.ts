@@ -68,15 +68,14 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'userSidebar',
           position: 'left',
-          label: 'User Documentation',
+          label: 'User Docs',
         },
-        // {
-        //   type: 'docSidebar',
-        //   sidebarId: 'devSidebar',
-        //   position: 'right',
-        //   label: 'Developer Documentation',
-        //   docsPluginId: 'dev-docs',
-        // },
+        {
+          type: 'docSidebar',
+          sidebarId: 'devSidebar',
+          position: 'left',
+          label: 'Dev Docs',
+        },
         { to: '/blog', label: 'Blog', position: 'right' },
         {
           href: 'https://github.com/absmach/magistrala',
