@@ -106,7 +106,7 @@ notifier.Notify("1234", []string{"5678"}, message)
 
 The Subscriptions API in Magistrala allows users to manage subscriptions, enabling selective notifications based on specific topics.
 
-A subscrription is usually of the format:
+A subscription is usually of the format:
 
 ```go
 // Subscription represents a user Subscription.

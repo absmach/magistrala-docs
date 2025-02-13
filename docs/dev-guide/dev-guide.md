@@ -176,26 +176,6 @@ docker build --no-cache . -t magistrala/vernemq
 
 The Magistrala uses the [VerneMQ][vernemq] for implementation of the MQTT messaging. Therefore, for some questions or problems you can also check out the VerneMQ documentation or reach out its contributors.
 
-### Protobuf
-
-If you've made any changes to `.proto` files, you should call `protoc` command prior to compiling individual microservices.
-
-To do this by hand, execute:
-
-```bash
-protoc -I. --go_out=. --go_opt=paths=source_relative pkg/messaging/*.proto
-protoc -I. --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative users/policies/*.proto
-protoc -I. --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative things/policies/*.proto
-```
-
-A shorthand to do this via `make` tool is:
-
-```bash
-make proto
-```
-
-> N.B. This must be done once at the beginning in order to generate protobuf Go structures needed for the build. However, if you don't change any of `.proto` files, this step is not mandatory, since all generated files are included in the repository (those are files with `.pb.go` extension).
-
 ### Cross-compiling for ARM
 
 Magistrala can be compiled for ARM platform and run on Raspberry Pi or other similar IoT gateways, by following the instructions [here][go-cross-compile] or [here][go-arm] as well as information found [here][wiki-go-arm]. The environment variables `GOARCH=arm` and `GOARM=7` must be set for the compilation.
