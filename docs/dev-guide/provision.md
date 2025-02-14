@@ -326,10 +326,10 @@ To connect a client to the channel you should send following request:
 > This endpoint will be depreciated in 1.0.0. It will be replaced with the bulk endpoint found at /connect.
 
 ```bash
-curl -s -S -i --cacert docker/ssl/certs/ca.crt -X PUT -H "Authorization: Bearer $USER_TOKEN" https://localhost/<domain_id>/channels/<channel_id>/connect {
+curl -s -S -i --cacert docker/ssl/certs/ca.crt -X PUT -H "Authorization: Bearer $USER_TOKEN" https://localhost/<domain_id>/channels/<channel_id>/connect -d '{
     "client_ids": ["client_id"],
     "types": ["publish"]
-}
+}'
 ```
 
 For example:
