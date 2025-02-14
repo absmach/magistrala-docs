@@ -7,7 +7,7 @@ Magistrala allows for fine-grained control over user permissions, taking into ac
 
 ## Domains
 
-Domain contains **Clients**, **Channels**, and **Groups**. A **User** can be a member of a domain with different types of available relations. This relation provides access control to the entities in the domain.
+Domain contains **Clients**, **Channels**, and **Groups**. A **User** can be a member of a domain with different types of available roles. This role provides access control to the entities in the domain.
 
 ### Domain Entities
 
@@ -24,7 +24,7 @@ graph TD
 
    Do --->|owns| Gr
    Do --->|owns| Ch
-   Do --->|owns| Th
+   Do --->|owns| Cl
 
 ```
 
@@ -78,14 +78,14 @@ graph
 `Channel` is a message conduit between clients connected to it. It serves as a message topic that can be consumed by all of the clients connected to it.
 Clients can publish or subscribe to the channel.
 
-Client and channel can be connected to multiple channels using the following API.
+Multiple clients can be connected to a channel using the following API request.
 
 ```bash
-curl -sSiX POST http://localhost/connect -H "Content-Type: application/json" -H "Authorization: Bearer <domain_user_access_token>" -d @- << EOF
-{  
-  "client_id": "<client_id>",
-  "channel_id": "<channel_id>"
-}  
+curl -sSiX POST http://localhost/<domain_id>/channels/<channel_id>/connect -H "Content-Type: application/json" -H "Authorization: Bearer <domain_user_access_token>" -d @- << EOF
+{
+    "client_ids": ["client_id"],
+    "types": ["publish"]
+} 
 EOF 
 ```
 
@@ -119,7 +119,7 @@ A group serves as a parent entity that can contain both groups and channels as c
 Assigning a group as the parent of a channel can be achieved through the following request.
 
 ```bash
-curl -sSiX POST 'http://localhost/channels/<channel_id>/groups/assign' -H "Content-Type: application/json" -H "Authorization: Bearer <domain_user_access_token>" -d @- << EOF
+curl -sSiX POST 'http://localhost/<domain_id>/channels/<channel_id>/groups/assign' -H "Content-Type: application/json" -H "Authorization: Bearer <domain_user_access_token>" -d @- << EOF
 {
   "group_ids" : [ "<group_id_1>", "<group_id_2>" ]
 }

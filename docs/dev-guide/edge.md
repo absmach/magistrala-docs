@@ -72,7 +72,7 @@ curl -s -S -X GET http://magistrala-domain.com:9013/clients/bootstrap/<external_
 }
 ```
 
-- `external_id` is usually MAC address, but anyclient that suits applications requirements can be used
+- `external_id` is usually MAC address, but anything that suits applications requirements can be used
 - `external_key` is key that will be provided to agent process
 - `client_id` is Magistrala client id
 - `channels` is 2-element array where first channel is CONTROL and second is DATA, both channels should be assigned to client

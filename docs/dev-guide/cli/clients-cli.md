@@ -9,13 +9,13 @@ Magistrala CLI provides a simple and efficient way to manage clients or devices.
 To create a client using `Magistrala-CLI`, run the following command:
 
 ```bash
-magistrala-cli clients create '{"name":"thing_name"}' <domain_id> <user_token>
+magistrala-cli clients create '{"name":"client_name"}' <domain_id> <user_token>
 ```
 
 Example usage:
 
 ```bash
-magistrala-cli clients create '{"name":"myThing"}' 9879f314-8b0a-4a11-b157-8523491ffa81 token
+magistrala-cli clients create '{"name":"myClient"}' 9879f314-8b0a-4a11-b157-8523491ffa81 token
 ```
 
 Example response:
@@ -28,7 +28,7 @@ Example response:
   },
   "domain_id": "9879f314-8b0a-4a11-b157-8523491ffa81",
   "id": "baff9fe7-2673-499f-a23c-a209836174b8",
-  "name": "myThing",
+  "name": "myClient",
   "status": "enabled",
   "updated_at": "0001-01-01T00:00:00Z"
 }
