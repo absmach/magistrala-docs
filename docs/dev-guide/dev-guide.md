@@ -3,7 +3,7 @@ title: Developer's Guide
 ---
 
 
-## Getting Magistrala
+## Install Magistrala
 
 Magistrala source can be found in the official [Magistrala GitHub repository][magistrala-repo]. You should fork this repository in order to make changes to the project. The forked version of the repository should be cloned using the following:
 
@@ -22,7 +22,7 @@ Make sure that you have [Protocol Buffers][protocol-buffers] (version 21.12) com
 
 [Go Protobuf][golang-protobuf] installation instructions are [here][protobuf-install]. Go Protobuf uses C bindings, so you will need to install [C++ protobuf][protobuf] as a prerequisite. Magistrala uses `Protocol Buffers for Go with Gadgets` to generate faster marshaling and unmarshaling Go code. Protocol Buffers for Go with Gadgets installation instructions can be found [here][google-protobuf].
 
-A copy of [Go][go-install] (version 1.19.4) and docker template (version 3.7) will also need to be installed on your system.
+A copy of [Go][go-install] (version 1.19.4 or higher) and docker template (version 3.7) will also need to be installed on your system.
 
 If any of these versions seem outdated, the latest can always be found in our [CI script][mg-ci-scripts].
 
@@ -32,6 +32,19 @@ Use the _GNU Make_ tool to build all Magistrala services:
 
 ```bash
 make
+```
+
+The response will be:
+
+```bash
+CGO_ENABLED=0 GOOS= GOARCH=amd64 GOARM= go build -tags nats --tags nats -ldflags "-s -w -X 'github.com/absmach/magistrala.BuildTime=2025-02-11_14:51:59' -X 'github.com/absmach/magistrala.Version=unknown' -X 'github.com/absmach/magistrala.Commit=ddc43c482f6c98f3a4d49aa1d609bfae9e0e7d34'" -o build/bootstrap cmd/bootstrap/main.go
+CGO_ENABLED=0 GOOS= GOARCH=amd64 GOARM= go build -tags nats --tags nats -ldflags "-s -w -X 'github.com/absmach/magistrala.BuildTime=2025-02-11_14:52:10' -X 'github.com/absmach/magistrala.Version=unknown' -X 'github.com/absmach/magistrala.Commit=ddc43c482f6c98f3a4d49aa1d609bfae9e0e7d34'" -o build/provision cmd/provision/main.go
+CGO_ENABLED=0 GOOS= GOARCH=amd64 GOARM= go build -tags nats --tags nats -ldflags "-s -w -X 'github.com/absmach/magistrala.BuildTime=2025-02-11_14:52:11' -X 'github.com/absmach/magistrala.Version=unknown' -X 'github.com/absmach/magistrala.Commit=ddc43c482f6c98f3a4d49aa1d609bfae9e0e7d34'" -o build/re cmd/re/main.go
+CGO_ENABLED=0 GOOS= GOARCH=amd64 GOARM= go build -tags nats --tags nats -ldflags "-s -w -X 'github.com/absmach/magistrala.BuildTime=2025-02-11_14:52:14' -X 'github.com/absmach/magistrala.Version=unknown' -X 'github.com/absmach/magistrala.Commit=ddc43c482f6c98f3a4d49aa1d609bfae9e0e7d34'" -o build/postgres-writer cmd/postgres-writer/main.go
+CGO_ENABLED=0 GOOS= GOARCH=amd64 GOARM= go build -tags nats --tags nats -ldflags "-s -w -X 'github.com/absmach/magistrala.BuildTime=2025-02-11_14:52:15' -X 'github.com/absmach/magistrala.Version=unknown' -X 'github.com/absmach/magistrala.Commit=ddc43c482f6c98f3a4d49aa1d609bfae9e0e7d34'" -o build/postgres-reader cmd/postgres-reader/main.go
+CGO_ENABLED=0 GOOS= GOARCH=amd64 GOARM= go build -tags nats --tags nats -ldflags "-s -w -X 'github.com/absmach/magistrala.BuildTime=2025-02-11_14:52:16' -X 'github.com/absmach/magistrala.Version=unknown' -X 'github.com/absmach/magistrala.Commit=ddc43c482f6c98f3a4d49aa1d609bfae9e0e7d34'" -o build/timescale-writer cmd/timescale-writer/main.go
+CGO_ENABLED=0 GOOS= GOARCH=amd64 GOARM= go build -tags nats --tags nats -ldflags "-s -w -X 'github.com/absmach/magistrala.BuildTime=2025-02-11_14:52:17' -X 'github.com/absmach/magistrala.Version=unknown' -X 'github.com/absmach/magistrala.Commit=ddc43c482f6c98f3a4d49aa1d609bfae9e0e7d34'" -o build/timescale-reader cmd/timescale-reader/main.go
+CGO_ENABLED=0 GOOS= GOARCH=amd64 GOARM= go build -tags nats --tags nats -ldflags "-s -w -X 'github.com/absmach/magistrala.BuildTime=2025-02-11_14:52:18' -X 'github.com/absmach/magistrala.Version=unknown' -X 'github.com/absmach/magistrala.Commit=ddc43c482f6c98f3a4d49aa1d609bfae9e0e7d34'" -o build/cli cmd/cli/main.go
 ```
 
 Build artifacts will be put in the `build` directory.
@@ -49,10 +62,16 @@ make <microservice_name>
 For example:
 
 ```bash
-make http
+make Bootstrap
 ```
 
-will build the HTTP Adapter microservice.
+will build the Bootstrap microservice.
+
+The response will be:
+
+```bash
+CGO_ENABLED=0 GOOS= GOARCH=amd64 GOARM= go build -tags nats --tags nats -ldflags "-s -w -X 'github.com/absmach/magistrala.BuildTime=2025-02-11_14:54:15' -X 'github.com/absmach/magistrala.Version=unknown' -X 'github.com/absmach/magistrala.Commit=ddc43c482f6c98f3a4d49aa1d609bfae9e0e7d34'" -o build/bootstrap cmd/bootstrap/main.go
+```
 
 ### Building Dockers
 
@@ -71,12 +90,12 @@ make docker_<microservice_name>
 For example:
 
 ```bash
-make docker_http
+make docker_bootstrap
 ```
 
 > N.B. Magistrala creates `FROM scratch` docker containers which are compact and small in size.
 >
-> N.B. The `things-db` and `users-db` containers are built from a vanilla PostgreSQL docker image downloaded from docker hub which does not persist the data when these containers are rebuilt. Thus, **rebuilding of all docker containers with `make dockers` or rebuilding the `things-db` and `users-db` containers separately with `make docker_things-db` and `make docker_users-db` respectively, will cause data loss. All your users, things, channels and connections between them will be lost!** As we use this setup only for development, we don't guarantee any permanent data persistence. Though, in order to enable data retention, we have configured persistent volumes for each container that stores some data. If you want to update your Magistrala dockerized installation and want to keep your data, use `make cleandocker` to clean the containers and images and keep the data (stored in docker persistent volumes) and then `make run` to update the images and the containers. Check the [Cleaning up your dockerized Magistrala setup][cleanup-docker] section for details. Please note that this kind of updating might not work if there are database changes.
+> N.B. The `clients-db` and `users-db` containers are built from a vanilla PostgreSQL docker image downloaded from docker hub which does not persist the data when these containers are rebuilt. Thus, **rebuilding of all docker containers with `make dockers` or rebuilding the `clients-db` and `users-db` containers separately with `make docker_clients-db` and `make docker_users-db` respectively, will cause data loss. All your users, clients, channels and connections between them will be lost!** As we use this setup only for development, we don't guarantee any permanent data persistence. Though, in order to enable data retention, we have configured persistent volumes for each container that stores some data. If you want to update your Magistrala dockerized installation and want to keep your data, use `make cleandocker` to clean the containers and images and keep the data (stored in docker persistent volumes) and then `make run` to update the images and the containers. Check the [Cleaning up your dockerized Magistrala setup][cleanup-docker] section for details. Please note that this kind of updating might not work if there are database changes.
 
 #### Building Docker images for development
 
@@ -157,26 +176,6 @@ docker build --no-cache . -t magistrala/vernemq
 
 The Magistrala uses the [VerneMQ][vernemq] for implementation of the MQTT messaging. Therefore, for some questions or problems you can also check out the VerneMQ documentation or reach out its contributors.
 
-### Protobuf
-
-If you've made any changes to `.proto` files, you should call `protoc` command prior to compiling individual microservices.
-
-To do this by hand, execute:
-
-```bash
-protoc -I. --go_out=. --go_opt=paths=source_relative pkg/messaging/*.proto
-protoc -I. --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative users/policies/*.proto
-protoc -I. --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative things/policies/*.proto
-```
-
-A shorthand to do this via `make` tool is:
-
-```bash
-make proto
-```
-
-> N.B. This must be done once at the beginning in order to generate protobuf Go structures needed for the build. However, if you don't change any of `.proto` files, this step is not mandatory, since all generated files are included in the repository (those are files with `.pb.go` extension).
-
 ### Cross-compiling for ARM
 
 Magistrala can be compiled for ARM platform and run on Raspberry Pi or other similar IoT gateways, by following the instructions [here][go-cross-compile] or [here][go-arm] as well as information found [here][wiki-go-arm]. The environment variables `GOARCH=arm` and `GOARM=7` must be set for the compilation.
@@ -243,14 +242,14 @@ MG_BROKER_TYPE=<broker-type> make run
 
 #### PostgreSQL
 
-Magistrala uses PostgreSQL to store metadata (`users`, `things` and `channels` entities alongside with authorization tokens). It expects that PostgreSQL DB is installed, set up and running on the local system.
+Magistrala uses PostgreSQL to store metadata (`users`, `clients` and `channels` entities alongside with authorization tokens). It expects that PostgreSQL DB is installed, set up and running on the local system.
 
 Information how to set-up (prepare) PostgreSQL database can be found [here][postgres-roles], and it is done by executing following commands:
 
 ```bash
-# Create `users` and `things` databases
+# Create `users` and `clients` databases
 sudo -u postgres createdb users
-sudo -u postgres createdb things
+sudo -u postgres createdb clients
 
 # Set-up Postgres roles
 sudo su - postgres
@@ -271,7 +270,7 @@ make rundev
 
 which will properly configure and run all microservices.
 
-Please assure that MQTT microservice has `node_modules` installed, as explained in _MQTT Microservice_ chapter.
+Please assure that MQTT microservice has `node_modules` installed.
 
 > N.B. `make rundev` actually calls helper script `scripts/run.sh`, so you can inspect this script for the details.
 
@@ -282,7 +281,7 @@ Please assure that MQTT microservice has `node_modules` installed, as explained 
 [protobuf]: https://github.com/google/protobuf
 [google-protobuf]: https://google.golang.org/protobuf/proto
 [go-install]: https://golang.org/doc/install
-[mg-ci-scripts]: https://github.com/absmach/magistrala/blob/master/scripts/ci.sh
+[mg-ci-scripts]: https://github.com/absmach/magistrala/blob/main/scripts/ci.sh
 [scratch-docker]: https://hub.docker.com/_/scratch/
 [cleanup-docker]: #cleaning-up-your-dockerized-magistrala-setup
 [docker-compose-ref]: https://docs.docker.com/compose/reference/overview/
