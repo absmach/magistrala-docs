@@ -122,26 +122,20 @@ const sidebars: SidebarsConfig = {
     { type: 'doc', id: 'dev-guide/roles-schema', label: 'Roles' },
     {
       type: "category",
-      label: "Concepts",
+      label: "Development Tools",
+      link: {
+        type: "doc",
+        id: "dev-guide/tools-introduction",
+      },
       items: [
         { type: 'doc', id: 'dev-guide/authentication', label: 'Authentication' },
         { type: 'doc', id: 'dev-guide/authorization', label: 'Authorization' },
-        { type: 'doc', id: 'dev-guide/security', label: 'Security' },
         { type: 'doc', id: 'dev-guide/messaging', label: 'Messaging' },
-      ],
-    },
-    {
-      type: "category",
-      label: "Development Tools",
-      items: [
+        { type: 'doc', id: 'dev-guide/security', label: 'Security' },
         { type: "doc", id: "dev-guide/events", label: "Events" },
         { type: "doc", id: "dev-guide/tracing", label: "Tracing" },
+        { type: "doc", id: "dev-guide/storage", label: "Storage" },
       ],
-    },
-    {
-      type: "doc",
-      id: "dev-guide/storage",
-      label: "Storage",
     },
     {
       type: "doc",

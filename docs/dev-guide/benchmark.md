@@ -69,7 +69,7 @@ This is basic architecture when running MZBench:
 
 Every node that runs your scenarios will be one of Amazon EC2 instance; plus one more additional node — the director node. The director doesn't run scenarios, it collects the metrics from the other nodes and runs [post and pre hooks][mzbench-scenarios]. So, if you want to run jobs on 10 nodes, actually 11 EC2 instances will be created. All instances will be automatically terminated when the test finishes.
 
-We will use one of ready-to-use Amazon Machine Images (AMI) with all necessary dependencies. We will choose AMI with OTP 22, because that is the version we have on MZBench server. So, we will search for `MZBench-erl22` AMI and find one with id `ami-03a169923be706764` available in `us-west-1b` zone. If you have chosen this AMI, everything you do from now must be in us-west-1 zone. We must have IAM user with `AmazonEC2FullAccess` and `IAMFullAccess` permissions policies, and his `access_key_id` and `secret_access_key` goes to configuration file. In EC2 dashboard, you must create new security group `MZbench_cluster` where you will add inbound rules to open ssh and TCP ports 4801-4804. Also, in EC2 dashboard go to section `key pairs`, click `Actions` -> `Import key pair` and upload public key you have on your MZBench server in `~/.ssh/id_rsa.pub` (if you need to create new, run `ssh-keygen` and follow instructions). Give it a name on EC2 dashboard, put that name (`key_name`) and path (`keyfile`) in configuration file.
+We will use one of ready-to-use Amazon Machine Images (AMI) with all necessary dependencies. We will choose AMI with OTP 22, because that is the version we have on MZBench server. So, we will search for `MZBench-erl22` AMI and find one with id `ami-03a169923be706764` available in `us-west-1b` zone. If you have chosen this AMI, all you do from now must be in us-west-1 zone. We must have IAM user with `AmazonEC2FullAccess` and `IAMFullAccess` permissions policies, and his `access_key_id` and `secret_access_key` goes to configuration file. In EC2 dashboard, you must create new security group `MZbench_cluster` where you will add inbound rules to open ssh and TCP ports 4801-4804. Also, in EC2 dashboard go to section `key pairs`, click `Actions` -> `Import key pair` and upload public key you have on your MZBench server in `~/.ssh/id_rsa.pub` (if you need to create new, run `ssh-keygen` and follow instructions). Give it a name on EC2 dashboard, put that name (`key_name`) and path (`keyfile`) in configuration file.
 
 ```config
 [
@@ -125,7 +125,7 @@ TBD
 
 ### Create and get client
 
-In this scenario, large number of requests are sent to things service to create things and than to retrieve their data. This test checks how much time things service needs to respond to each request.
+In this scenario, large number of requests are sent to clients service to create clients and than to retrieve their data. This test checks how much time clients service needs to respond to each request.
 
 #### Create and Get Client Results
 

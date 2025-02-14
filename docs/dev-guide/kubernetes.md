@@ -221,7 +221,7 @@ You can usually find this IP address in your DigitalOcean dashboard under the "N
     kubectl get svc -A | grep LoadBalancer
 ```
 
-This command searches all namespaces for services of type `LoadBalancer`. The output looks something like this:
+This command searches all namespaces for services of type `LoadBalancer`. The output looks like this:
 
 ```plaintext
     ingress-nginx           ingress-nginx-controller                         LoadBalancer   10.245.192.202   138.68.126.8   80:30424/TCP,443:31752/TCP                        64d
@@ -357,7 +357,7 @@ The Magistrala Core includes the essential services that are installed by defaul
 
 - authn
 - users
-- things
+- clients
 - adapter_http
 - adapter_mqtt
 - adapter_coap
@@ -384,7 +384,7 @@ Here’s a list of available add-ons:
 
 ### Scaling Services
 
-By default, the MQTT adapter, Things, Envoy, Authn, and the Message Broker services are set to scale with a replica count of 3. It’s recommended to set these values according to the number of nodes in your Kubernetes cluster. For example, you can adjust the replica count with the following command:
+By default, the MQTT adapter, Clients, Envoy, Authn, and the Message Broker services are set to scale with a replica count of 3. It’s recommended to set these values according to the number of nodes in your Kubernetes cluster. For example, you can adjust the replica count with the following command:
 
 ```bash
 helm install magistrala . -n mg --set defaults.replicaCount=3 --set messageBroker.replicaCount=3
@@ -432,7 +432,7 @@ For testing purposes, you can generate the necessary TLS certificates. Detailed 
 ```bash
 make ca
 make server_cert
-make thing_cert KEY=<thing_secret>
+make client_cert KEY=<client_secret>
 ```
 
 This will generate the following certificates in the `certs` folder, which you’ll use to set up TLS and mTLS:
@@ -443,8 +443,8 @@ ca.key
 ca.srl
 magistrala-server.crt
 magistrala-server.key
-thing.crt
-thing.key
+client.crt
+client.key
 ```
 
 ### Creating Kubernetes Secrets
@@ -482,7 +482,7 @@ For mTLS you need to set `nginx_internal.mtls.tls="magistrala-server"` and `ngin
 You can test sending an MQTT message with the following command:
 
 ```bash
-mosquitto_pub -d -L mqtts://<thing_id>:<thing_secret>@example.com:8883/channels/<channel_id>/messages  --cert  thing.crt --key thing.key --cafile ca.crt  -m "test-message"
+mosquitto_pub -d -L mqtts://<client_id>:<client_secret>@example.com:8883/channels/<channel_id>/messages  --cert  client.crt --key client.key --cafile ca.crt  -m "test-message"
 ```
 
 [ingress-yaml]: https://github.com/absmach/devops/blob/master/charts/mainflux/templates/ingress.yaml#L141

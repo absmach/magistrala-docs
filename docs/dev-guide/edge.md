@@ -33,18 +33,18 @@ Agent service has following features:
 
 ### Run Agent
 
-Before running agent we need to provision a thing and DATA and CONTROL channel. Thing that will be used as gateway representation and make bootstrap configuration. If using Magistrala UI this is done automatically when adding gateway through UI. Gateway can be provisioned with [`provision`][provision] service.
+Before running agent we need to provision a client and DATA and CONTROL channel. Client that will be used as gateway representation and make bootstrap configuration. If using Magistrala UI this is done automatically when adding gateway through UI. Gateway can be provisioned with [`provision`][provision] service.
 
 When you provisioned gateway as described in [provision][provision] you can check results
 
 ```bash
-curl -s -S -X GET http://magistrala-domain.com:9013/things/bootstrap/<external_id> -H "Authorization: Thing <external_key>" -H 'Content-Type: application/json' |jq
+curl -s -S -X GET http://magistrala-domain.com:9013/clients/bootstrap/<external_id> -H "Authorization: Client <external_key>" -H 'Content-Type: application/json' |jq
 ```
 
 ```json
 {
-  "thing_id": "e22c383a-d2ab-47c1-89cd-903955da993d",
-  "thing_key": "fc987711-1828-461b-aa4b-16d5b2c642fe",
+  "client_id": "e22c383a-d2ab-47c1-89cd-903955da993d",
+  "client_key": "fc987711-1828-461b-aa4b-16d5b2c642fe",
   "channels": [
     {
       "id": "fa5f9ba8-a1fc-4380-9edb-d0c23eaa24ec",
@@ -68,14 +68,14 @@ curl -s -S -X GET http://magistrala-domain.com:9013/things/bootstrap/<external_i
       }
     }
   ],
-  "content": "{\"agent\":{\"edgex\":{\"url\":\"http://localhost:48090/api/v1/\"},\"heartbeat\":{\"interval\":\"30s\"},\"log\":{\"level\":\"debug\"},\"mqtt\":{\"mtls\":false,\"qos\":0,\"retain\":false,\"skip_tls_ver\":true,\"url\":\"tcp://magistrala-domain.com:1883\"},\"server\":{\"nats_url\":\"localhost:4222\",\"port\":\"9000\"},\"terminal\":{\"session_timeout\":\"30s\"}},\"export\":{\"exp\":{\"cache_db\":\"0\",\"cache_pass\":\"\",\"cache_url\":\"localhost:6379\",\"log_level\":\"debug\",\"nats\":\"nats://localhost:4222\",\"port\":\"8172\"},\"mqtt\":{\"ca_path\":\"ca.crt\",\"cert_path\":\"thing.crt\",\"channel\":\"\",\"host\":\"tcp://magistrala-domain.com:1883\",\"mtls\":false,\"password\":\"\",\"priv_key_path\":\"thing.key\",\"qos\":0,\"retain\":false,\"skip_tls_ver\":false,\"username\":\"\"},\"routes\":[{\"mqtt_topic\":\"\",\"nats_topic\":\"channels\",\"subtopic\":\"\",\"type\":\"mfx\",\"workers\":10},{\"mqtt_topic\":\"\",\"nats_topic\":\"export\",\"subtopic\":\"\",\"type\":\"default\",\"workers\":10}]}}"
+  "content": "{\"agent\":{\"edgex\":{\"url\":\"http://localhost:48090/api/v1/\"},\"heartbeat\":{\"interval\":\"30s\"},\"log\":{\"level\":\"debug\"},\"mqtt\":{\"mtls\":false,\"qos\":0,\"retain\":false,\"skip_tls_ver\":true,\"url\":\"tcp://magistrala-domain.com:1883\"},\"server\":{\"nats_url\":\"localhost:4222\",\"port\":\"9000\"},\"terminal\":{\"session_timeout\":\"30s\"}},\"export\":{\"exp\":{\"cache_db\":\"0\",\"cache_pass\":\"\",\"cache_url\":\"localhost:6379\",\"log_level\":\"debug\",\"nats\":\"nats://localhost:4222\",\"port\":\"8172\"},\"mqtt\":{\"ca_path\":\"ca.crt\",\"cert_path\":\"client.crt\",\"channel\":\"\",\"host\":\"tcp://magistrala-domain.com:1883\",\"mtls\":false,\"password\":\"\",\"priv_key_path\":\"client.key\",\"qos\":0,\"retain\":false,\"skip_tls_ver\":false,\"username\":\"\"},\"routes\":[{\"mqtt_topic\":\"\",\"nats_topic\":\"channels\",\"subtopic\":\"\",\"type\":\"mfx\",\"workers\":10},{\"mqtt_topic\":\"\",\"nats_topic\":\"export\",\"subtopic\":\"\",\"type\":\"default\",\"workers\":10}]}}"
 }
 ```
 
-- `external_id` is usually MAC address, but anything that suits applications requirements can be used
+- `external_id` is usually MAC address, but anyclient that suits applications requirements can be used
 - `external_key` is key that will be provided to agent process
-- `thing_id` is Magistrala thing id
-- `channels` is 2-element array where first channel is CONTROL and second is DATA, both channels should be assigned to thing
+- `client_id` is Magistrala client id
+- `channels` is 2-element array where first channel is CONTROL and second is DATA, both channels should be assigned to client
 - `content` is used for configuring parameters of agent and export service.
 
 Then to start the agent service you can do it like this
@@ -89,8 +89,8 @@ MG_AGENT_LOG_LEVEL=debug \
 MG_AGENT_BOOTSTRAP_KEY=edged \
 MG_AGENT_BOOTSTRAP_ID=34:e1:2d:e6:cf:03 ./magistrala-agent
 
-{"level":"info","message":"Requesting config for 34:e1:2d:e6:cf:03 from http://localhost:9013/things/bootstrap","ts":"2019-12-05T04:47:24.98411512Z"}
-{"level":"info","message":"Getting config for 34:e1:2d:e6:cf:03 from http://localhost:9013/things/bootstrap succeeded","ts":"2019-12-05T04:47:24.995465239Z"}
+{"level":"info","message":"Requesting config for 34:e1:2d:e6:cf:03 from http://localhost:9013/clients/bootstrap","ts":"2019-12-05T04:47:24.98411512Z"}
+{"level":"info","message":"Getting config for 34:e1:2d:e6:cf:03 from http://localhost:9013/clients/bootstrap succeeded","ts":"2019-12-05T04:47:24.995465239Z"}
 {"level":"info","message":"Connected to MQTT broker","ts":"2019-12-05T04:47:25.009645082Z"}
 {"level":"info","message":"Agent service started, exposed port 9000","ts":"2019-12-05T04:47:25.009755345Z"}
 {"level":"info","message":"Subscribed to MQTT broker","ts":"2019-12-05T04:47:25.012930443Z"}
@@ -103,9 +103,9 @@ MG_AGENT_BOOTSTRAP_ID=34:e1:2d:e6:cf:03 ./magistrala-agent
 
 ```bash
 # Set connection parameters as environment variables in shell
-CH=`curl -s -S -X GET http://some-domain-name:9013/things/bootstrap/34:e1:2d:e6:cf:03 -H "Authorization: Thing <BOOTSTRAP_KEY>" -H 'Content-Type: application/json' | jq -r '.magistrala_channels[0].id'`
-TH=`curl -s  -S -X GET http://some-domain-name:9013/things/bootstrap/34:e1:2d:e6:cf:03 -H "Authorization: Thing <BOOTSTRAP_KEY>" -H 'Content-Type: application/json' | jq -r .magistrala_id`
-KEY=`curl -s  -S -X GET http://some-domain-name:9013/things/bootstrap/34:e1:2d:e6:cf:03 -H "Authorization: Thing <BOOTSTRAP_KEY>" -H 'Content-Type: application/json' | jq -r .magistrala_key`
+CH=`curl -s -S -X GET http://some-domain-name:9013/clients/bootstrap/34:e1:2d:e6:cf:03 -H "Authorization: Client <BOOTSTRAP_KEY>" -H 'Content-Type: application/json' | jq -r '.magistrala_channels[0].id'`
+TH=`curl -s  -S -X GET http://some-domain-name:9013/clients/bootstrap/34:e1:2d:e6:cf:03 -H "Authorization: Client <BOOTSTRAP_KEY>" -H 'Content-Type: application/json' | jq -r .magistrala_id`
+KEY=`curl -s  -S -X GET http://some-domain-name:9013/clients/bootstrap/34:e1:2d:e6:cf:03 -H "Authorization: Client <BOOTSTRAP_KEY>" -H 'Content-Type: application/json' | jq -r .magistrala_key`
 
 # Subscribe for response
 mosquitto_sub -d -u $TH -P $KEY  -t "channels/${CH}/messages/res/#" -h some-domain-name -p 1883
@@ -178,25 +178,25 @@ Commands are:
 #### Operation
 
 ```bash
-mosquitto_pub -u <thing_id> -P <thing_secret> -t channels/<channel_id>/messages/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-operation, start, edgex-support-notifications, edgex-core-data"}]'
+mosquitto_pub -u <client_id> -P <client_secret> -t channels/<channel_id>/messages/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-operation, start, edgex-support-notifications, edgex-core-data"}]'
 ```
 
 #### Config
 
 ```bash
-mosquitto_pub -u <thing_id> -P <thing_secret> -t channels/<channel_id>/messages/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-config, edgex-support-notifications, edgex-core-data"}]'
+mosquitto_pub -u <client_id> -P <client_secret> -t channels/<channel_id>/messages/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-config, edgex-support-notifications, edgex-core-data"}]'
 ```
 
 #### Metrics
 
 ```bash
-mosquitto_pub -u <thing_id> -P <thing_secret> -t channels/<channel_id>/messages/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-metrics, edgex-support-notifications, edgex-core-data"}]'
+mosquitto_pub -u <client_id> -P <client_secret> -t channels/<channel_id>/messages/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-metrics, edgex-support-notifications, edgex-core-data"}]'
 ```
 
 If you subscribe to
 
 ```bash
-mosquitto_sub -u <thing_id> -P <thing_secret> -t channels/<channel_id>/messages/#
+mosquitto_sub -u <client_id> -P <client_secret> -t channels/<channel_id>/messages/#
 ```
 
 You can observe commands and response from commands executed against edgex
@@ -243,15 +243,15 @@ By default `Export` service looks for config file at [`../configs/config.toml`][
   port = "8170"
 
 [mqtt]
-  username = "<thing_id>"
-  password = "<thing_password>"
+  username = "<client_id>"
+  password = "<client_password>"
   ca_path = "ca.crt"
   client_cert = ""
   client_cert_key = ""
-  client_cert_path = "thing.crt"
-  client_priv_key_path = "thing.key"
+  client_cert_path = "client.crt"
+  client_priv_key_path = "client.key"
   mtls = "false"
-  priv_key = "thing.key"
+  priv_key = "client.key"
   retain = "false"
   skip_tls_ver = "false"
   url = "tcp://magistrala.com:1883"
@@ -283,14 +283,14 @@ If you run with environment variables you can create config file:
 MG_EXPORT_PORT=8178 \
 MG_EXPORT_LOG_LEVEL=debug \
 MG_EXPORT_MQTT_HOST=tcp://localhost:1883 \
-MG_EXPORT_MQTT_USERNAME=<thing_id> \
-MG_EXPORT_MQTT_PASSWORD=<thing_secret> \
+MG_EXPORT_MQTT_USERNAME=<client_id> \
+MG_EXPORT_MQTT_PASSWORD=<client_secret> \
 MG_EXPORT_MQTT_CHANNEL=<channel_id> \
 MG_EXPORT_MQTT_SKIP_TLS=true \
 MG_EXPORT_MQTT_MTLS=false \
 MG_EXPORT_MQTT_CA=ca.crt \
-MG_EXPORT_MQTT_CLIENT_CERT=thing.crt \
-MG_EXPORT_MQTT_CLIENT_PK=thing.key \
+MG_EXPORT_MQTT_CLIENT_CERT=client.crt \
+MG_EXPORT_MQTT_CLIENT_PK=client.key \
 MG_EXPORT_CONFIG_FILE=export.toml \
 ../build/magistrala-export&
 ```
@@ -310,11 +310,11 @@ curl -X GET http://localhost:8170/health
 
 To establish connection to MQTT broker following settings are needed:
 
-- `username` - Magistrala [thing_id]
-- `password` - Magistrala [thing_secret]
+- `username` - Magistrala [client_id]
+- `password` - Magistrala [client_secret]
 - `url` - url of MQTT broker
 
-Additionally, you will need MQTT client certificates if you enable mTLS. To obtain certificates `ca.crt`, `thing.crt` and key `thing.key` follow instructions [here][mutual-tls] or [here][certs-service].
+Additionally, you will need MQTT client certificates if you enable mTLS. To obtain certificates `ca.crt`, `client.crt` and key `client.key` follow instructions [here][mutual-tls] or [here][certs-service].
 
 #### MTLS
 
@@ -329,13 +329,13 @@ Routes are being used for specifying which subscriber's topic(subject) goes to w
 - `subtopic` - messages will be published to MQTT topic `<mqtt_topic>/<subtopic>/<nats_subject>`, where dots in nats_subject are replaced with '/'
 - `workers` - specifies number of workers that will be used for message forwarding.
 - `type` - specifies message transformation:
-  - `default` is for sending messages as they are received on the Message Broker with no transformation (so they should be in SenML or JSON format if we want to persist them in Magistrala in cloud). If you don't want to persist messages in Magistrala or you are not exporting to Magistrala cloud - message format can be anything that suits your application as message passes untransformed.
+  - `default` is for sending messages as they are received on the Message Broker with no transformation (so they should be in SenML or JSON format if we want to persist them in Magistrala in cloud). If you don't want to persist messages in Magistrala or you are not exporting to Magistrala cloud - message format can be that which that suits your application as message passes untransformed.
   - `mfx` is for messages that are being picked up on internal Magistrala Message Broker bus. When using `Export` along with Magistrala deployed on gateway ([Fig. 1][back-to-edge]) messages coming from MQTT broker that are published to the Message Broker bus are [Magistrala message][protomsg]. Using `mfx` type will extract payload and `export` will publish it to `mqtt_topic`. Extracted payload is SenML or JSON if we want to persist messages. `nats_topic` in this case must be `channels`, or if you want to pick messages from a specific channel in local Magistrala instance to be exported to cloud you can put `channels.<local_magistrala_channel_id>`.
 
 Before running `Export` service edit `configs/config.toml` and provide `username`, `password` and `url`
 
-- `username` - matches `thing_id` in Magistrala cloud instance
-- `password` - matches `thing_secret`
+- `username` - matches `client_id` in Magistrala cloud instance
+- `password` - matches `client_secret`
 - `channel` - MQTT part of the topic where to publish MQTT data (`channel/<channel_id>/messages` is format of magistrala MQTT topic) and plays a part in authorization.
 
 If Magistrala and Export service are deployed on same gateway `Export` can be configured to send messages from Magistrala internal Message Broker bus to Magistrala in a cloud. In order for `Export` service to listen on Magistrala Message Broker deployed on the same machine Message Broker port must be exposed. Edit Magistrala [docker-compose.yml][docker-compose]. Default Message Broker, NATS, section must look like below:
@@ -356,7 +356,7 @@ nats:
 Configuration file for `Export` service can be sent over MQTT using [Agent][agent] service.
 
 ```bash
-mosquitto_pub -u <thing_id> -P <thing_secret> -t channels/<control_ch_id>/messages/req -h localhost -p 18831  -m  "[{\"bn\":\"1:\", \"n\":\"config\", \"vs\":\"save, export, <config_file_path>, <file_content_base64>\"}]"
+mosquitto_pub -u <client_id> -P <client_secret> -t channels/<control_ch_id>/messages/req -h localhost -p 18831  -m  "[{\"bn\":\"1:\", \"n\":\"config\", \"vs\":\"save, export, <config_file_path>, <file_content_base64>\"}]"
 ```
 
 `vs="save, export, config_file_path, file_content_base64"` - vs determines where to save file and contains file content in base64 encoding payload:
@@ -437,10 +437,10 @@ curl -s -S  -X POST  http://localhost:9016/mapping -H "Authorization: Bearer $US
 
 ```json
 {
-  "things": [
+  "clients": [
     {
       "id": "88529fb2-6c1e-4b60-b9ab-73b5d89f7404",
-      "name": "thing",
+      "name": "client",
       "key": "3529c1bb-7211-4d40-9cd8-b05833196093",
       "metadata": {
         "external_id": "54:FG:66:DC:43"
@@ -469,7 +469,7 @@ curl -s -S  -X POST  http://localhost:9016/mapping -H "Authorization: Bearer $US
 }
 ```
 
-Parameters `external_id` and `external_key` are representing the gateway. `Provision` will use them to create a bootstrap configuration that will make a relation with Magistrala entities used for connection, authentication and authorization `thing` and `channel`. These parameters will be used by `Agent` service on the gateway to retrieve that information and establish a connection with the cloud.
+Parameters `external_id` and `external_key` are representing the gateway. `Provision` will use them to create a bootstrap configuration that will make a relation with Magistrala entities used for connection, authentication and authorization `client` and `channel`. These parameters will be used by `Agent` service on the gateway to retrieve that information and establish a connection with the cloud.
 
 ## Services on the Edge
 
@@ -481,10 +481,10 @@ Start the [NATS][nats] and [Agent][agent] service:
 gnatsd
 MG_AGENT_BOOTSTRAP_ID=54:FG:66:DC:43 \
 MG_AGENT_BOOTSTRAP_KEY="223334fw2" \
-MG_AGENT_BOOTSTRAP_URL=http://localhost:9013/things/bootstrap \
+MG_AGENT_BOOTSTRAP_URL=http://localhost:9013/clients/bootstrap \
 build/magistrala-agent
-{"level":"info","message":"Requesting config for 54:FG:66:DC:43 from http://localhost:9013/things/bootstrap","ts":"2020-05-07T15:50:58.041145096Z"}
-{"level":"info","message":"Getting config for 54:FG:66:DC:43 from http://localhost:9013/things/bootstrap succeeded","ts":"2020-05-07T15:50:58.120779415Z"}
+{"level":"info","message":"Requesting config for 54:FG:66:DC:43 from http://localhost:9013/clients/bootstrap","ts":"2020-05-07T15:50:58.041145096Z"}
+{"level":"info","message":"Getting config for 54:FG:66:DC:43 from http://localhost:9013/clients/bootstrap succeeded","ts":"2020-05-07T15:50:58.120779415Z"}
 {"level":"info","message":"Saving export config file /configs/export/config.toml","ts":"2020-05-07T15:50:58.121602229Z"}
 {"level":"warn","message":"Failed to save export config file Error writing config file: open /configs/export/config.toml: no such file or directory","ts":"2020-05-07T15:50:58.121752142Z"}
 {"level":"info","message":"Client agent-88529fb2-6c1e-4b60-b9ab-73b5d89f7404 connected","ts":"2020-05-07T15:50:58.128500603Z"}
@@ -500,7 +500,7 @@ make
 
 Edit the `configs/config.toml` setting
 
-- `username` - thing from the results of provision request.
+- `username` - client from the results of provision request.
 - `password` - key from the results of provision request.
 - `mqtt_topic` - in routes set to `channels/<channel_data_id>/messages` from results of provision.
 - `nats_topic` - whatever you need, export will subscribe to `export.<nats_topic>` and forward messages to MQTT.
@@ -547,7 +547,7 @@ git clone https://github.com/absmach/agent.git
 go run ./examples/publish/main.go -s http://localhost:4222 export.test "[{\"bn\":\"test\"}]";
 ```
 
-We have configured route for export, `nats_topic = ">"` means that it will listen to `NATS` subject `export.>` and `mqtt_topic` is configured so that data will be sent to MQTT broker on topic `channels/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/messages` with appended `NATS` subject. Other brokers can such as `rabbitmq` can be used, for more detail refer to [dev-guide][dev-guide].
+We have configured route for export, `nats_topic = ">"` means that it will listen to `NATS` subject `export.>` and `mqtt_topic` is configured so that data will be sent to MQTT broker on topic `channels/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/messages` with appended `NATS` subject. Other brokers can such as `rabbitmq` can be used.
 
 In terminal where export is started you should see following message:
 
@@ -577,4 +577,3 @@ magistrala-mqtt   | {"level":"info","message":"Publish - client ID export-88529f
 [protomsg]: https://github.com/absmach/magistrala/blob/main/pkg/messaging/message.proto
 [back-to-edge]: ./edge.md
 [nats]: https://nats.io/
-[dev-guide]: ./dev-guide.md
