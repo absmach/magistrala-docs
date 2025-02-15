@@ -232,8 +232,6 @@ chunksDownloadTime":0,"queryReferencedStructuredMetadata":false,"chunk":{"headCh
 "entriesStored":0,"bytesReceived":0,"bytesSent":0,"requests":0,"downloadTime":0,"queryLengthServed":0}},"index":{"totalChunks":0,"postFilterChunks":0,"shardsDuration":0,"usedBloomFilters":false}}}}
 ```
 
----
-
 ### 6. Deploy Magistrala
 
 Deploy the Magistrala Helm chart into the `mg` namespace:
@@ -254,7 +252,7 @@ Ensure you have the Nginx Ingress repository added:
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 ```
 
-### 7. Verifying the Deployment
+### 7. Verifying Magistrala the Deployment
 
 After deploying Magistrala, verify the services and pods using `kubectl` commands:
 
@@ -275,6 +273,36 @@ kubectl get services -n mg
 ```bash
 kubectl logs <pod-name> -n mg
 ```
+
+**View Logs in Grafana**
+
+To visualize logs in Grafana, follow these steps:
+
+#### **1. Port-Forward Grafana**
+
+Since Grafana is running inside the Kubernetes cluster, you need to expose it locally using port forwarding:
+
+```bash
+kubectl port-forward -n smq svc/supermq-grafana 3000:80
+```
+
+#### **2. Log in to Grafana**
+
+1. Open a web browser and go to **http://127.0.0.1:3000**.
+2. Enter the login credentials:
+   - **Username:** `admin`
+   - **Password:** `12345678` (or your configured password).
+3. Click **Login**.
+4. On the left sidebar, click **Explore**.
+5. In the **Data Source** dropdown at the top-right, select **Loki**.
+
+#### **3. Apply Filters and Customize View**
+
+- Use **Labels** like `service_name="fluent-bit"` to refine results.
+- Select different time ranges to analyze logs over specific periods.
+- Click **Run Query** to refresh the results.
+
+You should see a log volume graph and structured log entries
 
 ### Interacting with Magistrala Services After Deployment
 
