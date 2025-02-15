@@ -1,6 +1,6 @@
 ---
-title: Kubernetes
----
+
+## title: Kubernetes
 
 Magistrala can be easily deployed on the Kubernetes platform using Helm Charts from the official [Magistrala DevOps GitHub repository](https://github.com/absmach/devops).
 
@@ -139,6 +139,9 @@ cd devops/charts/magistrala
 helm repo add nats https://nats-io.github.io/k8s/helm/charts/
 helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
 helm repo add hashicorp https://helm.releases.hashicorp.com
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add fluent https://fluent.github.io/helm-charts
 helm repo update
 ```
 
@@ -154,7 +157,7 @@ helm dependency update
 
 If the repositories are set up correctly, this will resolve and download all chart dependencies to `charts/magistrala/charts`.
 
-### 3. Create a Namespace (if needed)
+### 4. Create a Namespace (if needed)
 
 ```bash
 kubectl create namespace mg
@@ -162,7 +165,76 @@ kubectl create namespace mg
 
 ---
 
-### 4. Deploy Magistrala
+### 5. Install Loki Manually
+
+Instead of managing Loki as a dependency in the Helm chart, install it separately using the following command:
+
+```bash
+helm upgrade --install supermq \
+  grafana/loki \
+  --version=6.27.0 \
+  --values=loki-override.yaml \
+  --namespace loki \
+  --create-namespace
+```
+
+#### Verify Loki Deployment
+
+After installing Loki, check that it is running correctly:
+
+```bash
+kubectl get pods -n loki
+kubectl get services -n loki
+```
+
+To check logs for any errors:
+
+```bash
+kubectl logs -l app.kubernetes.io/name=loki -n loki
+```
+
+To verify Loki’s ingestion and querying, **use port-forwarding** in a separate terminal:
+
+```bash
+kubectl port-forward -n loki svc/supermq-loki 3100:3100
+```
+
+Then, in another terminal, send test logs:
+
+```bash
+curl -H "Content-Type: application/json" -XPOST -s "http://127.0.0.1:3100/loki/api/v1/push" \
+--data-raw '{"streams": [{"stream": {"job": "test"}, "values": [["'"$(date +%s)000000000"'", "test log message"]]}]}'
+```
+
+Finally, verify the logs in Loki:
+
+```bash
+curl "http://127.0.0.1:3100/loki/api/v1/query_range" --data-urlencode 'query={job="test"}'
+```
+
+You should get something like:
+
+```bash
+{"status":"success","data":{"resultType":"streams","result":[{"stream":{"detected_level":"unknown","job":"test","service_name":"test"},"values":[["1739616166000000000","test
+log message"]]}],"stats":{"summary":{"bytesProcessedPerSecond":597,"linesProcessedPerSecond":24,"totalBytesProcessed":24,"totalLinesProcessed":1,"execTime":0.040156,"queueTime":0.000814,
+"subqueries":0,"totalEntriesReturned":1,"splits":5,"shards":5,"totalPostFilterLines":1,"totalStructuredMetadataBytesProcessed":8},"querier":{"store":{"totalChunksRef":0,"totalChunksDownloaded":0,"
+chunksDownloadTime":0,"queryReferencedStructuredMetadata":false,"chunk":{"headChunkBytes":0,"headChunkLines":0,"decompressedBytes":0,"decompressedLines":0,"compressedBytes":0,"totalDuplicates":0,
+"postFilterLines":0,"headChunkStructuredMetadataBytes":0,"decompressedStructuredMetadataBytes":0},"chunkRefsFetchTime":0,"congestionControlLatency":0,"pipelineWrapperFilteredLines":0}},
+"ingester":{"totalReached":5,"totalChunksMatched":1,"totalBatches":6,"totalLinesSent":1,"store":{"totalChunksRef":0,"totalChunksDownloaded":0,"chunksDownloadTime":0,"queryReferencedStructuredMetadata":false,
+"chunk":{"headChunkBytes":24,"headChunkLines":1,"decompressedBytes":0,"decompressedLines":0,"compressedBytes":0,"totalDuplicates":0,"postFilterLines":1,"headChunkStructuredMetadataBytes":8,
+"decompressedStructuredMetadataBytes":0},"chunkRefsFetchTime":880885,"congestionControlLatency":0,"pipelineWrapperFilteredLines":0}},"cache":{"chunk":{"entriesFound":0,"entriesRequested":0,
+"entriesStored":0,"bytesReceived":0,"bytesSent":0,"requests":0,"downloadTime":0,"queryLengthServed":0},"index":{"entriesFound":0,"entriesRequested":0,"entriesStored":0,"bytesReceived":0,
+"bytesSent":0,"requests":0,"downloadTime":0,"queryLengthServed":0},"result":{"entriesFound":0,"entriesRequested":0,"entriesStored":0,"bytesReceived":0,"bytesSent":0,"requests":0,
+"downloadTime":0,"queryLengthServed":0},"statsResult":{"entriesFound":3,"entriesRequested":4,"entriesStored":4,"bytesReceived":525,"bytesSent":0,"requests":8,"downloadTime":9907901,
+"queryLengthServed":90000000000},"volumeResult":{"entriesFound":0,"entriesRequested":0,"entriesStored":0,"bytesReceived":0,"bytesSent":0,"requests":0,"downloadTime":0,"queryLengthServed":0},
+"seriesResult":{"entriesFound":0,"entriesRequested":0,"entriesStored":0,"bytesReceived":0,"bytesSent":0,"requests":0,"downloadTime":0,"queryLengthServed":0},"labelResult":{"entriesFound":0,
+"entriesRequested":0,"entriesStored":0,"bytesReceived":0,"bytesSent":0,"requests":0,"downloadTime":0,"queryLengthServed":0},"instantMetricResult":{"entriesFound":0,"entriesRequested":0,
+"entriesStored":0,"bytesReceived":0,"bytesSent":0,"requests":0,"downloadTime":0,"queryLengthServed":0}},"index":{"totalChunks":0,"postFilterChunks":0,"shardsDuration":0,"usedBloomFilters":false}}}}
+```
+
+---
+
+### 6. Deploy Magistrala
 
 Deploy the Magistrala Helm chart into the `mg` namespace:
 
@@ -182,7 +254,7 @@ Ensure you have the Nginx Ingress repository added:
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 ```
 
-### 5. Verifying the Deployment
+### 7. Verifying the Deployment
 
 After deploying Magistrala, verify the services and pods using `kubectl` commands:
 
