@@ -107,7 +107,7 @@ The possible parameters that can be set using the config command are:
 | http_adapter_url | HTTP adapter URL                                     |  [http_adapter_url][http_adapter] |
 | msg_content_type | Message content type                                 | "application/senml+json" |
 | reader_url       | Reader URL                                           | [reader_url][reader]       |
-| things_url       | Things service URL                                   | [things_url][things]  |
+| clients_url       | Clients service URL                                   | [clients_url][clients]  |
 | tls_verification | Do not check for TLS cert                            |                          |
 | users_url        | Users service URL                                    | [users_url][users]  |
 | state            | Bootstrap state query parameter                      |                          |
@@ -125,5 +125,5 @@ The possible parameters that can be set using the config command are:
 [certs]: http://localhost:9019
 [http_adapter]:http://localhost/http
 [reader]: http://localhost
-[things]: http://localhost:9000
+[clients]: http://localhost:9000
 [users]:http://localhost:9002

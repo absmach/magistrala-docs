@@ -3,7 +3,7 @@ title: Introduction
 ---
 
 
-Magistrala CLI makes it easy to manage users, things, channels and messages.
+Magistrala CLI makes it easy to manage users, clients, channels and messages.
 
 CLI can be downloaded as separate asset from [project releases][releases] or it can be built with `GNU Make` tool:
 
@@ -68,7 +68,7 @@ Flags:
   -R, --reader-url string        Reader URL
   -z, --state string             Bootstrap state query parameter
   -S, --status string            User status query parameter
-  -t, --things-url string        Things service URL
+  -t, --clients-url string        Things service URL
   -T, --topic string             Subscription topic query parameter
   -u, --users-url string         Users service URL
 
@@ -139,7 +139,7 @@ Global Flags:
   -R, --reader-url string        Reader URL
   -z, --state string             Bootstrap state query parameter
   -S, --status string            User status query parameter
-  -t, --things-url string        Things service URL
+  -t, --clients-url string        Things service URL
   -T, --topic string             Subscription topic query parameter
   -u, --users-url string         Users service URL
 

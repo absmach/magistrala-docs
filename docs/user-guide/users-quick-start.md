@@ -63,7 +63,7 @@ Any Client created while in the group can be connected to any channel within the
 
 A **new client** can be created by navigating to the **Clients Page** section of the Group and clicking the `+ Create Client` button.
 A dialog box will open, requiring fields such as **Name**.
-You can add a unique key for the thing, although one is automatically generated.
+You can add a unique key for the client, although one is automatically generated.
 Additionally, **tags** can be assigned to Clients for better organization and filtering.
 
 ![Create Client](../img/users-guide/group-client-create.png)
