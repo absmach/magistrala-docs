@@ -160,7 +160,7 @@ If the repositories are set up correctly, this will resolve and download all cha
 ### 4. Create a Namespace (if needed)
 
 ```bash
-kubectl create namespace mg
+kubectl create namespace smq
 ```
 
 ---
@@ -234,10 +234,10 @@ chunksDownloadTime":0,"queryReferencedStructuredMetadata":false,"chunk":{"headCh
 
 ### 6. Deploy Magistrala
 
-Deploy the Magistrala Helm chart into the `mg` namespace:
+Deploy the Magistrala Helm chart into the `smq` namespace:
 
 ```bash
-helm install magistrala . -n mg
+helm install magistrala . -n smq
 ```
 
 If you encounter an error related to snippet annotations in Nginx, enable them with:
@@ -259,19 +259,19 @@ After deploying Magistrala, verify the services and pods using `kubectl` command
 **List all pods:**
 
 ```bash
-kubectl get pods -n mg
+kubectl get pods -n smq
 ```
 
 **List all services:**
 
 ```bash
-kubectl get services -n mg
+kubectl get services -n smq
 ```
 
 **View logs of a pod:**
 
 ```bash
-kubectl logs <pod-name> -n mg
+kubectl logs <pod-name> -n smq
 ```
 
 **View Logs in Grafana**
@@ -425,10 +425,10 @@ helm upgrade <release-name> magistrala-devops/magistrala
 To uninstall the Magistrala release:
 
 ```bash
-helm uninstall <release-name> -n mg
+helm uninstall <release-name> -n smq
 ```
 
-This will remove the Magistrala release from the previously created `mg` namespace. Use the `--dry-run` flag to see which releases will be uninstalled without actually uninstalling them.
+This will remove the Magistrala release from the previously created `smq` namespace. Use the `--dry-run` flag to see which releases will be uninstalled without actually uninstalling them.
 
 To delete all data and resources from your cluster (or at least from the target namespace), the following two options are available:
 
@@ -437,11 +437,11 @@ To delete all data and resources from your cluster (or at least from the target 
 Deleting the entire namespace will remove all resources contained within it in one go. Later you can recreate the namespace.
 
 ```sh
-kubectl delete namespace mg
+kubectl delete namespace smq
 
 # Wait for deletion to complete (you can check the status with "kubectl get ns")
 # Then recreate the namespace:
-kubectl create namespace mg
+kubectl create namespace smq
 ```
 
 ##### Option 2: Delete All Resources Within the Namespace
@@ -450,15 +450,15 @@ If you prefer to keep the namespace and simply clear out all the resources, run 
 
 ```sh
 # Delete all workloads and services (Deployments, Pods, Services, etc.)
-kubectl delete all --all -n mg
+kubectl delete all --all -n smq
 
 # Delete all PersistentVolumeClaims in the namespace
-kubectl delete pvc --all -n mg
+kubectl delete pvc --all -n smq
 
 # Optionally, delete other resource types if needed (e.g., ConfigMaps, Secrets, ServiceAccounts)
-kubectl delete configmap --all -n mg
-kubectl delete secret --all -n mg
-kubectl delete serviceaccount --all -n mg
+kubectl delete configmap --all -n smq
+kubectl delete secret --all -n smq
+kubectl delete serviceaccount --all -n smq
 ```
 
 If your cluster is dynamically provisioning persistent volumes, the associated PVs may be automatically deleted (if their reclaim policy is set to `Delete`). If you need to manually remove all PVs (and you’re sure no other namespace depends on them), run:
@@ -471,7 +471,7 @@ kubectl delete pv --all
 
 Sometimes the namespace may be stuck in the **Terminating** phase because some resources (such as pods or PVCs) still have finalizers. If you encounter an error like:
 
-> `secrets "sh.helm.release.v1.magistrala.v1" is forbidden: unable to create new content in namespace mg because it is being terminated`
+> `secrets "sh.helm.release.v1.magistrala.v1" is forbidden: unable to create new content in namespace smq because it is being terminated`
 >
 > follow these steps to force-clear the namespace:
 
@@ -480,7 +480,7 @@ Sometimes the namespace may be stuck in the **Terminating** phase because some r
 Force-delete all pods in the namespace to remove any that might be stuck:
 
 ```sh
-kubectl delete pods --all --force --grace-period=0 -n mg
+kubectl delete pods --all --force --grace-period=0 -n smq
 ```
 
 #### Step 2. Remove Finalizers from PersistentVolumeClaims (PVCs)
@@ -488,20 +488,37 @@ kubectl delete pods --all --force --grace-period=0 -n mg
 List the PVCs in the namespace:
 
 ```sh
-kubectl get pvc -n mg
+kubectl get pvc -n smq
 ```
 
 For each PVC that is preventing deletion (they often have a finalizer like `kubernetes.io/pvc-protection`), remove the finalizer using:
 
 ```sh
-kubectl patch pvc <pvc-name> -p '{"metadata":{"finalizers":null}}' -n mg
+kubectl patch pvc <pvc-name> -p '{"metadata":{"finalizers":null}}' -n smq
 ```
 
 For example, if you have PVCs named `pvc-1` and `pvc-2`:
 
 ```sh
-kubectl patch pvc pvc-1 -p '{"metadata":{"finalizers":null}}' -n mg
-kubectl patch pvc pvc-2 -p '{"metadata":{"finalizers":null}}' -n mg
+kubectl patch pvc pvc-1 -p '{"metadata":{"finalizers":null}}' -n smq
+kubectl patch pvc pvc-2 -p '{"metadata":{"finalizers":null}}' -n smq
+```
+
+Tp patch all the stuck PVCs in one go, run the follwing command:
+
+```sh
+NAMESPACE="smq"
+
+# Get all Terminating PVCs
+kubectl get pvc -n $NAMESPACE | grep Terminating | awk '{print $1}' | while read pvc; do
+    echo "Patching and deleting PVC: $pvc"
+
+    # Patch to remove finalizers
+    kubectl patch pvc $pvc -n $NAMESPACE --type=json -p '[{"op": "remove", "path": "/metadata/finalizers"}]'
+
+    # Force delete the PVC
+    kubectl delete pvc $pvc -n $NAMESPACE --force --grace-period=0
+done
 ```
 
 #### Step 3. Delete All Remaining Resources (Optional)
@@ -509,10 +526,10 @@ kubectl patch pvc pvc-2 -p '{"metadata":{"finalizers":null}}' -n mg
 To ensure no lingering resources remain:
 
 ```sh
-kubectl delete all --all --force --grace-period=0 -n mg
-kubectl delete configmap --all -n mg
-kubectl delete secret --all -n mg
-kubectl delete serviceaccount --all -n mg
+kubectl delete all --all --force --grace-period=0 -n smq
+kubectl delete configmap --all -n smq
+kubectl delete secret --all -n smq
+kubectl delete serviceaccount --all -n smq
 ```
 
 #### Step 4. Remove Finalizers from the Namespace
@@ -520,7 +537,7 @@ kubectl delete serviceaccount --all -n mg
 Patch the namespace to remove its finalizers so that it can be fully deleted:
 
 ```sh
-kubectl patch namespace mg -p '{"spec":{"finalizers":[]}}'
+kubectl patch namespace smq -p '{"spec":{"finalizers":[]}}'
 ```
 
 #### Step 5. Verify and Recreate the Namespace
@@ -528,23 +545,23 @@ kubectl patch namespace mg -p '{"spec":{"finalizers":[]}}'
 Check that the namespace is deleted:
 
 ```sh
-kubectl get namespace mg
+kubectl get namespace smq
 ```
 
 Once deleted, recreate the namespace:
 
 ```sh
-kubectl create namespace mg
+kubectl create namespace smq
 ```
 
 ---
 
 ## Final Step: Reinstall Your Helm Release
 
-After clearing the namespace (using any of the options above), you can now install your Helm release into a fresh `mg` namespace:
+After clearing the namespace (using any of the options above), you can now install your Helm release into a fresh `smq` namespace:
 
 ```sh
-helm install magistrala . -n mg
+helm install magistrala . -n smq
 ```
 
 ---
@@ -556,13 +573,13 @@ To override values in the chart, use either the `--values` flag and pass in a fi
 For example, if you want to set a custom hostname for the ingress (like `example.com`) and ensure you're using the latest version of the `users` image, you can do this during installation with the following command::
 
 ```bash
-helm install magistrala -n mg --set ingress.hostname='example.com' --set users.image.tag='latest'
+helm install magistrala -n smq --set ingress.hostname='example.com' --set users.image.tag='latest'
 ```
 
 If Magistrala is already installed and you want to update it with new settings (for example, changing the ingress hostname or image tag), you can use the `helm upgrade` command:
 
 ```bash
-helm upgrade magistrala -n mg --set ingress.hostname='example.com' --set users.image.tag='latest'
+helm upgrade magistrala -n smq --set ingress.hostname='example.com' --set users.image.tag='latest'
 ```
 
 This will apply your changes to the existing installation. For a complete table of the configurable parameters and their default values, see [configurable parameters and their default values](https://github.com/absmach/devops/blob/master/charts/magistrala/README.md). For changes to any of the configurable parameters, equally update the documentation at `charts/magistrala/README.md` using `helm-docs` as described in [Autogenerating Helm Chart Documentation](https://github.com/absmach/devops/blob/master/README.md).
@@ -586,7 +603,7 @@ These are the minimum required services to run Magistrala.
 Magistrala Add-ons are optional services that are not installed by default. To enable an add-on, you need to specify it during installation. For example, to enable the InfluxDB reader and writer, you would use the following command:
 
 ```bash
-helm install magistrala . -n mg --set influxdb=true
+helm install magistrala . -n smq --set influxdb=true
 ```
 
 Here’s a list of available add-ons:
@@ -603,7 +620,7 @@ Here’s a list of available add-ons:
 By default, the MQTT adapter, Things, Envoy, Authn, and the Message Broker services are set to scale with a replica count of 3. It’s recommended to set these values according to the number of nodes in your Kubernetes cluster. For example, you can adjust the replica count with the following command:
 
 ```bash
-helm install magistrala . -n mg --set defaults.replicaCount=3 --set messageBroker.replicaCount=3
+helm install magistrala . -n smq --set defaults.replicaCount=3 --set messageBroker.replicaCount=3
 ```
 
 This ensures that your services scale appropriately for your environment.
@@ -665,18 +682,18 @@ thing.key
 
 ### Creating Kubernetes Secrets
 
-Create kubernetes secrets using those certificates by running commands from [secrets script][secrets]. In this example secrets are created in `mg` namespace:
+Create kubernetes secrets using those certificates by running commands from [secrets script][secrets]. In this example secrets are created in `smq` namespace:
 
 ```bash
-kubectl -n mg create secret tls magistrala-server --key magistrala-server.key --cert magistrala-server.crt
+kubectl -n smq create secret tls magistrala-server --key magistrala-server.key --cert magistrala-server.crt
 
-kubectl -n mg create secret generic ca --from-file=ca.crt
+kubectl -n smq create secret generic ca --from-file=ca.crt
 ```
 
 You can check if they are succesfully created:
 
 ```bash
-kubectl get secrets -n mg
+kubectl get secrets -n smq
 ```
 
 ### Configuring Ingress for TLS
