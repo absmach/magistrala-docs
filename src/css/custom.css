@@ -37,6 +37,21 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
 }
 
+@font-face {
+  src: url('./RobotoMono-VariableFont_wght.ttf') format("ttf");
+  font-family: "Roboto Mono";
+  font-weight: 200 500;
+  font-stretch: 75% 125%;
+  font-style: normal;
+}
+
+/* Ensure code blocks use a monospace font */
+code,
+pre,
+pre code {
+  font-family: "Roboto Mono";
+}
+
 .web-link:hover {
   text-decoration: none !important;
   color: white;

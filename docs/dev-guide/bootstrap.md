@@ -17,18 +17,18 @@ title: Bootstrap
 
 ## Bootstrapping Workflow
 
-![Configure device](../img/bootstrap/1.png)
+![Configure device](../img/bootstrap/b-1.png)
 _1) Configure device with Bootstrap service URL, an external key and external ID_
 
-> ![Provision Magistrala channels](../img/bootstrap/2.png)
+> ![Provision Magistrala channels](../img/bootstrap/b-2png.png)
 >
 > _Optionally create Magistrala channels if they don't exist_
 >
-> ![Provision Magistrala clients](../img/bootstrap/3.png)
+> ![Provision Magistrala clients](../img/bootstrap/b2-3%20.png)
 >
 > _Optionally create Magistrala client if it doesn't exist_
 
-![Upload configuration](../img/bootstrap/4.png)
+![Upload configuration](../img/bootstrap/b-4.png)
 _2) Upload configuration for the Magistrala client_
 
 ![Bootstrap](../img/bootstrap/5.png)
