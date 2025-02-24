@@ -38,9 +38,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @font-face {
-  src: url('./RobotoMono-VariableFont_wght.ttf') format("ttf");
-  font-family: "Roboto Mono";
-  font-weight: 200 500;
+  src: url('./SpaceMono-Regular.ttf') format("ttf");
+  font-family: "SpaceMono-Regular";
   font-stretch: 75% 125%;
   font-style: normal;
 }
@@ -49,7 +48,7 @@ h1, h2, h3, h4, h5, h6 {
 code,
 pre,
 pre code {
-  font-family: "Roboto Mono";
+  font-family: "SpaceMono-Regular";
 }
 
 .web-link:hover {
