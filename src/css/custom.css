@@ -38,11 +38,31 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @font-face {
-  src: url('./SpaceMono-Regular.ttf') format("truetype");
+  src: url('../fonts/SpaceMono-Regular.ttf') format("truetype");
   font-family: "Space Mono";
-  font-stretch: 75% 125%;
   font-style: normal;
-  font-weight: 300;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  src: url('../fonts/SpaceMono-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  src: url('../fonts/SpaceMono-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  src: url('../fonts/SpaceMono-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
 }
 
 /* Ensure code blocks use a monospace font */
