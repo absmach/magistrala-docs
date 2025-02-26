@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 :root {
   --ifm-color-primary: #184D91;
   --ifm-color-primary-dark: #14437F;
@@ -30,4 +35,8 @@ body, h1, h2, h3, h4, h5, h6, p, li, a, span, code {
 h1, h2, h3, h4, h5, h6 {
   color: #184D91;
   font-weight: 600;
+}
+
+.home-page {
+  margin-top: 1.5rem;
 }
