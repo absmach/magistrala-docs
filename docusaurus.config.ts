@@ -135,9 +135,9 @@ const config: Config = {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
     },
-    // typography: {
-    //   fontFamily: "Inter, sans-serif",
-    // },
+    typography: {
+      fontFamily: 'Inter, sans-serif',
+    },
   } satisfies Preset.ThemeConfig,
 };
 

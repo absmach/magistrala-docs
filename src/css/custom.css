@@ -38,17 +38,22 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @font-face {
-  src: url('./SpaceMono-Regular.ttf') format("ttf");
-  font-family: "SpaceMono-Regular";
+  src: url('./SpaceMono-Regular.ttf') format("truetype");
+  font-family: "Space Mono";
   font-stretch: 75% 125%;
   font-style: normal;
+  font-weight: 300;
 }
 
 /* Ensure code blocks use a monospace font */
 code,
 pre,
 pre code {
-  font-family: "SpaceMono-Regular";
+  font-family: "Space Mono", monospace !important;
+}
+
+:root {
+  --ifm-font-family-base: 'Inter', sans-serif;
 }
 
 .web-link:hover {
