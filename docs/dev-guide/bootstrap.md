@@ -31,7 +31,7 @@ _1) Configure device with Bootstrap service URL, an external key and external ID
 ![Upload configuration](../img/bootstrap/b-4.png)
 _2) Upload configuration for the Magistrala client_
 
-![Bootstrap](../img/bootstrap/b-5.png)
+![Bootstrap](../img/bootstrap/b2-5.png)
 _3) Bootstrap - send a request for the configuration_
 
 ![Update, enable/disable, remove](../img/bootstrap/b-6.png)
