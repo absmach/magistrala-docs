@@ -37,6 +37,23 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
 }
 
+.web-link:hover {
+  text-decoration: none !important;
+  color: white;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
 
 @layer base {
   :root {
@@ -103,22 +120,4 @@ h1, h2, h3, h4, h5, h6 {
   body {
     @apply tw-bg-background tw-text-foreground;
   }
-}
-
-.web-link:hover {
-  text-decoration: none !important;
-  color: white;
-}
-
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-.animate-marquee {
-  animation: marquee 25s linear infinite;
 }

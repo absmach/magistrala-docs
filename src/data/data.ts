@@ -1,3 +1,28 @@
+export const navigationLinks = [
+  { label: "Features", href: "#features" },
+  { label: "Solutions", href: "#use-cases" },
+  { label: "Pricing", href: "#pricing" },
+  { label: "Docs", href: "/docs" },
+  {
+    label: "Blog",
+    href: "https://medium.com/abstract-machines-blog",
+  },
+];
+export const HeaderData = {
+  Logo: {
+    src: "/img/logo-light1.png",
+    alt: "Magistrala Logo",
+    width: "250px",
+    height: "250px",
+    placeholder: "/placeholder.svg",
+  },
+  navigationLinks: navigationLinks,
+  ctaButton: {
+    text: "Try For Free",
+    link: "#pricing",
+  },
+};
+
 export const heroData = {
   title1: "Simplify Messaging",
   title2: "Empower Systems",
@@ -76,7 +101,7 @@ export const trustedByData = [
     },
   },
   {
-    name: "Target",
+    name: "etf",
     logo: "img/logos/etf.png",
     style: {
       height: "70px",

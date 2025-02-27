@@ -8,16 +8,12 @@ import { FeaturesSection } from "../components/section-features";
 import { PricingSection } from "../components/section-pricing";
 import { UsecasesSection } from "../components/section-usecases";
 import { FaqSection } from "../components/section-faq";
+import HeaderSection from "../components/section-header";
 
 export default function HomePage() {
-  useEffect(() => {
-    document
-      .querySelector(".navbar__inner")
-      .classList.add("container", "mx-auto");
-  }, []);
-
   return (
-    <Layout description="Magistrala bridges the gap between devices, applications, and systems. With multi-protocol messaging, customizable dashboards, and robust security, we make it easy to manage, monitor, and scale your operations.">
+    <body>
+      <HeaderSection />
       <div className="tw-mt-4 container">
         <div className="row">
           <div className="col col--12">
@@ -32,6 +28,6 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-    </Layout>
+    </body>
   );
 }

@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 
 export function HeroSection() {
   return (
-    <section className="tw-py-32">
+    <section className="tw-py-28">
       <div className="container">
         <div>
           <div className="tw-text-center tw-w-2/3 container">
