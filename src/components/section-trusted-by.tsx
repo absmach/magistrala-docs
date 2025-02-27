@@ -2,7 +2,7 @@ import { trustedByData } from "../data/data";
 
 export function TrustedBySection() {
   return (
-    <section className="tw-py-12">
+    <section className="tw-py-14">
       <div className="container">
         <h2 className="tw-text-3xl tw-text-center tw-mb-10">
           Our Clients and Partners

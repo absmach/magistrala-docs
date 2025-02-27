@@ -14,7 +14,7 @@ import { Separator } from "./ui/separator";
 
 export default function HeaderSection() {
   return (
-    <header className="tw-sticky tw-top-0 tw-z-50 tw-shadow-sm tw-py-4">
+    <header className="tw-sticky tw-top-0 tw-z-50 tw-shadow-sm tw-py-4 tw-bg-white">
       <div className="container tw-mx-auto tw-flex tw-items-center tw-justify-between">
         <Link href="/" className="web-link">
           <img
