@@ -1,4 +1,4 @@
-import { trustedByData } from "../data/data";
+import { TrustedByData } from "../data/data";
 
 export function TrustedBySection() {
   return (
@@ -11,7 +11,7 @@ export function TrustedBySection() {
           <div className="tw-flex tw-w-[300%] tw-gap-4">
             {/* First set of logos */}
             <div className="tw-flex tw-w-1/2 tw-animate-marquee tw-items-center">
-              {trustedByData.map((t) => (
+              {TrustedByData.map((t) => (
                 <img
                   key={`first-${t.name}`}
                   src={t.logo || "/placeholder.svg"}
@@ -23,7 +23,7 @@ export function TrustedBySection() {
             </div>
             {/* Second set of logos */}
             <div className="tw-flex tw-w-1/2 tw-animate-marquee tw-items-center">
-              {trustedByData.map((t) => (
+              {TrustedByData.map((t) => (
                 <img
                   key={`second-${t.name}`}
                   src={t.logo || "/placeholder.svg"}

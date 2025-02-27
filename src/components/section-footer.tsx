@@ -1,7 +1,7 @@
 import Link from "@docusaurus/Link";
-import { footerData } from "../data/data";
+import { FooterData } from "../data/data";
 import { Separator } from "./ui/separator";
-import { Github, Linkedin, Mail, Twitter } from "lucide-react";
+import { Github, Linkedin, Twitter } from "lucide-react";
 import { Button } from "./ui/button";
 
 const icons = {
@@ -28,15 +28,15 @@ export function FooterSection() {
 }
 
 function CompanyInfo() {
-  const { Logo, description } = footerData.companyInfo;
+  const { logo, description } = FooterData.companyInfo;
 
   return (
     <div className="tw-space-y-4 tw-max-w-sm">
       <img
-        src={Logo.src}
-        alt={Logo.alt}
-        width={Logo.width}
-        height={Logo.height}
+        src={logo.src}
+        alt={logo.alt}
+        width={logo.width}
+        height={logo.height}
       />
       <p className="tw-text-muted-foreground tw-leading-relaxed">
         {description}
@@ -46,7 +46,7 @@ function CompanyInfo() {
 }
 
 function CopyRight() {
-  const { year, rights, policies } = footerData.footerCopyright;
+  const { year, rights, policies } = FooterData.footerCopyright;
 
   return (
     <div className="tw-mt-12">
@@ -71,7 +71,7 @@ function CopyRight() {
 }
 
 function QuickLinks() {
-  const { quickLinks } = footerData;
+  const { quickLinks } = FooterData;
 
   return (
     <div className="tw-space-y-4">
@@ -93,7 +93,7 @@ function QuickLinks() {
 }
 
 function SocialLinks() {
-  const { socialLinks } = footerData;
+  const { socialLinks } = FooterData;
 
   return (
     <div className="tw-space-y-4">
@@ -120,7 +120,7 @@ function SocialLinks() {
 }
 
 function Newsletter() {
-  const { title, subtitle, placeholder, buttonText } = footerData.newsletter;
+  const { title, subtitle, placeholder, buttonText } = FooterData.newsletter;
 
   return (
     <div className="tw-space-y-4">

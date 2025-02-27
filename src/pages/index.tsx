@@ -20,12 +20,12 @@ export default function HomePage() {
           <div className="col col--12">
             <HeroSection />
             <TrustedBySection />
-            {/* <ProductSection /> */}
-            {/* <BenefitsSection /> */}
-            {/* <FeaturesSection /> */}
-            {/* <UsecasesSection /> */}
-            {/* <PricingSection /> */}
-            {/* <FaqSection /> */}
+            <ProductSection />
+            <BenefitsSection />
+            <FeaturesSection />
+            <UsecasesSection />
+            <PricingSection />
+            <FaqSection />
           </div>
         </div>
       </div>

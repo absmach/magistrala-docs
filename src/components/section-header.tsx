@@ -18,10 +18,10 @@ export default function HeaderSection() {
       <div className="container tw-mx-auto tw-flex tw-items-center tw-justify-between">
         <Link href="/" className="web-link">
           <img
-            src={HeaderData.Logo.src}
-            alt={HeaderData.Logo.alt}
-            width={HeaderData.Logo.width}
-            height={HeaderData.Logo.height}
+            src={HeaderData.logo.src}
+            alt={HeaderData.logo.alt}
+            width={HeaderData.logo.width}
+            height={HeaderData.logo.height}
           />
         </Link>
         <nav className="tw-hidden md:tw-flex tw-flex-1 tw-justify-center">
