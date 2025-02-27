@@ -18,17 +18,17 @@ export default function HomePage() {
 
   return (
     <Layout description="Magistrala bridges the gap between devices, applications, and systems. With multi-protocol messaging, customizable dashboards, and robust security, we make it easy to manage, monitor, and scale your operations.">
-      <div className="mt-4 container">
+      <div className="tw-mt-4 container">
         <div className="row">
           <div className="col col--12">
             <HeroSection />
-            {/* <TrustedBySection />
-            <ProductSection />
-            <BenefitsSection />
-            <FeaturesSection />
-            <UsecasesSection />
-            <PricingSection />
-            <FaqSection /> */}
+            <TrustedBySection />
+            {/* <ProductSection /> */}
+            {/* <BenefitsSection /> */}
+            {/* <FeaturesSection /> */}
+            {/* <UsecasesSection /> */}
+            {/* <PricingSection /> */}
+            {/* <FaqSection /> */}
           </div>
         </div>
       </div>
