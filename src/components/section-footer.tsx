@@ -115,6 +115,16 @@ function SocialLinks() {
           );
         })}
       </ul>
+      <div>
+        <h3 className="tw-text-lg tw-font-semibold">Acknowledgments</h3>
+        <a
+          href="https://storyset.com/technology"
+          target="_blank"
+          className="tw-text-muted-foreground"
+        >
+          Technology illustrations by Storyset
+        </a>
+      </div>
     </div>
   );
 }

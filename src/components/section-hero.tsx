@@ -5,14 +5,20 @@ import { Button } from "./ui/button";
 export function HeroSection() {
   return (
     <section className="tw-py-28">
-      <div className="container">
+      <div className="w-full md:container">
         <div>
-          <div className="tw-text-center tw-w-2/3 container">
+          <div className="tw-text-center md:tw-w-2/3 container">
             <div className="tw-mb-10">
               <div className="tw-space-y-1 tw-mb-4">
-                <h2 className="tw-text-6xl">{HeroData.title1}</h2>
-                <h2 className="tw-text-6xl">{HeroData.title2}</h2>
-                <h2 className="tw-text-6xl">{HeroData.title3}</h2>
+                <h2 className="tw-text-4xl md:tw-text-6xl">
+                  {HeroData.title1}
+                </h2>
+                <h2 className="tw-text-4xl md:tw-text-6xl">
+                  {HeroData.title2}
+                </h2>
+                <h2 className="tw-text-4xl md:tw-text-6xl">
+                  {HeroData.title3}
+                </h2>
               </div>
               <p className="tw-text-xl tw-text-muted-foreground tw-mr-2">
                 {HeroData.subtitle}

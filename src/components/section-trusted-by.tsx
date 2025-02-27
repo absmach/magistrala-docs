@@ -8,9 +8,9 @@ export function TrustedBySection() {
           Our Clients and Partners
         </h2>
         <div className="tw-relative tw-w-full tw-overflow-hidden">
-          <div className="tw-flex tw-w-[300%] tw-gap-4">
+          <div className="tw-flex tw-w-[500%] md:tw-w-[300%] tw-gap-4">
             {/* First set of logos */}
-            <div className="tw-flex tw-w-1/2 tw-animate-marquee tw-items-center">
+            <div className="tw-flex tw-w-full md:tw-w-1/2 tw-animate-marquee tw-items-center">
               {TrustedByData.map((t) => (
                 <img
                   key={`first-${t.name}`}
@@ -22,7 +22,7 @@ export function TrustedBySection() {
               ))}
             </div>
             {/* Second set of logos */}
-            <div className="tw-flex tw-w-1/2 tw-animate-marquee tw-items-center">
+            <div className="!hidden md:!block tw-flex tw-w-1/2 tw-animate-marquee tw-items-center">
               {TrustedByData.map((t) => (
                 <img
                   key={`second-${t.name}`}

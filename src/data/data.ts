@@ -180,29 +180,71 @@ export const ProductData = {
   },
 };
 
-export const BenefitsData = {
-  sectionId: "benefits",
-  title: "Why Choose Magistrala?",
+export const FeaturesOverviewData = {
+  sectionId: "features",
+  title: "Explore Our Features",
   subtitle:
     "Empower your production ecosystem with tools designed to simplify, secure, and scale your operations.",
   benefits: [
     {
-      title: "State of the Art Security",
+      title: "Multi-Protocol Messaging",
       description:
-        "Build highly secure applications with advanced encryption protocols and robust security frameworks via tokens and encryptions. Magistrala ensures resilience against cyber threats giving you the confidence to innovate without compromising security.",
-      imageUrl: "cybersec.avif",
+        "Empowers your IoT ecosystem with versatile multi-protocol messaging capabilities, seamlessly handling communication from a wide array of IoT devices using different protocols.",
+      imageUrl: "img/connectivity.svg",
     },
     {
-      title: "Seamless Connectivity",
+      title: "Device and Payload Agnostic",
       description:
-        "Connect and manage your devices effortlessly with our open-source frameworks, libraries and APIs. Enjoy a streamlined data flow as well as smooth integration of existing systems. We ensure seamless connectivity across diverse ecosystems.",
-      imageUrl: "connectivity.avif",
+        "Connects and communicates with various IoT devices and accommodates diverse message formats, ensuring flexibility and compatibility with your IoT data.",
+      imageUrl: "img/devices.svg",
     },
     {
-      title: "Thriving Dev Community",
+      title: "Superior Security",
       description:
-        "Join a vibrant open-source community that fosters collaboration and innovation. Magistrala empowers developers to create groundbreaking technologies together through the use of extensive training, timely dev support and discussion forums.",
-      imageUrl: "opensource.avif",
+        "Incorporates robust data protection and access control mechanisms, including encryption, authentication, and fine-grained access policies, ensuring the integrity and confidentiality of your IoT data.",
+      imageUrl: "img/security.svg",
+    },
+    {
+      title: "Efficient and Cloud-Native",
+      description:
+        "Leverages a cloud-native architecture with microservices for efficient and scalable deployment, offering robust remote monitoring, comprehensive metrics, and detailed logs.",
+      imageUrl: "img/cloud.svg",
+    },
+    {
+      title: "Extensible IoT Protocol Adapters",
+      description:
+        "Equipped with a rich library of existing IoT protocol adapters and allows easy development and deployment of custom adapters, ensuring flexibility and compatibility across diverse IoT devices and services.",
+      imageUrl: "img/adapter.svg",
+    },
+    {
+      title: "Pluggable Storage and Message Brokers",
+      description:
+        "Offers flexibility in your choice of databases and seamless integration with various message brokers, enabling you to tailor your IoT infrastructure to your specific needs.",
+      imageUrl: "img/storage.svg",
+    },
+    {
+      title: "User Interface and Open APIs",
+      description:
+        "Provides an open-source user interface for effortless IoT ecosystem management and open APIs adhering to the OpenAPI standard for easy integration and custom application development.",
+      imageUrl: "img/dashboard.svg",
+    },
+    {
+      title: "High Code Quality and Well-Tested",
+      description:
+        "Built with a strong commitment to high code quality and reliability, following best open-source practices with comprehensive test coverage to ensure stability and performance.",
+      imageUrl: "img/code-testing.svg",
+    },
+    {
+      title: "Open-Source Tools, SDKs, and Libraries",
+      description:
+        "Offers a rich ecosystem of open-source tools, SDKs, and libraries to streamline development tasks and create innovative, efficient IoT solutions.",
+      imageUrl: "img/tools.svg",
+    },
+    {
+      title: "Open-Source and Free",
+      description:
+        "Proudly open-source under the permissive Apache-2.0 license, empowering you to accelerate your IoT product development with a scalable and versatile platform.",
+      imageUrl: "img/open-source.svg",
     },
   ],
 };
@@ -261,8 +303,7 @@ export const FeaturesData = {
 export const UsecasesData = {
   sectionId: "use-cases",
   title: "Use Cases",
-  subtitle:
-    "Here are some real-world solutions that Magistrala has aided in fruition.",
+  subtitle: "Real-World Applications of Magistrala in IoT and Smart Systems",
   useCases: [
     {
       title: "Smart Cities",
@@ -305,31 +346,60 @@ export const PricingData = {
   plans: [
     {
       title: "Trial",
-      features: ["Test 14 days for free", "Up to 5 users", "Self-service"],
+      features: [
+        "Test 14 days for free",
+        "Up to 3 users",
+        "5 dashboards",
+        "10 clients",
+        "10 channels",
+        "2 groups",
+        "10,000 messages",
+      ],
+      price: "Free",
       ctaText: "Sign Up",
-      ctaVariant: "default" as const,
       ctaLink: "#",
     },
     {
       title: "Starter",
       features: [
-        "Pay-per-user",
-        "Unlimited workspaces and clients",
-        "All elemental features",
+        "Up to 25 users",
+        "500 dashboards",
+        "500 clients",
+        "100 channels",
+        "50 groups",
+        "1,000,000 messages",
       ],
+      price: "€350/mo (€300/mo yearly)",
       ctaText: "Sign Up",
-      ctaVariant: "default" as const,
       ctaLink: "/#",
+    },
+    {
+      title: "Business",
+      features: [
+        "Up to 100 users",
+        "1000 dashboards",
+        "1000 clients",
+        "1000 channels",
+        "100 groups",
+        "10,000,000 messages",
+      ],
+      price: "€750/mo (€700/mo yearly)",
+      ctaText: "Sign Up",
+      ctaLink: "#",
     },
     {
       title: "Enterprise",
       features: [
-        "The full experience",
-        "Individual models and customized dashboard templates",
-        "All advanced features",
+        "Multitenant support",
+        "Custom number of users",
+        "Custom dashboards",
+        "Custom clients",
+        "Custom channels",
+        "Custom groups",
+        "Custom messages",
       ],
+      price: "Contact us!",
       ctaText: "Contact Us",
-      ctaVariant: "success" as const,
       ctaLink: "/contact",
     },
   ],

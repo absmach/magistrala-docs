@@ -22,7 +22,7 @@ export default function HomePage() {
             <TrustedBySection />
             <ProductSection />
             <BenefitsSection />
-            <FeaturesSection />
+            {/* <FeaturesSection /> */}
             <UsecasesSection />
             <PricingSection />
             <FaqSection />
