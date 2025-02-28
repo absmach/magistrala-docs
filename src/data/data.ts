@@ -342,7 +342,7 @@ export const PricingData = {
   sectionId: "pricing",
   title: "Pricing",
   subtitle:
-    "Choose the right plan for your business needs and get started with Magistrala today.",
+    "Choose the right plan for your business needs and get started with Magistrala today",
   plans: [
     {
       title: "Trial",
@@ -355,7 +355,11 @@ export const PricingData = {
         "2 groups",
         "10,000 messages",
       ],
-      price: "Free",
+      price: {
+        custom: true,
+        month: "Free",
+        year: "Free",
+      },
       ctaText: "Sign Up",
       ctaLink: "#",
     },
@@ -369,7 +373,11 @@ export const PricingData = {
         "50 groups",
         "1,000,000 messages",
       ],
-      price: "€350/mo (€300/mo yearly)",
+      price: {
+        custom: false,
+        month: "350",
+        year: "300",
+      },
       ctaText: "Sign Up",
       ctaLink: "/#",
     },
@@ -383,7 +391,11 @@ export const PricingData = {
         "100 groups",
         "10,000,000 messages",
       ],
-      price: "€750/mo (€700/mo yearly)",
+      price: {
+        custom: false,
+        month: "750",
+        year: "700",
+      },
       ctaText: "Sign Up",
       ctaLink: "#",
     },
@@ -398,7 +410,11 @@ export const PricingData = {
         "Custom groups",
         "Custom messages",
       ],
-      price: "Contact us!",
+      price: {
+        custom: true,
+        month: "Contact us",
+        year: "Contact us",
+      },
       ctaText: "Contact Us",
       ctaLink: "/contact",
     },

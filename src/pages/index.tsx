@@ -13,7 +13,7 @@ import { FooterSection } from "../components/section-footer";
 
 export default function HomePage() {
   return (
-    <body>
+    <body className="web-body">
       <HeaderSection />
       <div className="tw-mt-4 container">
         <div className="row">

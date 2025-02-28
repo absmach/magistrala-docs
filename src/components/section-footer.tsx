@@ -75,7 +75,7 @@ function QuickLinks() {
 
   return (
     <div className="tw-space-y-4">
-      <h3 className="tw-text-lg tw-font-semibold">Quick Links</h3>
+      <h3 className="tw-text-lg tw-font-normal">Quick Links</h3>
       <ul className="tw-flex tw-flex-col tw-space-y-2">
         {quickLinks.map((link) => (
           <li key={link.label}>
@@ -96,27 +96,29 @@ function SocialLinks() {
   const { socialLinks } = FooterData;
 
   return (
-    <div className="tw-space-y-4">
-      <h3 className="tw-text-lg tw-font-semibold">Connect With Us</h3>
-      <ul className="tw-flex tw-flex-col tw-space-y-2">
-        {socialLinks.map((link) => {
-          const Icon = icons[link.icon as keyof typeof icons];
-          return (
-            <li key={link.platform}>
-              <Link
-                href={link.href}
-                target="_blank"
-                className="web-link hover:tw-text-primary tw-transition-colors tw-flex tw-items-center tw-text-muted-foreground"
-              >
-                <Icon className="tw-mr-2 tw-h-4 tw-w-4" />
-                {link.platform}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-      <div>
-        <h3 className="tw-text-lg tw-font-semibold">Acknowledgments</h3>
+    <div className="tw-space-y-8">
+      <div className="tw-space-y-4">
+        <h3 className="tw-text-lg tw-font-normal">Connect With Us</h3>
+        <ul className="tw-flex tw-flex-col tw-space-y-2">
+          {socialLinks.map((link) => {
+            const Icon = icons[link.icon as keyof typeof icons];
+            return (
+              <li key={link.platform}>
+                <Link
+                  href={link.href}
+                  target="_blank"
+                  className="web-link hover:tw-text-primary tw-transition-colors tw-flex tw-items-center tw-text-muted-foreground"
+                >
+                  <Icon className="tw-mr-2 tw-h-4 tw-w-4" />
+                  {link.platform}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      <div className="tw-space-y-4">
+        <h3 className="tw-text-lg tw-font-normal">Acknowledgments</h3>
         <a
           href="https://storyset.com/technology"
           target="_blank"

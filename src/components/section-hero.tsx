@@ -10,13 +10,13 @@ export function HeroSection() {
           <div className="tw-text-center md:tw-w-2/3 container">
             <div className="tw-mb-10">
               <div className="tw-space-y-1 tw-mb-4">
-                <h2 className="tw-text-4xl md:tw-text-6xl">
+                <h2 className="tw-text-4xl md:tw-text-6xl tw-font-normal">
                   {HeroData.title1}
                 </h2>
-                <h2 className="tw-text-4xl md:tw-text-6xl">
+                <h2 className="tw-text-4xl md:tw-text-6xl tw-font-normal">
                   {HeroData.title2}
                 </h2>
-                <h2 className="tw-text-4xl md:tw-text-6xl">
+                <h2 className="tw-text-4xl md:tw-text-6xl tw-font-normal">
                   {HeroData.title3}
                 </h2>
               </div>
@@ -29,7 +29,7 @@ export function HeroSection() {
                 size="lg"
                 variant="default"
                 asChild={true}
-                className="px-4 py-2 rounded w-48 hover:tw-scale-105"
+                className="px-4 py-2 tw-rounded-md w-48 hover:tw-scale-105"
               >
                 <Link
                   href={HeroData.getStartedButton.link}

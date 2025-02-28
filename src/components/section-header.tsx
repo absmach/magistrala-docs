@@ -30,7 +30,7 @@ export default function HeaderSection() {
               <li key={link.label}>
                 <Link
                   href={link.href}
-                  className="web-link tw-text-xl tw-transition-colors hover:tw-text-blue-600"
+                  className="web-link tw-text-lg tw-transition-colors hover:tw-text-blue-600"
                 >
                   {link.label}
                 </Link>

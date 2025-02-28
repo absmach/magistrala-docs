@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -29,7 +29,7 @@
 }
 
 body, h1, h2, h3, h4, h5, h6, p, li, a, span, code {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Rubik', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -49,6 +49,13 @@ h1, h2, h3, h4, h5, h6 {
   100% {
     transform: translateX(-100%);
   }
+}
+
+.navbar__link, .footer__link-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.1rem;
 }
 
 .animate-marquee {
@@ -76,7 +83,7 @@ h1, h2, h3, h4, h5, h6 {
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
+    --radius: 10px;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -104,6 +111,7 @@ h1, h2, h3, h4, h5, h6 {
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 48%;
+    --radius: 0.5rem;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -116,7 +124,7 @@ h1, h2, h3, h4, h5, h6 {
   * {
     @apply tw-border-border;
   }
-  body {
+  .web-body {
     @apply tw-font-sans tw-antialiased tw-bg-background tw-text-foreground;
   }
 }
@@ -127,7 +135,7 @@ h1, h2, h3, h4, h5, h6 {
   * {
     @apply tw-border-border tw-outline-ring/50;
   }
-  body {
+  .web-body {
     @apply tw-bg-background tw-text-foreground;
   }
 }

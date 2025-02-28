@@ -4,7 +4,7 @@ export function TrustedBySection() {
   return (
     <section className="tw-py-14">
       <div className="container">
-        <h2 className="tw-text-3xl tw-text-center tw-mb-10">
+        <h2 className="tw-text-3xl tw-text-center tw-mb-10 tw-font-normal">
           Our Clients and Partners
         </h2>
         <div className="tw-relative tw-w-full tw-overflow-hidden">

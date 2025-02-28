@@ -6,7 +6,7 @@ export function BenefitsSection() {
   return (
     <section id={sectionId} className="tw-py-32">
       <div className="container tw-mx-auto tw-text-center">
-        <h2 className="tw-text-3xl lg:tw-text-5xl tw-mb-8">{title}</h2>
+        <h2 className="tw-text-3xl lg:tw-text-5xl tw-mb-8 tw-font-normal">{title}</h2>
         <p className="tw-text-xl tw-text-gray-700 tw-mb-12">{subtitle}</p>
         <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-8">
           {benefits.map((benefit) => (
@@ -43,7 +43,7 @@ function BenefitsCard({ title, description, imageUrl }: Props) {
       </div>
       <CardHeader className="tw-text-start">
         <CardTitle className="tw-text-xl">{title}</CardTitle>
-        <CardDescription className="tw-font-medium tw-mt-2">
+        <CardDescription className="tw-mt-2">
           {description}
         </CardDescription>
       </CardHeader>

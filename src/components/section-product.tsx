@@ -16,7 +16,9 @@ export function ProductSection() {
             />
           </div>
           <div className="tw-w-full lg:tw-w-1/2 tw-space-y-6">
-            <h2 className="tw-text-3xl lg:tw-text-5xl tw-mb-8">{title}</h2>
+            <h2 className="tw-text-3xl lg:tw-text-5xl tw-mb-8 tw-font-normal">
+              {title}
+            </h2>
             <div className="tw-space-y-6 tw-text-gray-700">
               <p className="tw-text-lg tw-leading-relaxed">
                 {content.overview}

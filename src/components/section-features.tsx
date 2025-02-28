@@ -5,7 +5,7 @@ export function FeaturesSection() {
   return (
     <section id={sectionId} className="tw-py-32">
       <div className="container tw-mx-auto ">
-        <h2 className="tw-text-3xl lg:tw-text-5xl tw-mb-8 tw-text-center">
+        <h2 className="tw-text-3xl lg:tw-text-5xl tw-mb-8 tw-text-center tw-font-normal">
           {title}
         </h2>
         <p className="tw-text-xl tw-text-gray-700 tw-mb-12 tw-text-center">
