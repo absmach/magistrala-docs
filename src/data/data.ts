@@ -416,7 +416,7 @@ export const PricingData = {
         year: "Contact us",
       },
       ctaText: "Contact Us",
-      ctaLink: "/contact",
+      ctaLink: "#",
     },
   ],
 };
