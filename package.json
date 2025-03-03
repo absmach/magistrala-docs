@@ -61,21 +61,5 @@
   },
   "engines": {
     "node": ">=18.0"
-  },
-  "description": "[![license][license]](LICENSE)",
-  "main": "tailwind.config.js",
-  "directories": {
-    "doc": "docs"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ianmuchyri/magistrala-docs.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ianmuchyri/magistrala-docs/issues"
-  },
-  "homepage": "https://github.com/ianmuchyri/magistrala-docs#readme"
+  }
 }
