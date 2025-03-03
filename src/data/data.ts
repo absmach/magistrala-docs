@@ -338,6 +338,30 @@ export const UsecasesData = {
   ],
 };
 
+export const UsedForData = {
+  sectionId: "used-for",
+  title: "Magistrala IoT Core is used for",
+  usedFor: [
+    {
+      title: "Industrial IoT (IIoT)",
+      description:
+        "Magistrala IoT platform serves as the backbone for Industrial IoT (IIoT) applications, supporting industrial protocols like Sparkplug MQTT, OPC-UA, Modbus, BACnet, and more. It facilitates seamless data exchange, edge computing through gateways, robust security measures, and ensures real-time insights for critical industrial processes.",
+      icon: "Factory",
+    },
+    {
+      title: "Enterprise IoT",
+      description:
+        "In Enterprise IoT, Magistrala's adaptable microservice architecture empowers the development and deployment of IoT solutions tailored to the unique demands of modern enterprises. Harness the capabilities of 5G connectivity, efficiently manage and scale microservices, and optimize resource utilization to enhance system performance.",
+      icon: "Building",
+    },
+    {
+      title: "Consumer IoT",
+      description:
+        "Magistrala streamlines Consumer IoT with support for multiple protocols, making it a device-agnostic and easy-to-integrate platform. Whether you're working on smart homes or wearables, Magistrala offers open-source flexibility and a rich set of SDKs for seamless development and customization.",
+      icon: "Laptop",
+    },
+  ],
+};
 export const PricingData = {
   sectionId: "pricing",
   title: "Pricing",

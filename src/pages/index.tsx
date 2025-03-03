@@ -10,6 +10,7 @@ import { UsecasesSection } from "../components/section-usecases";
 import { FaqSection } from "../components/section-faq";
 import HeaderSection from "../components/section-header";
 import { FooterSection } from "../components/section-footer";
+import { UsedForSection } from "../components/section-use-for";
 
 export default function HomePage() {
   return (
@@ -23,6 +24,7 @@ export default function HomePage() {
             <ProductSection />
             <BenefitsSection />
             {/* <FeaturesSection /> */}
+            <UsedForSection />
             <UsecasesSection />
             <PricingSection />
             <FaqSection />

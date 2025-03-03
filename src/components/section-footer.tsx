@@ -81,7 +81,7 @@ function QuickLinks() {
           <li key={link.label}>
             <Link
               href={link.href}
-              className="web-link hover:tw-text-primary tw-transition-colors"
+              className="web-link hover:tw-text-primary tw-transition-colors tw-text-muted-foreground"
             >
               {link.label}
             </Link>
