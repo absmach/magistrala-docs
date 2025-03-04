@@ -57,7 +57,7 @@ function MobileMenu() {
   const [open, setOpen] = useState(false);
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild={true}>
         <Button className="md:tw-hidden" aria-label="Toggle Mobile menu">
           <Menu className="tw-h-6 tw-w-6 tw-text-white" />
@@ -75,6 +75,7 @@ function MobileMenu() {
                 <Link
                   href={link.href}
                   className="web-link tw-text-xl tw-hover:text-blue-600 tw-transition-colors"
+                  onClick={() => setOpen(false)}
                 >
                   {link.label}
                 </Link>
@@ -84,7 +85,11 @@ function MobileMenu() {
           <Separator className="tw-my-4" />
 
           <Button aria-label={HeaderData.ctaButton.text} asChild={true}>
-            <Link className="web-link" href={HeaderData.ctaButton.link}>
+            <Link
+              className="web-link"
+              href={HeaderData.ctaButton.link}
+              onClick={() => setOpen(false)}
+            >
               {HeaderData.ctaButton.text}
             </Link>
           </Button>

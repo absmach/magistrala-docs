@@ -1,5 +1,3 @@
-import Layout from "@theme/Layout";
-import { useEffect } from "react";
 import { HeroSection } from "../components/section-hero";
 import { TrustedBySection } from "../components/section-trusted-by";
 import { ProductSection } from "../components/section-product";
@@ -14,7 +12,7 @@ import { UsedForSection } from "../components/section-use-for";
 
 export default function HomePage() {
   return (
-    <body className="web-body">
+    <div className="web-body">
       <HeaderSection />
       <div className="tw-mt-4 container">
         <div className="row">
@@ -32,6 +30,6 @@ export default function HomePage() {
         </div>
       </div>
       <FooterSection />
-    </body>
+    </div>
   );
 }

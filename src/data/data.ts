@@ -1,9 +1,9 @@
 import { getCurrentYear } from "../lib/utils";
 
 const navigationLinks = [
-  { label: "Features", href: "#features" },
-  { label: "Solutions", href: "#use-cases" },
-  { label: "Pricing", href: "#pricing" },
+  { label: "Features", href: "/#features" },
+  { label: "Solutions", href: "/#use-cases" },
+  { label: "Pricing", href: "/#pricing" },
   { label: "Docs", href: "/docs" },
   {
     label: "Blog",
@@ -24,7 +24,7 @@ export const HeaderData = {
   navigationLinks: navigationLinks,
   ctaButton: {
     text: "Try For Free",
-    link: "#pricing",
+    link: "/#pricing",
   },
 };
 

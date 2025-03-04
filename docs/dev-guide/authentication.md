@@ -157,7 +157,7 @@ mosquitto_sub -u <client_id> -P <client_secret> --cafile docker/ssl/certs/ca.crt
 [messaging]: ./messaging.md
 [rf5280]: https://tools.ietf.org/html/rfc5280
 [ssl-makefile]: https://github.com/absmach/magistrala/blob/main/docker/ssl/Makefile
-[provision]: ./provision.md#platform-management
+[provision]: ./provision.md
 [openssl]: https://www.openssl.org/
 [vault]: https://www.vaultproject.io/
 [oidc]: https://openid.net/connect/
