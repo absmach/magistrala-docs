@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -28,8 +29,8 @@
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 
-body, h1, h2, h3, h4, h5, h6, p, li, a, span, code {
-  font-family: 'Rubik', sans-serif;
+body, h1, h2, h3, h4, h5, h6, p, li, a, span {
+  font-family: 'Inter', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -37,39 +38,11 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
 }
 
-@font-face {
-  src: url('../fonts/SpaceMono-Regular.ttf') format("truetype");
-  font-family: "Space Mono";
-  font-style: normal;
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: 'Space Mono';
-  src: url('../fonts/SpaceMono-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Space Mono';
-  src: url('../fonts/SpaceMono-Italic.ttf') format('truetype');
-  font-weight: 400;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Space Mono';
-  src: url('../fonts/SpaceMono-BoldItalic.ttf') format('truetype');
-  font-weight: 700;
-  font-style: italic;
-}
-
 /* Ensure code blocks use a monospace font */
 code,
 pre,
 pre code {
-  font-family: "Space Mono", monospace !important;
+  font-family: "Roboto Mono", monospace !important;
 }
 
 :root {
