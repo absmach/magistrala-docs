@@ -42,24 +42,11 @@ h1, h2, h3, h4, h5, h6 {
   color: white;
 }
 
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
 .navbar__link, .footer__link-item {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 0.1rem;
-}
-
-.animate-marquee {
-  animation: marquee 25s linear infinite;
 }
 
 @layer base {
@@ -128,9 +115,7 @@ h1, h2, h3, h4, h5, h6 {
     @apply tw-font-sans tw-antialiased tw-bg-background tw-text-foreground;
   }
 }
- 
 
- 
 @layer base {
   * {
     @apply tw-border-border tw-outline-ring/50;

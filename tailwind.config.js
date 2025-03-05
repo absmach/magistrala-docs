@@ -44,20 +44,7 @@ module.exports = {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
-  		animation: {
-  			marquee: 'marquee 25s linear infinite',
-  			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
-  		},
   		keyframes: {
-  			marquee: {
-  				'0%': {
-  					transform: 'translateX(0%)'
-  				},
-  				'100%': {
-  					transform: 'translateX(-100%)'
-  				}
-  			},
   			'accordion-down': {
   				from: {
   					height: '0'

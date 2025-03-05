@@ -13,12 +13,6 @@ export function HeroSection() {
                 <h2 className="tw-text-4xl md:tw-text-6xl tw-font-normal">
                   {HeroData.title1}
                 </h2>
-                <h2 className="tw-text-4xl md:tw-text-6xl tw-font-normal">
-                  {HeroData.title2}
-                </h2>
-                <h2 className="tw-text-4xl md:tw-text-6xl tw-font-normal">
-                  {HeroData.title3}
-                </h2>
               </div>
               <p className="tw-text-xl tw-text-muted-foreground tw-mr-2">
                 {HeroData.subtitle}

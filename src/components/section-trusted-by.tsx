@@ -1,4 +1,5 @@
 import { TrustedByData } from "../data/data";
+import Marquee from "react-fast-marquee";
 
 export function TrustedBySection() {
   return (
@@ -9,8 +10,7 @@ export function TrustedBySection() {
         </h2>
         <div className="tw-relative tw-w-full tw-overflow-hidden">
           <div className="tw-flex tw-w-[500%] md:tw-w-[300%] tw-gap-4">
-            {/* First set of logos */}
-            <div className="tw-flex tw-w-full md:tw-w-1/2 tw-animate-marquee tw-items-center">
+            <Marquee autoFill={true}>
               {TrustedByData.map((t) => (
                 <img
                   key={`first-${t.name}`}
@@ -20,19 +20,7 @@ export function TrustedBySection() {
                   className="tw-h-12 tw-mx-8 tw-flex-shrink-0"
                 />
               ))}
-            </div>
-            {/* Second set of logos */}
-            <div className="!hidden md:!block tw-flex tw-w-1/2 tw-animate-marquee tw-items-center">
-              {TrustedByData.map((t) => (
-                <img
-                  key={`second-${t.name}`}
-                  src={t.logo || "/placeholder.svg"}
-                  alt={t.name}
-                  style={t.style}
-                  className="tw-h-12 tw-mx-8 tw-flex-shrink-0"
-                />
-              ))}
-            </div>
+            </Marquee>
           </div>
         </div>
       </div>

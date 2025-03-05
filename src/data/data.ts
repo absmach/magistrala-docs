@@ -73,11 +73,9 @@ export const FooterData = {
 };
 
 export const HeroData = {
-  title1: "Simplify Messaging",
-  title2: "Empower Systems",
-  title3: "Integrate Seamlessly",
+  title1: "Reliable and Secure Infrastructure for the Cloud-Edge Continuum",
   subtitle:
-    "Magistrala bridges the gap between devices, applications, and systems. With multi-protocol messaging, customizable dashboards, and robust security, we make it easy to manage, monitor, and scale your operations.",
+    "Magistrala creates a platform to connect and manage devices and applications across the cloud and edge with ease. Fine-grained access control with a sophisticated policy and identity management system helps securely connect devices over constrained IoT protocols - like MQTT or CoAP. Embrace the future of IoT technology confidently, and simplify your IoT device management with our cutting-edge platform.",
   getStartedButton: {
     text: "Get Started",
     link: "#",
