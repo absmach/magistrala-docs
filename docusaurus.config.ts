@@ -47,7 +47,7 @@ const config: Config = {
           blogSidebarCount: "ALL",
         },
         theme: {
-          customCss: 'src/css/custom.css',
+          customCss: "src/css/custom.css",
         },
       } satisfies Preset.Options,
     ],
@@ -73,10 +73,10 @@ const config: Config = {
           label: "User Docs",
         },
         {
-          type: 'docSidebar',
-          sidebarId: 'devSidebar',
-          position: 'left',
-          label: 'Developer Docs',
+          type: "docSidebar",
+          sidebarId: "devSidebar",
+          position: "left",
+          label: "Developer Docs",
         },
         { to: "/blog", label: "Blog", position: "right" },
         {
@@ -136,7 +136,7 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
     },
     typography: {
-      fontFamily: 'Inter, sans-serif',
+      fontFamily: "Inter, sans-serif",
     },
   } satisfies Preset.ThemeConfig,
 };
