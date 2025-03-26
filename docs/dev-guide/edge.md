@@ -108,10 +108,10 @@ TH=`curl -s  -S -X GET http://some-domain-name:9013/clients/bootstrap/34:e1:2d:e
 KEY=`curl -s  -S -X GET http://some-domain-name:9013/clients/bootstrap/34:e1:2d:e6:cf:03 -H "Authorization: Client <BOOTSTRAP_KEY>" -H 'Content-Type: application/json' | jq -r .magistrala_key`
 
 # Subscribe for response
-mosquitto_sub -d -u $TH -P $KEY  -t "channels/${CH}/messages/res/#" -h some-domain-name -p 1883
+mosquitto_sub -d -u $TH -P $KEY  -t "ch/${CH}/msg/res/#" -h some-domain-name -p 1883
 
 # Publish command e.g `ls`
-mosquitto_pub -d -u $TH -P $KEY  -t channels/$CH/messages/req -h some-domain-name -p 1883  -m '[{"bn":"1:", "n":"exec", "vs":"ls, -l"}]'
+mosquitto_pub -d -u $TH -P $KEY  -t ch/$CH/msg/req -h some-domain-name -p 1883  -m '[{"bn":"1:", "n":"exec", "vs":"ls, -l"}]'
 ```
 
 #### Remote terminal
@@ -125,10 +125,10 @@ You can get the list of services by sending following mqtt message
 
 ```bash
 # View services that are sending heartbeat
-mosquitto_pub -d -u $TH -P $KEY  -t channels/$CH/messages/req -h some-domain-name -p 1883  -m '[{"bn":"1:", "n":"service", "vs":"view"}]'
+mosquitto_pub -d -u $TH -P $KEY  -t ch/$CH/msg/req -h some-domain-name -p 1883  -m '[{"bn":"1:", "n":"service", "vs":"view"}]'
 ```
 
-Response can be observed on `channels/$CH/messages/res/#`
+Response can be observed on `ch/$CH/msg/res/#`
 
 ### Proxying commands
 
@@ -136,7 +136,7 @@ You can send commands to services running on the same edge gateway as Agent if t
 
 Service commands are being sent via MQTT to topic:
 
-`channels/<control_channel_id>/messages/services/<service_name>/<subtopic>`
+`ch/<control_channel_id>/msg/services/<service_name>/<subtopic>`
 
 when messages is received Agent forwards them to the Message Broker on subject:
 
@@ -178,25 +178,25 @@ Commands are:
 #### Operation
 
 ```bash
-mosquitto_pub -u <client_id> -P <client_secret> -t channels/<channel_id>/messages/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-operation, start, edgex-support-notifications, edgex-core-data"}]'
+mosquitto_pub -u <client_id> -P <client_secret> -t ch/<channel_id>/msg/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-operation, start, edgex-support-notifications, edgex-core-data"}]'
 ```
 
 #### Config
 
 ```bash
-mosquitto_pub -u <client_id> -P <client_secret> -t channels/<channel_id>/messages/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-config, edgex-support-notifications, edgex-core-data"}]'
+mosquitto_pub -u <client_id> -P <client_secret> -t ch/<channel_id>/msg/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-config, edgex-support-notifications, edgex-core-data"}]'
 ```
 
 #### Metrics
 
 ```bash
-mosquitto_pub -u <client_id> -P <client_secret> -t channels/<channel_id>/messages/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-metrics, edgex-support-notifications, edgex-core-data"}]'
+mosquitto_pub -u <client_id> -P <client_secret> -t ch/<channel_id>/msg/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-metrics, edgex-support-notifications, edgex-core-data"}]'
 ```
 
 If you subscribe to
 
 ```bash
-mosquitto_sub -u <client_id> -P <client_secret> -t channels/<channel_id>/messages/#
+mosquitto_sub -u <client_id> -P <client_secret> -t ch/<channel_id>/msg/#
 ```
 
 You can observe commands and response from commands executed against edgex
@@ -324,7 +324,7 @@ To setup `MTLS` connection `Export` service requires client certificate and `mtl
 
 Routes are being used for specifying which subscriber's topic(subject) goes to which publishing topic. Currently only MQTT is supported for publishing. To match Magistrala requirements `mqtt_topic` must contain `channel/<channel_id>/messages`, additional subtopics can be appended.
 
-- `mqtt_topic` - `channel/<channel_id>/messages/<custom_subtopic>`
+- `mqtt_topic` - `ch/<channel_id>/msg/<custom_subtopic>`
 - `nats_topic` - `Export` service will be subscribed to the Message Broker subject `<nats_topic>.>`
 - `subtopic` - messages will be published to MQTT topic `<mqtt_topic>/<subtopic>/<nats_subject>`, where dots in nats_subject are replaced with '/'
 - `workers` - specifies number of workers that will be used for message forwarding.
@@ -527,7 +527,7 @@ Edit the `configs/config.toml` setting
   username = "88529fb2-6c1e-4b60-b9ab-73b5d89f7404"
 
 [[routes]]
-  mqtt_topic = "channels/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/messages"
+  mqtt_topic = "ch/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/msg"
   nats_topic = ">"
   workers = 10
 ```
@@ -547,7 +547,7 @@ git clone https://github.com/absmach/agent.git
 go run ./examples/publish/main.go -s http://localhost:4222 export.test "[{\"bn\":\"test\"}]";
 ```
 
-We have configured route for export, `nats_topic = ">"` means that it will listen to `NATS` subject `export.>` and `mqtt_topic` is configured so that data will be sent to MQTT broker on topic `channels/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/messages` with appended `NATS` subject. Other brokers can such as `rabbitmq` can be used.
+We have configured route for export, `nats_topic = ">"` means that it will listen to `NATS` subject `export.>` and `mqtt_topic` is configured so that data will be sent to MQTT broker on topic `ch/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/msg` with appended `NATS` subject. Other brokers can such as `rabbitmq` can be used.
 
 In terminal where export is started you should see following message:
 
@@ -558,7 +558,7 @@ In terminal where export is started you should see following message:
 In Magistrala `mqtt` service:
 
 ```log
-magistrala-mqtt   | {"level":"info","message":"Publish - client ID export-88529fb2-6c1e-4b60-b9ab-73b5d89f7404 to the topic: channels/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/messages/export/test","ts":"2020-05-08T15:16:02.999684791Z"}
+magistrala-mqtt   | {"level":"info","message":"Publish - client ID export-88529fb2-6c1e-4b60-b9ab-73b5d89f7404 to the topic: ch/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/msg/export/test","ts":"2020-05-08T15:16:02.999684791Z"}
 ```
 
 [agent]: ./edge.md#agent
