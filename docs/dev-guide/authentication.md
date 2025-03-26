@@ -113,7 +113,7 @@ const WebSocket = require("ws");
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 // Replace <channel_id> and <client_secret> with real values.
 const ws = new WebSocket(
-  "wss://localhost/ws/channels/<channel_id>/messages?authorization=<client_secret>",
+  "wss://localhost/ws/ch/<channel_id>/msg?authorization=<client_secret>",
   // This is ClientOptions object that contains client cert and client key in the form of string. You can easily load these strings from cert and key files.
   {
     cert: `-----BEGIN CERTIFICATE-----....`,
@@ -136,7 +136,7 @@ As you can see, `Authorization` header does not have to be present in the HTTP r
 ### HTTPS
 
 ```bash
-curl -s -S -i --cacert docker/ssl/certs/ca.crt --cert docker/ssl/certs/<client_cert_name>.crt --key docker/ssl/certs/<client_cert_key>.key -X POST -H "Content-Type: application/senml+json" https://localhost/http/channels/<channel_id>/messages -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+curl -s -S -i --cacert docker/ssl/certs/ca.crt --cert docker/ssl/certs/<client_cert_name>.crt --key docker/ssl/certs/<client_cert_key>.key -X POST -H "Content-Type: application/senml+json" https://localhost/http/ch/<channel_id>/msg -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
 ### MQTTS
@@ -144,13 +144,13 @@ curl -s -S -i --cacert docker/ssl/certs/ca.crt --cert docker/ssl/certs/<client_c
 #### Publish
 
 ```bash
-mosquitto_pub -u <client_id> -P <client_secret> -t channels/<channel_id>/messages -h localhost -p 8883  --cafile docker/ssl/certs/ca.crt --cert docker/ssl/certs/<client_cert_name>.crt --key docker/ssl/certs/<client_cert_key>.key -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+mosquitto_pub -u <client_id> -P <client_secret> -t ch/<channel_id>/msg -h localhost -p 8883  --cafile docker/ssl/certs/ca.crt --cert docker/ssl/certs/<client_cert_name>.crt --key docker/ssl/certs/<client_cert_key>.key -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
 #### Subscribe
 
 ```bash
-mosquitto_sub -u <client_id> -P <client_secret> --cafile docker/ssl/certs/ca.crt --cert docker/ssl/certs/<client_cert_name>.crt --key docker/ssl/certs/<client_cert_key>.key -t channels/<channel_id>/messages -h localhost -p 8883
+mosquitto_sub -u <client_id> -P <client_secret> --cafile docker/ssl/certs/ca.crt --cert docker/ssl/certs/<client_cert_name>.crt --key docker/ssl/certs/<client_cert_key>.key -t ch/<channel_id>/msg -h localhost -p 8883
 ```
 
 [jwt]: https://jwt.io/

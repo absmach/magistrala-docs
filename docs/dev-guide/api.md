@@ -61,7 +61,7 @@ curl -X POST http://localhost:9002/users \
 
 ```
 
-**Expected  Create User Response:**
+**Expected Create User Response:**
 
 ```json
 {
@@ -106,7 +106,7 @@ curl -sSiX POST http://localhost/users/tokens/issue -H "Content-Type: applicatio
 }
 EOF
 
-HTTP/2 201 
+HTTP/2 201
 server: nginx/1.25.4
 date: Thu, 13 Feb 2025 21:30:06 GMT
 content-type: application/json
@@ -2028,7 +2028,7 @@ Access-Control-Expose-Headers: Location
 Sends message via HTTP protocol
 
 ```bash
-curl -sSiX POST http://localhost/http/channels/<channel_id>/messages -H "Content-Type: application/senml+json" -H "Authorization: Client <client_secret>" -d @- << EOF
+curl -sSiX POST http://localhost/http/ch/<channel_id>/msg -H "Content-Type: application/senml+json" -H "Authorization: Client <client_secret>" -d @- << EOF
 [
   {
     "bn": "<base_name>",
@@ -2051,7 +2051,7 @@ EOF
 For example:
 
 ```bash
-curl -sSiX POST http://localhost/http/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/messages -H "Content-Type: application/senml+json" -H "Authorization: Client a83b9afb-9022-4f9e-ba3d-4354a08c273a" -d @- << EOF
+curl -sSiX POST http://localhost/http/ch/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/msg -H "Content-Type: application/senml+json" -H "Authorization: Client a83b9afb-9022-4f9e-ba3d-4354a08c273a" -d @- << EOF
 [
   {
     "bn": "some-base-name:",
@@ -2086,13 +2086,13 @@ Connection: keep-alive
 Reads messages from database for a given channel
 
 ```bash
-curl -sSiX GET http://localhost:<service_port>/channels/<channel_id>/messages?[offset=<offset>]&[limit=<limit>] -H "Authorization: Client <client_secret>"
+curl -sSiX GET http://localhost:<service_port>/ch/<channel_id>/msg?[offset=<offset>]&[limit=<limit>] -H "Authorization: Client <client_secret>"
 ```
 
 For example:
 
 ```bash
-curl -sSiX GET http://localhost:9009/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/messages -H "Authorization: Client a83b9afb-9022-4f9e-ba3d-4354a08c273a"
+curl -sSiX GET http://localhost:9009/ch/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/msg -H "Authorization: Client a83b9afb-9022-4f9e-ba3d-4354a08c273a"
 
 HTTP/1.1 200 OK
 Content-Type: application/json
