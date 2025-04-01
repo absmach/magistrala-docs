@@ -30,7 +30,7 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Rubik', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -48,7 +48,7 @@ pre code {
 }
 
 :root {
-  --ifm-font-family-base: 'Inter', sans-serif;
+  --ifm-font-family-base: 'Rubik', sans-serif;
 }
 
 .web-link:hover {

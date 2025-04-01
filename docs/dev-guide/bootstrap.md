@@ -246,4 +246,6 @@ magistrala-cli bootstrap bootstrap secure '09:6:0:sb:sa' 'key' 'v7aT0HGxJxt2gULz
 
 For more information about the Bootstrap service API, please check out the [API documentation][api-docs].
 
+> This feature is currently under development :hammer:
+
 [api-docs]: https://github.com/absmach/magistrala/blob/main/api/openapi/bootstrap.yml
