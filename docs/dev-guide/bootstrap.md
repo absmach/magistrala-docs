@@ -17,24 +17,24 @@ title: Bootstrap
 
 ## Bootstrapping Workflow
 
-![Configure device](../img/bootstrap/1.png)
+![Configure device](../img/bootstrap/b-1.png)
 _1) Configure device with Bootstrap service URL, an external key and external ID_
 
-> ![Provision Magistrala channels](../img/bootstrap/2.png)
+> ![Provision Magistrala channels](../img/bootstrap/b-2png.png)
 >
 > _Optionally create Magistrala channels if they don't exist_
 >
-> ![Provision Magistrala clients](../img/bootstrap/3.png)
+> ![Provision Magistrala clients](../img/bootstrap/b2-3%20.png)
 >
 > _Optionally create Magistrala client if it doesn't exist_
 
-![Upload configuration](../img/bootstrap/4.png)
+![Upload configuration](../img/bootstrap/b-4.png)
 _2) Upload configuration for the Magistrala client_
 
-![Bootstrap](../img/bootstrap/5.png)
+![Bootstrap](../img/bootstrap/b3-5.png)
 _3) Bootstrap - send a request for the configuration_
 
-![Update, enable/disable, remove](../img/bootstrap/6.png)
+![Update, enable/disable, remove](../img/bootstrap/b-6.png)
 _4) Connect/disconnect client from channels, update or remove configuration_
 
 ## Configuration Structure
@@ -245,5 +245,7 @@ magistrala-cli bootstrap bootstrap secure '09:6:0:sb:sa' 'key' 'v7aT0HGxJxt2gULz
 ```
 
 For more information about the Bootstrap service API, please check out the [API documentation][api-docs].
+
+> This feature is currently under development :hammer:
 
 [api-docs]: https://github.com/absmach/magistrala/blob/main/api/openapi/bootstrap.yml

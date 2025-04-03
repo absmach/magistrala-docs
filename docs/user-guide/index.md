@@ -12,7 +12,7 @@ Magistrala is a cutting-edge, open-source IoT cloud platform built on top of [Su
 
 It accepts user and client connections over various network protocols (i.e. HTTP, MQTT, WebSocket, CoAP), thus making a seamless bridge between them. It is used as the IoT middleware for building complex IoT solutions as one of its capabilities in modern software as a service functionalities.
 
-![banner](../img/gopherBanner.jpg)
+![banner](../img/MGGopherBanner.jpg)
 
 ### Features
 

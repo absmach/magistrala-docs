@@ -47,7 +47,7 @@ const config: Config = {
           blogSidebarCount: "ALL",
         },
         theme: {
-          customCss: "./src/css/custom.css",
+          customCss: "src/css/custom.css",
         },
       } satisfies Preset.Options,
     ],
@@ -76,7 +76,7 @@ const config: Config = {
           type: "docSidebar",
           sidebarId: "devSidebar",
           position: "left",
-          label: "Dev Docs",
+          label: "Developer Docs",
         },
         { to: "/blog", label: "Blog", position: "right" },
         {

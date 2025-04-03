@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -28,13 +29,26 @@
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 
-body, h1, h2, h3, h4, h5, h6, p, li, a, span, code {
+body {
   font-family: 'Rubik', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
   color: #184D91;
   font-weight: 600;
+}
+
+/* Ensure code blocks use a monospace font */
+code,
+pre,
+pre code {
+  font-family: "Roboto Mono", monospace;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+:root {
+  --ifm-font-family-base: 'Rubik', sans-serif;
 }
 
 .web-link:hover {
