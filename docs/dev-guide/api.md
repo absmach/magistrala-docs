@@ -2028,7 +2028,7 @@ Access-Control-Expose-Headers: Location
 Sends message via HTTP protocol
 
 ```bash
-curl -sSiX POST http://localhost/http/ch/<channel_id>/msg -H "Content-Type: application/senml+json" -H "Authorization: Client <client_secret>" -d @- << EOF
+curl -sSiX POST http://localhost/http/c/<channel_id>/m -H "Content-Type: application/senml+json" -H "Authorization: Client <client_secret>" -d @- << EOF
 [
   {
     "bn": "<base_name>",
@@ -2051,7 +2051,7 @@ EOF
 For example:
 
 ```bash
-curl -sSiX POST http://localhost/http/ch/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/msg -H "Content-Type: application/senml+json" -H "Authorization: Client a83b9afb-9022-4f9e-ba3d-4354a08c273a" -d @- << EOF
+curl -sSiX POST http://localhost/http/c/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/m -H "Content-Type: application/senml+json" -H "Authorization: Client a83b9afb-9022-4f9e-ba3d-4354a08c273a" -d @- << EOF
 [
   {
     "bn": "some-base-name:",
@@ -2086,13 +2086,13 @@ Connection: keep-alive
 Reads messages from database for a given channel
 
 ```bash
-curl -sSiX GET http://localhost:<service_port>/ch/<channel_id>/msg?[offset=<offset>]&[limit=<limit>] -H "Authorization: Client <client_secret>"
+curl -sSiX GET http://localhost:<service_port>/c/<channel_id>/m?[offset=<offset>]&[limit=<limit>] -H "Authorization: Client <client_secret>"
 ```
 
 For example:
 
 ```bash
-curl -sSiX GET http://localhost:9009/ch/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/msg -H "Authorization: Client a83b9afb-9022-4f9e-ba3d-4354a08c273a"
+curl -sSiX GET http://localhost:9009/c/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/m -H "Authorization: Client a83b9afb-9022-4f9e-ba3d-4354a08c273a"
 
 HTTP/1.1 200 OK
 Content-Type: application/json
