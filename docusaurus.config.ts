@@ -22,7 +22,18 @@ const config: Config = {
     locales: ["en"],
   },
 
-  plugins: [tailwindPlugin],
+  plugins: [
+    tailwindPlugin,
+    [
+      require.resolve("@easyops-cn/docusaurus-search-local"),
+      {
+        indexDocs: true,
+        indexPages: true,
+        language: ["en"],
+        docsRouteBasePath: "/docs",
+      },
+    ],
+  ],
 
   presets: [
     [
