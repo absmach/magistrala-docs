@@ -12,9 +12,7 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc",
-    "clean": "rm -rf node_modules build package-lock.json node_modules/.cache",
-    "rebuild": "npm run clean && npm install && npm run build"
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@docusaurus/core": "3.7.0",
