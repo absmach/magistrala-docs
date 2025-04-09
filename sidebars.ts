@@ -79,6 +79,11 @@ const sidebars: SidebarsConfig = {
       id: "user-guide/profile-management/users",
       label: "Profile Management",
     },
+     {
+      type: "doc",
+      id: "user-guide/pats",
+      label: "Personal Access Tokens",
+    },
   ],
   devSidebar: [
     { type: 'doc', id: 'dev-guide/getting-started', label: 'Developer Guide' },
