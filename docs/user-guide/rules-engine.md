@@ -3,7 +3,7 @@ title: Rules Engine
 ---
 
 The **Rules Engine** in Magistrala allows users to define, manage, and automate message processing logic.
-It enables users to create rules by combining input, logic, and output nodes, defining how messages are processed, evaluated, and acted upon.
+It enables users to create rules by combining input, logic, and output nodes, defining how messages are processed, evaLuated, and acted upon.
 
 ## Features
 
@@ -42,11 +42,11 @@ Navigate to the **Rules** section and click on the `+ Create` button. Provide a 
 
 ## View a Rule
 
-Click the rule name in the rules table to open the Rule’s page.
+Click the rule name in the rules table to open the rule’s page.
 
-![View a Rule](../img/rules/view-rule.png)
+![View a rule](../img/rules/view-rule.png)
 
-On the Rule page, you can configure the following:
+On the rule page, you can configure the following:
 
 ### 1. Input Node
 
@@ -69,7 +69,7 @@ After setting the input, you can define the logic of your rule using one of two 
 
 #### Comparison Block
 
-Use `IF`, `AND` and `OR` conditions to evaluate message payloads:
+Use `IF`, `AND` and `OR` conditions to evaLuate message payloads:
 
 ![comparison node](../img/rules/comparison-node.png)
 
@@ -91,20 +91,20 @@ To write custom logic, you can select the editor option of the logic node.
 
 ![editor node](../img/rules/editor-node.png)
 
-This allows you to write lua script code to process your message. Your Lua script should be wrapped in a function called `logicFunction()` and return a result. The result can be a primitive value or an object.
+This allows you to write Lua script code to process your message. Your Lua script should be wrapped in a function called `logicFunction()` and return a result. The result can be a primitive value or an object.
 
-The lua script allows us to utilize the message object that we subscribe to by using Lua tables to get any values in the message. This also uses SenML format.
+The Lua script supports the utilization of the message object that we subscribe to by using Lua tables to get any values in the message. This also uses SenML format.
 
 Example:
 
-```lua title="Returns an object"
+```Lua title="Returns an object"
 function logicFunction()
   local converted_temp = (message.value * 1.8 + 32)
   return {channel=message.channel, value=converted_temp, unit="°F"}
 end
 ```
 
-```lua title="Returns a primitive"
+```Lua title="Returns a primitive"
 function logicFunction()
   return (message.value * 1.8 + 32)
 end
@@ -112,17 +112,17 @@ end
 
 ### 2. Output Node
 
-We support the choice of 1 or more output nodes. The following nodes are supported:
+You can add one or more output nodes. The following nodes are supported:
 
 1. MQTT publisher
-2. E-mail
+2. Email
 3. PostgreSQL
 
 ![select output](../img/rules/select-output.png)
 
 #### MQTT Publisher
 
-This allows you to specify the output channel and topic. The result of the logic node is published to this topic.
+Enables you to specify the output channel and topic. The result of the logic node is published to this topic.
 
 Select the MQTT Publisher as the output node and enter the channel and topic.
 
@@ -149,18 +149,18 @@ Subject: Current Temperature
   - `{{result.key}}` — a specific field from the result
   - `{{message.key}}` — a field from the original message
 
-```lua
-Message: Current temperature in degrees celcius is {{message.temperature}} {{message.unit}} while the temperature in degrees fahrenheit is {{result.value}} {{result.unit}}.
+```Lua
+Message: Current temperature in degrees celsius is {{message.temperature}} {{message.unit}} while the temperature in degrees fahrenheit is {{result.value}} {{result.unit}}.
 ```
 
 ![email node](../img/rules/email-node.png)
 
 #### PostgreSQL
 
-This allows you to store the results of the message processing to your custom postgres db.
+You can store the results of the message processing to your custom PostgreSQL db.
 Select the PostgreSQL output node option and enter the following information:
 
-![postgres variables](../img/rules/postgres-variables.png)
+![PostgreSQL variables](../img/rules/postgres-variables.png)
 
 - Host
 - Port
@@ -170,7 +170,7 @@ Select the PostgreSQL output node option and enter the following information:
 - Table name
 - Map data to table columns using templates
 
-```lua
+```Lua
 {
   "channel" = "{{message.channel}}",
   "value" = "{{result.value}}",
@@ -178,11 +178,11 @@ Select the PostgreSQL output node option and enter the following information:
 }
 ```
 
-![postgres node](../img/rules/postgres-node.png)
+![PostgreSQL node](../img/rules/postgres-node.png)
 
 ## Connecting Nodes and Save
 
-After adding input, logic, and output nodes, connect the nodes visually in the layout.
+Once you've added the input, logic, and output nodes, connect them visually in the layout.
 Click Save to finalize the rule.
 
 ![view final rule](../img/rules/rule.png)
@@ -191,7 +191,7 @@ Click Save to finalize the rule.
 
 To enable or disable a rule:
 
-- Use the toggle at the top right of the Rule page.
+- Use the toggle at the top right of the rule page.
 
   ![Disable rule in rule page](../img/rules/disable-rule-toggle.png)
 
@@ -201,7 +201,7 @@ To enable or disable a rule:
 
 ## Add a scheduler
 
-You can configure a scheduler to control when a rule executes.
+You can configure a scheduler to define when a rule executes.
 
 ![Scheduler](../img/rules/scheduler.png)
 
