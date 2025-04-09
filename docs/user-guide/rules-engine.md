@@ -83,7 +83,7 @@ The input of the comparison block supports the SenML message formats:
 
 Depending on the type of data you have you can compare the two by changing the type of the comparison value. It can either be `Num`, `Bool` or `String`.
 
-<!-- ![Add multiple conditions](../img/rules/add-multiple-conditions.png) -->
+![Add multiple conditions](../img/rules/add-multiple-conditions.png)
 
 #### Lua Script Editor
 
