@@ -1,4 +1,4 @@
-## Kubernetes
+# Kubernetes
 
 Supermq can be easily deployed on the Kubernetes platform using Helm Charts from the official [Supermq DevOps GitHub repository](https://github.com/absmach/supermq-devops).
 
@@ -14,13 +14,9 @@ Once installed, verify the installation:
 docker --version
 ```
 
----
-
 ### 2. Install Kubernetes via K3d
 
 K3d is a lightweight Kubernetes distribution that runs inside Docker, ideal for local development.
-
-#### Steps to install K3d
 
 ```bash
 curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
@@ -31,8 +27,6 @@ For more information on K3d, refer to the official [K3d documentation](https://k
 ### 3. Install kubectl
 
 `kubectl` is the command-line tool used to interact with your Kubernetes cluster.
-
-#### Steps to install kubectl
 
 ```bash
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -45,13 +39,9 @@ Verify the installation:
 kubectl version --client
 ```
 
----
-
 ### 4. Install Helm v3
 
 Helm is a package manager for Kubernetes, simplifying application installation and management.
-
-#### Steps to install Helm
 
 ```bash
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
@@ -63,11 +53,7 @@ Verify the installation:
 helm version
 ```
 
----
-
 ### 5. Add Helm Repositories
-
-#### Add Stable Helm Repository
 
 The **Helm stable repository** contains Helm charts that you can use to install applications on Kubernetes.
 
@@ -76,8 +62,6 @@ helm repo add stable https://charts.helm.sh/stable
 helm repo update
 ```
 
-#### Add Bitnami Helm Repository
-
 Bitnami offers a collection of popular Helm charts for various applications.
 
 ```bash
@@ -85,13 +69,9 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 ```
 
----
-
 ### 6. Install Nginx Ingress Controller
 
 The Nginx Ingress Controller manages external access to services within your Kubernetes cluster.
-
-#### Install Nginx Ingress Controller using Helm
 
 ```bash
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
@@ -110,13 +90,13 @@ kubectl get pods -n ingress-nginx
 
 ---
 
-### Deploying Supermq
+## Deploying Supermq
 
 There are two primary ways to deploy Supermq, depending on your needs:
 
 ---
 
-#### 1. Manual Local Deployment
+### 1. Manual Local Deployment
 
 This method involves **cloning the chart source code**, modifying it locally, and installing Supermq from disk.
 
@@ -125,8 +105,6 @@ This approach is useful if you want to:
 - Directly interact with the chart source files.
 - Modify the chart before installation.
 - Perform development or testing on the chart.
-
-### Steps
 
 #### 1. Clone Supermq Helm Chart Repository
 
@@ -166,11 +144,7 @@ You can confirm the dependencies were fetched correctly by listing the contents 
 ls charts/
 ```
 
-Here’s a cleaner, more structured, and slightly more explanatory version of that section:
-
----
-
-### **4. Create Namespace and Deploy Supermq**
+#### 4. Create Namespace and Deploy Supermq
 
 First, create a namespace for Supermq (if it doesn’t already exist):
 
@@ -186,10 +160,6 @@ helm install supermq . -n smq
 
 > **Note**: Make sure you're in the `charts/supermq/` directory containing the `Chart.yaml` when running the install command.
 
----
-
-### **Troubleshooting Ingress Annotations**
-
 If you encounter an error related to **snippet annotations** when using the NGINX Ingress Controller, you can enable them by upgrading the controller with the following flag:
 
 ```bash
@@ -202,8 +172,6 @@ Make sure the NGINX Ingress repository is added:
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 ```
-
----
 
 ### **Post-Deployment Verification**
 
@@ -247,7 +215,7 @@ Once Supermq is successfully deployed, you can interact with its services in the
 
 Supermq uses the `ingress-nginx-controller` to expose services through Kubernetes Ingress resources. Depending on where you're running your cluster, the method for accessing the services differs slightly.
 
-##### **DigitalOcean (DO) Deployment**
+#### **DigitalOcean (DO) Deployment**
 
 If you're deploying on DigitalOcean, a LoadBalancer service is automatically provisioned. To find the public IP address:
 
@@ -265,7 +233,7 @@ Here, the public IP is **`138.68.126.8`** — this is the address you'll use to 
 
 ---
 
-##### **Local Deployment (e.g., with `kind`, `minikube`, or `k3d`)**
+#### **Local Deployment (e.g., with `kind`, `minikube`, or `k3d`)**
 
 If you're running locally, a LoadBalancer may not be automatically available. You can use one of the following approaches:
 
@@ -306,7 +274,7 @@ If you prefer working with APIs, you can also interact with Supermq services usi
 
 This URL points to the endpoint that handles user creation on your Supermq deployment. Replace `138.68.126.8` with the actual IP address or domain of your deployment if it differs.
 
-###### 2. Set Up the Request Body
+##### 2. Set Up the Request Body
 
 Switch to the `Body` tab in Postman and select `raw` as the format. Choose `JSON` from the dropdown menu, and then enter the following JSON structure in the text area:
 
@@ -328,53 +296,56 @@ Switch to the `Body` tab in Postman and select `raw` as the format. Choose `JSON
 
 For more examples, refer to this [Postman Collection](https://elements.getpostman.com/redirect?entityId=38532610-ef9a0562-b353-4d2c-8aca-a5fae35ad0ad&entityType=collection).
 
-## Installing from the Published Helm Repository
+## Installing Supermq from Published Chart
 
-This method uses the hosted Helm chart — no cloning or manual editing required.
+Supermq Helm charts are published to a secure, private OCI registry hosted with Harbor.
+This method is ideal for production and CI/CD setups, with support for authentication, RBAC, and signed charts.
 
-### Use Case
+For a complete Harbor-specific Helm guide, see the official docs: [Working with Helm OCI Charts](https://goharbor.io/docs/2.12.0/working-with-projects/working-with-oci/working-with-helm-oci-charts/)
 
-Ideal for:
-
-- Quick deployments.
-- Production environments.
-- Users who don’t need to modify the chart.
-
-> While you won’t be editing the chart source code, you can still customize nearly every aspect of the deployment using a custom `values.yaml` file.
-> This includes changing service settings, enabling/disabling components, overriding resource limits, configuring secrets, and much more — all without touching the chart itself.
-
-### Install Steps
-
-#### 1. Add the Supermq Helm Repository (Private Access)
-
-The Supermq Helm charts are hosted via a private registry protected by an authentication layer.
-
-To add the repository:
+### 1. Authenticate with Harbor
 
 ```bash
-helm repo add Supermq-devops https://absmach.github.io/devops/ \
-  --username <your-username> \
-  --password <your-personal-access-token>
-helm repo update
+helm registry login harbor.example.com
 ```
 
-> **Important:** Replace `<your-username>` and `<your-personal-access-token>` with your actual credentials or token.
+Use your Harbor username/password or robot account credentials.
 
-#### 2. Install the Supermq Chart
+### 2. Install the Chart (Choose One Option)
+
+**Option A — Pull and install locally:**
 
 ```bash
-helm install <release-name> Supermq-devops/Supermq [flags]
+helm pull oci://harbor.example.com/supermq/supermq --version 0.16.7
+helm install supermq ./supermq-0.16.7.tgz -n smq
 ```
 
-> **Important:** Replace `<release-name>` with your desired release name. For the complete list of available flags to use with the above command, run `helm install --help`.
-
-Example with release name and flag:
+**Option B — Install directly from OCI:**
 
 ```bash
-helm install my-Supermq Supermq-devops/Supermq --version 0.14.0
+helm install supermq oci://harbor.example.com/supermq/supermq \
+  --version 0.16.7 \
+  -f custom-values.yaml \
+  -n smq
 ```
 
-#### 3. Upgrading the Supermq Chart
+### 3. Upgrade the Chart
+
+```bash
+helm upgrade supermq oci://harbor.example.com/supermq/supermq \
+  --version 0.16.7 \
+  -f custom-values.yaml \
+  -n smq
+```
+
+### 4. Verify the Installation
+
+```bash
+helm list -n smq
+kubectl get pods -n smq
+```
+
+## Upgrading the Supermq Chart
 
 To upgrade your Supermq deployment — whether you're:
 
@@ -399,7 +370,7 @@ For a complete table of configurable parameters and their default values, see th
 
 Let me know if you'd like this added to the deployment guide `.md` file too.
 
-##### Optional: Upgrade to a Specific Version
+### Optional: Upgrade to a Specific Version
 
 If you want to upgrade to a particular chart version:
 
@@ -409,7 +380,7 @@ helm upgrade <release-name> Supermq-devops/Supermq --version 0.14.0 -f custom-va
 
 > Use `helm search repo Supermq-devops/Supermq --versions` to view all available versions.
 
-##### Verify the Upgrade
+### Verify the Upgrade
 
 Once the upgrade command runs successfully, verify that your deployment is up-to-date:
 
@@ -418,7 +389,7 @@ helm list -n <namespace>
 kubectl get pods -n <namespace>
 ```
 
-#### 4. Uninstalling Supermq
+## Uninstalling Supermq
 
 To uninstall the Supermq release:
 
@@ -430,7 +401,7 @@ This will remove the Supermq release from the previously created `smq` namespace
 
 To delete all data and resources from your cluster (or at least from the target namespace), the following two options are available:
 
-##### Option 1: Delete the Entire Namespace
+### Option 1: Delete the Entire Namespace
 
 Deleting the entire namespace will remove all resources contained within it in one go. Later you can recreate the namespace.
 
@@ -442,7 +413,7 @@ kubectl delete namespace smq
 kubectl create namespace smq
 ```
 
-##### Option 2: Delete All Resources Within the Namespace
+### Option 2: Delete All Resources Within the Namespace
 
 If you prefer to keep the namespace and simply clear out all the resources, run these commands:
 
@@ -473,7 +444,7 @@ Sometimes the namespace may be stuck in the **Terminating** phase because some r
 >
 > follow these steps to force-clear the namespace:
 
-#### Step 1. Force-Delete All Pods
+#### 1. Force-Delete All Pods
 
 Force-delete all pods in the namespace to remove any that might be stuck:
 
@@ -481,7 +452,7 @@ Force-delete all pods in the namespace to remove any that might be stuck:
 kubectl delete pods --all --force --grace-period=0 -n smq
 ```
 
-#### Step 2. Remove Finalizers from PersistentVolumeClaims (PVCs)
+#### 2. Remove Finalizers from PersistentVolumeClaims (PVCs)
 
 List the PVCs in the namespace:
 
@@ -519,7 +490,7 @@ kubectl get pvc -n $NAMESPACE | grep Terminating | awk '{print $1}' | while read
 done
 ```
 
-#### Step 3. Delete All Remaining Resources (Optional)
+#### 3. Delete All Remaining Resources (Optional)
 
 To ensure no lingering resources remain:
 
@@ -530,7 +501,7 @@ kubectl delete secret --all -n smq
 kubectl delete serviceaccount --all -n smq
 ```
 
-#### Step 4. Remove Finalizers from the Namespace
+#### 4. Remove Finalizers from the Namespace
 
 Patch the namespace to remove its finalizers so that it can be fully deleted:
 
@@ -538,7 +509,7 @@ Patch the namespace to remove its finalizers so that it can be fully deleted:
 kubectl patch namespace smq -p '{"spec":{"finalizers":[]}}'
 ```
 
-#### Step 5. Verify
+#### 5. Verify
 
 Check that the namespace is deleted:
 
@@ -550,7 +521,7 @@ After clearing the namespace (using any of the options above), you can recreate 
 
 ---
 
-### Customizing Supermq Installation
+## Customizing Supermq Installation
 
 To override values in the chart, use either the `--values` flag and pass in a file or use the `--set` flag and pass configuration from the command line, to force a string value use `--set-string`. You can use `--set-file` to set individual values from a file when the value itself is too long for the command line or is dynamically generated. You can also use `--set-json` to set json values (scalars/objects/arrays) from the command line.
 
@@ -564,7 +535,7 @@ If Supermq is already installed and you want to update it with new settings (for
 
 ---
 
-## 🔧 Supermq Core
+## Supermq Core
 
 The **Supermq Core** consists of the essential services needed to run a functional deployment of the Supermq platform. These services are enabled by default and can be customized through the `values.yaml` file.
 
@@ -582,7 +553,7 @@ The **Supermq Core** consists of the essential services needed to run a function
 
 These services are enabled and configured out of the box in the default Helm chart configuration.
 
-### Supermq Add-ons
+## Supermq Add-ons
 
 Supermq Add-ons are optional services that are not installed by default. To enable an add-on, you need to specify it during installation using the following command:
 
@@ -592,7 +563,7 @@ helm upgrade magistrala -n mg --set ingress.hostname='example.com' --set users.i
 
 This will apply your changes to the existing installation. For a complete table of the configurable parameters and their default values, see [configurable parameters and their default values](https://github.com/absmach/devops/blob/master/charts/magistrala/README.md). For changes to any of the configurable parameters, equally update the documentation at `charts/magistrala/README.md` using `helm-docs` as described in [Autogenerating Helm Chart Documentation](https://github.com/absmach/devops/blob/master/README.md).
 
-### Magistrala Core
+## Scaling Services
 
 The Magistrala Core includes the essential services that are installed by default:
 
@@ -633,15 +604,15 @@ helm install magistrala . -n mg --set defaults.replicaCount=3 --set messageBroke
 
 This ensures that your services scale appropriately for your environment.
 
-### Additional Steps to Configure Ingress Controller
+## Additional Steps to Configure Ingress Controller
 
 To allow your host to send MQTT messages on ports `1883` and `8883`, you need to configure the NGINX Ingress Controller with some additional steps.
 
-#### Step 1: Configure TCP and UDP Services
+### 1. Configure TCP and UDP Services
 
 The NGINX Ingress Controller uses ConfigMaps to expose TCP and UDP services. The necessary ConfigMaps are included in the Helm chart in the [ingress.yaml][ingress-yaml] file assuming that location of ConfigMaps should be `ingress-nginx/tcp-services` and `ingress-nginx/udp-services`. These locations are set with `--tcp-services-configmap` and `--udp-services-configmap` flags and you can check it in deployment of Ingress Controller or add it there in [args section for nginx-ingress-controller][ingress-controller-args] if it's not already specified. This is explained in [NGINX Ingress documentation][ingress-controller-tcp-udp]
 
-#### Step 2: Expose the Required Ports in the Ingress Service
+### 2. Expose the Required Ports in the Ingress Service
 
 You need to expose the MQTT ports (`1883` for unencrypted and `8883` for encrypted messages) and the CoAP port (`5683` for UDP) in the NGINX Ingress Controller service. You can do that with the following command that edits your service:
 
@@ -666,7 +637,7 @@ and add in spec->ports:
 
 ## Configuring TLS & mTLS
 
-### Generating Certificates
+### 1. Generating Certificates
 
 For testing purposes, you can generate the necessary TLS certificates. Detailed instructions are provided in the [authentication][authentication] chapter of this document. You can use [this script][makefile] to generate the certificates. After replacing all instances of `localhost` with your actual hostname, run the following commands:
 
@@ -688,7 +659,7 @@ client.crt
 client.key
 ```
 
-### Creating Kubernetes Secrets
+### 2. Creating Kubernetes Secrets
 
 Create kubernetes secrets using those certificates by running commands from [secrets script][secrets]. In this example secrets are created in `smq` namespace:
 
@@ -704,7 +675,7 @@ You can check if they are succesfully created:
 kubectl get secrets -n smq
 ```
 
-### Configuring Ingress for TLS
+### 3. Configuring Ingress for TLS
 
 To secure your ingress with a TLS certificate, set the following values in your Helm configuration:
 
@@ -714,11 +685,11 @@ To secure your ingress with a TLS certificate, set the following values in your 
 
 After updating your Helm chart, your ingress will be secured with the TLS certificate.
 
-### Configuring Ingress for mTLS
+### 4. Configuring Ingress for mTLS
 
 For mTLS you need to set `nginx_internal.mtls.tls="Supermq-server"` and `nginx_internal.mtls.intermediate_crt="ca"`.
 
-### Testing MQTT with mTLS
+### 5. Testing MQTT with mTLS
 
 You can test sending an MQTT message with the following command:
 
