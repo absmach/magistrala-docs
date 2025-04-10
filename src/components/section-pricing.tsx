@@ -10,7 +10,7 @@ import { useState } from "react";
 
 export function PricingSection() {
   const { sectionId, title, subtitle, plans } = PricingData;
-  const [annual, setAnnual] = useState(false);
+  const [annual, setAnnual] = useState(true);
   return (
     <section id={sectionId} className="tw-py-32">
       <div className="container tw-mx-auto">

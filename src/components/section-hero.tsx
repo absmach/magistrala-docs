@@ -38,12 +38,11 @@ export function HeroSection() {
                 asChild={true}
                 className="px-4 py-2 rounded w-48 hover:tw-scale-105"
               >
-                <Link
+                <a
                   href={HeroData.requestDemoButton.link}
-                  className="web-link"
                 >
                   {HeroData.requestDemoButton.text}
-                </Link>
+                </a>
               </Button>
             </div>
           </div>

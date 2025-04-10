@@ -82,7 +82,7 @@ export const HeroData = {
   },
   requestDemoButton: {
     text: "Request For Demo",
-    link: "#",
+    link: "mailto:info@abstractmachines.fr",
   },
   image: {
     url: "hero.webp",
