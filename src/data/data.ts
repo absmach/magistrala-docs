@@ -383,7 +383,7 @@ export const PricingData = {
         year: "Free",
       },
       ctaText: "Sign Up",
-      ctaLink: "#",
+      ctaLink: "/#",
     },
     {
       title: "Starter",
@@ -419,7 +419,7 @@ export const PricingData = {
         year: "700",
       },
       ctaText: "Sign Up",
-      ctaLink: "#",
+      ctaLink: "/#",
     },
     {
       title: "Enterprise",
@@ -438,7 +438,7 @@ export const PricingData = {
         year: "Contact us",
       },
       ctaText: "Contact Us",
-      ctaLink: "#",
+      ctaLink: "/#",
     },
   ],
 };

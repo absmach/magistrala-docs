@@ -38,7 +38,7 @@ export function HeroSection() {
                 asChild={true}
                 className="px-4 py-2 rounded w-48 hover:tw-scale-105"
               >
-                <a
+                <a className="hover:tw-no-underline"
                   href={HeroData.requestDemoButton.link}
                 >
                   {HeroData.requestDemoButton.text}

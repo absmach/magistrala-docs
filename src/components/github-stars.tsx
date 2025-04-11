@@ -21,7 +21,7 @@ export const GithubStarButton = () => {
     }, []);
 
     return (
-        <div className="flex items-center gap-1">
+        <div className="flex flex-row items-center">
             <Button
                 variant="outline"
                 asChild={true}
@@ -31,10 +31,10 @@ export const GithubStarButton = () => {
                     className="web-link"
                 >
                     <Github />
-                    Star:
-                    < span className="ml-2 font-semibold" >
-                        {stars !== null ? stars.toLocaleString() : "54"
-                        }
+                    <div className="tw-h-6 tw-border-l-2" />
+                    Stars:
+                    <span className="tw-font-semibold" >
+                        {stars !== null ? stars.toLocaleString() : "54"}
                     </span >
                 </Link>
             </Button>
