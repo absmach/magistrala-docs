@@ -82,7 +82,7 @@ export const HeroData = {
   },
   requestDemoButton: {
     text: "Request For Demo",
-    link: "#",
+    link: "mailto:info@abstractmachines.fr",
   },
   image: {
     url: "hero.webp",
@@ -383,7 +383,7 @@ export const PricingData = {
         year: "Free",
       },
       ctaText: "Sign Up",
-      ctaLink: "#",
+      ctaLink: "/#",
     },
     {
       title: "Starter",
@@ -419,7 +419,7 @@ export const PricingData = {
         year: "700",
       },
       ctaText: "Sign Up",
-      ctaLink: "#",
+      ctaLink: "/#",
     },
     {
       title: "Enterprise",
@@ -438,7 +438,7 @@ export const PricingData = {
         year: "Contact us",
       },
       ctaText: "Contact Us",
-      ctaLink: "#",
+      ctaLink: "/#",
     },
   ],
 };

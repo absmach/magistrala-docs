@@ -11,6 +11,7 @@ import {
 } from "./ui/sheet";
 import { Menu } from "lucide-react";
 import { Separator } from "./ui/separator";
+import { GithubStarButton } from "./github-stars";
 
 export default function HeaderSection() {
   return (
@@ -39,7 +40,8 @@ export default function HeaderSection() {
           </ul>
         </nav>
 
-        <div className="tw-hidden md:tw-flex tw-items-center tw-gap-6">
+        <div className="tw-hidden md:tw-flex md:tw-fles-row  tw-items-center tw-gap-6">
+          <GithubStarButton />
           <Button aria-label={HeaderData.ctaButton.text} asChild={true}>
             <Link href={HeaderData.ctaButton.link} className="web-link">
               {HeaderData.ctaButton.text}

@@ -39,8 +39,9 @@ export function HeroSection() {
                 className="px-4 py-2 rounded w-48 hover:tw-scale-105"
               >
                 <Link
-                  href={HeroData.requestDemoButton.link}
                   className="web-link"
+                  target="_self"
+                  href={HeroData.requestDemoButton.link}
                 >
                   {HeroData.requestDemoButton.text}
                 </Link>
