@@ -25,11 +25,10 @@ export const GithubStarButton = () => {
             <div className="tw-flex tw-flex-row tw-items-center tw-gap-1 tw-mr-auto">
                 <Github />
                 Stars
-                <div className="tw-h-6 tw-ml-2 tw-border-l-2" />
             </div>
             <Link
                 href={"https://github.com/absmach/magistrala"}
-                className="tw-font-semibold tw-flex tw-justify-center tw-items-center">
+                className=" tw-border-l-2 tw-font-semibold tw-flex tw-justify-center tw-items-center">
                 <span className="tw-no-underline">{stars !== null ? stars.toLocaleString() : "54"} </span>
             </Link>
         </Button>
