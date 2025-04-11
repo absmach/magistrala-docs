@@ -33,7 +33,12 @@ body {
   font-family: 'Rubik', sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: #184D91;
   font-weight: 600;
 }
@@ -45,6 +50,7 @@ pre code {
   font-family: "Roboto Mono", monospace;
   font-optical-sizing: auto;
   font-style: normal;
+  padding-top: 0;
 }
 
 :root {
@@ -56,7 +62,8 @@ pre code {
   color: white;
 }
 
-.navbar__link, .footer__link-item {
+.navbar__link,
+.footer__link-item {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -91,7 +98,7 @@ pre code {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
   }
- 
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -120,11 +127,12 @@ pre code {
     --chart-5: 340 75% 55%;
   }
 }
- 
+
 @layer base {
   * {
     @apply tw-border-border;
   }
+
   .web-body {
     @apply tw-font-sans tw-antialiased tw-bg-background tw-text-foreground;
   }
@@ -134,6 +142,7 @@ pre code {
   * {
     @apply tw-border-border tw-outline-ring/50;
   }
+
   .web-body {
     @apply tw-bg-background tw-text-foreground;
   }
