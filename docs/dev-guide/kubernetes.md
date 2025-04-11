@@ -1,6 +1,6 @@
 # Kubernetes
 
-Supermq can be easily deployed on the Kubernetes platform using Helm Charts from the official [Supermq DevOps GitHub repository](https://github.com/absmach/supermq-devops).
+Magistrala can be easily deployed on the Kubernetes platform using Helm Charts from the official [Magistrala DevOps GitHub repository](https://github.com/absmach/magistrala-devops).
 
 ## Prerequisites
 
@@ -90,15 +90,15 @@ kubectl get pods -n ingress-nginx
 
 ---
 
-## Deploying Supermq
+## Deploying Magistrala
 
-There are two primary ways to deploy Supermq, depending on your needs:
+There are two primary ways to deploy Magistrala, depending on your needs:
 
 ---
 
 ### 1. Manual Local Deployment
 
-This method involves **cloning the chart source code**, modifying it locally, and installing Supermq from disk.
+This method involves **cloning the chart source code**, modifying it locally, and installing Magistrala from disk.
 
 This approach is useful if you want to:
 
@@ -106,11 +106,11 @@ This approach is useful if you want to:
 - Modify the chart before installation.
 - Perform development or testing on the chart.
 
-#### 1. Clone Supermq Helm Chart Repository
+#### 1. Clone Magistrala Helm Chart Repository
 
 ```bash
-git clone https://github.com/absmach/supermq-devops.git
-cd supermq-devops/charts/supermq # Ensure you're in the directory containing Chart.yaml
+git clone https://github.com/absmach/magistrala-devops.git
+cd magistrala-devops/charts/magistrala # Ensure you're in the directory containing Chart.yaml
 ```
 
 #### 2. Add Required Helm Repositories
@@ -134,9 +134,9 @@ Once the repositories have been added, update the on-disk dependencies to match 
 helm dependency update
 ```
 
-If the repositories are set up correctly, this will resolve and download all chart dependencies to `charts/supermq/charts`.
+If the repositories are set up correctly, this will resolve and download all chart dependencies to `charts/magistrala/charts`.
 
-> **Note**: Make sure you're running this command from within the `charts/supermq/` directory — the one containing the `Chart.yaml` file.
+> **Note**: Make sure you're running this command from within the `charts/magistrala/` directory — the one containing the `Chart.yaml` file.
 
 You can confirm the dependencies were fetched correctly by listing the contents of the `charts/` directory:
 
@@ -144,21 +144,21 @@ You can confirm the dependencies were fetched correctly by listing the contents 
 ls charts/
 ```
 
-#### 4. Create Namespace and Deploy Supermq
+#### 4. Create Namespace and Deploy Magistrala
 
-First, create a namespace for Supermq (if it doesn’t already exist):
+First, create a namespace for Magistrala (if it doesn’t already exist):
 
 ```bash
 kubectl create namespace smq
 ```
 
-Then deploy the Supermq Helm chart into the `smq` namespace:
+Then deploy the Magistrala Helm chart into the `smq` namespace:
 
 ```bash
-helm install supermq . -n smq
+helm install magistrala . -n smq
 ```
 
-> **Note**: Make sure you're in the `charts/supermq/` directory containing the `Chart.yaml` when running the install command.
+> **Note**: Make sure you're in the `charts/magistrala/` directory containing the `Chart.yaml` when running the install command.
 
 If you encounter an error related to **snippet annotations** when using the NGINX Ingress Controller, you can enable them by upgrading the controller with the following flag:
 
@@ -175,7 +175,7 @@ helm repo update
 
 ### **Post-Deployment Verification**
 
-Once the chart is installed, you can verify that Supermq is running correctly:
+Once the chart is installed, you can verify that Magistrala is running correctly:
 
 #### View all resources in the `smq` namespace:
 
@@ -203,17 +203,17 @@ kubectl logs <pod-name> -n smq
 
 Replace `<pod-name>` with the actual name of the pod you want to inspect.
 
-### Interacting with Supermq Services After Deployment
+### Interacting with Magistrala Services After Deployment
 
-Once Supermq is successfully deployed, you can interact with its services in the following ways:
+Once Magistrala is successfully deployed, you can interact with its services in the following ways:
 
 - **Web-based User Interface (UI)**
-- **Supermq CLI tool** (see the [CLI Documentation](https://docs.supermq.abstractmachines.fr/cli/))
+- **Magistrala CLI tool** (see the [CLI Documentation](https://docs.magistrala.abstractmachines.fr/cli/))
 - **HTTP API Clients** (e.g., `curl`, Postman)
 
 #### Accessing Services via Ingress
 
-Supermq uses the `ingress-nginx-controller` to expose services through Kubernetes Ingress resources. Depending on where you're running your cluster, the method for accessing the services differs slightly.
+Magistrala uses the `ingress-nginx-controller` to expose services through Kubernetes Ingress resources. Depending on where you're running your cluster, the method for accessing the services differs slightly.
 
 #### **DigitalOcean (DO) Deployment**
 
@@ -229,7 +229,7 @@ This command searches all namespaces for services of type `LoadBalancer`. The ou
 ingress-nginx   ingress-nginx-controller   LoadBalancer   10.245.192.202   138.68.126.8   80:30424/TCP,443:31752/TCP   64d
 ```
 
-Here, the public IP is **`138.68.126.8`** — this is the address you'll use to access Supermq services via the web UI, CLI, or API clients.
+Here, the public IP is **`138.68.126.8`** — this is the address you'll use to access Magistrala services via the web UI, CLI, or API clients.
 
 ---
 
@@ -252,7 +252,7 @@ If you're running locally, a LoadBalancer may not be automatically available. Yo
   kubectl port-forward -n ingress-nginx svc/ingress-nginx-controller 8080:80
   ```
 
-  Then access Supermq at [http://localhost:8080](http://localhost:8080).
+  Then access Magistrala at [http://localhost:8080](http://localhost:8080).
 
 #### Using the Web-Based UI
 
@@ -265,14 +265,14 @@ If you're running locally, a LoadBalancer may not be automatically available. Yo
 
 #### Using Postman
 
-If you prefer working with APIs, you can also interact with Supermq services using Postman by sending requests to the Public IP address of your load balancer. For example, to create a user:
+If you prefer working with APIs, you can also interact with Magistrala services using Postman by sending requests to the Public IP address of your load balancer. For example, to create a user:
 
 ##### 1. Set Up the Postman Request
 
 - **Method:** `POST`
 - **URL:** `http://138.68.126.8/users`
 
-This URL points to the endpoint that handles user creation on your Supermq deployment. Replace `138.68.126.8` with the actual IP address or domain of your deployment if it differs.
+This URL points to the endpoint that handles user creation on your Magistrala deployment. Replace `138.68.126.8` with the actual IP address or domain of your deployment if it differs.
 
 ##### 2. Set Up the Request Body
 
@@ -296,9 +296,9 @@ Switch to the `Body` tab in Postman and select `raw` as the format. Choose `JSON
 
 For more examples, refer to this [Postman Collection](https://elements.getpostman.com/redirect?entityId=38532610-ef9a0562-b353-4d2c-8aca-a5fae35ad0ad&entityType=collection).
 
-## Installing Supermq from Published Chart
+## Installing Magistrala from Published Chart
 
-Supermq Helm charts are published to a secure, private OCI registry hosted with Harbor.
+Magistrala Helm charts are published to a secure, private OCI registry hosted with Harbor.
 This method is ideal for production and CI/CD setups, with support for authentication, RBAC, and signed charts.
 
 For a complete Harbor-specific Helm guide, see the official docs: [Working with Helm OCI Charts](https://goharbor.io/docs/2.12.0/working-with-projects/working-with-oci/working-with-helm-oci-charts/)
@@ -316,14 +316,14 @@ Use your Harbor username/password or robot account credentials.
 **Option A — Pull and install locally:**
 
 ```bash
-helm pull oci://harbor.example.com/supermq/supermq --version 0.16.7
-helm install supermq ./supermq-0.16.7.tgz -n smq
+helm pull oci://harbor.example.com/magistrala/magistrala --version 0.16.7
+helm install magistrala ./magistrala-0.16.7.tgz -n smq
 ```
 
 **Option B — Install directly from OCI:**
 
 ```bash
-helm install supermq oci://harbor.example.com/supermq/supermq \
+helm install magistrala oci://harbor.example.com/magistrala/magistrala \
   --version 0.16.7 \
   -f custom-values.yaml \
   -n smq
@@ -332,7 +332,7 @@ helm install supermq oci://harbor.example.com/supermq/supermq \
 ### 3. Upgrade the Chart
 
 ```bash
-helm upgrade supermq oci://harbor.example.com/supermq/supermq \
+helm upgrade magistrala oci://harbor.example.com/magistrala/magistrala \
   --version 0.16.7 \
   -f custom-values.yaml \
   -n smq
@@ -345,9 +345,9 @@ helm list -n smq
 kubectl get pods -n smq
 ```
 
-## Upgrading the Supermq Chart
+## Upgrading the Magistrala Chart
 
-To upgrade your Supermq deployment — whether you're:
+To upgrade your Magistrala deployment — whether you're:
 
 - updating to a **newer chart version**,
 - applying changes to your `values.yaml`, or
@@ -355,16 +355,16 @@ To upgrade your Supermq deployment — whether you're:
   use the following command:
 
 ```bash
-helm upgrade <release-name> Supermq-devops/Supermq -f custom-values.yaml
+helm upgrade <release-name> magistrala-devops/magistrala -f custom-values.yaml
 ```
 
-> **Replace `<release-name>`** with the name of your existing Helm release (e.g., `supermq`), and  
+> **Replace `<release-name>`** with the name of your existing Helm release (e.g., `magistrala`), and  
 > **`custom-values.yaml`** with your configuration file (if applicable).
 
-For a complete table of configurable parameters and their default values, see the [configurable parameters reference](https://github.com/absmach/supermq-devops/blob/master/charts/Supermq/README.md).
+For a complete table of configurable parameters and their default values, see the [configurable parameters reference](https://github.com/absmach/magistrala-devops/blob/master/charts/magistrala/README.md).
 
-> **Note:** You only need to update the documentation at `charts/Supermq/README.md` if you’re making changes to the chart source (e.g., adding or modifying parameters in `values.yaml` or templates).  
-> In such cases, regenerate the docs using `helm-docs` as outlined in [Autogenerating Helm Chart Documentation](https://github.com/absmach/supermq-devops/blob/master/README.md).
+> **Note:** You only need to update the documentation at `charts/magistrala/README.md` if you’re making changes to the chart source (e.g., adding or modifying parameters in `values.yaml` or templates).  
+> In such cases, regenerate the docs using `helm-docs` as outlined in [Autogenerating Helm Chart Documentation](https://github.com/absmach/magistrala-devops/blob/master/README.md).
 
 ---
 
@@ -375,10 +375,10 @@ Let me know if you'd like this added to the deployment guide `.md` file too.
 If you want to upgrade to a particular chart version:
 
 ```bash
-helm upgrade <release-name> Supermq-devops/Supermq --version 0.14.0 -f custom-values.yaml
+helm upgrade <release-name> magistrala-devops/magistrala --version 0.14.0 -f custom-values.yaml
 ```
 
-> Use `helm search repo Supermq-devops/Supermq --versions` to view all available versions.
+> Use `helm search repo magistrala-devops/magistrala --versions` to view all available versions.
 
 ### Verify the Upgrade
 
@@ -389,15 +389,15 @@ helm list -n <namespace>
 kubectl get pods -n <namespace>
 ```
 
-## Uninstalling Supermq
+## Uninstalling Magistrala
 
-To uninstall the Supermq release:
+To uninstall the Magistrala release:
 
 ```bash
 helm uninstall <release-name> -n smq
 ```
 
-This will remove the Supermq release from the previously created `smq` namespace. Use the `--dry-run` flag to see which releases will be uninstalled without actually uninstalling them.
+This will remove the Magistrala release from the previously created `smq` namespace. Use the `--dry-run` flag to see which releases will be uninstalled without actually uninstalling them.
 
 To delete all data and resources from your cluster (or at least from the target namespace), the following two options are available:
 
@@ -440,7 +440,7 @@ kubectl delete pv --all
 
 Sometimes the namespace may be stuck in the **Terminating** phase because some resources (such as pods or PVCs) still have finalizers. If you encounter an error like:
 
-> `secrets "sh.helm.release.v1.Supermq.v1" is forbidden: unable to create new content in namespace smq because it is being terminated`
+> `secrets "sh.helm.release.v1.magistrala.v1" is forbidden: unable to create new content in namespace smq because it is being terminated`
 >
 > follow these steps to force-clear the namespace:
 
@@ -521,41 +521,41 @@ After clearing the namespace (using any of the options above), you can recreate 
 
 ---
 
-## Customizing Supermq Installation
+## Customizing Magistrala Installation
 
 To override values in the chart, use either the `--values` flag and pass in a file or use the `--set` flag and pass configuration from the command line, to force a string value use `--set-string`. You can use `--set-file` to set individual values from a file when the value itself is too long for the command line or is dynamically generated. You can also use `--set-json` to set json values (scalars/objects/arrays) from the command line.
 
 For example, if you want to set a custom hostname for the ingress (like `example.com`) and ensure you're using the latest version of the `users` image, you can do this during installation with the following command::
 
 ```bash
-helm install Supermq -n smq --set ingress.hostname='example.com' --set users.image.tag='latest'
+helm install magistrala -n smq --set ingress.hostname='example.com' --set users.image.tag='latest'
 ```
 
-If Supermq is already installed and you want to update it with new settings (for example, changing the ingress hostname or image tag), you can use the `helm upgrade` command:
+If Magistrala is already installed and you want to update it with new settings (for example, changing the ingress hostname or image tag), you can use the `helm upgrade` command:
 
 ---
 
-## Supermq Core
+## Magistrala Core
 
-The **Supermq Core** consists of the essential services needed to run a functional deployment of the Supermq platform. These services are enabled by default and can be customized through the `values.yaml` file.
+The **Magistrala Core** consists of the essential services needed to run a functional deployment of the Magistrala platform. These services are enabled by default and can be customized through the `values.yaml` file.
 
 ### Core Services Overview
 
-| Service        | Description                                                          |
-| -------------- | -------------------------------------------------------------------- |
-| `auth`         | Handles user authentication and token generation via gRPC and HTTP.  |
-| `users`        | Manages user registration, password policies, and account lifecycle. |
-| `clients`      | Registers and manages clients (devices, apps) and their credentials. |
-| `adapter_http` | HTTP protocol adapter for interacting with Supermq over REST APIs.   |
-| `adapter_mqtt` | MQTT protocol adapter + broker integration for real-time messaging.  |
-| `adapter_coap` | Lightweight CoAP protocol adapter for constrained devices.           |
-| `ui`           | Web-based User Interface for managing Supermq and its services.      |
+| Service        | Description                                                           |
+| -------------- | --------------------------------------------------------------------- |
+| `auth`         | Handles user authentication and token generation via gRPC and HTTP.   |
+| `users`        | Manages user registration, password policies, and account lifecycle.  |
+| `clients`      | Registers and manages clients (devices, apps) and their credentials.  |
+| `adapter_http` | HTTP protocol adapter for interacting with Magistrala over REST APIs. |
+| `adapter_mqtt` | MQTT protocol adapter + broker integration for real-time messaging.   |
+| `adapter_coap` | Lightweight CoAP protocol adapter for constrained devices.            |
+| `ui`           | Web-based User Interface for managing Magistrala and its services.    |
 
 These services are enabled and configured out of the box in the default Helm chart configuration.
 
-## Supermq Add-ons
+## Magistrala Add-ons
 
-Supermq Add-ons are optional services that are not installed by default. To enable an add-on, you need to specify it during installation using the following command:
+Magistrala Add-ons are optional services that are not installed by default. To enable an add-on, you need to specify it during installation using the following command:
 
 ```bash
 helm upgrade magistrala -n mg --set ingress.hostname='example.com' --set users.image.tag='latest'
@@ -664,7 +664,7 @@ client.key
 Create kubernetes secrets using those certificates by running commands from [secrets script][secrets]. In this example secrets are created in `smq` namespace:
 
 ```bash
-kubectl -n smq create secret tls Supermq-server --key Supermq-server.key --cert Supermq-server.crt
+kubectl -n smq create secret tls magistrala-server --key magistrala-server.key --cert magistrala-server.crt
 
 kubectl -n smq create secret generic ca --from-file=ca.crt
 ```
@@ -681,13 +681,13 @@ To secure your ingress with a TLS certificate, set the following values in your 
 
 - `ingress.hostname` to your hostname
 - `ingress.tls.hostname` to your hostname
-- `ingress.tls.secret` to `Supermq-server`
+- `ingress.tls.secret` to `magistrala-server`
 
 After updating your Helm chart, your ingress will be secured with the TLS certificate.
 
 ### 4. Configuring Ingress for mTLS
 
-For mTLS you need to set `nginx_internal.mtls.tls="Supermq-server"` and `nginx_internal.mtls.intermediate_crt="ca"`.
+For mTLS you need to set `nginx_internal.mtls.tls="magistrala-server"` and `nginx_internal.mtls.intermediate_crt="ca"`.
 
 ### 5. Testing MQTT with mTLS
 
@@ -701,5 +701,5 @@ mosquitto_pub -d -L mqtts://<client_id>:<client_secret>@example.com:8883/m/<doma
 [ingress-controller-args]: https://kubernetes.github.io/ingress-nginx/user-guide/cli-arguments/
 [ingress-controller-tcp-udp]: https://kubernetes.github.io/ingress-nginx/user-guide/exposing-tcp-udp-services/
 [authentication]: ./authentication.md
-[makefile]: https://github.com/absmach/Supermq/blob/master/docker/ssl/Makefile
+[makefile]: https://github.com/absmach/magistrala/blob/master/docker/ssl/Makefile
 [secrets]: https://github.com/absmach/devops/blob/master/charts/mainflux/secrets/secrets.sh
