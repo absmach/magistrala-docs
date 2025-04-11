@@ -29,10 +29,10 @@ mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> 
 To subscribe to channel, client should call following command:
 
 ```bash
-mosquitto_sub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost
+mosquitto_sub -u <client_id> -P <client_secret> -t c/<topic>/m -h localhost
 ```
 
-If you want to use standard topic such as `m/<domain_id>c/<channel_id>` with SenML content type (JSON or CBOR), you should use following topic `m/<domain_id>c/<channel_id>`.
+If you want to use standard topic such as `m/<domain_id>/c/<topic>` with SenML content type (JSON or CBOR), you should use following topic `c/<topic>/m`.
 
 If you are using TLS to secure MQTT connection, add `--cafile docker/ssl/certs/ca.crt`
 to every command.
