@@ -27,7 +27,7 @@ export const GithubStarButton = () => {
                 asChild={true}
             >
                 <Link
-                    href={"https://github.com/absmach/magistrala/stargazers"}
+                    href={"https://github.com/absmach/magistrala"}
                     className="web-link"
                 >
                     <Github />
