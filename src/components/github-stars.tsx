@@ -21,15 +21,22 @@ export const GithubStarButton = () => {
     }, []);
 
     return (
-        <Button variant="outline" className="tw-grid tw-grid-cols-2 tw-rounded-md tw-items-center">
-            <div className="tw-flex tw-flex-row tw-items-center tw-gap-1 tw-mr-auto">
-                <Github />
-                Stars
-            </div>
+        <Button
+            variant="outline"
+            className=" tw-rounded-md tw-items-center"
+            asChild={true}
+        >
             <Link
                 href={"https://github.com/absmach/magistrala"}
-                className=" tw-border-l-2 tw-font-semibold tw-flex tw-justify-center tw-items-center">
-                <span className="tw-no-underline">{stars !== null ? stars.toLocaleString() : "54"} </span>
+                className="tw-grid tw-grid-cols-2 tw-font-semibold tw-flex tw-justify-center tw-items-center web-link"
+            >
+                <div className="tw-flex tw-flex-row tw-items-center tw-gap-1 tw-mr-auto">
+                    <Github />
+                    Stars
+                </div>
+                <span className="tw-border-l-2 tw-flex tw-justify-center">
+                    {stars !== null ? stars.toLocaleString() : "54"}{" "}
+                </span>
             </Link>
         </Button>
     );
