@@ -2,8 +2,8 @@
 title: Rules Engine
 ---
 
-The **Rules Engine** in Magistrala allows users to define, manage, and automate message processing logic.
-It enables users to create rules by combining input, logic, and output nodes, defining how messages are processed, evaLuated, and acted upon.
+The **Rules Engine** helps automate message processing using visual workflows composed of input sources, logic evaluations, and output destinations.
+Users can define rules by visually combining input, logic, and output nodes to determine how incoming messages are processed, evaluated, and responded to.
 
 ## Features
 
@@ -13,9 +13,19 @@ It enables users to create rules by combining input, logic, and output nodes, de
 - **Logic Nodes**: Use either comparison blocks or Lua scripts to define logic conditions.
 - **Output Nodes**: Output processed data to MQTT publishers, Email recipients, or PostgreSQL databases.
 - **Lua Script Integration**: Use custom Lua scripts with a required `logicFunction()` for advanced logic.
-- **Templated Messaging**: Use `{{result}}`, `{{result.key}}`, and `{{message.key}}` to inject dynamic values into messages.
+- **Templated Messaging**: Use `{{result}}`, `{{result.key}}`, `{{message.key}}` and `{{messages.key}}` to inject dynamic values into messages.
 - **Scheduling**: Define execution windows with start time, specific time, recurring intervals, and periods.
 - **Connection Layout**: Visually connect all nodes to complete and activate a rule.
+
+## Use Cases
+
+Here are some practical examples of how you can use the Rules Engine:
+
+- `Temperature Alerts`: Notify users by email when temperature exceeds safe limits.
+
+- `Message Filtering`: Only forward messages with specific fields or values.
+
+- `Unit Conversion`: Convert sensor data from Celsius to Fahrenheit before publishing.
 
 ## Create a Rule
 
@@ -50,7 +60,7 @@ On the rule page, you can configure the following:
 
 ### 1. Input Node
 
-- Only a single input is supported currently.
+- Currently, only one input node is supported per rule.
 
 ![select input](../img/rules/select-input.png)
 
@@ -67,21 +77,31 @@ On the rule page, you can configure the following:
 
 After setting the input, you can define the logic of your rule using one of two options:
 
+1. Comparison Block
+2. Lua Script Editor
+
+The logic nodes support different message payloads as inputs.
+If you send a single message you can utilize `message`, while if it is an array you can utilize `messages` as the value.
+
 #### Comparison Block
 
-Use `IF`, `AND` and `OR` conditions to evaLuate message payloads:
+Use `if`, `and` and `or` conditions to evaluate message payloads:
 
 ![comparison node](../img/rules/comparison-node.png)
 
-The input of the comparison block supports the SenML message formats:
+The input can be either `message.<key>` or `messages[<index>].<key>`.
 
-1. value
-2. string_value
-3. bool_value
-4. data_value
-5. sum
+We also support nested objects, e.g. `messages[<index>].<key>.<key>`.
 
-Depending on the type of data you have you can compare the two by changing the type of the comparison value. It can either be `Num`, `Bool` or `String`.
+For SenML message formats, you can have the following option of keys:
+
+1. `value`
+2. `string_value`
+3. `bool_value`
+4. `data_value`
+5. `sum`
+
+Depending on the type of data you have you can compare the two by changing the type of the comparison value. It can either be `Num` , `Bool` or `String`. The comparison block also supports multiple conditions using the `and` or `or` operator
 
 ![Add multiple conditions](../img/rules/add-multiple-conditions.png)
 
@@ -93,8 +113,9 @@ To write custom logic, you can select the editor option of the logic node.
 
 This allows you to write Lua script code to process your message. Your Lua script should be wrapped in a function called `logicFunction()` and return a result. The result can be a primitive value or an object.
 
-The Lua script supports the utilization of the message object that we subscribe to by using Lua tables to get any values in the message. This also uses SenML format.
+The Lua script supports the utilization of the `message` object if you sent a single message or `messages` object if you sent multiple messages that we subscribe to by using Lua tables to get any values in the message.
 
+The editor allows you to return either a lua script table or a primitive value.
 Example:
 
 ```Lua title="Returns an object"
@@ -132,12 +153,12 @@ Select the MQTT Publisher as the output node and enter the channel and topic.
 
 #### Email
 
-This allows you to send the result of the messaging processing to the recipient emails.
-Select the E-Mail output node and enter the following information:
+Send the result of message processing to specified email recipients..
+Select the Email output node and enter the following information:
 
 ![email variables](../img/rules/email-variables.png)
 
-- Enter recipient email addresses.
+- Specify one or more recipient email addresses.
 - Specify subject and body message.
 
 ```
@@ -148,6 +169,7 @@ Subject: Current Temperature
   - `{{result}}` — the entire result from logic block
   - `{{result.key}}` — a specific field from the result
   - `{{message.key}}` — a field from the original message
+  - `{{messages[index].key}}` — a field from the original message
 
 ```Lua
 Message: Current temperature in degrees celsius is {{message.temperature}} {{message.unit}} while the temperature in degrees fahrenheit is {{result.value}} {{result.unit}}.
@@ -157,8 +179,7 @@ Message: Current temperature in degrees celsius is {{message.temperature}} {{mes
 
 #### PostgreSQL
 
-You can store the results of the message processing to your custom PostgreSQL db.
-Select the PostgreSQL output node option and enter the following information:
+Store message processing results to your PostgreSQL database. Select the PostgreSQL output node option and enter the following information:
 
 ![PostgreSQL variables](../img/rules/postgres-variables.png)
 
@@ -180,6 +201,39 @@ Select the PostgreSQL output node option and enter the following information:
 
 ![PostgreSQL node](../img/rules/postgres-node.png)
 
+## Dynamic Variables and Templates
+
+You can inject dynamic values from your message or logic result using templating variables.
+
+Available template variables:
+
+| Variable                  | Description                                                   |
+| ------------------------- | ------------------------------------------------------------- |
+| `{{result}}`              | Entire object or primitive value returned from the logic node |
+| `{{result.key}}`          | Specific field from the logic result object                   |
+| `{{message.key}}`         | Field from the input message                                  |
+| `{{messages[index].key}}` | Field from an indexed input message (for arrays)              |
+
+These variables work in outputs like:
+
+- Email (body)
+
+- PostgreSQL (column mapping)
+
+```Lua title="Example usage in Email message"
+Current temperature is {{message.temperature}}°C ({{result.value}}°F).
+
+```
+
+```Lua title="Example usage in PostgreSQL column mapping"
+{
+  channel = "{{message.channel}}",
+  value =  "{{result.value}}",
+  unit = "{{result.unit}}"
+}
+
+```
+
 ## Connecting Nodes and Save
 
 Once you've added the input, logic, and output nodes, connect them visually in the layout.
@@ -199,7 +253,7 @@ To enable or disable a rule:
 
   ![Disable rule in quick links](../img/rules/disable-rule.png)
 
-## Add a scheduler
+## Add a Scheduler
 
 You can configure a scheduler to define when a rule executes.
 
@@ -213,6 +267,73 @@ Fields:
 - **Recurring Period**: Frequency of execution (e.g., every 2 intervals = every other day/hour)
 
 This helps automate rule execution based on custom schedules.
+
+## Store Messages
+
+To store messages in Magistrala's internal database, you must create a **Rule** for this.
+
+- Magistrala only stores messages in [**SenML** format](https://datatracker.ietf.org/doc/html/rfc8428#section-4.3).
+- You can submit data in any format(e.g, JSON), but must convert it to SenML using a Lua script.
+  SenML format fields:
+
+  | Name          | Label | CBOR Label | JSON Type   | XML Type    |
+  | ------------- | ----- | ---------- | ----------- | ----------- |
+  | Base Name     | bn    | -2         | String      | string      |
+  | Base Time     | bt    | -3         | Number      | double      |
+  | Base Unit     | bu    | -4         | String      | string      |
+  | Base Value    | bv    | -5         | Number      | double      |
+  | Base Sum      | bs    | -6         | Number      | double      |
+  | Base Version  | bver  | -1         | Number      | int         |
+  | Name          | n     | 0          | String      | string      |
+  | Unit          | u     | 1          | String      | string      |
+  | Value         | v     | 2          | Number      | double      |
+  | String Value  | vs    | 3          | String      | string      |
+  | Boolean Value | vb    | 4          | Boolean     | boolean     |
+  | Data Value    | vd    | 8          | String (\*) | string (\*) |
+  | Sum           | s     | 5          | Number      | double      |
+  | Time          | t     | 6          | Number      | double      |
+  | Update Time   | ut    | 7          | Number      | double      |
+
+### Example: Convert JSON to SenML
+
+Assume your incoming payload is:
+
+```json
+{
+  "temperature": 28.5,
+  "unit": "C",
+  "sensor": "room-1"
+}
+```
+
+Use the following Lua script to convert it:
+
+```Lua
+function logicFunction()
+  return {
+    n = message.sensor,
+    v = message.temperature,
+    t = os.time()
+  }
+end
+```
+
+> This returns a valid SenML message the internal DB will accept.
+
+<br/>
+Then set your output node to store this result using the Magistrala internal DB option.
+
+![Storage with json input](../img/rules/json-input.png)
+
+If your message is already SenML format, you can just return the message directly in your Lua script function:
+
+```lua
+function logicFunction()
+  return message
+end
+```
+
+![Storage with senml input](../img/rules/senml-input.png)
 
 :::info
 
