@@ -108,10 +108,10 @@ TH=`curl -s  -S -X GET http://some-domain-name:9013/clients/bootstrap/34:e1:2d:e
 KEY=`curl -s  -S -X GET http://some-domain-name:9013/clients/bootstrap/34:e1:2d:e6:cf:03 -H "Authorization: Client <BOOTSTRAP_KEY>" -H 'Content-Type: application/json' | jq -r .magistrala_key`
 
 # Subscribe for response
-mosquitto_sub -d -u $TH -P $KEY  -t "c/${CH}/m/res/#" -h some-domain-name -p 1883
+mosquitto_sub -d -u $TH -P $KEY  -t "m/<domain_id>/c/${CH}/res/#" -h some-domain-name -p 1883
 
 # Publish command e.g `ls`
-mosquitto_pub -d -u $TH -P $KEY  -t c/$CH/m/req -h some-domain-name -p 1883  -m '[{"bn":"1:", "n":"exec", "vs":"ls, -l"}]'
+mosquitto_pub -d -u $TH -P $KEY  -t m/<domain_id>/c/$CH/req -h some-domain-name -p 1883  -m '[{"bn":"1:", "n":"exec", "vs":"ls, -l"}]'
 ```
 
 #### Remote terminal
@@ -125,10 +125,10 @@ You can get the list of services by sending following mqtt message
 
 ```bash
 # View services that are sending heartbeat
-mosquitto_pub -d -u $TH -P $KEY  -t c/$CH/m/req -h some-domain-name -p 1883  -m '[{"bn":"1:", "n":"service", "vs":"view"}]'
+mosquitto_pub -d -u $TH -P $KEY  -t m/<domain_id>/c/$CH/req -h some-domain-name -p 1883  -m '[{"bn":"1:", "n":"service", "vs":"view"}]'
 ```
 
-Response can be observed on `c/$CH/m/res/#`
+Response can be observed on `m/<domain_id>/c/$CH/res/#`
 
 ### Proxying commands
 
@@ -136,7 +136,7 @@ You can send commands to services running on the same edge gateway as Agent if t
 
 Service commands are being sent via MQTT to topic:
 
-`c/<control_channel_id>/m/services/<service_name>/<subtopic>`
+`m/<domain_id>/c/<control_channel_id>/services/<service_name>/<subtopic>`
 
 when messages is received Agent forwards them to the Message Broker on subject:
 
@@ -178,25 +178,25 @@ Commands are:
 #### Operation
 
 ```bash
-mosquitto_pub -u <client_id> -P <client_secret> -t c/<channel_id>/m/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-operation, start, edgex-support-notifications, edgex-core-data"}]'
+mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id>/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-operation, start, edgex-support-notifications, edgex-core-data"}]'
 ```
 
 #### Config
 
 ```bash
-mosquitto_pub -u <client_id> -P <client_secret> -t c/<channel_id>/m/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-config, edgex-support-notifications, edgex-core-data"}]'
+mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id>/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-config, edgex-support-notifications, edgex-core-data"}]'
 ```
 
 #### Metrics
 
 ```bash
-mosquitto_pub -u <client_id> -P <client_secret> -t c/<channel_id>/m/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-metrics, edgex-support-notifications, edgex-core-data"}]'
+mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id>/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-metrics, edgex-support-notifications, edgex-core-data"}]'
 ```
 
 If you subscribe to
 
 ```bash
-mosquitto_sub -u <client_id> -P <client_secret> -t c/<channel_id>/m/#
+mosquitto_sub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id>/#
 ```
 
 You can observe commands and response from commands executed against edgex
@@ -257,14 +257,14 @@ By default `Export` service looks for config file at [`../configs/config.toml`][
   url = "tcp://magistrala.com:1883"
 
 [[routes]]
-  mqtt_topic = "channel/<channel_id>/messages"
+  mqtt_topic = "m/<domain_id>/c/<channel_id>"
   subtopic = "subtopic"
   nats_topic = "export"
   type = "default"
   workers = 10
 
 [[routes]]
-  mqtt_topic = "channel/<channel_id>/messages"
+  mqtt_topic = "m/<domain_id>/c/<channel_id>"
   subtopic = "subtopic"
   nats_topic = "channels"
   type = "mfx"
@@ -324,7 +324,7 @@ To setup `MTLS` connection `Export` service requires client certificate and `mtl
 
 Routes are being used for specifying which subscriber's topic(subject) goes to which publishing topic. Currently only MQTT is supported for publishing. To match Magistrala requirements `mqtt_topic` must contain `channel/<channel_id>/messages`, additional subtopics can be appended.
 
-- `mqtt_topic` - `c/<channel_id>/m/<custom_subtopic>`
+- `mqtt_topic` - `m/<domain_id>/c/<channel_id>/<custom_subtopic>`
 - `nats_topic` - `Export` service will be subscribed to the Message Broker subject `<nats_topic>.>`
 - `subtopic` - messages will be published to MQTT topic `<mqtt_topic>/<subtopic>/<nats_subject>`, where dots in nats_subject are replaced with '/'
 - `workers` - specifies number of workers that will be used for message forwarding.
@@ -336,7 +336,7 @@ Before running `Export` service edit `configs/config.toml` and provide `username
 
 - `username` - matches `client_id` in Magistrala cloud instance
 - `password` - matches `client_secret`
-- `channel` - MQTT part of the topic where to publish MQTT data (`channel/<channel_id>/messages` is format of magistrala MQTT topic) and plays a part in authorization.
+- `channel` - MQTT part of the topic where to publish MQTT data (`m/<domain_id>/c/<channel_id>` is format of magistrala MQTT topic) and plays a part in authorization.
 
 If Magistrala and Export service are deployed on same gateway `Export` can be configured to send messages from Magistrala internal Message Broker bus to Magistrala in a cloud. In order for `Export` service to listen on Magistrala Message Broker deployed on the same machine Message Broker port must be exposed. Edit Magistrala [docker-compose.yml][docker-compose]. Default Message Broker, NATS, section must look like below:
 
@@ -356,7 +356,7 @@ nats:
 Configuration file for `Export` service can be sent over MQTT using [Agent][agent] service.
 
 ```bash
-mosquitto_pub -u <client_id> -P <client_secret> -t channels/<control_ch_id>/messages/req -h localhost -p 18831  -m  "[{\"bn\":\"1:\", \"n\":\"config\", \"vs\":\"save, export, <config_file_path>, <file_content_base64>\"}]"
+mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<control_ch_id>/req -h localhost -p 18831  -m  "[{\"bn\":\"1:\", \"n\":\"config\", \"vs\":\"save, export, <config_file_path>, <file_content_base64>\"}]"
 ```
 
 `vs="save, export, config_file_path, file_content_base64"` - vs determines where to save file and contains file content in base64 encoding payload:
@@ -502,7 +502,7 @@ Edit the `configs/config.toml` setting
 
 - `username` - client from the results of provision request.
 - `password` - key from the results of provision request.
-- `mqtt_topic` - in routes set to `channels/<channel_data_id>/messages` from results of provision.
+- `mqtt_topic` - in routes set to `m/<domain_id>/c/<channel_data_id>` from results of provision.
 - `nats_topic` - whatever you need, export will subscribe to `export.<nats_topic>` and forward messages to MQTT.
 - `host` - url of MQTT broker.
 
@@ -527,7 +527,7 @@ Edit the `configs/config.toml` setting
   username = "88529fb2-6c1e-4b60-b9ab-73b5d89f7404"
 
 [[routes]]
-  mqtt_topic = "c/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/m"
+  mqtt_topic = "m/6a45444c-4c89-46f9-a284-9e731674726a/c/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce"
   nats_topic = ">"
   workers = 10
 ```
@@ -547,7 +547,7 @@ git clone https://github.com/absmach/agent.git
 go run ./examples/publish/main.go -s http://localhost:4222 export.test "[{\"bn\":\"test\"}]";
 ```
 
-We have configured route for export, `nats_topic = ">"` means that it will listen to `NATS` subject `export.>` and `mqtt_topic` is configured so that data will be sent to MQTT broker on topic `c/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/m` with appended `NATS` subject. Other brokers can such as `rabbitmq` can be used.
+We have configured route for export, `nats_topic = ">"` means that it will listen to `NATS` subject `export.>` and `mqtt_topic` is configured so that data will be sent to MQTT broker on topic `m/6a45444c-4c89-46f9-a284-9e731674726a/c/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce` with appended `NATS` subject. Other brokers can such as `rabbitmq` can be used.
 
 In terminal where export is started you should see following message:
 
@@ -558,7 +558,7 @@ In terminal where export is started you should see following message:
 In Magistrala `mqtt` service:
 
 ```log
-magistrala-mqtt   | {"level":"info","message":"Publish - client ID export-88529fb2-6c1e-4b60-b9ab-73b5d89f7404 to the topic: c/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/m/export/test","ts":"2020-05-08T15:16:02.999684791Z"}
+magistrala-mqtt   | {"level":"info","message":"Publish - client ID export-88529fb2-6c1e-4b60-b9ab-73b5d89f7404 to the topic: m/6a45444c-4c89-46f9-a284-9e731674726a/c/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/export/test","ts":"2020-05-08T15:16:02.999684791Z"}
 ```
 
 [agent]: ./edge.md#agent
