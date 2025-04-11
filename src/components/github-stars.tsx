@@ -31,8 +31,8 @@ export const GithubStarButton = () => {
                     className="web-link"
                 >
                     <Github />
+                    Stars
                     <div className="tw-h-6 tw-border-l-2" />
-                    Stars:
                     <span className="tw-font-semibold" >
                         {stars !== null ? stars.toLocaleString() : "54"}
                     </span >
