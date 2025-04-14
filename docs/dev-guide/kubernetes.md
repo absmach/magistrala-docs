@@ -125,15 +125,15 @@ helm repo update
 
 This ensures that all necessary repositories are available for dependencies.
 
-#### 3. Authenticate with Harbor
+#### 3. Authenticate with Private Registry
 
-Magistrala includes **SuperMQ** as a chart dependency, and SuperMQ is hosted in a private OCI registry (Harbor). This means you must **authenticate with the OCI registry before running `helm dependency update`**, or the SuperMQ chart will not be pulled correctly.
+Magistrala includes **SuperMQ** as a chart dependency, and SuperMQ is hosted in a private OCI registry. This means you must **authenticate with the OCI registry before running `helm dependency update`**, or the SuperMQ chart will not be pulled correctly.
 
 To do so, run:
 
 ```bash
-# Replace '109.92.195.153' with your actual Harbor registry IP or domain (e.g., harbor.example.com)
-helm registry login 109.92.195.153
+# Replace 'magistrala.example.com' with your actual Private OCI Registry registry IP or domain (e.g., magistrala.example.com)
+helm registry login magistrala.example.com
 ```
 
 #### 4. Update Dependencies
@@ -310,21 +310,19 @@ For more examples, refer to this [Postman Collection](https://elements.getpostma
 
 ## Installing Magistrala from Published Chart (with SuperMQ Dependency)
 
-The Magistrala Helm chart — along with its dependency, **SuperMQ** — is published to a secure, private OCI registry hosted in Harbor. This installation method is recommended for **production environments** and **CI/CD pipelines**, offering authentication, RBAC, and chart signature verification.
+The Magistrala Helm chart — along with its dependency, **SuperMQ** — is published to a secure, private OCI registry. This installation method is recommended for **production environments** and **CI/CD pipelines**, offering authentication, RBAC, and chart signature verification.
 
-Since both charts are stored in the **same Harbor OCI registry**, you must authenticate to Harbor **before attempting to install or upgrade** Magistrala. Helm will otherwise fail to pull the SuperMQ dependency.
+Since both charts are stored in the **same Private OCI Registry**, you must authenticate to the registry **before attempting to install or upgrade** Magistrala. Helm will otherwise fail to pull the SuperMQ dependency.
 
-> For additional background, see the official guide: [Working with Helm OCI Charts in Harbor](https://goharbor.io/docs/2.12.0/working-with-projects/working-with-oci/working-with-helm-oci-charts/)
+### 1. Authenticate with the Private OCI Registry
 
-### 1. Authenticate with the Harbor OCI Registry
-
-Replace the domain or IP with your actual Harbor address:
+Replace the domain or IP with your actual Private OCI Registry address:
 
 ```bash
-helm registry login 109.92.195.153
+helm registry login magistrala.example.com
 ```
 
-> Use your Harbor username/password or a robot account with appropriate project permissions.
+> Use your Private OCI Registry username/password or a robot account with appropriate project permissions.
 
 ### 2. Install Magistrala (Pick One Method)
 
@@ -333,14 +331,14 @@ helm registry login 109.92.195.153
 #### **Option A — Pull and install locally**
 
 ```bash
-helm pull oci://109.92.195.153/magistrala/magistrala --version 0.16.7
+helm pull oci://magistrala.example.com/magistrala/magistrala --version 0.16.7
 helm install magistrala ./magistrala-0.16.7.tgz -n mg
 ```
 
 #### **Option B — Install directly from OCI**
 
 ```bash
-helm install magistrala oci://109.92.195.153/magistrala/magistrala \
+helm install magistrala oci://magistrala.example.com/magistrala/magistrala \
   --version 0.16.7 \
   -f custom-values.yaml \
   -n mg
@@ -351,7 +349,7 @@ helm install magistrala oci://109.92.195.153/magistrala/magistrala \
 To apply a new version or configuration changes to an existing installation:
 
 ```bash
-helm upgrade magistrala oci://109.92.195.153/magistrala/magistrala \
+helm upgrade magistrala oci://magistrala.example.com/magistrala/magistrala \
   --version 0.16.7 \
   -f custom-values.yaml \
   -n mg
