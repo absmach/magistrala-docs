@@ -2,6 +2,8 @@
 title: Rules Engine
 ---
 
+## Overview
+
 The **Rules Engine** helps automate message processing using visual workflows composed of input sources, logic evaluations, and output destinations.
 Users can define rules by visually combining input, logic, and output nodes to determine how incoming messages are processed, evaluated, and responded to.
 
@@ -13,7 +15,7 @@ Users can define rules by visually combining input, logic, and output nodes to d
 - **Logic Nodes**: Use either comparison blocks or Lua scripts to define logic conditions.
 - **Output Nodes**: Output processed data to MQTT publishers, Email recipients, or PostgreSQL databases.
 - **Lua Script Integration**: Use custom Lua scripts with a required `logicFunction()` for advanced logic.
-- **Templated Messaging**: Use `{{result}}`, `{{result.key}}`, `{{message.key}}` and `{{messages.key}}` to inject dynamic values into messages.
+- **Templated Messaging**: Use `{{result}}`, `{{result.key}}`, and `{{message.key}}` to inject dynamic values into messages.
 - **Scheduling**: Define execution windows with start time, specific time, recurring intervals, and periods.
 - **Connection Layout**: Visually connect all nodes to complete and activate a rule.
 
@@ -80,8 +82,8 @@ After setting the input, you can define the logic of your rule using one of two 
 1. Comparison Block
 2. Lua Script Editor
 
-The logic nodes support different message payloads as inputs.
-If you send a single message you can utilize `message`, while if it is an array you can utilize `messages` as the value.
+The logic nodes support different message payloads as inputs.  
+To utilize the message payload, you can use `message.<key>` in the input. e.g., if your message is a single SenML message, you can do `message.payload.v` to ge the value.
 
 #### Comparison Block
 
@@ -89,17 +91,15 @@ Use `if`, `and` and `or` conditions to evaluate message payloads:
 
 ![comparison node](../img/rules/comparison-node.png)
 
-The input can be either `message.<key>` or `messages[<index>].<key>`.
-
-We also support nested objects, e.g. `messages[<index>].<key>.<key>`.
+> We also support nested objects `message.<key>.<key>` e.g., `message.payload.sensor.temperature`.
 
 For SenML message formats, you can have the following option of keys:
 
-1. `value`
-2. `string_value`
-3. `bool_value`
-4. `data_value`
-5. `sum`
+1. `v`
+2. `vs`
+3. `vb`
+4. `vd`
+5. `s`
 
 Depending on the type of data you have you can compare the two by changing the type of the comparison value. It can either be `Num` , `Bool` or `String`. The comparison block also supports multiple conditions using the `and` or `or` operator
 
@@ -113,21 +113,21 @@ To write custom logic, you can select the editor option of the logic node.
 
 This allows you to write Lua script code to process your message. Your Lua script should be wrapped in a function called `logicFunction()` and return a result. The result can be a primitive value or an object.
 
-The Lua script supports the utilization of the `message` object if you sent a single message or `messages` object if you sent multiple messages that we subscribe to by using Lua tables to get any values in the message.
+The Lua script supports the utilization of the `message` object that we subscribe to by using Lua tables to get any values in the message.
 
 The editor allows you to return either a lua script table or a primitive value.
 Example:
 
 ```Lua title="Returns an object"
 function logicFunction()
-  local converted_temp = (message.value * 1.8 + 32)
-  return {channel=message.channel, value=converted_temp, unit="°F"}
+  local converted_temp = (message.payload.v * 1.8 + 32)
+  return {n = "Temp_fahrenheit", v = converted_temp, u = "°F", }
 end
 ```
 
 ```Lua title="Returns a primitive"
 function logicFunction()
-  return (message.value * 1.8 + 32)
+  return (message.payload.v * 1.8 + 32)
 end
 ```
 
@@ -135,17 +135,19 @@ end
 
 You can add one or more output nodes. The following nodes are supported:
 
-1. MQTT publisher
+1. Channel publisher
 2. Email
 3. PostgreSQL
+4. alarm
+5. Magistrala DB
 
 ![select output](../img/rules/select-output.png)
 
-#### MQTT Publisher
+#### Channel Publisher
 
 Enables you to specify the output channel and topic. The result of the logic node is published to this topic.
 
-Select the MQTT Publisher as the output node and enter the channel and topic.
+Select the Channel Publisher as the output node and enter the channel and topic.
 
 ![publisher variables](../img/rules/publisher-variables.png)
 
@@ -169,10 +171,9 @@ Subject: Current Temperature
   - `{{result}}` — the entire result from logic block
   - `{{result.key}}` — a specific field from the result
   - `{{message.key}}` — a field from the original message
-  - `{{messages[index].key}}` — a field from the original message
 
 ```Lua
-Message: Current temperature in degrees celsius is {{message.temperature}} {{message.unit}} while the temperature in degrees fahrenheit is {{result.value}} {{result.unit}}.
+Message: Current temperature in degrees celsius is {{message.payload.v}} {{message.payload.u}} while the temperature in degrees fahrenheit is {{result.value}} {{result.unit}}.
 ```
 
 ![email node](../img/rules/email-node.png)
@@ -201,18 +202,29 @@ Store message processing results to your PostgreSQL database. Select the Postgre
 
 ![PostgreSQL node](../img/rules/postgres-node.png)
 
+#### Magistrala DB
+
+To be able to store messages in the internal Magistrala DB, you need to create a rule that processes the results. More information about this is in the [Store Messages](#store-messages) section.
+
+![Magistrala DB rule example](../img/rules/magistrala-db-rule.png)
+
+#### Alarms
+
+An alarm output will enable you to be able to generate alarms in the case where a threshold has been exceeded. More information about this node is provided in the [Alarms](/docs/user-guide/alarms.md) section.
+
+![Alarm rule example](../img/rules/alarm-rule.png)
+
 ## Dynamic Variables and Templates
 
 You can inject dynamic values from your message or logic result using templating variables.
 
 Available template variables:
 
-| Variable                  | Description                                                   |
-| ------------------------- | ------------------------------------------------------------- |
-| `{{result}}`              | Entire object or primitive value returned from the logic node |
-| `{{result.key}}`          | Specific field from the logic result object                   |
-| `{{message.key}}`         | Field from the input message                                  |
-| `{{messages[index].key}}` | Field from an indexed input message (for arrays)              |
+| Variable          | Description                                                   |
+| ----------------- | ------------------------------------------------------------- |
+| `{{result}}`      | Entire object or primitive value returned from the logic node |
+| `{{result.key}}`  | Specific field from the logic result object                   |
+| `{{message.key}}` | Field from the input message                                  |
 
 These variables work in outputs like:
 
@@ -221,7 +233,7 @@ These variables work in outputs like:
 - PostgreSQL (column mapping)
 
 ```Lua title="Example usage in Email message"
-Current temperature is {{message.temperature}}°C ({{result.value}}°F).
+Current temperature is {{message.payload.v}}°C  or ({{result.value}}°F).
 
 ```
 
@@ -311,8 +323,8 @@ Use the following Lua script to convert it:
 ```Lua
 function logicFunction()
   return {
-    n = message.sensor,
-    v = message.temperature,
+    n = message.payload.sensor,
+    v = message.payload.temperature,
     t = os.time()
   }
 end
@@ -325,11 +337,13 @@ Then set your output node to store this result using the Magistrala internal DB 
 
 ![Storage with json input](../img/rules/json-input.png)
 
-If your message is already SenML format, you can just return the message directly in your Lua script function:
+### Example: Input is SenML
+
+If your message payload is already SenML format, you can just return the message payload directly in your Lua script function:
 
 ```lua
 function logicFunction()
-  return message
+  return message.payload
 end
 ```
 
