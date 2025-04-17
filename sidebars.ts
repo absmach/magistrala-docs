@@ -76,6 +76,11 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: "doc",
+      id: "user-guide/alarms",
+      label: "Alarms",
+    },
+    {
+      type: "doc",
       id: "user-guide/profile-management/users",
       label: "Profile Management",
     },
