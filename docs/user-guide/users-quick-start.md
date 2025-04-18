@@ -110,7 +110,7 @@ Clients can be connected to channels in groups. This is done in the **Connection
 
 ## **Send a Message**
 
-Once a Channel and Client are connected, a user is able to send messages. Navigate to the `Messages` tab of the Group-Channel and click on `**Send Messages**`.
+Once a Channel and Client are connected, a user is able to send messages. Navigate to the `Messages` tab of the Group-Channel and click on `Send Messages`.
 
 ![View Messages Page](../img/users-guide/group-messages-view.png)
 
@@ -118,6 +118,26 @@ This will open a dialog box where all the required fields bear an asterisk. Mess
 
 ![Send Message](../img/users-guide/group-send-message.png)
 
+Users can also send messages using curl commands for HTTP or via MQTT.  
+Here are some examples:
+
+**Using HTTP**:
+```bash
+curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/senml+json" -H "Authorization: Client <client_secret>" https://localhost/http/m/<domain_id>/c/<channel_id> -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+```
+
+**Using MQTT**:
+```bash
+mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+```  
+
+:::info
+
+More information on how to send messages via the terminal can be found in the **Developer Docs**, under the **Messaging section** in **Developer Tools**.
+
+:::    
+
+  
 The messages table will then update to include the message sent with the latest message appearing first.
 Using the filter options, you can filter through a wide range of messages based on the protocol, publisher or even value.
 
