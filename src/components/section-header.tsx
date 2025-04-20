@@ -12,6 +12,7 @@ import {
 import { Menu } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { GithubStarButton } from "./github-stars";
+import React from "react";
 
 export default function HeaderSection() {
   return (

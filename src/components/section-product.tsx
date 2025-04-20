@@ -1,4 +1,5 @@
 import { ProductData } from "../data/data";
+import React from "react";
 
 export function ProductSection() {
   const { sectionId, title, content, imageUrl, alt } = ProductData;

@@ -5,6 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
+import React from "react";
 
 export function FaqSection() {
   const { sectionId, title, subtitle, faqs } = faqData;

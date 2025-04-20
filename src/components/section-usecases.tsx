@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "./ui/card";
 import { UsecasesData } from "../data/data";
+import React from "react";
 
 export function UsecasesSection() {
   const { sectionId, title, subtitle, useCases } = UsecasesData;
@@ -40,6 +41,7 @@ export function UsecasesSection() {
 }
 
 interface Props {
+  key?: string;
   title: string;
   description: string;
   imageUrl: string;

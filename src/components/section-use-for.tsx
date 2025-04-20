@@ -1,6 +1,7 @@
 import { Building, Computer, Factory, Laptop } from "lucide-react";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { UsedForData } from "../data/data";
+import React from "react";
 
 export function UsedForSection() {
   const { sectionId, title, usedFor } = UsedForData;
@@ -30,6 +31,7 @@ const icons = {
 function UsedForCard({
   usedFor,
 }: {
+  key?: string;
   usedFor: { title: string; description: string; icon: string };
 }) {
   const Icon = icons[usedFor.icon as keyof typeof icons];

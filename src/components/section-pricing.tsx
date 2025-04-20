@@ -7,6 +7,7 @@ import { Separator } from "./ui/separator";
 import { Switch } from "./ui/switch";
 import { Label } from "./ui/label";
 import { useState } from "react";
+import React from "react";
 
 export function PricingSection() {
   const { sectionId, title, subtitle, plans } = PricingData;
@@ -50,6 +51,7 @@ export function PricingSection() {
 }
 
 interface Props {
+  key?: string;
   title: string;
   features: string[];
   ctaText: string;
