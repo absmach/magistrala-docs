@@ -7,7 +7,7 @@ Users in Magistrala must have **unique credentials**, including a `username`, `s
 
 This guide will take you through the core services for a quick set up of Magistrala and a walkthrough its services and components.
 
-## **Sign Up**
+## Sign Up
 
 To get started, create an account by providing the following details in the sign up page:
 
@@ -21,13 +21,13 @@ Once registered, the user will be redirected to the **Domains Homepage**, where 
 
 ![Domain Homepage](../img/users-guide/janedoe-domainshome.png)
 
-## **Log In**
+## Log In
 
 Incase you already have an account, you can log in with your email/username and password.
 
 ![Login](../img/users-guide/main-login.png)
 
-## **Log into a Domain**
+## Log into a Domain
 
 Upon logging in, users are redirected to the **Domain Selection Page**.
 
@@ -41,7 +41,7 @@ Once you create a domain, you are given **admin** role over the domain by defaul
 
 We will delve deeper into Domains in another section. For now you need to be able to log into a Domain to move on to **Groups**.
 
-## **Create a Group**
+## Create a Group
 
 Once logged in, you will be directed to the **Homepage** where you can view all the available entities in the domain.
 
@@ -53,7 +53,7 @@ To create a group, click on the `+ Create` button present on the top-left corner
 
 ![Create Group](../img/clients/group-information.png)
 
-## **Create a Client**
+## Create a Client
 
 A **Client** represents a device connected to Magistrala, capable of communication with other devices.
 
@@ -83,7 +83,7 @@ The client's data can be updated in this page and its ID copied as well.
 
 There **Connections** tab in the **group-client page** is where a User can connect a Client to a Channel.
 
-## **Create a Channel**
+## Create a Channel
 
 Channels are considered as message conduits.
 
@@ -108,7 +108,7 @@ Clients can be connected to channels in groups. This is done in the **Connection
 
 ![Connect Group Channel Clients](../img/users-guide/group-channel-connections.png)
 
-## **Send a Message**
+## Send a Message
 
 Once a Channel and Client are connected, a user is able to send messages. Navigate to the `Messages` tab of the Group-Channel and click on `Send Messages`.
 
