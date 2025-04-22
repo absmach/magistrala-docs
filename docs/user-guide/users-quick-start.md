@@ -133,7 +133,7 @@ mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> 
 
 :::info
 
-More information on how to send messages via the terminal can be found in the **Developer Docs**, under the **Messaging section** in **Developer Tools**.
+More information on how to send messages via the terminal can be found in the **Developer Docs**, under the [**Messaging section** in **Developer Tools**](/docs/dev-guide/messaging).
 
 :::    
 
@@ -143,11 +143,15 @@ Using the filter options, you can filter through a wide range of messages based 
 
 ![Messages Table](../img/users-guide/group-sent-messages-page.png)
 
-> The download message feature is currently not active but will be with future iterations of Magistrala.
 
-Some advanced filters allow you to filter based on which type of value you require such as boolean values or string values.
-There is also a provision for time where the date-time picker allows you to select a date and input a specific time window.
-You can also find aggregate values of messages provided you add an interval as well as a `From` and `To` time.
+Some advanced filters allow the user to filter based on the required value type, such as boolean or string values.
+The time filter allows the user to select a date and define a specific time window using the date-time picker.
+The user can also find aggregate values of messages provided they add an interval as well as a `From` and `To` time.
 With these values you can get the `Maximum`, `Minimum`, `Average` and `Count` value of messages within a certain time period.
-You can also be able to download a list of messages depenidng on any of the filters you need and view them in a `.csv` file.
+
+The user can also download a list of messages based on selected filters and view them in a `.csv` file by clicking the `Download Messages` button at the top right of the messages table.  
+
+![Download Form](../img/users-guide/group-download-messages.png)
+
+
 Messages provide a core service for our IoT platform especially when it comes to the Dashboards service.
