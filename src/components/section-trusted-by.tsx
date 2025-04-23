@@ -1,4 +1,3 @@
-import React from "react";
 import { TrustedByData } from "../data/data";
 import Marquee from "react-fast-marquee";
 

@@ -1,4 +1,3 @@
-import React from "react";
 import { FeaturesOverviewData } from "../data/data";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
@@ -25,7 +24,6 @@ export function BenefitsSection() {
 }
 
 interface Props {
-  key?: string;
   title: string;
   description: string;
   imageUrl?: string;

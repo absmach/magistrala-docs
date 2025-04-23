@@ -154,3 +154,10 @@ pre code {
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
+
+.markdown ul {
+  list-style-type: disc; 
+  padding-left: 1.25rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}

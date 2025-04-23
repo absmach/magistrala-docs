@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "@docusaurus/Link";
 import { HeaderData } from "../data/data";
 import { Button } from "./ui/button";

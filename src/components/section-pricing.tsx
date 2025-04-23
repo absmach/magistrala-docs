@@ -1,4 +1,3 @@
-import React from "react";
 import { CircleCheck } from "lucide-react";
 import { Card, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";

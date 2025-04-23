@@ -1,4 +1,3 @@
-import React from "react";
 import { FeaturesData } from "../data/data";
 
 export function FeaturesSection() {

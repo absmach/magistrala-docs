@@ -1,4 +1,3 @@
-import React from "react";
 import { faqData } from "../data/data";
 import {
   Accordion,

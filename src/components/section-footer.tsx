@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "@docusaurus/Link";
 import { FooterData } from "../data/data";
 import { Separator } from "./ui/separator";
