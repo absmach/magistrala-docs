@@ -1,9 +1,9 @@
+import React from "react";
 import Link from "@docusaurus/Link";
 import { FooterData } from "../data/data";
 import { Separator } from "./ui/separator";
 import { Github, Linkedin, Twitter } from "lucide-react";
 import { Button } from "./ui/button";
-import React from "react";
 
 const icons = {
   Twitter,

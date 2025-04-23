@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "@docusaurus/Link";
 import { Button } from "./ui/button";
 import {
@@ -8,7 +9,6 @@ import {
   CardTitle,
 } from "./ui/card";
 import { UsecasesData } from "../data/data";
-import React from "react";
 
 export function UsecasesSection() {
   const { sectionId, title, subtitle, useCases } = UsecasesData;

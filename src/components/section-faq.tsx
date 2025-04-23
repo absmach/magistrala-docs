@@ -1,3 +1,4 @@
+import React from "react";
 import { faqData } from "../data/data";
 import {
   Accordion,
@@ -5,7 +6,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
-import React from "react";
 
 export function FaqSection() {
   const { sectionId, title, subtitle, faqs } = faqData;

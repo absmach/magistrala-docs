@@ -1,7 +1,7 @@
+import React from "react";
 import Link from "@docusaurus/Link";
 import { HeroData } from "../data/data";
 import { Button } from "./ui/button";
-import React from "react";
 
 export function HeroSection() {
   return (

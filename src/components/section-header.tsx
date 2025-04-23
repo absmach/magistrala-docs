@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "@docusaurus/Link";
 import { HeaderData } from "../data/data";
 import { Button } from "./ui/button";
@@ -12,7 +13,6 @@ import {
 import { Menu } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { GithubStarButton } from "./github-stars";
-import React from "react";
 
 export default function HeaderSection() {
   return (

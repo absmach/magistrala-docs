@@ -1,3 +1,4 @@
+import React from "react";
 import { CircleCheck } from "lucide-react";
 import { Card, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -7,7 +8,6 @@ import { Separator } from "./ui/separator";
 import { Switch } from "./ui/switch";
 import { Label } from "./ui/label";
 import { useState } from "react";
-import React from "react";
 
 export function PricingSection() {
   const { sectionId, title, subtitle, plans } = PricingData;

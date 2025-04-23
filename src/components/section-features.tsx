@@ -1,5 +1,5 @@
-import { FeaturesData } from "../data/data";
 import React from "react";
+import { FeaturesData } from "../data/data";
 
 export function FeaturesSection() {
   const { sectionId, title, subtitle, features } = FeaturesData;
