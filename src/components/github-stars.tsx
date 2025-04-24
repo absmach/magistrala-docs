@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from "./ui/button";
 import Link from "@docusaurus/Link";
 import { Github } from 'lucide-react';
