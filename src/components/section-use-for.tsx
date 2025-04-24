@@ -30,7 +30,6 @@ const icons = {
 function UsedForCard({
   usedFor,
 }: {
-  key?: string;
   usedFor: { title: string; description: string; icon: string };
 }) {
   const Icon = icons[usedFor.icon as keyof typeof icons];

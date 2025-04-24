@@ -27,7 +27,6 @@ export function FeaturesSection() {
 }
 
 interface Props {
-  key?: string;
   title: string;
   description: string;
   imageUrl: string;

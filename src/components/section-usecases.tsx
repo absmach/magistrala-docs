@@ -40,7 +40,6 @@ export function UsecasesSection() {
 }
 
 interface Props {
-  key?: string;
   title: string;
   description: string;
   imageUrl: string;

@@ -50,7 +50,6 @@ export function PricingSection() {
 }
 
 interface Props {
-  key?: string;
   title: string;
   features: string[];
   ctaText: string;
