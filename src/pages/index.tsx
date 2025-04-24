@@ -21,7 +21,6 @@ export default function HomePage() {
             <TrustedBySection />
             <ProductSection />
             <BenefitsSection />
-            {/* <FeaturesSection /> */}
             <UsedForSection />
             <UsecasesSection />
             <PricingSection />
