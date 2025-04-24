@@ -7,7 +7,7 @@ Users in Magistrala must have **unique credentials**, including a `username`, `s
 
 This guide will take you through the core services for a quick set up of Magistrala and a walkthrough its services and components.
 
-## **Sign Up**
+## Sign Up
 
 To get started, create an account by providing the following details in the sign up page:
 
@@ -21,13 +21,13 @@ Once registered, the user will be redirected to the **Domains Homepage**, where 
 
 ![Domain Homepage](../img/users-guide/janedoe-domainshome.png)
 
-## **Log In**
+## Log In
 
 Incase you already have an account, you can log in with your email/username and password.
 
 ![Login](../img/users-guide/main-login.png)
 
-## **Log into a Domain**
+## Log into a Domain
 
 Upon logging in, users are redirected to the **Domain Selection Page**.
 
@@ -41,7 +41,7 @@ Once you create a domain, you are given **admin** role over the domain by defaul
 
 We will delve deeper into Domains in another section. For now you need to be able to log into a Domain to move on to **Groups**.
 
-## **Create a Group**
+## Create a Group
 
 Once logged in, you will be directed to the **Homepage** where you can view all the available entities in the domain.
 
@@ -53,7 +53,7 @@ To create a group, click on the `+ Create` button present on the top-left corner
 
 ![Create Group](../img/clients/group-information.png)
 
-## **Create a Client**
+## Create a Client
 
 A **Client** represents a device connected to Magistrala, capable of communication with other devices.
 
@@ -83,7 +83,7 @@ The client's data can be updated in this page and its ID copied as well.
 
 There **Connections** tab in the **group-client page** is where a User can connect a Client to a Channel.
 
-## **Create a Channel**
+## Create a Channel
 
 Channels are considered as message conduits.
 
@@ -108,9 +108,9 @@ Clients can be connected to channels in groups. This is done in the **Connection
 
 ![Connect Group Channel Clients](../img/users-guide/group-channel-connections.png)
 
-## **Send a Message**
+## Send a Message
 
-Once a Channel and Client are connected, a user is able to send messages. Navigate to the `Messages` tab of the Group-Channel and click on `**Send Messages**`.
+Once a Channel and Client are connected, a user is able to send messages. Navigate to the `Messages` tab of the Group-Channel and click on `Send Messages`.
 
 ![View Messages Page](../img/users-guide/group-messages-view.png)
 
@@ -118,16 +118,40 @@ This will open a dialog box where all the required fields bear an asterisk. Mess
 
 ![Send Message](../img/users-guide/group-send-message.png)
 
+Users can also send messages using curl commands for HTTP or via MQTT.  
+Here are some examples:
+
+**Using HTTP**:
+```bash
+curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/senml+json" -H "Authorization: Client <client_secret>" https://localhost/http/m/<domain_id>/c/<channel_id> -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+```
+
+**Using MQTT**:
+```bash
+mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+```  
+
+:::info
+
+More information on how to send messages via the terminal can be found in the **Developer Docs**, under the [**Messaging section** in **Developer Tools**](/docs/dev-guide/messaging).
+
+:::    
+
+  
 The messages table will then update to include the message sent with the latest message appearing first.
 Using the filter options, you can filter through a wide range of messages based on the protocol, publisher or even value.
 
 ![Messages Table](../img/users-guide/group-sent-messages-page.png)
 
-> The download message feature is currently not active but will be with future iterations of Magistrala.
 
-Some advanced filters allow you to filter based on which type of value you require such as boolean values or string values.
-There is also a provision for time where the date-time picker allows you to select a date and input a specific time window.
-You can also find aggregate values of messages provided you add an interval as well as a `From` and `To` time.
+Some advanced filters allow the user to filter based on the required value type, such as boolean or string values.
+The time filter allows the user to select a date and define a specific time window using the date-time picker.
+The user can also find aggregate values of messages provided they add an interval as well as a `From` and `To` time.
 With these values you can get the `Maximum`, `Minimum`, `Average` and `Count` value of messages within a certain time period.
-You can also be able to download a list of messages depenidng on any of the filters you need and view them in a `.csv` file.
+
+The user can also download a list of messages based on selected filters and view them in a `.csv` file by clicking the `Download Messages` button at the top right of the messages table.  
+
+![Download Form](../img/users-guide/group-download-messages.png)
+
+
 Messages provide a core service for our IoT platform especially when it comes to the Dashboards service.
