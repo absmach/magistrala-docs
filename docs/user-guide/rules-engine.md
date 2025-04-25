@@ -37,13 +37,13 @@ Navigate to the **Rules** section and click on the `+ Create` button. Provide a 
 
 ![Create a Rule Dialog](../img/rules/create-rule-dialog.png)
 
-#### After creation, the rule appears in a list with the following details:
+### After creation, the rule appears in a list with the following details
 
 1. Rule Name
 2. Status (Enabled/Disabled)
 3. Creation Date
 
-#### Each rule entry also has quick actions for:
+#### Each rule entry also has quick actions for
 
 - Viewing the rule
 - Copying the rule ID
@@ -83,7 +83,7 @@ After setting the input, you can define the logic of your rule using one of two 
 2. Lua Script Editor
 
 The logic nodes support different message payloads as inputs.  
-To utilize the message payload, you can use `message.<key>` in the input. e.g., if your message is a single SenML message, you can do `message.payload.v` to ge the value.
+To utilize the message payload, you can use `message.<key>` in the input. For example if your message is a single SenML message, you can do `message.payload.v` to get the value.
 
 #### Comparison Block
 
@@ -131,14 +131,14 @@ function logicFunction()
 end
 ```
 
-### 2. Output Node
+### 3. Output Node
 
 You can add one or more output nodes. The following nodes are supported:
 
 1. Channel publisher
 2. Email
 3. PostgreSQL
-4. alarm
+4. Alarm
 5. Magistrala DB
 
 ![select output](../img/rules/select-output.png)
@@ -163,7 +163,7 @@ Select the Email output node and enter the following information:
 - Specify one or more recipient email addresses.
 - Specify subject and body message.
 
-```
+```Lua
 Subject: Current Temperature
 ```
 
@@ -333,6 +333,7 @@ end
 > This returns a valid SenML message the internal DB will accept.
 
 <br/>
+
 Then set your output node to store this result using the Magistrala internal DB option.
 
 ![Storage with json input](../img/rules/json-input.png)
