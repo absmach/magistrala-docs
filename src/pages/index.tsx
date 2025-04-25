@@ -1,8 +1,8 @@
+import React from "react";
 import { HeroSection } from "../components/section-hero";
 import { TrustedBySection } from "../components/section-trusted-by";
 import { ProductSection } from "../components/section-product";
 import { BenefitsSection } from "../components/section-benefits";
-import { FeaturesSection } from "../components/section-features";
 import { PricingSection } from "../components/section-pricing";
 import { UsecasesSection } from "../components/section-usecases";
 import { FaqSection } from "../components/section-faq";
@@ -21,7 +21,6 @@ export default function HomePage() {
             <TrustedBySection />
             <ProductSection />
             <BenefitsSection />
-            {/* <FeaturesSection /> */}
             <UsedForSection />
             <UsecasesSection />
             <PricingSection />

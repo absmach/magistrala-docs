@@ -147,3 +147,17 @@ pre code {
     @apply tw-bg-background tw-text-foreground;
   }
 }
+
+.markdown ol {
+  list-style-type: decimal; 
+  padding-left: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.markdown ul {
+  list-style-type: disc; 
+  padding-left: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}

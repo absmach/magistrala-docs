@@ -1,4 +1,4 @@
-import { Building, Computer, Factory, Laptop } from "lucide-react";
+import { Building, Factory, Laptop } from "lucide-react";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { UsedForData } from "../data/data";
 
