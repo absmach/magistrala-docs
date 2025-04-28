@@ -132,7 +132,7 @@ Magistrala includes **SuperMQ** as a chart dependency, and SuperMQ is hosted in 
 To do so, run:
 
 ```bash
-# Replace 'magistrala.example.com' with your actual Private OCI Registry registry IP or domain (e.g., magistrala.example.com)
+# Replace 'magistrala.example.com' with your actual Private OCI Registry registry IP or domain
 helm registry login magistrala.example.com
 ```
 
@@ -154,13 +154,51 @@ You can confirm the dependencies were fetched correctly by listing the contents 
 ls charts/
 ```
 
-#### 5. Create Namespace and Deploy Magistrala
+#### 5. Create Namespace
 
 First, create a namespace for Magistrala (if it doesn’t already exist):
 
 ```bash
 kubectl create namespace mg
 ```
+
+#### 6. Provide RE Email Configuration
+
+The Rules Engine (RE) email credentials must be provided via a Kubernetes Secret.
+
+You need to:
+
+1. Create a `.env` file containing the email settings:
+
+    ```env
+    MG_EMAIL_HOST=smtp.example.com
+    MG_EMAIL_PORT=587
+    MG_EMAIL_USERNAME=user@example.com
+    MG_EMAIL_PASSWORD=yourpassword
+    MG_EMAIL_FROM_ADDRESS=noreply@example.com
+    MG_EMAIL_FROM_NAME=Example Team
+    ```
+
+2. Set the secret name in `values.yaml`:
+
+    ```yaml
+    re:
+      secrets:
+        name: "your-secret-name"
+    ```
+
+3. Create the Kubernetes Secret:
+
+    ```bash
+    kubectl create secret generic <secret-name> --from-env-file=.env
+    ```
+
+    Replace `<secret-name>` with the value you set in `re.secrets.name`.
+
+> **Important**: If `re.secrets.name` is not set, the deployment will fail.
+
+
+#### 7. Deploy Magistrala
 
 Then deploy the Magistrala Helm chart into the `mg` namespace:
 
