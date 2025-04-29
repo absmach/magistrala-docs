@@ -9,7 +9,7 @@ The Reports Service operates through three main components:
 
 1. **Report Configurations**: Define what data to collect and how to process it
 2. **Scheduler**: Handles recurring report generation based on defined schedules
-3. **Generator Engine**: Creates human-readable reports in multiple formats
+3. **Generator Engine**: Generates human-readable reports in various formats.
 
 ![reports_architecture](../diagrams/reports_architecture.svg)
 
@@ -26,7 +26,7 @@ type ReportConfig struct {
     DomainID    string
     Config      *MetricConfig
     Metrics     []Metric      
-    Email       *Email        // Email Notification settings 
+    Email       *EmailSetting        // Email Notification settings 
     Schedule    Schedule      // Generation schedule
     Status      Status        // Enabled/Disabled
     CreatedAt   time.Time
@@ -119,7 +119,7 @@ Data Collection
     - Time range (From/To)
     - Aggregation method
     - Metric filters
-3. Supports complex queries across multiple devices/channels
+3. Supports complex queries across multiple devices and channels
 
 ## Output Formats
 
@@ -167,7 +167,8 @@ type EmailSetting struct {
 
 
 > **NOTE:**
-> Automatically sends generated reports as email with body text summarizing report contents.
+> Automatically sends generated reports via email, including a summary of the report contents in the body.  
+
 
 ### API Operations
 
@@ -183,7 +184,7 @@ curl --location http://localhost:9008/domains/{domainID}/reports/configs \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
     "name": "lab 1 report",
-    "descripion": "lab 1 sensors report",
+    "description": "lab 1 sensors report",
     "config": {
         "from": "now()-5d",
         "to": "now()",
@@ -208,7 +209,7 @@ curl --location http://localhost:9008/domains/{domainID}/reports/configs \
     },
     "email": {
         "to": ["team@example.com"],
-        "subject": "Weeky Lab Report"
+        "subject": "Weekly Lab Report"
     },
 }'
 ```
@@ -265,7 +266,7 @@ curl -X POST http://localhost:9008/domains/{domainID}/reports \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
     "name": "lab 1 report",
-    "descripion": "lab 1 sensors report",
+    "description": "lab 1 sensors report",
     "config": {
         "from": "now()-5d",
         "to": "now()",
@@ -285,7 +286,7 @@ curl -X POST http://localhost:9008/domains/{domainID}/reports \
 }'
 ```
 
-Expected reponse:
+Expected response:
 
 ```bash
 {
@@ -333,7 +334,7 @@ curl --location 'http://localhost:9008/bd1bb2c5-ce78-4456-8725-bd1beab80250/repo
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
     "name": "lab 1 report",
-    "descripion": "lab 1 sensors report",
+    "description": "lab 1 sensors report",
     "config": {
         "from": "now()-5d",
         "to": "now()",
@@ -349,7 +350,7 @@ curl --location 'http://localhost:9008/bd1bb2c5-ce78-4456-8725-bd1beab80250/repo
 }'
 ```
 
-Expected reponse:
+Expected response:
 
 ![report_pdf](../diagrams/pdf.png)
 
@@ -363,7 +364,7 @@ curl --location 'http://localhost:9008/bd1bb2c5-ce78-4456-8725-bd1beab80250/repo
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data-raw '{
     "name": "lab 1 report",
-    "descripion": "lab 1 sensors report",
+    "description": "lab 1 sensors report",
     "config": {
         "from": "now()-5d",
         "to": "now()",
