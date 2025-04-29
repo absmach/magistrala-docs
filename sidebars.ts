@@ -126,6 +126,7 @@ const sidebars: SidebarsConfig = {
         { type: "doc", id: "dev-guide/provision", label: "Provisioning" },
         { type: "doc", id: "dev-guide/readers", label: "Readers" },
         { type: "doc", id: "dev-guide/rules-engine", label: "Rules Engine" },
+        { type: "doc", id: "dev-guide/reports", label: "Reports"},
       ],
     },
     { type: 'doc', id: 'dev-guide/api', label: 'API' },
