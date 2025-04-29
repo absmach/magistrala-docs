@@ -2,7 +2,7 @@
 title: Reports
 ---
 
-The **Reports Service** in Magistrala enables automated generation and scheduling of data reports from connected devices and sensors. This service allows users to collect, aggregate, and distribute metrics in PDF and CSV formats through email or direct download.
+The **Reports Service** in Magistrala provides a streamlined way to generate and schedule data reports from connected devices and sensors. It allows users to collect, aggregate, and export metrics in PDF and CSV formats, either via email or direct download.
 
 ## Architecture
 The Reports Service operates through three main components:
@@ -197,7 +197,7 @@ curl --location http://localhost:9008/domains/{domainID}/reports/configs \
         {
             "channel_id": "{{CHANNELID}}",
             "client_id": "{{THINGID}}",
-            "name": "current"
+            "name": "current",
             "subtopic": "lab/room1"
         }
     ]
