@@ -438,6 +438,56 @@ curl --location --request PUT 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af
 }
 ```
 
+### Update Rule Scheduler
+
+This is to update an existing rule schedule.
+
+The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}/schedule`
+
+**Example command:**
+
+```bash
+curl --location --request PATCH 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules/rule123/schedule' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <access_token>' \
+--data '{
+    "schedule": {
+        "recurring": "daily",
+        "recurring_period": 1,
+        "start_datetime": "2025-04-30T17:22:00.000Z",
+        "time": "0001-01-01T18:00:00.000Z"
+    }
+}'
+```
+
+**Expected Response:**
+
+```bash
+{
+  "id": "rule123",
+  "name": "High Temp Alert",
+  "input_channel": "sensors",
+  "input_topic": "temperature",
+  "logic": {
+    "type": 0,
+    "value": "if message.payload > 35 then return 'Critical Temp!' end"
+  },
+  "schedule": {
+    "recurring": "daily",
+    "recurring_period": 1,
+    "start_datetime": "2025-04-30T17:22:00.000Z",
+    "time": "0001-01-01T18:00:00.000Z"
+  },
+  "output_channel": "alerts",
+  "output_topic": "temperature_critical",
+  "status": "enabled",
+  "created_at": "2024-02-14T10:00:00Z",
+  "created_by": "user123",
+  "updated_at": "2024-02-16T09:00:00Z",
+  "updated_by": "user789"
+}
+```
+
 ### Delete Rule
   
 This function deletes an existing rule.
