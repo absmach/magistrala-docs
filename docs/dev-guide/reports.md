@@ -5,6 +5,7 @@ title: Reports
 The **Reports Service** in Magistrala provides a streamlined way to generate and schedule data reports from connected devices and sensors. It allows users to collect, aggregate, and export metrics in PDF and CSV formats, either via email or direct download.
 
 ## Architecture
+
 The Reports Service operates through three main components:
 
 1. **Report Configurations**: Define what data to collect and how to process it
@@ -74,7 +75,6 @@ type Metric struct {
 | Protocol    | string  | Protocol filter (MQTT/HTTP/etc.)         | Optional |
 | Format      | string  | Data format specification                | Optional |
 
-
 ## Report Parameters
 
 ```go
@@ -104,7 +104,6 @@ type AggConfig struct {
 | AggType   | Aggregation | Processing type (MAX/MIN/SUM/AVG/COUNT)  | If aggregation needed |
 | Interval  | string      | Time window (e.g., "1h", "5m")           | If AggType specified  |
 
-
 ### Example configurations:
 
 - Daily sales report at 8 AM: **DAILY** + **08:00**
@@ -114,6 +113,7 @@ type AggConfig struct {
 ### Report Generation
 
 Data Collection
+
 1. Connects to Magistrala's time-series database
 2. Collects data using configured:
     - Time range (From/To)
@@ -125,13 +125,13 @@ Data Collection
 
 Both PDF and CSV formats contain identical data - they differ only in presentation style and file structure:
 
-| Feature	        |   PDF Format                      |	CSV Format                       |
+| Feature           |   PDF Format                      |	CSV Format                       |
 |-------------------|-----------------------------------|------------------------------------|
-| Structure	        | Multi-page document with tables	| Single-file comma-separated values |
-| Headers	        | Styled section headers	        | Simple text row headers            |
-| Data Format	    | Human-readable timestamps	        | Human-readable timestamps          |
-| Visual Elements	| Page numbers, borders, shading	| Plain text with commas             |
-| Best For	        | Printing/sharing	                | Programmatic analysis              |
+| Structure	        | Multi-page document with tables   | Single-file comma-separated values |
+| Headers           | Styled section headers            | Simple text row headers            |
+| Data Format       | Human-readable timestamps         | Human-readable timestamps          |
+| Visual Elements   | Page numbers, borders, shading    | Plain text with commas             |
+| Best For          | Printing/sharing                  | Programmatic analysis              |
 
 Example Data Representation
 
@@ -165,10 +165,8 @@ type EmailSetting struct {
 | Subject   | string   | Email subject line                       | Optional |
 | Content   | string   | Email body content                       | Optional |
 
-
 > **NOTE:**
 > Automatically sends generated reports via email, including a summary of the report contents in the body.  
-
 
 ### API Operations
 
@@ -384,7 +382,6 @@ curl --location 'http://localhost:9008/bd1bb2c5-ce78-4456-8725-bd1beab80250/repo
 }'
 ```
 
-
 3. List Report Configurations
 Endpoint: `GET /configs`
 
@@ -444,7 +441,6 @@ Expected response:
 ```
 
 > **Note** : The following parameters are supported `status`, `limit`, `offset` and `name`. This allows for search by `name`
-
 
 4. View report configurations
 Endpoint: `GET /configs/{reportID}`
