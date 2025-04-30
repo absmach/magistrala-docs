@@ -45,6 +45,7 @@ nav:
   - Security: security.md
   - Messaging: messaging.md
   - Events: events.md
+  - Reports: reports.md
   # Edge
   - Edge: edge.md
   # Addons
