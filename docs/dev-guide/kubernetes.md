@@ -119,7 +119,6 @@ cd magistrala-devops/charts/magistrala # Ensure you're in the directory containi
 helm repo add nats https://nats-io.github.io/k8s/helm/charts/
 helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
 helm repo add hashicorp https://helm.releases.hashicorp.com
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 ```
 
@@ -162,40 +161,143 @@ First, create a namespace for Magistrala (if it doesn’t already exist):
 kubectl create namespace mg
 ```
 
+Thank you — this confirms your concern and you're absolutely right to raise it.
+
+In your actual `values.yaml` file, the key section is:
+
+```yaml
+re:
+  ...
+  email: {}
+  secrets:
+    names: []
+```
+
+This means:
+
+* `re.secrets.names` is **set** but **empty** (`[]`).
+* In Helm templating, `.Values.re.secrets.names` **exists**, so `if not .Values.re.secrets.names` will evaluate to **false**, even if the list is empty.
+
+---
+
+### 🔥 The Problem
+
+In your `deployment.yaml`, you wrote:
+
+```yaml
+{{- if .Values.re.secrets.names }}
+envFrom:
+  {{- range $secretName := .Values.re.secrets.names }}
+  - secretRef:
+      name: {{ $secretName | quote }}
+  {{- end }}
+{{- end }}
+
+...
+
+{{- if not .Values.re.secrets.names }}
+# use inline MG_EMAIL_* values here
+{{- end }}
+```
+
+That logic **fails when `re.secrets.names: []` is present**, because:
+
+* The block for `envFrom` renders **nothing**.
+* The fallback `env:` block is **skipped** (because the list exists, even if empty).
+* ➜ Result: **No email config is applied → container fails to start.**
+
+---
+
+### ✅ Corrected Logic for Helm Template
+
+You need to test if the list is **non-empty**, not just if it exists.
+
+Replace:
+
+```yaml
+{{- if .Values.re.secrets.names }}
+```
+
+with:
+
+```yaml
+{{- if gt (len .Values.re.secrets.names) 0 }}
+```
+
+and similarly:
+
+```yaml
+{{- if not .Values.re.secrets.names }}
+```
+
+becomes:
+
+```yaml
+{{- if eq (len .Values.re.secrets.names) 0 }}
+```
+
+---
+
+### ✅ Updated Docs Section
+
+Here is the corrected and clarified documentation you should use:
+
+---
+
 #### 6. Provide RE Email Configuration
 
-The Rules Engine (RE) email credentials must be provided via a Kubernetes Secret.
+> **Note**: Email configuration is required if the Rules Engine is enabled. You must provide email credentials either via Kubernetes Secrets or inline values.
 
-You need to:
+##### **Option 1: Using a Kubernetes Secret (Recommended)**
 
-1. Create a `.env` file containing the email settings:
+1. Create a `.env` file with the required email credentials:
 
-    ```env
-    MG_EMAIL_HOST=smtp.example.com
-    MG_EMAIL_PORT=587
-    MG_EMAIL_USERNAME=user@example.com
-    MG_EMAIL_PASSWORD=yourpassword
-    MG_EMAIL_FROM_ADDRESS=noreply@example.com
-    MG_EMAIL_FROM_NAME=Example Team
-    ```
+   ```env
+   MG_EMAIL_HOST=smtp.example.com
+   MG_EMAIL_PORT=587
+   MG_EMAIL_USERNAME=user@example.com
+   MG_EMAIL_PASSWORD=yourpassword
+   MG_EMAIL_FROM_ADDRESS=noreply@example.com
+   MG_EMAIL_FROM_NAME=Example Team
+   ```
 
-2. Set the secret name in `values.yaml`:
+2. Reference the secret in `values.yaml`:
 
-    ```yaml
-    re:
-      secrets:
-        name: "your-secret-name"
-    ```
+   ```yaml
+   re:
+     secrets:
+       names:
+         - "re-email-secret"
+   ```
 
 3. Create the Kubernetes Secret:
 
-    ```bash
-    kubectl create secret generic <secret-name> --from-env-file=.env
-    ```
+   ```bash
+   kubectl create secret generic re-email-secret --from-env-file=.env
+   ```
 
-    Replace `<secret-name>` with the value you set in `re.secrets.name`.
+---
 
-> **Important**: If `re.secrets.name` is not set, the deployment will fail.
+##### **Option 2: Inline Configuration (For Dev/Testing Only)**
+
+If `re.secrets.names` is omitted or left empty, email credentials must be defined inline under `re.email`:
+
+```yaml
+re:
+  email:
+    host: smtp.example.com
+    port: 587
+    username: user@example.com
+    password: yourpassword
+    fromAddress: noreply@example.com
+    fromName: Example Team
+```
+
+---
+
+> **Important**: If `re.secrets.names` is defined as an empty list (i.e., `[]`) and `re.email` is also empty, no email configuration will be applied and the deployment will fail.
+
+---
 
 
 #### 7. Deploy Magistrala
@@ -583,8 +685,6 @@ helm install magistrala -n mg --set ingress.hostname='example.com' --set users.i
 ```
 
 If Magistrala is already installed and you want to update it with new settings (for example, changing the ingress hostname or image tag), you can use the `helm upgrade` command:
-
-Here’s a **refined and polished version** of your documentation. It improves clarity, structure, consistency, and polish—while still being technically precise and aligned with the `supermq` base chart model:
 
 ---
 
