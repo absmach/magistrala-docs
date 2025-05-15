@@ -652,7 +652,6 @@ Adapters ingest data from external protocols and systems.
 - **LoRa Adapter**  
   
 
-
   ```bash
   --set adapter.lora.enabled=true
   ```
@@ -683,7 +682,6 @@ Support for structured and time-series storage using PostgreSQL or TimescaleDB.
 
 - **Reader**
 
-
   ```bash
   --set postgres.reader.enabled=true
   ```
@@ -699,7 +697,6 @@ Delivers alerts or notifications based on system events or rules.
   ```
 
 - **SMPP (SMS) Notifier**
-
 
   ```bash
   --set notifiers.smpp.enabled=true
