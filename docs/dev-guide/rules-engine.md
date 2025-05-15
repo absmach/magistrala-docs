@@ -212,12 +212,11 @@ Each message must be a **JSON array of SenML records**. Each object inside the a
 
 Avoid using special characters in the `n` (name) field, such as:
 
-* Slashes (`/`)
-* Emojis
-* Symbols like `@`, `#`, `:`
+- Slashes (`/`)
+- Emojis
+- Symbols like `@`, `#`, `:`
 
 These may break internal parsing or rule pattern matching.
-
 
 #### Topic Rewriting and `.` Operator
 
@@ -225,21 +224,21 @@ MQTT topics received by Magistrala are rewritten into dot-separated strings for 
 
 Topic:
 
-```
+```bash
 m/<domain_id>/c/<channel_id>/building1/floor2/temp
 ```
 
 Becomes:
 
-```
+```bash
 channels.<channel_id>.building1.floor2.temp
 ```
 
 This means:
 
-* MQTT `/` separators are rewritten as `.` internally
-* Rules matching `input_topic` or using `message.subtopic` must use **dot-separated format**
-* Every empty segment (e.g. double slashes `//`) is removed
+- MQTT `/` separators are rewritten as `.` internally
+- Rules matching `input_topic` or using `message.subtopic` must use **dot-separated format**
+- Every empty segment (e.g. double slashes `//`) is removed
 
 ---
 

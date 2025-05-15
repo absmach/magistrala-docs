@@ -213,6 +213,7 @@ re:
 > **Important**: If `re.secrets.names` is defined as an empty list (i.e., `[]`) and `re.email` is also empty, no email configuration will be applied and the deployment will fail.
 
 ---
+
 #### 7. Deploy Magistrala
 
 Then deploy the Magistrala Helm chart into the `mg` namespace:
@@ -650,7 +651,6 @@ Adapters ingest data from external protocols and systems.
   ```
 
 - **LoRa Adapter**  
-  
 
   ```bash
   --set adapter.lora.enabled=true
