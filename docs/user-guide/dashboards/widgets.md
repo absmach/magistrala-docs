@@ -6,7 +6,7 @@ title: Widget Guide
 
 Widgets are interactive components designed to display data visually. They enable real-time monitoring and historical data analysis, providing valuable insights through customizable dashboards. Widgets can be tailored to meet specific requirements, making them essential tools for data-driven decision-making.
 
-Magistrala offers a variety of widgets, including charts, data cards, gauges, maps and control elements:
+Magistrala offers a variety of widgets, including charts, data cards, gauges, maps, and control elements:
 
 - **Timeseries Charts**:
   - Line Chart
@@ -29,7 +29,7 @@ Magistrala offers a variety of widgets, including charts, data cards, gauges, ma
 Each of these widgets can be customized and configured to display data in the most meaningful way for your use case.
 
 To use widgets effectively, particularly timeseries charts, you need to have connected entities that are actively sending data.
-A guide to how to connect and send messages is provided on [Quick Start Guide][users-quick-start].
+A guide on how to connect and send messages is provided in [Quick Start Guide][users-quick-start].
 Widgets rely on messages sent from devices in the following **SeNML** format:
 
 ```json
@@ -47,7 +47,7 @@ Widgets rely on messages sent from devices in the following **SeNML** format:
 
 To add a new widget to your dashboard, start by opening the desired dashboard. Click on `Add Widget` to open the widget selection dialog box. Choose the widget type that best suits your needs, whether it's a **chart**, **card**, **gauge**, **map**, or **control**. Customize the widget's appearance, configure data sources, and adjust display options to fit your preferences. Once you've completed the setup, click `Save` to add the widget to your dashboard.
 
-Charts are perfect for time-series data and comparisons, while cards are designed to showcase key metrics prominently. Gauges help visualize performance against predefined thresholds, and maps provide a spatial context for your data. Controls enhance dashboard interactivity, allowing users to filter and manipulate data views dynamically.
+Charts are ideal for time-series data and comparisons, while cards prominently showcase key metrics. Gauges help visualize performance against predefined thresholds, and maps provide a spatial context for your data. Controls enhance dashboard interactivity, allowing users to filter and manipulate data views dynamically.
 
 Dashboards are built using **Widgets** that visualize data and facilitate control over other devices. These widgets can host a variety of charts and controls.
 To ensure that timeseries charts function correctly, you need to have connected channels and clients that actively send messages.
@@ -68,7 +68,7 @@ These features include:
 
 #### 1. Time Window
 
-The time window represents the interval used to fetch time-series data for charts. It is especially useful for time-series charts like Area, Line, Bar, Pie charts, and Route Maps.
+The time window represents the interval used to fetch time-series data for charts. It is especially useful for time-series charts like Area, Line, Bar, Pie charts, Route Maps and Value Cards.
 
 ![Calender Option](../../img/dashboards/date-picker.png)
 
@@ -78,7 +78,7 @@ The selected "from" and "to" times are included in the query sent to the databas
 
 - **Realtime**: Shows data as it is updated in real-time.
 
-The date-time calendar also includes time slots. Clicking on the first box allows you to enter the time using a 24-hour clock format. When live data is selected, a red blinking button appears on the widget.
+The date-time calendar also includes time slots. Clicking the first box allows you to enter the time using a 24-hour clock format. When live data is selected, a red blinking button appears on the widget.
 
 Here is an example of a time-series Area chart using live data:
 
@@ -92,9 +92,9 @@ Chart Appearance Settings allow you to adjust how your charts look, including ti
 
 To further customize a chart's title, click the `pencil` icon on the widget after creation. This opens a panel displaying current settings. While titles default to the chart name, they can be edited to fit your preferences.
 
-For **time-series charts**, settings are generally consistent except for pie charts which require multiple data sources and does not use axes.  
+For **time-series charts**, settings are generally consistent except for pie charts which require multiple data sources and do not use axes.  
 
-A user can only modify the **title** and **update interval**.
+Users can only modify the **title** and **update interval**.
 The update interval determines how often the API requests new data from the database, with a default of **60 seconds**. Additionally, a user can modify the **x and y-axis** labels as needed.
 
 ![Settings](../../img/dashboards/settings-xyaxes.png)
@@ -173,7 +173,7 @@ Simply type the name of the desired icon and it will appear on the card
 
 #### 4. Filters
 
-Filters play a crucial role in refining the data displayed in widgets. Each map contains specific fields that help filter the data presented. Time windows serve as a fundamental filter, defining the period of data retrieval.
+Filters play a crucial role in refining the data displayed in widgets. Each map contains specific fields that help refine the displayed data.. Time windows serve as a fundamental filter, defining the period of data retrieval.
 
 Data sources act as filters, particularly concerning client IDs and channel IDs. Most charts currently support multiple data sources simultaneously. When a channel is selected, the associated client must be connected to that channel to enable data retrieval from the backend.
 
@@ -191,7 +191,7 @@ The **ValueName** parameter functions as an additional filter by restricting req
 }
 ```
 
-The status of an entity also serves as a key filter, especially in charts like the entity table and count card. This filter limits displayed entities based on their status: enabled, disabled, or all statuses.
+The status of an entity also acts as a key filter, especially in charts like the entity table and count card. This filter limits displayed entities based on their status: enabled, disabled, or all statuses.
 
 ![Status check](../../img/dashboards/status-filter-charts.png)
 
@@ -213,7 +213,7 @@ For aggregation to work correctly:
 
 - In Realtime mode, users must select a From Date, specify the Last duration, and set the Aggregation Interval.
 
-The **Aggregation Interval** indicates the frequency at which the data points are aggregated (e.g. every 10 seconds).
+The **Aggregation Interval** indicates the frequency at which the data points are aggregated (e.g., every 10 seconds).
 
 ![Aggregation Settings](../../img/dashboards/aggregation-setting.png)
 
@@ -227,7 +227,7 @@ For example, to view the average temperature readings of a sensor every 10 minut
 
 This setup provides a clear visual representation of temperature trends.
 
-By using data aggregation, a user gains deeper insights into your data, making it easier to monitor and analyze the performance and behavior of your IoT devices.
+By using data aggregation, users gain deeper insights into your data, making it easier to monitor and analyze the performance and behavior of your IoT devices.
 
 ### Edit the Widgets
 

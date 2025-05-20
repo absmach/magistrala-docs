@@ -26,6 +26,8 @@ Click the `Add Widget` button and select **Count Card** from the list of availab
 
 5. **Title**: Enter a title for the count card, which will appear at the top of the widget.
 
+6. **Label**: Enter a label for the count card, e.g Water Meters.
+
 Once all fields are completed, click the `Create` button to add the Count Card to the dashboard.
 
 The card will immediately display the total count of entities based on the selected data source and filters. It will also display:
@@ -60,6 +62,7 @@ Count Cards are versatile and can be customized to meet specific needs. Customiz
 3. **Deleting a Card**: To delete a count card, click the **Trash Icon**. A confirmation popup will appear.
 4. **Popup**: Click `Delete` in the popup to confirm the deletion.
 5. **Titles**: Titles of the count card can be customized for clarity.
+6. **Labels**: Labels for the count card
 
 #### **Conclusion**
 
