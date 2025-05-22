@@ -2,13 +2,13 @@
 title: Channels
 ---
 
-**Channels** are considered as message conduits. They are responsible for the messages exchange between Clients and act as message topic that can be **published** or **subscribed** to by multiple Clients.
+**Channels** are considered as message conduits. They are responsible for the messages exchange between Clients and act as message topics that can be **published** or **subscribed** to by multiple Clients.
 
 Clients are able to **publish** or **subscribe** to a channel depending on the connection type they have.
 
 ## Create a Channel
 
-To create a channel, click on the `+ Create` button present on the top-left corner of the page. You can also create multiple channels by clicking on the `+ Create Channels` button and uploading a _.csv_ file with channel **names** and any other fields you would like to add.
+To create a channel, click on the `+ Create` button present on the top-left corner of the page. You can also create multiple channels by clicking on the `+ Create Channels` button and uploading a _.csv_ file.
 
 ![Create channel](../../img/clients/channel-create-buttons.png)
 
@@ -26,7 +26,7 @@ You can be able to create channels in bulk by uploading a _.csv_ file with the f
 2. Metadata
 3. Tags
 
-A sample of the _.csv_ file can be found [here](https://github.com/absmach/magistrala-ui/blob/main/samples/channels.csv).
+A sample of the channels _.csv_ file can be found [here](https://github.com/absmach/magistrala-ui/blob/main/samples/channels.csv).
 
 ![Bulk create channels](../../img/clients/channels-bulk-ceate.png)
 
@@ -36,19 +36,19 @@ After creating a channel, you will be able to see the created channel on the cha
 
 ![View channel](../../img/clients/channel-view.png)
 
-This will lead you to the channel settings page, where you can view all the channel settings.
+This will lead you to the channel settings page, where you can view all the channel settings and connections.
 
 ![View channel settings](../../img/clients/channel-view-settings.png)
 
 ## Update a Channel
 
-In the channel settings page, you are able to update the following channel details:
+In the channel settings page, you will be able to update the following channel details:
 
 1. Name
 2. Metadata
 3. Status
 
-To update a field, click on the `pencil` icon on the far end of the field to edit. Once you have updated the value, click on the `tick` icon to update the changes or the `cross` icon to cancel the change. To update the channel status, toggle the switch on the far end of the status field.
+To update a field, click on the `pencil` icon on the far end of the field to edit. Once you have updated the value, click on the `check` icon to update the changes or the `cross` icon to cancel the change. To update the channel status, toggle the switch on the far end of the status field.
 
 ![Edit channel](../../img/clients/channel-update.png)
 
@@ -60,11 +60,14 @@ Navigate to the `Connections` section of the channel navigation. This will lead 
 
 In this page you are able to add a connection by clicking on the `Connect` button on the top right corner.
 
-This opens up a dialog box that allows you to select the clients you want to connect and with which connection type. A client can have both connection types selected.  
+This opens up a dialog box that allows you to select the clients you want to connect and with which connection type.
+
 There are two connection type options:
 
 1. **Publish**: Allows the client to send messages in the channel
 2. **Subscribe**: Allows the client to read messages in the channel
+
+ A client can have both connection types selected.  
 
 ![Connect client](../../img/clients/channel-connect-client.png)
 
@@ -72,7 +75,7 @@ To disconnect the client, click on the `Disconnect` button at the end of the cha
 
 ![Disconnect client button](../../img/clients/channel-disc-client.png)
 
-This will open up a dialog that allows you to select which connection type you want to remove. You can remove one or both of the connection types if you have multiple.
+This will open up a dialog that allows you to select which connection type you want to remove. You can remove one or both of the connection types if there are multiple.
 
 ![Disconnect client dialog](../../img/clients/channel-disc-client-dialog.png)
 
@@ -107,7 +110,7 @@ The following is the list of available actions for a channel:
 
 #### Update
 
-To update a role name, click on the `pencil` icon on the far right end of the field, update the value then click on the `tick` icon to update the changes or the `cross` icon to cancel the changes.
+To update a role name, click on the `pencil` icon on the far right end of the field, update the value then click on the `check` icon to update the changes or the `cross` icon to cancel the changes.
 
 ![Update role name](../../img/clients/channel-role-update.png)
 
@@ -127,6 +130,38 @@ You can also delete actions and members by clicking on the `trash` icon. It pops
 ### Users
 
 > This feature is currently under development :hammer:
+
+## Messages
+
+While on channels, a user can view, send and download messages associated to the channel.
+
+### Send Messages
+
+A connected client can be used as a publisher to send a message via the _http_ protocol while on the Magistrala UI.
+To send a message navigate to the Messages section and click on the `Send Message` button.
+On the dialog that comes up there are some key fields that must be filled.
+These fields include:
+
+1. **Name** - This is the base name of the message.
+2. **Value Type** - This would determine the nature of the payload being sent. It could vary between _number_, _boolean_, _string_, or _data-value_.
+3. **Value** - This is the actual value received from the sensor.
+4. **Publisher** - This is the **connected** Client which can be selected from an infinite select. From this client the backend will get the special _Client-Key_ which will be used to send the message.
+
+There are some more fields that are not required but assist in making the messages more legible such as:
+
+- **Unit** - This is the unit of the Value of the payload being sent.
+- **Subtopic** - This is a crucial field that is needed to assist in classifying the messages sent. This fiel **MUST** match the Rules Engine Publisher topic for the message to be saved in the database.
+
+![Send Message](../../img/users-guide/group-send-message.png)
+
+Messages sent are typically in SeNML format.
+The Magistrala UI also prioritises sending these messages via _http_.
+A user can send their messages using the command terminal over other protocols such as MQTT or WebSocket.
+Further information on these protocols is discussed[here](../../dev-guide/messaging.md).
+
+The messages table will then update to include the message sent with the latest message appearing first.
+
+Using the filter options, you can filter through a wide range of messages based on the protocol, publisher or even value.
 
 ## Audit Logs
 
