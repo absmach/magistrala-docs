@@ -332,8 +332,6 @@ end
 
 > This returns a valid SenML message the internal DB will accept.
 
-<br/>
-
 Then set your output node to store this result using the Magistrala internal DB option.
 
 ![Storage with json input](../img/rules/json-input.png)

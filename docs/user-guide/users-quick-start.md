@@ -68,7 +68,7 @@ Additionally, **tags** can be assigned to Clients for better organization and fi
 
 ![Create Client](../img/users-guide/group-client-create.png)
 
-A user can also create bulk clients by clicking on the `+ Create Clients` button. This will lead to a dialogbox that takes in a _.CSV_  file with the clients' details filled in correctly as seen in these [samples](https://github.com/absmach/magistrala-ui/tree/main/samples).
+A user can also create bulk clients by clicking on the `+ Create Clients` button. This will lead to a dialogbox that takes iNingYuanchang@123n a _.CSV_  file with the clients' details filled in correctly as seen in these [samples](https://github.com/absmach/magistrala-ui/tree/main/samples).
 
 ![Create Clients](../img/users-guide/group-clients-create.png)
 
@@ -108,9 +108,54 @@ Clients can be connected to channels in groups. This is done in the **Connection
 
 ![Connect Group Channel Clients](../img/users-guide/group-channel-connections.png)
 
+## Create a Rule
+
+To be able to publish and save any messages to our Magistrala database, a rule must be created and saved.
+Rules Engine takes care of this procedure.
+Navigate to the **Rules Engine** section on the navigation bar and click on `+ Create`.
+This will open a dialog box onto which you can enter the Rule name.
+To keep a close track of the Rules present the naming convention can follow `Save Channel <channel_name> Messages`.
+Once created the Rule will show up on the table present on the page.
+
+### View a Rule
+
+Click on the Rule just created to be able to view its properties. From this page you can update the Rule with:
+
+- Input Node
+- Output Node
+- Logic Node
+
+Select the **Input Node** on the Rule page. This will bring up a doalog box which will allow you to select an **MQTT Subscriber** as the input type. Then select the **channel** which will be subscribed to from the list of channels as well as the **topic** of the payload.
+The Input Node will then appear on the screen.
+
+Next, set up the input logic of your Rule. You can select the `Lua Script Editor` from the two options present.
+Once the Code Editor appears ensure to add the following Lua Script that will be used to define your Rule logic.
+
+```lua
+function logicFunction()
+  return message.payload
+end
+```
+
+This will be able to return the SenML payload of the messsages published.
+
+Finally we can set up the Output Node. There are multiple nodes supported:
+
+1. Channel publisher
+2. Email
+3. PostgreSQL
+4. Alarm
+5. Magistrala DB
+
+Select the **Magistrala DB** option which will store the messages in the internal Magistrala Postgres DB.
+
+Then a **Channel Publisher** with a subtopic must be present.
+
+> More information about Rules Creation and Updating can be found in the [Rules Engine Section](./rules-engine.md)
+
 ## Send a Message
 
-Once a Channel and Client are connected, a user is able to send messages. Navigate to the `Messages` tab of the Group-Channel and click on `Send Messages`.
+Once a Channel and Client are connected as well as Rule created, a user is able to send messages. Navigate to the `Messages` tab of the Group-Channel and click on `Send Messages`.
 
 ![View Messages Page](../img/users-guide/group-messages-view.png)
 
@@ -122,11 +167,13 @@ Users can also send messages using curl commands for HTTP or via MQTT.
 Here are some examples:
 
 **Using HTTP**:
+
 ```bash
 curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/senml+json" -H "Authorization: Client <client_secret>" https://localhost/http/m/<domain_id>/c/<channel_id> -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
 **Using MQTT**:
+
 ```bash
 mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```  
@@ -135,14 +182,12 @@ mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> 
 
 More information on how to send messages via the terminal can be found in the **Developer Docs**, under the [**Messaging section** in **Developer Tools**](/docs/dev-guide/messaging).
 
-:::    
+:::
 
-  
 The messages table will then update to include the message sent with the latest message appearing first.
 Using the filter options, you can filter through a wide range of messages based on the protocol, publisher or even value.
 
 ![Messages Table](../img/users-guide/group-sent-messages-page.png)
-
 
 Some advanced filters allow the user to filter based on the required value type, such as boolean or string values.
 The time filter allows the user to select a date and define a specific time window using the date-time picker.
@@ -152,6 +197,5 @@ With these values you can get the `Maximum`, `Minimum`, `Average` and `Count` va
 The user can also download a list of messages based on selected filters and view them in a `.csv` file by clicking the `Download Messages` button at the top right of the messages table.  
 
 ![Download Form](../img/users-guide/group-download-messages.png)
-
 
 Messages provide a core service for our IoT platform especially when it comes to the Dashboards service.
