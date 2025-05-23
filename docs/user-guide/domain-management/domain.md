@@ -2,17 +2,17 @@
 title: Domain
 ---
 
-## Domain Information
+### Domain Information
 
 Navigate to the `Domain` section in the side navigation under **Domain Management** to find out more about the domain.
 
-Here a user can edit the Domain Name, Alias, Tags and Metadata as well as copy the Domain ID.
+Here, a user can edit the Domain **Name**, **Alias**, **Tags**, **Metadata** and **Logo** as well as copy the Domain ID.
 
-The Domain status can be disabled by clicking the `Disable` button or enabled by the `Enable` button. Disabling the domain will revoke the access for users who are not domain admins.
+The Domain status can be disabled by clicking the `Disable` button or enabled by the `Enable` button. Disabling the domain will revoke access for users who aren't domain admins.
 
 ![Domain Info](../../img/domain/domain-info.png)
 
-## Domain Roles
+### Domain Roles
 
 From the roles section of the domain, the user can create new roles with varying role actions.
 
@@ -20,7 +20,7 @@ By default, an admin role with complete control over the domain is always presen
 
 ![Domain Roles](../../img/domain/roles.png)
 
-This is a domain role actions comprehensive list:
+Here's a comprehensive list of domain role actions:
 
 - **Domain Management**
 
@@ -84,15 +84,24 @@ To create a new role, click on the `+ Create` button, provide a descriptive name
 ![Create Domain Role](../../img/domain/create-role.png)
 
 Once created, domain roles can be edited in their respective pages.
-A user can edit the domain role name, role actions and role members.
+Users can edit the domain role name, role actions, and role members.
 
 ![Domain Role Page](../../img/domain/domain-role-id.png)
 
 These fields can be updated directly on the page or via the dropdown menu options.
 ![Domain Action Buttons](../../img/domain/role-actions.png)
 
-## Domain Members
+### Domain Members
 
-An admin or a member with the right permissions can assign users to a domain. Members must be assigned with specific roles.
+A domain admin or a member with the right permissions can assign users to a domain.
+Members must be assigned specific roles.
+Domain members have permissions over different entities depending on the role assigned to them. For example, members without read permissions aren't able to view specific entities within the domain.
 
-> This feature is currently under development :hammer:
+#### Assign Users
+
+To assign a user to a domain, click the `Assign User(s)` button, and then select a user along with their respective roles.
+Alternatively, the user can be added while creating the domain role.
+
+#### Unassign Users
+
+To unassign a user click the `trash` icon on the member row to be unassigned and confirm the action.
