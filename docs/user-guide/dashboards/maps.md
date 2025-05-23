@@ -2,7 +2,7 @@
 title: Maps
 ---
 
-## **Marker Map**
+### **Marker Map**
 
 **Marker Maps** are used to visualize the locations of entities, such as devices or channels, on a map. This makes them particularly useful for tracking the geographical locations of various IoT assets in a visual interface.
 
@@ -79,11 +79,11 @@ Once changes have been made, click `Update` to apply the modifications. The upda
 
 Marker Maps offer an intuitive way to visualize the physical locations of IoT devices or channels on a dashboard. The flexibility to add multiple data sources, customize markers, and retrieve position data from metadata or messages ensures that this widget is adaptable to various use cases. By integrating real-time location data, Marker Maps enable users to track and monitor their assets effectively.
 
-## **Route Map**
+### **Route Map**
 
 **Route Maps** display the path or movement of a device or entity based on the location messages sent over time. Unlike Marker Maps, which rely on metadata, Route Maps depend on message data from a connected channel-client pair. These messages contain latitude and longitude values, which are used to trace the route on the map. This feature is particularly useful for tracking the movement of devices over time.
 
-### How Route Maps Work
+#### How Route Maps Work
 
 Route Maps visualize location data by retrieving it from messages sent through a channel. The process for sending messages is covered in [getting-started](../../dev-guide/getting-started.md).
 To use Route Maps, navigate to the messages tab of a channel that has connected clients. For Route Maps, it is crucial to use `location` as the value name, and the value type must be string. The message should contain the location data in the following format (as a string):
