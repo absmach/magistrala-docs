@@ -2,21 +2,21 @@
 title: Channels
 ---
 
-**Channels** are considered as message conduits. They are responsible for the messages exchange between Clients and act as message topics that can be **published** or **subscribed** to by multiple Clients.
+**Channels** act as message conduits. They are responsible for the messages exchange between Clients and act as message topics that can be **published** or **subscribed** to by multiple Clients.
 
-Clients are able to **publish** or **subscribe** to a channel depending on the connection type they have.
+Clients are able to **publish** or **subscribe** to a channel depending on their connection.
 
 ## Create a Channel
 
 To create a channel, click on the `+ Create` button present on the top-left corner of the page. You can also create multiple channels by clicking on the `+ Create Channels` button and uploading a _.csv_ file.
 
-![Create channel](../../img/clients/channel-create-buttons.png)
+![Create channel](../../img/clients/channel-create-buttons2.png)
 
 ### Channel Information
 
 Add a channel **_name_** and optionally **_tags_** and **_metadata_**.
 
-![Channel information](../../img/clients/channel-create.png)
+![Channel information](../../img/clients/channel-create3.png)
 
 ### Bulk Creation
 
@@ -28,35 +28,38 @@ You can be able to create channels in bulk by uploading a _.csv_ file with the f
 
 A sample of the channels _.csv_ file can be found [here](https://github.com/absmach/magistrala-ui/blob/main/samples/channels.csv).
 
-![Bulk create channels](../../img/clients/channels-bulk-ceate.png)
+![Bulk create channels](../../img/clients/channels-bulk-ceate2.png)
 
 ## View a Channel
 
-After creating a channel, you will be able to see the created channel on the channels table. To view that channel click on the **row** or the **view** button in the row actions
+After creating a channel, it will appear in the channels table. To view that channel click on the **row** or the **view** button in the row actions.
 
-![View channel](../../img/clients/channel-view.png)
+![View channel](../../img/clients/channel-view2.png)
 
-This will lead you to the channel settings page, where you can view all the channel settings and connections.
+This will lead you to the Channel Settings page, where you can view the channel's **Name**, **ID**, **Metadata**, **Tags** and **Status**.
 
-![View channel settings](../../img/clients/channel-view-settings.png)
+![View channel settings](../../img/clients/channel-view-settings2.png)
 
 ## Update a Channel
 
-In the channel settings page, you will be able to update the following channel details:
+In the channel settings page, you will be able to update the following channel details as long as you have the required permissions:
 
 1. Name
 2. Metadata
 3. Status
+4. Tags
 
 To update a field, click on the `pencil` icon on the far end of the field to edit. Once you have updated the value, click on the `check` icon to update the changes or the `cross` icon to cancel the change. To update the channel status, toggle the switch on the far end of the status field.
 
-![Edit channel](../../img/clients/channel-update.png)
+This is an example of updating tags.
+
+![Edit channel](../../img/clients/channel-update2.png)
 
 ## Connect to a Client
 
 Navigate to the `Connections` section of the channel navigation. This will lead you to the connections page where you can view the clients connected to a channel.
 
-![Connections page](../../img/clients/channel-connections.png)
+![Connections page](../../img/clients/channel-connections2.png)
 
 In this page you are able to add a connection by clicking on the `Connect` button on the top right corner.
 
@@ -69,30 +72,30 @@ There are two connection type options:
 
  A client can have both connection types selected.  
 
-![Connect client](../../img/clients/channel-connect-client.png)
+![Connect client](../../img/clients/channel-connect-client2.png)
 
 To disconnect the client, click on the `Disconnect` button at the end of the channel row.
 
-![Disconnect client button](../../img/clients/channel-disc-client.png)
+![Disconnect client button](../../img/clients/channel-disc-client3.png)
 
 This will open up a dialog that allows you to select which connection type you want to remove. You can remove one or both of the connection types if there are multiple.
 
-![Disconnect client dialog](../../img/clients/channel-disc-client-dialog.png)
+![Disconnect client dialog](../../img/clients/channel-disc-client-dialog2.png)
 
-## Channel Members
-
-### Roles
+## Channel Roles
 
 Roles allow you to group a specific set of actions and allocate them to users.
 To create a role, navigate to the roles section on the client navbar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
 
-![Create channel role](../../img/clients/channel-create-role.png)
+![Create channel role](../../img/clients/channel-create-role2.png)
 
-#### Role Information
+### Channel Role Information
 
-![Channel role information](../../img/clients/channel-create-role-dialog.png)
+![Channel role information](../../img/clients/channel-create-role-dialog2.png)
 
-The role name is complusory. You can optionally provide the role actions by selecting from the available actions. You can also optionally provide the members by searching for a user with their **username**.
+The **Role Name** is compulsory.
+You can provide the role actions by selecting from the available actions in the dropdown menu depending on which permissions you would wish each member to have access to.
+You can also optionally provide the members by searching for a user with their **username**.
 
 The following is the list of available actions for a channel:
 
@@ -108,28 +111,64 @@ The following is the list of available actions for a channel:
 - remove_role_users
 - view_role_users
 
-#### Update
+### Update Channel Role Actions
 
 To update a role name, click on the `pencil` icon on the far right end of the field, update the value then click on the `check` icon to update the changes or the `cross` icon to cancel the changes.
 
-![Update role name](../../img/clients/channel-role-update.png)
+![Update role name](../../img/clients/channel-role-update2.png)
 
-To update the **actions** and **members** click on the `pencil` icon, it will pop up a dialog box allowing you to select the actions and users you want to add.
+To update the **role name** and **actions** click their respective `pencil` icons. Updating Role Actions will pop up a dialog box allowing you to select the Role Actions you want to add. This list will consist of all the actions available that are currently not amongst your Role Actions.
 
-![Update role actions](../../img/clients/channel-role-add-actions.png)
+![Update role actions](../../img/clients/channel-role-add-actions2.png)
 
-![Update role members](../../img/clients/channel-role-add-members.png)
+### Update Role Members
 
-#### Delete
+Members are listed in a separate table below the **Role Actions** section.
 
-You can also delete actions and members by clicking on the `trash` icon. It pops up a dialog that allows you to select which action or member you want to remove. Optionally you can delete all of the actions or members by clicking on the `Delete All Actions` or `Delete All Members` buttons.
+![Channel role members](../../img/clients/channel-role-members.png)
 
-![Delete role actions](../../img/clients/channel-role-delete-actions.png)
-![Delete role members](../../img/clients/channel-role-delete-members.png)
+To add new members to the channel under the current role click on `Add Members` button. The pop-up dialog will allow you to add any user that is a member of the domain to the channel. The users will show up on a dropdown menu.
 
-### Users
+![Channel role add members](../../img/clients/channel-role-add-members2.png)
 
-> This feature is currently under development :hammer:
+### Delete Channel Role
+
+If you would like to remove or delete any Role Action, click on the `Trash` icon. It pops up a dialog that allows you to select which Role Action you want to remove. Optionally you can delete all of the Role Actions by clicking on the `Delete All Actions` button.
+
+![Delete role actions](../../img/clients/channel-role-delete-actions2.png)
+
+### Delete Channel Role Members
+
+Clicking on the `Delete All Members` button will open an alert pop-up that requests for confirmation to delete the channel Role Members.
+
+![Delete role members](../../img/clients/channel-role-delete-members2.png)
+
+## Channel Members
+
+A channel can have multiple users assigned to it with various roles. Much like the Channel Role Members users can create, update and delete any Members from this segment.
+
+### View Channel Members
+
+Navigate to the Members tab under the Channel Menu. This will lead you to a table of all the available members as well their roles.
+The roles present here are the same roles as the Channel Roles in the section just above
+
+![View role members](../../img/clients/channel-members.png)
+
+### Assign Channel Members
+
+Members can be assigned to a channel by clicking on the `Assign Member` button.
+This will open up a dialog that allows you to select from amongst the Domain Members present from a dropdown list.
+The roles presented will also be the very same Channel Roles from above.
+
+![Assign role members](../../img/clients/channel-assign-member.png)
+
+Channel Members can have multiple Channel Roles assigned to them.
+
+### Unassign Channel Members
+
+To unassign a specific member from a channel, simply click on the `Trash` Icon on their row in the table. This will bring up a confirmation dialog.
+
+![Unassign role members](../../img/clients/channel-members-unassign.png)
 
 ## Messages
 
@@ -137,7 +176,7 @@ While on channels, a user can view, send and download messages associated to the
 
 ### Send Messages
 
-A connected client can be used as a publisher to send a message via the _http_ protocol while on the Magistrala UI.
+A connected client can be used as a publisher to send a message via the _HTTP_ protocol while on the Magistrala UI.
 To send a message navigate to the Messages section and click on the `Send Message` button.
 On the dialog that comes up there are some key fields that must be filled.
 These fields include:
@@ -147,17 +186,17 @@ These fields include:
 3. **Value** - This is the actual value received from the sensor.
 4. **Publisher** - This is the **connected** Client which can be selected from an infinite select. From this client the backend will get the special _Client-Key_ which will be used to send the message.
 
-There are some more fields that are not required but assist in making the messages more legible such as:
+Additional optional fields that help enhance message clarity:
 
 - **Unit** - This is the unit of the Value of the payload being sent.
-- **Subtopic** - This is a crucial field that is needed to assist in classifying the messages sent. This fiel **MUST** match the Rules Engine Publisher topic for the message to be saved in the database.
+- **Subtopic** - This is a crucial field that is needed to assist in classifying the messages sent. This field **MUST** match the Rules Engine Publisher topic for the message to be saved in the database.
 
 ![Send Message](../../img/users-guide/group-send-message.png)
 
-Messages sent are typically in SeNML format.
-The Magistrala UI also prioritises sending these messages via _http_.
+Messages sent are typically in SenML format.
+The Magistrala UI also prioritizes sending these messages via _HTTP_.
 A user can send their messages using the command terminal over other protocols such as MQTT or WebSocket.
-Further information on these protocols is discussed[here](../../dev-guide/messaging.md).
+Further information on these protocols is discussed [here](../../dev-guide/messaging.md).
 
 The messages table will then update to include the message sent with the latest message appearing first.
 
@@ -166,68 +205,4 @@ Using the filter options, you can filter through a wide range of messages based 
 ## Audit Logs
 
 Audit logs track all **group events**, from **creation** to **updates** and **disabling**.
-
-> This feature is currently under development :hammer:
-
-<!--
-### **Create a Channel**
-
-To create a channel, navigate to the fourth tab under the groups and click on `+ Create`. This will open a dialog box which will take in a unique Channel name. Much like the Clients, clicking on `+ Create Channels` will allow a user to upload a _.CSV_ file with multiple channels.
-
-![Create Group Channel](../../img/users-guide/group-channel-create.png)
-
-## View a Channel
-
-After the Channel is created, clicking on it while it is on the Channel's table leads to the **Channel View** Page.
-
-![View Group Channel](../../img/users-guide/group-channel-view.png)
-
-## Connect a Channel
-
-Clients can be connected to channels in groups. This is done in the **Connections** tab. There are two major connection types ie:
-
-- **Subscribe**
-- **Publish**
-
-These Channels can then be connected to a Client with either `subscribe` or `publish` connection types or both.
-
-![Connect Group Channel Clients](../../img/users-guide/group-channel-connections.png)
-
-This is required to send messages via the channels and has been discussed in [QuickStart Guide][users-quick-start]
-
-## User Management
-
-**User Management** in group-channels is pretty much the same as in the group-clients. A user can add roles and role actions to the channel.
-
-![Group Channel Roles Create](../../img/users-guide/group-channel-roles-create.png)
-
-Role Actions present include but are not limited to:
-
-- update
-- read
-- delete
-- set_parent_group
-- connect_to_client
-- publish
-- subscribe
-- manage_role
-- add_role_users
-- remove_role_users
-- view_role_users
-
-> Channel Users are an upcoming feature to Magistrala.
-
-## Send a Message
-
-Once a Channel and Client are connected, a user can send messages with the channel as a topic and the client unique key. Messages sent are typically in SeNML format.
-
-![View Messages Page](../../img/users-guide/group-messages-view.png)
-
-fields bear an asterisk. Messages are sent via _HTTP_ protocol in the UI.
-
-![Send Message](../../img/users-guide/group-send-message.png)
-
-The messages table will then update to include the message sent with the latest message appearing first.
-Using the filter options, you can filter through a wide range of messages based on the protocol, publisher or even value.
-
-[users-quick-start]: users-quick-start.md -->
+Through these logs a detailed report of what procedures and changes the Channel undergoes can be tracked.

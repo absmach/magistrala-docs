@@ -8,7 +8,7 @@ title: Groups
 
 To create a group, click on the `+ Create` button present on the top-left corner of the page. You can also create multiple groups by uploading a _.csv_ file with group **names** and any other fields you would like to add.
 
-![Create group](../../img/clients/group-create-button.png)
+![Create group](../../img/clients/group-create-button2.png)
 
 ### Group Information
 
