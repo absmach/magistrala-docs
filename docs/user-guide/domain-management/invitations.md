@@ -2,14 +2,14 @@
 title: Invitations
 ---
 
-### Overview
+## Overview
 
 Domain administrators can invite users to their domain with a specific role. Each role grants the invitee a predefined set of actions they can perform within the domain.  
 The **Invitations** tab displays a list of invitations sent by the user to other users.
 
 ![Invitations Table](../../img/invitations/invitation-table.png)
 
-### Send Invitation
+## Send Invitation
 
 To invite users to a domain, the administrator can click the `Send Invitation` button and select multiple users along with their assigned role.
 
@@ -17,7 +17,7 @@ To invite users to a domain, the administrator can click the `Send Invitation` b
 
 Once an invitation is sent, the recipient will receive a notification after logging in and can either accept or decline it.
 
-### Accept or Decline an Invitation
+## Accept or Decline an Invitation
 
 After logging in, the recipient will see a pop-up notification on the **Domains** page displaying all pending invitations.  
 

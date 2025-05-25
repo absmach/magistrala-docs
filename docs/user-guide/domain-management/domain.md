@@ -2,7 +2,7 @@
 title: Domain
 ---
 
-### Domain Information
+## Domain Information
 
 Navigate to the `Domain` section in the side navigation under **Domain Management** to find out more about the domain.
 
@@ -12,7 +12,7 @@ The Domain status can be disabled by clicking the `Disable` button or enabled by
 
 ![Domain Info](../../img/domain/domain-info.png)
 
-### Domain Roles
+## Domain Roles
 
 From the roles section of the domain, the user can create new roles with varying role actions.
 
@@ -91,17 +91,23 @@ Users can edit the domain role name, role actions, and role members.
 These fields can be updated directly on the page or via the dropdown menu options.
 ![Domain Action Buttons](../../img/domain/role-actions.png)
 
-### Domain Members
+## Domain Members
 
 A domain admin or a member with the right permissions can assign users to a domain.
 Members must be assigned specific roles.
 Domain members have permissions over different entities depending on the role assigned to them. For example, members without read permissions aren't able to view specific entities within the domain.
 
-#### Assign Users
+### Assign Users
 
-To assign a user to a domain, click the `Assign User(s)` button, and then select a user along with their respective roles.
+To assign a user to a domain, click the `Assign User` button, and then select a user along with their respective roles.
 Alternatively, the user can be added while creating the domain role.
 
-#### Unassign Users
+![Assign User Button](../../img/domain/assign-user.png)
+
+![Assign User Form](../../img/domain/assign-user-form.png)
+
+### Unassign Users
 
 To unassign a user click the `trash` icon on the member row to be unassigned and confirm the action.
+
+![Unassign User Button](../../img/domain/unassign-user.png)
