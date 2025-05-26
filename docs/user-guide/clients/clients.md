@@ -8,13 +8,13 @@ title: Clients
 
 To create a client, click on the `+ Create` button present on the top-left corner of the page. You can also create multiple clients by clicking on the `+ Create Clients` button and uploading a _.csv_ file with client **names** and any other fields you would like to add.
 
-![Create client](../../img/clients/client-create-buttons.png)
+![Create client](../../img/clients/client-create-buttons2.png)
 
 ### Client Information
 
 Add a client **_name_** and optionally a **_key_** (has to be unique), **_tags_** and **_metadata_**.
 
-![Client information](../../img/clients/client-create.png)
+![Client information](../../img/clients/client-create2.png)
 
 The client **key** will be used to authorize the device to send messages.
 
@@ -29,21 +29,21 @@ You can be able to create clients in bulk by uploading a _.csv_ file with the fo
 
 A sample of the _.csv_ file can be found [here](https://github.com/absmach/magistrala-ui/blob/main/samples/clients.csv).
 
-![Bulk create clients](../../img/clients/clients-bulk-create.png)
+![Bulk create clients](../../img/clients/clients-bulk-create2.png)
 
 ## View a Client
 
 After creating a client, you will be able to see the created client on the clients table. To view that client click on the **row** or the **view** button in the row actions
 
-![View client](../../img/clients/client-view.png)
+![View client](../../img/clients/client-view3.png)
 
-This will lead you to the client configuration page, where you can view all the client configurations.
+This will lead you to the client configuration page, where you can view all the client details.
 
-![View client configurations](../../img/clients/client-view-config.png)
+![View client configurations](../../img/clients/client-view-config2.png)
 
 ## Configurations
 
-This page consists of both the client configurations which are the client details and the bootstrap configuration which are the bootstrap details for the client.
+This page consists of key information relating to the specific Client which can be retrieved in an instance. There are fields such as Tags and Metadata that assist in further classification and search functionalites for the clients.
 
 ### Client Configuration
 
@@ -55,11 +55,12 @@ This section enables a user to update the following client details:
 4. Metadata
 5. Status
 
-To update a field, click on the `pencil` icon on the far end of the field to edit. Once you have updated the value, click on the `tick` icon to update the changes or the `cross` icon to cancel the change. To update the client status, toggle the switch on the far end of the status field.
+To update a field, click on the `pencil` icon on the far end of the field to edit. Once you have updated the value, click on the `check` icon to update the changes or the `cross` icon to cancel the change. To update the client status, toggle the switch on the far end of the status field.
+Metadata MUST be a valid JSON object to be considered valid. Tags require the user to click `Enter` after each tag to have the entry recognised as valid Tag.
 
-![Edit client](../../img/clients/client-update.png)
+![Edit client](../../img/clients/client-edit-config.png)
 
-### Bootstrap Configuration
+<!-- ### Bootstrap Configuration
 
 Bootstrap configuration of a client allows bootstrapping of the device (self-starting process that proceeds without external input). Further details of bootstrapping are discussed in the [Bootstrap section](bootstraps.md).
 
@@ -79,13 +80,13 @@ A dialog box will appear allowing you to enter the following fields
    - Client Key
    - CA Cert
 
-![Bootstrap configuration dialog](../../img/clients/client-bootstrap-dialog.png)
+![Bootstrap configuration dialog](../../img/clients/client-bootstrap-dialog.png) -->
 
 ## Connect to a Channel
 
 Navigate to the `Connections` section of the client navigation. This will lead you to the connections page where you can view the channels a client is connected to.
 
-![Connections page](../../img/clients/client-connections.png)
+![Connections page](../../img/clients/client-connections2.png)
 
 In this page you are able to add a connection by clicking on the `Connect` button on the top right corner.
 
@@ -95,28 +96,26 @@ There are two connection type options:
 1. **Publish**: Allows the client to send messages in the channel
 2. **Subscribe**: Allows the client to read messages in the channel
 
-![Connect channel](../../img/clients/client-connect-channel.png)
+![Connect channel](../../img/clients/client-connect-channel2.png)
 
 To disconnect from the channel, click on the `Disconnect` button at the end of the channel row.
 
-![Disconnect channel button](../../img/clients/client-disc-channel.png)
+![Disconnect channel button](../../img/clients/client-disc-channel2.png)
 
 This will open up a dialog that allows you to select which connection type you want to remove. You can remove one or both of the connection types if you have multiple.
 
 ![Disconnect channel dialog](../../img/clients/client-disc-channel-dialog.png)
 
-## Client Members
-
-### Roles
+## Client Roles
 
 Roles allow you to group a specific set of actions and allocate them to users.
 To create a role, navigate to the roles section on the client navbar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
 
-![Create client role](../../img/clients/client-create-role.png)
+![Create client role](../../img/clients/client-roles2.png)
 
-#### Role Information
+### Role Information
 
-![Client role information](../../img/clients/client-create-role-dialog.png)
+![Client role information](../../img/clients/client-role-create.png)
 
 The role name is complusory. You can optionally provide the role actions by selecting from the available actions. You can also optionally provide the members by searching for a user with their **username**.
 
@@ -134,22 +133,33 @@ The following is the list of available actions for a client:
 
 #### Update
 
+Clicking the Role in the Role Table leads to the individual Role Page. Here there are two tables for the Role Actions and the assigned Role Members.
+
 To update a role name, click on the `pencil` icon on the far right end of the field, update the value then click on the `tick` icon to update the changes or the `cross` icon to cancel the changes.
 
-![Update role name](../../img/clients/client-role-update.png)
+![Update role name](../../img/clients/client-update-role.png)
 
-To update the **actions** and **members** click on the `pencil` icon, it will pop up a dialog box allowing you to select the actions and users you want to add.
+To update the **Role Actions** click on the `pencil` icon, it will pop up a dialog box allowing you to select the actions and users you want to add.
 
-![Update role actions](../../img/clients/client-role-add-actions.png)
+![Update role actions](../../img/clients/client-update-role-actions.png)
 
-![Update role members](../../img/clients/client-role-add-members.png)
+To update the **Role Members**, click the `Add Members` button. A popup dialog will appear with the list of Domain Members from which a user can select.
+
+![Update role members](../../img/clients/client-role-update-members.png)
 
 #### Delete
 
-You can also delete actions and members by clicking on the `trash` icon. It pops up a dialog that allows you to select which action or member you want to remove. Optionally you can delete all of the actions or members by clicking on the `Delete All Actions` or `Delete All Members` buttons.
+You can also delete actions and members by clicking on the `trash` icon. It pops up a dialog that allows you to select which action you want to remove. There is also an option for clearning the whole list if that is needed as well.
 
-![Delete role actions](../../img/clients/client-role-delete-actions.png)
-![Delete role members](../../img/clients/client-role-delete-members.png)
+![Delete role actions](../../img/clients/client-role-delete-actions2.png)
+
+When it comes to **Role Members** , you can clear the whole table with the `Delete All Members` which will lead to this alert dialog:
+
+![Delete All Role Members](../../img/clients/clients-delete-all-role-members-dialog.png)
+
+To delete specific members from the Role Members Table, click on the `trash` icon.
+
+![Delete role members](../../img/clients/client-delete-role-members.png)
 
 ### Users
 
