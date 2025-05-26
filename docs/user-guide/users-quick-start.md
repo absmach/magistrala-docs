@@ -51,7 +51,7 @@ On the sidebar navigation, click on **Groups** under the _Client Management_ sec
 
 To create a group, click on the `+ Create` button present on the top-left corner of the page. This will open a popover with all the required fields for a new group.
 
-![Create Group](../img/clients/group-information.png)
+![Create Group](../img/users-guide/group-information.png)
 
 ## Create a Client
 
@@ -68,7 +68,13 @@ Additionally, **tags** can be assigned to Clients for better organization and fi
 
 ![Create Client](../img/users-guide/group-client-create.png)
 
-A user can also create bulk clients by clicking on the `+ Create Clients` button. This will lead to a dialogbox that takes iNingYuanchang@123n a _.CSV_  file with the clients' details filled in correctly as seen in these [samples](https://github.com/absmach/magistrala-ui/tree/main/samples).
+A user can also create bulk clients by clicking on the `+ Create Clients` button. This will lead to a dialogbox that takes in a _.CSV_  file with the clients' details filled in correctly as seen in these [samples](https://github.com/absmach/magistrala-ui/tree/main/samples).
+
+The file should have the following fields in order:
+
+1. Name (Required)
+2. Metadata
+3. Tags
 
 ![Create Clients](../img/users-guide/group-clients-create.png)
 
