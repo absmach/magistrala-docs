@@ -33,7 +33,7 @@ Here are some practical examples of how you can use the Rules Engine:
 
 Navigate to the **Rules** section and click on the `+ Create` button. Provide a **name** for your rule and click **Create**.
 
-![Create a new Rule](../img/rules/create-rule.png)
+![Create a new Rule](../img/rules/rules.png)
 
 ![Create a Rule Dialog](../img/rules/create-rule-dialog.png)
 
@@ -64,7 +64,7 @@ On the rule page, you can configure the following:
 
 - Currently, only one input node is supported per rule.
 
-![select input](../img/rules/select-input.png)
+![select input](../img/rules/input-node2.png)
 
 - Select **MQTT Subscriber** as the input type.
 - Choose the **channel** and **topic** to subscribe to.
@@ -73,7 +73,7 @@ On the rule page, you can configure the following:
 
 - The input node will appear in the layout.
 
-  ![input node](../img/rules/input-node.png)
+  ![input node](../img/rules/input-node3.png)
 
 ### 2. Logic Node
 
@@ -141,7 +141,7 @@ You can add one or more output nodes. The following nodes are supported:
 4. Alarm
 5. Magistrala DB
 
-![select output](../img/rules/select-output.png)
+![select output](../img/rules/output-node.png)
 
 #### Channel Publisher
 
@@ -332,8 +332,6 @@ end
 
 > This returns a valid SenML message the internal DB will accept.
 
-<br/>
-
 Then set your output node to store this result using the Magistrala internal DB option.
 
 ![Storage with json input](../img/rules/json-input.png)
@@ -348,7 +346,7 @@ function logicFunction()
 end
 ```
 
-![Storage with senml input](../img/rules/senml-input.png)
+![Storage with senml input](../img/rules/rule.png)
 
 :::info
 
