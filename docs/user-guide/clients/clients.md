@@ -161,12 +161,22 @@ To delete specific members from the Role Members Table, click on the `trash` ico
 
 ![Delete role members](../../img/clients/client-delete-role-members.png)
 
-### Users
+## Client Members
 
-> This feature is currently under development :hammer:
+While we can create new members from the **Roles** section alongside the new roles actions, we can also assign members to the client through the **Members** Section.
+
+Clicking on the `Assign Member` button will open a dialog box that allows the user to select amongst the Domain Members present as well as the Roles present in the Client.
+
+![Assign Members](../../img/clients/client-members2.png)
 
 ## Audit Logs
 
-Audit logs track all **group events**, from **creation** to **updates** and **disabling**.
+Audit logs track all **client-related events**, including creation, updates, role changes, and connection activity.
 
-> This feature is currently under development :hammer:
+Each log entry displays the **operation type**, a **timestamp**, and optional **details** for deeper inspection.
+
+You can search logs by operation type using the search input above the log table.
+
+The most recent operations—such as `client.view`, `client.create`, and `channel.connect`—are displayed at the top.
+
+![Client Audit Logs](../../img/clients/client-auditlogs.png)
