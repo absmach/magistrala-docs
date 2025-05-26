@@ -104,7 +104,7 @@ To disconnect from the channel, click on the `Disconnect` button at the end of t
 
 This will open up a dialog that allows you to select which connection type you want to remove. You can remove one or both of the connection types if you have multiple.
 
-![Disconnect channel dialog](../../img/clients/client-disc-channel-dialog.png)
+![Disconnect channel dialog](../../img/clients/client-disc-channel-dialog2.png)
 
 ## Client Roles
 
