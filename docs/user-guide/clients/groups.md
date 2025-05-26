@@ -153,7 +153,6 @@ Optionally, we have the capacity to add users by assigning them to a group in th
 
 ![View Group Users](../../img/clients/group-users.png)
 
-> This feature is currently under development :hammer:
 
 ## Group Clients
 
@@ -173,4 +172,3 @@ A user is able to **create**, **update**, **disable**, **enable**, **delete**, a
 
 Audit logs track all **group events**, from **creation** to **updates** and **disabling**.
 
-> This feature is currently under development :hammer:
