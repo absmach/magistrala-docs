@@ -2,7 +2,7 @@
 title: Channels
 ---
 
-**Channels** act as message conduits. They are responsible for the messages exchange between Clients and act as message topics that can be **published** or **subscribed** to by multiple Clients.
+**Channels** act as message conduits. They are responsible for the messages exchange between clients and act as message topics that can be **published** or **subscribed** to by multiple Clients.
 
 Clients are able to **publish** or **subscribe** to a channel depending on their connection.
 
@@ -117,11 +117,11 @@ To update a role name, click on the `pencil` icon on the far right end of the fi
 
 ![Update role name](../../img/clients/channel-role-update.png)
 
-To update the **role name** and **actions** click their respective `pencil` icons. Updating Role Actions will pop up a dialog box allowing you to select the Role Actions you want to add. This list will consist of all the actions available that are currently not amongst your Role Actions.
+To update the **role name** and **role actions**, click their respective pencil icons. Updating Role Actions will open a dialog box allowing you to select the Role Actions you want to add. This list will include all available actions that are not currently among your Role Actions.
 
 ![Update role actions](../../img/clients/channel-role-add-actions.png)
 
-### Update Role Members
+### Update Channel Role Members
 
 Members are listed in a separate table below the **Role Actions** section.
 
@@ -173,6 +173,8 @@ To unassign a specific member from a channel, simply click on the `Trash` Icon o
 ## Messages
 
 While on channels, a user can view, send and download messages associated to the channel.
+
+![Messages Page](../../img/clients/empty-messages-page.png)
 
 ### Send Messages
 
