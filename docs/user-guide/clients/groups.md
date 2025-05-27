@@ -137,7 +137,7 @@ The following is the list of available actions for a group:
   - subgroup_remove_role_users
   - subgroup_view_role_users
 
-#### Update Group Roles
+### Update Group Roles
 
 To update a role name, click on the `pencil` icon on the far right end of the field, update the value then click on the `check` icon to update the changes or the `cross` icon to cancel the changes.
 
@@ -151,7 +151,7 @@ When it comes to the Group Role Members, we have a separate table for the users.
 
 ![Update role members](../../img/clients/group-role-members-add.png)
 
-#### Delete Group Roles
+### Delete Group Roles
 
 You can also delete actions and members by clicking on the `trash` icon. It pops up a dialog that allows you to select which action you want to remove. Optionally you can delete all of the actions by clicking on the `Delete All Actions` buttons.
 
