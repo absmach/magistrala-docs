@@ -8,13 +8,13 @@ title: Groups
 
 To create a group, click on the `+ Create` button present on the top-left corner of the page. You can also create multiple groups by uploading a _.csv_ file with group **names** and any other fields you would like to add.
 
-![Create group](../../img/clients/group-create-button2.png)
+![Create group](../../img/clients/group-create-button.png)
 
 ### Group Information
 
 Add a group _name_ and optionally a _description_, _metadata_ and a _parent group_.
 
-![Group information](../../img/clients/group-information2.png)
+![Group information](../../img/clients/group-information.png)
 
 The parent group would add hierarchy to the group making it a child of the parent group you have selected. Actions within a role in the parent group trickle down to the children groups.
 
@@ -24,7 +24,7 @@ On the group sidebar there is a levelled family tree section shows a group's par
 
 After creating a group, it will show up on the page as the first group created.
 
-![View Group](../../img/clients/group-view2.png)
+![View Group](../../img/clients/group-view.png)
 
 ## Update a Group
 
@@ -35,7 +35,7 @@ To update a field, click on the `pencil` icon on the far end of the field to edi
 
 A group can also be disabled or enabled by toggling the switch on the far end of the status field.
 
-![Disabled Group](../../img/clients/group-disabled2.png)
+![Disabled Group](../../img/clients/group-disabled.png)
 
 You can delete a group permanently from the database by clicking on the `Delete Group` button.
 This will open an alert dialog that will prompt you to enter the complete group name correctly to ensure confirmation of the deletion.
@@ -62,7 +62,7 @@ In the case of a group without a Parent, the button will instead prompt you to s
 Roles allow you to group a specific set of actions and allocate them to users.
 To create a role, navigate to the **Roles** section on the group navbar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
 
-![Create Group Role](../../img/clients/group-role-create2.png)
+![Create Group Role](../../img/clients/group-role-create.png)
 
 #### Role Information
 
@@ -155,11 +155,11 @@ When it comes to the Group Role Members, we have a separate table for the users.
 
 You can also delete actions and members by clicking on the `trash` icon. It pops up a dialog that allows you to select which action you want to remove. Optionally you can delete all of the actions by clicking on the `Delete All Actions` buttons.
 
-![Delete role actions](../../img/clients/group-role-delete-actions2.png)
+![Delete role actions](../../img/clients/group-role-delete-actions.png)
 
 To delete All the Members in the Role simply use the `Delete All Members` button and click on the confirmation.
 
-![Delete role members](../../img/clients/group-role-delete-members2.png)
+![Delete role members](../../img/clients/group-role-delete-members.png)
 
 The Members table also has individual `trash` icons on each row which facilitates deleting specific Role Members.
 
@@ -179,14 +179,14 @@ Through the use of the `trash` icon on each row to delete specific members from 
 Magistrala provides the capacity to create clients directly in the group level.  
 A user is able to **create**, **update**, **disable**, **enable**, **delete**, **assign**, and **connect** clients on the group level. These functionalities are described better in the [clients](clients.md) section
 
-![Group clients](../../img/clients/group-clients2.png)
+![Group clients](../../img/clients/group-clients.png)
 
 ## Group Channels
 
 Magistrala provides the capacity to create channels directly in the group level.  
 A user is able to **create**, **update**, **disable**, **enable**, **delete**, **assign**, and **connect** channels on the group level. These functionalities are described better in the [channels](channels.md) section
 
-![Group channels](../../img/clients/group-channels2.png)
+![Group channels](../../img/clients/group-channels.png)
 
 ## Audit Logs
 
