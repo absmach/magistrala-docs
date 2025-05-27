@@ -10,13 +10,13 @@ Clients are able to **publish** or **subscribe** to a channel depending on their
 
 To create a channel, click on the `+ Create` button present on the top-left corner of the page. You can also create multiple channels by clicking on the `+ Create Channels` button and uploading a _.csv_ file.
 
-![Create channel](../../img/clients/channel-create-buttons2.png)
+![Create channel](../../img/clients/channel-create-buttons.png)
 
 ### Channel Information
 
 Add a channel **_name_** and optionally **_tags_** and **_metadata_**.
 
-![Channel information](../../img/clients/channel-create3.png)
+![Channel information](../../img/clients/channel-create.png)
 
 ### Bulk Creation
 
@@ -28,17 +28,17 @@ You can be able to create channels in bulk by uploading a _.csv_ file with the f
 
 A sample of the channels _.csv_ file can be found [here](https://github.com/absmach/magistrala-ui/blob/main/samples/channels.csv).
 
-![Bulk create channels](../../img/clients/channels-bulk-ceate2.png)
+![Bulk create channels](../../img/clients/channels-bulk-create.png)
 
 ## View a Channel
 
 After creating a channel, it will appear in the channels table. To view that channel click on the **row** or the **view** button in the row actions.
 
-![View channel](../../img/clients/channel-view2.png)
+![View channel](../../img/clients/channel-view.png)
 
 This will lead you to the Channel Settings page, where you can view the channel's **Name**, **ID**, **Metadata**, **Tags** and **Status**.
 
-![View channel settings](../../img/clients/channel-view-settings2.png)
+![View channel settings](../../img/clients/channel-view-settings.png)
 
 ## Update a Channel
 
@@ -53,13 +53,13 @@ To update a field, click on the `pencil` icon on the far end of the field to edi
 
 This is an example of updating tags.
 
-![Edit channel](../../img/clients/channel-update2.png)
+![Edit channel](../../img/clients/channel-update.png)
 
 ## Connect to a Client
 
 Navigate to the `Connections` section of the channel navigation. This will lead you to the connections page where you can view the clients connected to a channel.
 
-![Connections page](../../img/clients/channel-connections2.png)
+![Connections page](../../img/clients/channel-connections.png)
 
 In this page you are able to add a connection by clicking on the `Connect` button on the top right corner.
 
@@ -72,26 +72,26 @@ There are two connection type options:
 
  A client can have both connection types selected.  
 
-![Connect client](../../img/clients/channel-connect-client2.png)
+![Connect client](../../img/clients/channel-connect-client.png)
 
 To disconnect the client, click on the `Disconnect` button at the end of the channel row.
 
-![Disconnect client button](../../img/clients/channel-disc-client3.png)
+![Disconnect client button](../../img/clients/channel-disc-client.png)
 
 This will open up a dialog that allows you to select which connection type you want to remove. You can remove one or both of the connection types if there are multiple.
 
-![Disconnect client dialog](../../img/clients/channel-disc-client-dialog2.png)
+![Disconnect client dialog](../../img/clients/channel-disc-client-dialog.png)
 
 ## Channel Roles
 
 Roles allow you to group a specific set of actions and allocate them to users.
 To create a role, navigate to the roles section on the client navbar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
 
-![Create channel role](../../img/clients/channel-create-role2.png)
+![Create channel role](../../img/clients/channel-create-role.png)
 
 ### Channel Role Information
 
-![Channel role information](../../img/clients/channel-create-role-dialog2.png)
+![Channel role information](../../img/clients/channel-create-role-dialog.png)
 
 The **Role Name** is compulsory.
 You can provide the role actions by selecting from the available actions in the dropdown menu depending on which permissions you would wish each member to have access to.
@@ -115,11 +115,11 @@ The following is the list of available actions for a channel:
 
 To update a role name, click on the `pencil` icon on the far right end of the field, update the value then click on the `check` icon to update the changes or the `cross` icon to cancel the changes.
 
-![Update role name](../../img/clients/channel-role-update2.png)
+![Update role name](../../img/clients/channel-role-update.png)
 
 To update the **role name** and **actions** click their respective `pencil` icons. Updating Role Actions will pop up a dialog box allowing you to select the Role Actions you want to add. This list will consist of all the actions available that are currently not amongst your Role Actions.
 
-![Update role actions](../../img/clients/channel-role-add-actions2.png)
+![Update role actions](../../img/clients/channel-role-add-actions.png)
 
 ### Update Role Members
 
@@ -129,19 +129,19 @@ Members are listed in a separate table below the **Role Actions** section.
 
 To add new members to the channel under the current role click on `Add Members` button. The pop-up dialog will allow you to add any user that is a member of the domain to the channel. The users will show up on a dropdown menu.
 
-![Channel role add members](../../img/clients/channel-role-add-members2.png)
+![Channel role add members](../../img/clients/channel-role-add-members.png)
 
 ### Delete Channel Role
 
 If you would like to remove or delete any Role Action, click on the `Trash` icon. It pops up a dialog that allows you to select which Role Action you want to remove. Optionally you can delete all of the Role Actions by clicking on the `Delete All Actions` button.
 
-![Delete role actions](../../img/clients/channel-role-delete-actions2.png)
+![Delete role actions](../../img/clients/channel-role-delete-actions.png)
 
 ### Delete Channel Role Members
 
 Clicking on the `Delete All Members` button will open an alert pop-up that requests for confirmation to delete the channel Role Members.
 
-![Delete role members](../../img/clients/channel-role-delete-members2.png)
+![Delete role members](../../img/clients/channel-role-delete-members.png)
 
 ## Channel Members
 
@@ -191,7 +191,7 @@ Additional optional fields that help enhance message clarity:
 - **Unit** - This is the unit of the Value of the payload being sent.
 - **Subtopic** - This is a crucial field that is needed to assist in classifying the messages sent. This field **MUST** match the Rules Engine Publisher topic for the message to be saved in the database.
 
-![Send Message](../../img/users-guide/group-send-message.png)
+![Send Message](../../img/clients/send-messages.png)
 
 Messages sent are typically in SenML format.
 The Magistrala UI also prioritizes sending these messages via _HTTP_.
@@ -200,9 +200,47 @@ Further information on these protocols is discussed [here](../../dev-guide/messa
 
 The messages table will then update to include the message sent with the latest message appearing first.
 
-Using the filter options, you can filter through a wide range of messages based on the protocol, publisher or even value.
+![Messages Table](../../img/clients/messages-table.png)
+
+### Filter Messages
+
+Magistrala provides a detailed **Messages Filter Panel** to help you query and view only the messages you’re interested in. By clicking on the `Filter` button in the Messages section, a filter menu appears with various filtering options:
+
+![Filter Messages](../../img/clients/filter-panel.png)  
+
+You can filter messages by:
+
+- **Protocol** – Select the communication protocol used (e.g., MQTT, HTTP).
+- **Publisher** – Choose the client that published the message.
+- **Value** – Input specific values to filter by.
+- **Boolean Value** – Filter by true/false type messages.
+- **String Value / Data Value** – Provide string or data-specific content to match.
+- **Time Range** – Use the **From** and **To** date fields to filter messages over a specific time window.
+- **Aggregation** – Select aggregation methods like `avg`, `sum`, `min`, `max` etc. for time-series aggregation.
+- **Interval** – Set intervals for the aggregation (e.g., `1m`, `10s`, `1h`).
+
+Once filters are selected, click the **Update** button to refresh the message list.
+
+You can also reset all filters by clicking the **Clear All** button.
+
+### Download Messages
+
+To download messages for reporting or analysis, click on the `Download` button. A dialog will appear that lets you customize which messages are downloaded:
+
+![Download Messages Dialog](../../img/clients/download-messages.png)
+
+In the download dialog, you can configure:
+
+- **Offset & Limit** – Control pagination of the result set.
+- **Name** – Filter messages by message name.
+- **Protocol** – Choose protocol type.
+- **Publisher** – Filter by client who published the messages.
+- **Value** – Match a specific message value.
+- **File Name** – Customize the name of the downloaded file. If a name is not provided we will default to using the Channel ID as the csv file name.
+
+Click **Download** to generate and download the CSV file containing the matching messages.
 
 ## Audit Logs
 
-Audit logs track all **group events**, from **creation** to **updates** and **disabling**.
+Audit logs track all **channel events**, from **creation** to **updates** and **disabling**.
 Through these logs a detailed report of what procedures and changes the Channel undergoes can be tracked.
