@@ -8,13 +8,13 @@ title: Clients
 
 To create a client, click on the `+ Create` button present on the top-left corner of the page. You can also create multiple clients by clicking on the `+ Create Clients` button and uploading a _.csv_ file with client **names** and any other fields you would like to add.
 
-![Create client](../../img/clients/client-create-buttons2.png)
+![Create client](../../img/clients/client-create-buttons.png)
 
 ### Client Information
 
 Add a client **_name_** and optionally a **_key_** (has to be unique), **_tags_** and **_metadata_**.
 
-![Client information](../../img/clients/client-create2.png)
+![Client information](../../img/clients/client-create.png)
 
 The client **key** will be used to authorize the device to send messages.
 
@@ -29,17 +29,17 @@ You can be able to create clients in bulk by uploading a _.csv_ file with the fo
 
 A sample of the _.csv_ file can be found [here](https://github.com/absmach/magistrala-ui/blob/main/samples/clients.csv).
 
-![Bulk create clients](../../img/clients/clients-bulk-create2.png)
+![Bulk create clients](../../img/clients/clients-bulk-create.png)
 
 ## View a Client
 
 After creating a client, you will be able to see the created client on the clients table. To view that client click on the **row** or the **view** button in the row actions
 
-![View client](../../img/clients/client-view3.png)
+![View client](../../img/clients/client-view.png)
 
 This will lead you to the client configuration page, where you can view all the client details.
 
-![View client configurations](../../img/clients/client-view-config2.png)
+![View client configurations](../../img/clients/client-view-config.png)
 
 ## Configurations
 
@@ -86,7 +86,7 @@ A dialog box will appear allowing you to enter the following fields
 
 Navigate to the `Connections` section of the client navigation. This will lead you to the connections page where you can view the channels a client is connected to.
 
-![Connections page](../../img/clients/client-connections2.png)
+![Connections page](../../img/clients/client-connections.png)
 
 In this page you are able to add a connection by clicking on the `Connect` button on the top right corner.
 
@@ -96,22 +96,22 @@ There are two connection type options:
 1. **Publish**: Allows the client to send messages in the channel
 2. **Subscribe**: Allows the client to read messages in the channel
 
-![Connect channel](../../img/clients/client-connect-channel2.png)
+![Connect channel](../../img/clients/client-connect-channel.png)
 
 To disconnect from the channel, click on the `Disconnect` button at the end of the channel row.
 
-![Disconnect channel button](../../img/clients/client-disc-channel2.png)
+![Disconnect channel button](../../img/clients/client-disc-channel.png)
 
 This will open up a dialog that allows you to select which connection type you want to remove. You can remove one or both of the connection types if you have multiple.
 
-![Disconnect channel dialog](../../img/clients/client-disc-channel-dialog2.png)
+![Disconnect channel dialog](../../img/clients/client-disc-channel-dialog.png)
 
 ## Client Roles
 
 Roles allow you to group a specific set of actions and allocate them to users.
 To create a role, navigate to the roles section on the client navbar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
 
-![Create client role](../../img/clients/client-roles2.png)
+![Create client role](../../img/clients/client-roles.png)
 
 ### Role Information
 
@@ -151,7 +151,7 @@ To update the **Role Members**, click the `Add Members` button. A popup dialog w
 
 You can also delete actions and members by clicking on the `trash` icon. It pops up a dialog that allows you to select which action you want to remove. There is also an option for clearning the whole list if that is needed as well.
 
-![Delete role actions](../../img/clients/client-role-delete-actions2.png)
+![Delete role actions](../../img/clients/client-role-delete-actions.png)
 
 When it comes to **Role Members** , you can clear the whole table with the `Delete All Members` which will lead to this alert dialog:
 
@@ -167,7 +167,7 @@ While we can create new members from the **Roles** section alongside the new rol
 
 Clicking on the `Assign Member` button will open a dialog box that allows the user to select amongst the Domain Members present as well as the Roles present in the Client.
 
-![Assign Members](../../img/clients/client-members2.png)
+![Assign Members](../../img/clients/client-members.png)
 
 ## Audit Logs
 
