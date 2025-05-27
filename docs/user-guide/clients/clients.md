@@ -171,12 +171,12 @@ Clicking on the `Assign Member` button will open a dialog box that allows the us
 
 ## Audit Logs
 
-Audit logs track all **client-related events**, including creation, updates, role changes, and connection activity.
+Audit logs track all **client-related events**, including **creation**, **updates**, **disabling**, **connectivity** and **role changes**
 
 Each log entry displays the **operation type**, a **timestamp**, and optional **details** for deeper inspection.
 
 You can search logs by operation type using the search input above the log table.
 
-The most recent operations—such as `client.view`, `client.create`, and `channel.connect`—are displayed at the top.
+The most recent operations—such as `client.view`, `client.create`, and `client.connect`—are displayed at the top.
 
-![Client Audit Logs](../../img/clients/client-auditlogs.png)
+![Client Audit Logs](../../img/clients/client-audit-logs.png)

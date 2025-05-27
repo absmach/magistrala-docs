@@ -206,4 +206,10 @@ To assign channels to a group, click on the `Assign Channels` button. This will 
 
 ## Audit Logs
 
-Audit logs track all **group events**, from **creation** to **updates** and **disabling**.
+Audit logs track all **group-related events**, including **creation**, **updates**, **disabling** and **role changes**.
+
+Each log entry displays the **operation type**, a **timestamp**, and optional **details** for deeper inspection.
+
+You can search logs by operation type using the search input above the log table.
+
+The most recent operations—such as `group.view`, `group.create` and `group.assign`—are displayed at the top.

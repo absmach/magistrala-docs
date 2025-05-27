@@ -253,5 +253,10 @@ Click **Download** to generate and download the CSV file containing the matching
 
 ## Audit Logs
 
-Audit logs track all **channel events**, from **creation** to **updates** and **disabling**.
-Through these logs a detailed report of what procedures and changes the Channel undergoes can be tracked.
+Audit logs track all **channel-related events**, including **creation**, **updates**, **disabling**, **connectivity** and **role changes**.
+
+Each log entry displays the **operation type**, a **timestamp**, and optional **details** for deeper inspection.
+
+You can search logs by operation type using the search input above the log table.
+
+The most recent operations—such as `channel.view`, `channel.create`, and `channel.connect`—are displayed at the top.
