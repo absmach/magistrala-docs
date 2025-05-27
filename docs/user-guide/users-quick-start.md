@@ -15,7 +15,7 @@ To get started, create an account by providing the following details in the sign
 - **An email address**
 - **A username**
 
-![Sign Up](../img/users-guide/registeruser2.png)
+![Sign Up](../img/users-guide/registeruser.png)
 
 Once registered, the user will be redirected to the **Domains Homepage**, where they can create and manage multiple domains.
 
@@ -85,7 +85,7 @@ To access the page, click on the Client in the Clients' table.
 
 The client's data can be updated in this page and its ID copied as well.
 
-![View Client](../img/users-guide/group-client-view2.png)
+![View Client](../img/users-guide/group-client-view.png)
 
 There **Connections** tab in the **group-client page** is where a User can connect a Client to a Channel.
 
