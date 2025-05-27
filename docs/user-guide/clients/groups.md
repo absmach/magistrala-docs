@@ -10,6 +10,16 @@ To create a group, click on the `+ Create` button present on the top-left corner
 
 ![Create group](../../img/clients/group-create-button.png)
 
+You can be able to create groups in bulk by uploading a _.csv_ file with the following fields in order:
+
+1. Name (Required)
+2. Metadata
+3. Description
+
+A sample of the groups _.csv_ file can be found [here](https://github.com/absmach/magistrala-ui/blob/main/samples/groups.csv).
+
+![Bulk create groups](../../img/clients/groups-bulk-create.png)
+
 ### Group Information
 
 Add a group _name_ and optionally a _description_, _metadata_ and a _parent group_.
