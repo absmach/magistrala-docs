@@ -83,7 +83,7 @@ The file should have the following fields in order:
 Once created, a **group-client** can be viewed and updated in the unique Client's ID page.
 To access the page, click on the Client in the Clients' table.
 
-The client's data can be updated in this page and its ID copied as well.
+The client's data can be updated in this page and its ID and secret copied as well.
 
 ![View Client](../img/users-guide/group-client-view.png)
 
@@ -116,22 +116,19 @@ Clients can be connected to channels in groups. This is done in the **Connection
 
 ## Create a Rule
 
-To be able to publish and save any messages to our Magistrala database, a rule must be created and saved.
+To be able to save any messages to our Magistrala database, a rule must be created and saved.
 Rules Engine takes care of this procedure.
 Navigate to the **Rules Engine** section on the navigation bar and click on `+ Create`.
 This will open a dialog box onto which you can enter the Rule name.
-To keep a close track of the Rules present the naming convention can follow `Save Channel <channel_name> Messages`.
+
+![Create Rule](../img/users-guide/create-rule.png)
+
 Once created the Rule will show up on the table present on the page.
 
-### View a Rule
+### Save a Rule
 
-Click on the Rule just created to be able to view its properties. From this page you can update the Rule with:
-
-- Input Node
-- Output Node
-- Logic Node
-
-Select the **Input Node** on the Rule page. This will bring up a doalog box which will allow you to select an **MQTT Subscriber** as the input type. Then select the **channel** which will be subscribed to from the list of channels as well as the **topic** of the payload.
+Click on the Rule just created to be able to view its properties.
+Select the **Input Node** on the Rule page. This will bring up a dialog box which will allow you to select a **Channel Subscriber** as the input type. Then select the **channel** which will be subscribed to from the list of channels as well as the **topic** of the payload.
 The Input Node will then appear on the screen.
 
 Next, set up the input logic of your Rule. You can select the `Lua Script Editor` from the two options present.
@@ -145,17 +142,11 @@ end
 
 This will be able to return the SenML payload of the messsages published.
 
-Finally we can set up the Output Node. There are multiple nodes supported:
-
-1. Channel publisher
-2. Email
-3. PostgreSQL
-4. Alarm
-5. Magistrala DB
-
-Select the **Magistrala DB** option which will store the messages in the internal Magistrala Postgres DB.
+Finally select the **Internal DB** option from the **Output Node** dialog option which will store the messages in the internal Magistrala Postgres DB.
 
 Then a **Channel Publisher** with a subtopic must be present.
+
+![Save Rule](../img/users-guide/save-rule.png)
 
 > More information about Rules Creation and Updating can be found in the [Rules Engine Section](./rules-engine.md)
 

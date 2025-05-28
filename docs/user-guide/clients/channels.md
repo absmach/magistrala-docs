@@ -8,7 +8,7 @@ Clients are able to **publish** or **subscribe** to a channel depending on their
 
 ## Create a Channel
 
-To create a channel, click on the `+ Create` button present on the top-left corner of the page. You can also create multiple channels by clicking on the `+ Create Channels` button and uploading a _.csv_ file.
+To create a channel, click on the `+ Create` button present on the top-left corner of the page. You can also create multiple channels by clicking on the `+ Upload` button and uploading a _.csv_ file.
 
 ![Create channel](../../img/clients/channel-create-buttons.png)
 
@@ -85,6 +85,8 @@ This will open up a dialog that allows you to select which connection type you w
 ## Channel Roles
 
 Roles allow you to group a specific set of actions and allocate them to users.
+Navigate to the **Roles** section of the channel sidebar. This will lead you to a table of all the available roles in the channel.
+
 To create a role, navigate to the roles section on the client navbar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
 
 ![Create channel role](../../img/clients/channel-create-role.png)
@@ -111,13 +113,16 @@ The following is the list of available actions for a channel:
 - remove_role_users
 - view_role_users
 
-### Update Channel Role Actions
+### Update Channel Role Name
 
+Clicking on a Channel Role leads you to the Role page with itss Role Actions and Role Members table.
 To update a role name, click on the `pencil` icon on the far right end of the field, update the value then click on the `check` icon to update the changes or the `cross` icon to cancel the changes.
 
 ![Update role name](../../img/clients/channel-role-update.png)
 
-To update the **role name** and **role actions**, click their respective pencil icons. Updating Role Actions will open a dialog box allowing you to select the Role Actions you want to add. This list will include all available actions that are not currently among your Role Actions.
+### Update Channel Role Actions
+
+To update the **role actions**, click the pencil icon on the row. Updating Role Actions will open a dialog box allowing you to select the Role Actions you want to add. This list will include all available actions that are not currently among your Role Actions.
 
 ![Update role actions](../../img/clients/channel-role-add-actions.png)
 
@@ -143,6 +148,10 @@ Clicking on the `Delete All Members` button will open an alert pop-up that reque
 
 ![Delete role members](../../img/clients/channel-role-delete-members.png)
 
+To delete individual members in a channel role, click on the `trash` icon on the Member row. This will open up a confirmation dialog.
+
+![Delete role member](../../img/clients/channel-role-member-delete.png)
+
 ## Channel Members
 
 A channel can have multiple users assigned to it with various roles. Much like the Channel Role Members users can create, update and delete any Members from this segment.
@@ -161,8 +170,6 @@ This will open up a dialog that allows you to select from amongst the Domain Mem
 The roles presented will also be the very same Channel Roles from above.
 
 ![Assign role members](../../img/clients/channel-assign-member.png)
-
-Channel Members can have multiple Channel Roles assigned to them.
 
 ### Unassign Channel Members
 
@@ -191,14 +198,16 @@ These fields include:
 Additional optional fields that help enhance message clarity:
 
 - **Unit** - This is the unit of the Value of the payload being sent.
-- **Subtopic** - This is a crucial field that is needed to assist in classifying the messages sent. This field **MUST** match the Rules Engine Publisher topic for the message to be saved in the database.
+- **Subtopic** - This is a field that can assist in classifying the messages sent. This field **MUST** match the Rules Engine Publisher topic for the message to be saved in the database.
 
 ![Send Message](../../img/clients/send-messages.png)
 
-Messages sent are typically in SenML format.
-The Magistrala UI also prioritizes sending these messages via _HTTP_.
+Messages sent are in SenML format.
+The Magistrala UI also sends these messages via _HTTP_.
 A user can send their messages using the command terminal over other protocols such as MQTT or WebSocket.
 Further information on these protocols is discussed [here](../../dev-guide/messaging.md).
+
+For a message to be saved on the Magistrala database, a Rule must be created in Rules Engine in relation to the specific channel and topic. This has been further discussed in the [**Rules Engine** documentation](../rules-engine.md).
 
 The messages table will then update to include the message sent with the latest message appearing first.
 
