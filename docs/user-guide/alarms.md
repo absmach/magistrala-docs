@@ -68,9 +68,9 @@ To create an alarm, first define an alarm rule in the Rules Engine.
 
 4. Add an **Editor** block as the logic node.
 
-   ![Logic options](../img/alarms/logic-options.png)
-
    ![Logic node](../img/alarms/logic-node.png)
+
+   ![Logic options](../img/alarms/logic-options.png)
 
 5. Add the **Alarm** node as the output node.
 
@@ -80,12 +80,12 @@ To create an alarm, first define an alarm rule in the Rules Engine.
 
    ![Alarm rule](../img/alarms/alarm-rule.png)
 
-Below is a Lua script example for checking temperature thresholds:
+Below is a Lua script example for checking water level thresholds:
 
-```Lua title="Check if temperature exceeds defined thresholds"
+```Lua title="Check if water level exceeds defined thresholds"
 function logicFunction()
     local results = {}
-    local threshold = 30
+    local threshold = 20000
 
     for _, msg in ipairs(message.payload) do
         local value = msg.v
