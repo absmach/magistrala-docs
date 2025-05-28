@@ -131,6 +131,12 @@ function logicFunction()
 end
 ```
 
+> **Note:** Output nodes **will only be triggered if the logic node returns a truthy result**.
+>
+> If and only if the logic node returns `false`, **the connected output nodes will not be executed**.
+>
+> This allows for conditional flows, ensuring actions such as MQTT publishing, email alerts, or database inserts only occur when the specified logic conditions are satisfied.
+
 ### 3. Output Node
 
 You can add one or more output nodes. The following nodes are supported:
