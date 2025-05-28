@@ -140,6 +140,8 @@ You can search logs by operation type using the search input above the log table
 
 The most recent operations—such as `channel.view`, `channel.create`, and `channel.connect`—are displayed at the top.
 
+![Channel Audit Logs](../../img/clients/channel-logs.png)
+
 <!--
 ### **Create a Channel**
 
