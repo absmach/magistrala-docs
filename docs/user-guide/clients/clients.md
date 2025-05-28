@@ -159,4 +159,12 @@ You can also delete actions and members by clicking on the `trash` icon. It pops
 
 Audit logs track all **group events**, from **creation** to **updates** and **disabling**.
 
-> This feature is currently under development :hammer:
+Audit logs track all **client-related events**, including **creation**, **updates**, **disabling**, **connectivity** and **role changes**
+
+Each log entry displays the **operation type**, a **timestamp**, and optional **details** for deeper inspection.
+
+You can search logs by operation type using the search input above the log table.
+
+The most recent operations—such as `client.view`, `client.create`, and `client.connect`—are displayed at the top.
+
+![Client Audit Logs](../../img/clients/client-audit-logs.png)

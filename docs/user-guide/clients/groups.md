@@ -171,6 +171,10 @@ A user is able to **create**, **update**, **disable**, **enable**, **delete**, a
 
 ## Audit Logs
 
-Audit logs track all **group events**, from **creation** to **updates** and **disabling**.
+Audit logs track all **group-related events**, including **creation**, **updates**, **disabling** and **role changes**.
 
-> This feature is currently under development :hammer:
+Each log entry displays the **operation type**, a **timestamp**, and optional **details** for deeper inspection.
+
+You can search logs by operation type using the search input above the log table.
+
+The most recent operations—such as `group.view`, `group.create` and `group.assign`—are displayed at the top.
