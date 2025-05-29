@@ -131,7 +131,7 @@ The following is the list of available actions for a client:
 - view_role_users
 - remove_role_users
 
-#### Update
+#### Update Client Roles
 
 Clicking the Role in the Role Table leads to the individual Role Page. Here there are two tables for the Role Actions and the assigned Role Members.
 
@@ -147,7 +147,7 @@ To update the **Role Members**, click the `Add Members` button. A popup dialog w
 
 ![Update role members](../../img/clients/client-role-update-members.png)
 
-#### Delete
+#### Delete Client Roles
 
 You can also delete actions and members by clicking on the `trash` icon. It pops up a dialog that allows you to select which action you want to remove. There is also an option for clearning the whole list if that is needed as well.
 
