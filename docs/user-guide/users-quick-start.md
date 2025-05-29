@@ -144,8 +144,6 @@ This will be able to return the SenML payload of the messsages published.
 
 Finally select the **Internal DB** option from the **Output Node** dialog option which will store the messages in the internal Magistrala Postgres DB.
 
-Then a **Channel Publisher** with a subtopic must be present.
-
 ![Save Rule](../img/users-guide/save-rule.png)
 
 > More information about Rules Creation and Updating can be found in the [Rules Engine Section](./rules-engine.md)
