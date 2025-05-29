@@ -108,10 +108,10 @@ TH=`curl -s  -S -X GET http://some-domain-name:9013/clients/bootstrap/34:e1:2d:e
 KEY=`curl -s  -S -X GET http://some-domain-name:9013/clients/bootstrap/34:e1:2d:e6:cf:03 -H "Authorization: Client <BOOTSTRAP_KEY>" -H 'Content-Type: application/json' | jq -r .magistrala_key`
 
 # Subscribe for response
-mosquitto_sub -d -u $TH -P $KEY  -t "m/<domain_id>/c/${CH}/res/#" -h some-domain-name -p 1883
+mosquitto_sub -d -I <client_name> -u $TH -P $KEY  -t "m/<domain_id>/c/${CH}/res/#" -h some-domain-name -p 1883
 
 # Publish command e.g `ls`
-mosquitto_pub -d -u $TH -P $KEY  -t m/<domain_id>/c/$CH/req -h some-domain-name -p 1883  -m '[{"bn":"1:", "n":"exec", "vs":"ls, -l"}]'
+mosquitto_pub -d -I <client_name> -u $TH -P $KEY  -t m/<domain_id>/c/$CH/req -h some-domain-name -p 1883  -m '[{"bn":"1:", "n":"exec", "vs":"ls, -l"}]'
 ```
 
 #### Remote terminal
@@ -125,7 +125,7 @@ You can get the list of services by sending following mqtt message
 
 ```bash
 # View services that are sending heartbeat
-mosquitto_pub -d -u $TH -P $KEY  -t m/<domain_id>/c/$CH/req -h some-domain-name -p 1883  -m '[{"bn":"1:", "n":"service", "vs":"view"}]'
+mosquitto_pub -d -I <client_name> -u $TH -P $KEY  -t m/<domain_id>/c/$CH/req -h some-domain-name -p 1883  -m '[{"bn":"1:", "n":"service", "vs":"view"}]'
 ```
 
 Response can be observed on `m/<domain_id>/c/$CH/res/#`
@@ -178,25 +178,25 @@ Commands are:
 #### Operation
 
 ```bash
-mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id>/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-operation, start, edgex-support-notifications, edgex-core-data"}]'
+mosquitto_pub -I <client_name> -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id>/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-operation, start, edgex-support-notifications, edgex-core-data"}]'
 ```
 
 #### Config
 
 ```bash
-mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id>/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-config, edgex-support-notifications, edgex-core-data"}]'
+mosquitto_pub -I <client_name> -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id>/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-config, edgex-support-notifications, edgex-core-data"}]'
 ```
 
 #### Metrics
 
 ```bash
-mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id>/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-metrics, edgex-support-notifications, edgex-core-data"}]'
+mosquitto_pub -I <client_name> -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id>/req -h localhost -m '[{"bn":"1:", "n":"control", "vs":"edgex-metrics, edgex-support-notifications, edgex-core-data"}]'
 ```
 
 If you subscribe to
 
 ```bash
-mosquitto_sub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id>/#
+mosquitto_sub -I <client_name> -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id>/#
 ```
 
 You can observe commands and response from commands executed against edgex
@@ -356,7 +356,7 @@ nats:
 Configuration file for `Export` service can be sent over MQTT using [Agent][agent] service.
 
 ```bash
-mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<control_ch_id>/req -h localhost -p 18831  -m  "[{\"bn\":\"1:\", \"n\":\"config\", \"vs\":\"save, export, <config_file_path>, <file_content_base64>\"}]"
+mosquitto_pub -I <client_name> -u <client_id> -P <client_secret> -t m/<domain_id>/c/<control_ch_id>/req -h localhost -p 18831  -m  "[{\"bn\":\"1:\", \"n\":\"config\", \"vs\":\"save, export, <config_file_path>, <file_content_base64>\"}]"
 ```
 
 `vs="save, export, config_file_path, file_content_base64"` - vs determines where to save file and contains file content in base64 encoding payload:

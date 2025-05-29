@@ -23,13 +23,13 @@ To send and receive messages over MQTT you could use [Mosquitto tools][mosquitto
 To publish message over channel, client should call following command:
 
 ```bash
-mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+mosquitto_pub -I <client_name> -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
 To subscribe to channel, client should call following command:
 
 ```bash
-mosquitto_sub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost
+mosquitto_sub -I <client_name> -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost
 ```
 
 If you want to use standard topic such as `m/<domain_id>/c/<channel_id>` with SenML content type (JSON or CBOR), you should use following topic `m/<domain_id>/c/<channel_id>`.
@@ -136,7 +136,7 @@ func main() {
  domainId := "f89f0e6e-f5ce-43fa-b9d5-3ce98ae50512"
  clientSecret := "c02ff576-ccd5-40f6-ba5f-c85377aad529"
 
- socketUrl := "ws://localhost:8186/m/" + domainId+ "/c/" + channelId + "?authorization=" + clientSecret
+ socketUrl := "ws://localhost:8186/m/" + domainId + "/c/" + channelId + "?authorization=" + clientSecret
 
  conn, _, err := websocket.DefaultDialer.Dial(socketUrl, nil)
  if err != nil {
