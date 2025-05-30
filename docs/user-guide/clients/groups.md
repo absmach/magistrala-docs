@@ -2,11 +2,11 @@
 title: Groups
 ---
 
-**Groups** in Magistrala are flexible containers used to organize clients and channels. This enables assigning of users to a group of channels and clients with a particular role.
+**Groups** in Magistrala can be anything really. They are used to group clients and channels together. This enables assigning of users to a group of channels and clients with a particular role.
 
 ## Create a Group
 
-To create a group, click on the `+ Create` button present on the top-left corner of the page. You can also create multiple groups by uploading a _.csv_ file with group **names** and any other fields you would like to add.
+To create a group, click on the `+ Create` button present on the top of the group sidebar. You can also create multiple groups by uploading a _.csv_ file with group **names** and any other fields you would like to add.
 
 ![Create group](../../img/clients/group-create-button.png)
 
@@ -27,8 +27,6 @@ Add a group _name_ and optionally a _description_, _metadata_ and a _parent grou
 ![Group information](../../img/clients/group-information.png)
 
 The parent group would add hierarchy to the group making it a child of the parent group you have selected. Actions within a role in the parent group trickle down to the children groups.
-
-On the group sidebar there is a levelled family tree section shows a group's parent-child relationship.
 
 ## View a Group
 
@@ -187,9 +185,13 @@ Through the use of the `trash` icon on each row to delete specific members from 
 ## Group Clients
 
 Magistrala provides the capacity to create clients directly in the group level.  
-A user is able to **create**, **update**, **disable**, **enable**, **delete**, **assign**, and **connect** clients on the group level. These functionalities are described better in the [clients](clients.md) section
+A user is able to **create**, **update**, **disable**, **enable**, **delete**, **assign**, and **connect** clients on the group level. These functionalities are described better in the [clients](clients.md) section.
 
 ![Group clients](../../img/clients/group-clients.png)
+
+To assign clients to a group, click on the `Assign Clients` button. This will open a dialog box where you can select multiple clients to assign to the group.
+
+![Assign Group clients](../../img/clients/assign-group-clients.png)
 
 ## Group Channels
 
@@ -197,6 +199,10 @@ Magistrala provides the capacity to create channels directly in the group level.
 A user is able to **create**, **update**, **disable**, **enable**, **delete**, **assign**, and **connect** channels on the group level. These functionalities are described better in the [channels](channels.md) section
 
 ![Group channels](../../img/clients/group-channels.png)
+
+To assign channels to a group, click on the `Assign Channels` button. This will open a dialog box where you can select multiple channels to assign to the group.
+
+![Assign Group channels](../../img/clients/assign-group-channels.png)
 
 ## Audit Logs
 
