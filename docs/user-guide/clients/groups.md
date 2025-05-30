@@ -6,9 +6,19 @@ title: Groups
 
 ## Create a Group
 
-To create a group, click on the `+ Create` button present on the top-left corner of the page. You can also create multiple groups by uploading a _.csv_ file with group **names** and any other fields you would like to add.
+To create a group, click on the `+ Create` button present on the top of the group sidebar. You can also create multiple groups by uploading a _.csv_ file with group **names** and any other fields you would like to add.
 
 ![Create group](../../img/clients/group-create-button.png)
+
+You can be able to create groups in bulk by uploading a _.csv_ file with the following fields in order:
+
+1. Name (Required)
+2. Metadata
+3. Description
+
+A sample of the groups _.csv_ file can be found [here](https://github.com/absmach/magistrala-ui/blob/main/samples/groups.csv).
+
+![Bulk create groups](../../img/clients/groups-bulk-create.png)
 
 ### Group Information
 
@@ -24,35 +34,48 @@ After creating a group, it will show up on the page as the first group created.
 
 ![View Group](../../img/clients/group-view.png)
 
-> The family tree section shows a group's parent-child relationship (This feature is still under development :hammer: )
-
 ## Update a Group
 
 While on the View Group Page, you are allowed to update the group details such as the name, description, metadata and the status.  
-To update a field, click on the `pencil` icon on the far end of the field to edit. Once you have updated the value, click on the `tick` icon to update the changes or the `cross` icon to cancel the change.
+To update a field, click on the `pencil` icon on the far end of the field to edit. Once you have updated the value, click on the `check` icon to update the changes or the `cross` icon to cancel the change.
 
-![Edit Group](../../img/clients/group-edit.png)
+![Edit Group](../../img/clients/group-update-view.png)
 
 A group can also be disabled or enabled by toggling the switch on the far end of the status field.
 
 ![Disabled Group](../../img/clients/group-disabled.png)
 
-## Group Members
+You can delete a group permanently from the database by clicking on the `Delete Group` button.
+This will open an alert dialog that will prompt you to enter the complete group name correctly to ensure confirmation of the deletion.
 
-### Roles
+![Delete Group](../../img/clients/group-delete.png)
 
-#### Create
+A group can also be shared to another domain member with specific group roles attached. Clicking on the `Share` button opens up a dialog that needs a Member as well as a Role.
+We will discuss these Group Roles in the next section.
+
+![Share Group](../../img/clients/group-share.png)
+
+To remove a child from the hierarchy it currently resides in, simply click on the `Remove Parent` button. This will remove it from the tier in the group sidebar and have it lose all the role actions and members it previously had access to.
+
+![Remove Parent Group](../../img/clients/group-remove-parent.png)
+
+In the case of a group without a Parent, the button will instead prompt you to select a Parent group from the current list of groups.
+
+![Add Parent Group](../../img/clients/group-add-parent.png)
+
+## Group Roles
+
+### Create Group Roles
 
 Roles allow you to group a specific set of actions and allocate them to users.
-To create a role, navigate to the roles section on the group navbar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
+To create a role, navigate to the **Roles** section on the group navbar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
 
 ![Create Group Role](../../img/clients/group-role-create.png)
 
-##### Role Information
+#### Role Information
 
-![Group Role Information](../../img/clients/group-role-information.png)
+When creating the Group Role, the role name is compulsory. You can optionally provide the role actions by selecting from the available actions. You can also optionally provide the members by searching for a user with their **username**. These Users must be members of the same domain however.
 
-The role name is complusory. You can optionally provide the role actions by selecting from the available actions. You can also optionally provide the members by searching for a user with their **username**.
 The following is the list of available actions for a group:
 
 - **Group Management**
@@ -122,55 +145,65 @@ The following is the list of available actions for a group:
   - subgroup_remove_role_users
   - subgroup_view_role_users
 
-#### Update
+### Update Group Roles
 
-To update a role name, click on the `pencil` icon on the far right end of the field, update the value then click on the `tick` icon to update the changes or the `cross` icon to cancel the changes.
+To update a role name, click on the `pencil` icon on the far right end of the field, update the value then click on the `check` icon to update the changes or the `cross` icon to cancel the changes.
 
-![Update role name](../../img/clients/group-role-name.png)
+![Update role name](../../img/clients/group-role-update.png)
 
-To update the **actions** and **members** click on the `pencil` icon, it will pop up a dialog box allowing you to select the actions and users you want to add.
+To update the **actions** click on the `pencil` icon, it will pop up a dialog box allowing you to select the actions you want to add.
 
 ![Update role actions](../../img/clients/group-role-actions.png)
 
-![Update role members](../../img/clients/group-role-member.png)
+When it comes to the Group Role Members, we have a separate table for the users. You can add more members by clicking on the `Add Members` button which will open up a dialog.
 
-#### Delete
+![Update role members](../../img/clients/group-role-members-add.png)
 
-You can also delete actions and members by clicking on the `trash` icon. It pops up a dialog that allows you to select which action or member you want to remove. Optionally you can delete all of the actions or members by clicking on the `Delete All Actions` or `Delete All Members` buttons.
+### Delete Group Roles
+
+You can also delete actions and members by clicking on the `trash` icon. It pops up a dialog that allows you to select which action you want to remove. Optionally you can delete all of the actions by clicking on the `Delete All Actions` buttons.
 
 ![Delete role actions](../../img/clients/group-role-delete-actions.png)
+
+To delete All the Members in the Role simply use the `Delete All Members` button and click on the confirmation.
+
 ![Delete role members](../../img/clients/group-role-delete-members.png)
 
-### Users
+The Members table also has individual `trash` icons on each row which facilitates deleting specific Role Members.
+
+## Group Members
 
 We can assign a user to a group by adding them as role members. This allows a user to be able to carry out the actions present in the role over the specific group.  
-To add role members, one can add them when creating a role or in the specific role page.  
-To add a user while in the role page, click on the pencil icon on the far end of the `Role Members` field, search for a user based on their username, and click on the user. Then click on `Add` to add them to the role.
+To add role members, one can add them when creating a role or in the specific role page. This has been discussed in the earlier **Roles** section.
 
-![Add Group Member](../../img/clients/group-role-member.png)
+We have the capacity to add users by assigning them to a group in the **Members** section of the group. This will allow you to assign a user to a group by adding them to a specific role.
 
-Optionally, we have the capacity to add users by assigning them to a group in the users section of the group. This will allow you to assign a user to a group by adding them to a specific role.
+![View Group Users](../../img/clients/group-asssign-member.png)
 
-![View Group Users](../../img/clients/group-users.png)
-
-> This feature is currently under development :hammer:
+Through the use of the `trash` icon on each row to delete specific members from the group.
 
 ## Group Clients
 
 Magistrala provides the capacity to create clients directly in the group level.  
-A user is able to **create**, **update**, **disable**, **enable**, **delete**, and **connect** clients on the group level. These functionalities are described better in the [clients](clients.md) section
+A user is able to **create**, **update**, **disable**, **enable**, **delete**, **assign**, and **connect** clients on the group level. These functionalities are described better in the [clients](clients.md) section.
 
 ![Group clients](../../img/clients/group-clients.png)
+
+To assign clients to a group, click on the `Assign Clients` button. This will open a dialog box where you can select multiple clients to assign to the group.
+
+![Assign Group clients](../../img/clients/assign-group-clients.png)
 
 ## Group Channels
 
 Magistrala provides the capacity to create channels directly in the group level.  
-A user is able to **create**, **update**, **disable**, **enable**, **delete**, and **connect** channels on the group level. These functionalities are described better in the [channels](channels.md) section
+A user is able to **create**, **update**, **disable**, **enable**, **delete**, **assign**, and **connect** channels on the group level. These functionalities are described better in the [channels](channels.md) section
 
 ![Group channels](../../img/clients/group-channels.png)
+
+To assign channels to a group, click on the `Assign Channels` button. This will open a dialog box where you can select multiple channels to assign to the group.
+
+![Assign Group channels](../../img/clients/assign-group-channels.png)
 
 ## Audit Logs
 
 Audit logs track all **group events**, from **creation** to **updates** and **disabling**.
-
-> This feature is currently under development :hammer:
