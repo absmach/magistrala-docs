@@ -15,7 +15,7 @@ To get started, create an account by providing the following details in the sign
 - **An email address**
 - **A username**
 
-![Sign Up](../img/users-guide/registeruser2.png)
+![Sign Up](../img/users-guide/registeruser.png)
 
 Once registered, the user will be redirected to the **Domains Homepage**, where they can create and manage multiple domains.
 
@@ -51,7 +51,7 @@ On the sidebar navigation, click on **Groups** under the _Client Management_ sec
 
 To create a group, click on the `+ Create` button present on the top-left corner of the page. This will open a popover with all the required fields for a new group.
 
-![Create Group](../img/clients/group-information.png)
+![Create Group](../img/users-guide/group-information.png)
 
 ## Create a Client
 
@@ -64,11 +64,17 @@ Any Client created while in the group can be connected to any channel within the
 A **new client** can be created by navigating to the **Clients Page** section of the Group and clicking the `+ Create Client` button.
 A dialog box will open, requiring fields such as **Name**.
 You can add a unique key for the client, although one is automatically generated.
-Additionally, **tags** can be assigned to Clients for better organization and filtering.
+Additionally, **tags** can be assigned to clients for better organization and filtering.
 
 ![Create Client](../img/users-guide/group-client-create.png)
 
 A user can also create bulk clients by clicking on the `+ Create Clients` button. This will lead to a dialogbox that takes in a _.CSV_  file with the clients' details filled in correctly as seen in these [samples](https://github.com/absmach/magistrala-ui/tree/main/samples).
+
+The file should have the following fields in order:
+
+1. Name (Required)
+2. Metadata
+3. Tags
 
 ![Create Clients](../img/users-guide/group-clients-create.png)
 
@@ -77,9 +83,9 @@ A user can also create bulk clients by clicking on the `+ Create Clients` button
 Once created, a **group-client** can be viewed and updated in the unique Client's ID page.
 To access the page, click on the Client in the Clients' table.
 
-The client's data can be updated in this page and its ID copied as well.
+The client's data can be updated in this page and its ID and secret copied as well.
 
-![View Client](../img/users-guide/group-client-view2.png)
+![View Client](../img/users-guide/group-client-view.png)
 
 There **Connections** tab in the **group-client page** is where a User can connect a Client to a Channel.
 
@@ -108,9 +114,43 @@ Clients can be connected to channels in groups. This is done in the **Connection
 
 ![Connect Group Channel Clients](../img/users-guide/group-channel-connections.png)
 
+## Create a Rule
+
+To be able to save any messages to our Magistrala database, a rule must be created and saved.
+Rules Engine takes care of this procedure.
+Navigate to the **Rules Engine** section on the navigation bar and click on `+ Create`.
+This will open a dialog box onto which you can enter the Rule name.
+
+![Create Rule](../img/users-guide/create-rule.png)
+
+Once created the Rule will show up on the table present on the page.
+
+### Save a Rule
+
+Click on the Rule just created to be able to view its properties.
+Select the **Input Node** on the Rule page. This will bring up a dialog box which will allow you to select a **Channel Subscriber** as the input type. Then select the **channel** which will be subscribed to from the list of channels as well as the **topic** of the payload.
+The Input Node will then appear on the screen.
+
+Next, set up the input logic of your Rule. You can select the `Lua Script Editor` from the two options present.
+Once the Code Editor appears ensure to add the following Lua Script that will be used to define your Rule logic.
+
+```lua
+function logicFunction()
+  return message.payload
+end
+```
+
+This will be able to return the SenML payload of the messsages published.
+
+Finally select the **Internal DB** option from the **Output Node** dialog option which will store the messages in the internal Magistrala Postgres DB.
+
+![Save Rule](../img/users-guide/save-rule.png)
+
+> More information about Rules Creation and Updating can be found in the [Rules Engine Section](./rules-engine.md)
+
 ## Send a Message
 
-Once a Channel and Client are connected, a user is able to send messages. Navigate to the `Messages` tab of the Group-Channel and click on `Send Messages`.
+Once a Channel and Client are connected as well as Rule created, a user is able to send messages. Navigate to the `Messages` tab of the Group-Channel and click on `Send Messages`.
 
 ![View Messages Page](../img/users-guide/group-messages-view.png)
 
@@ -122,11 +162,13 @@ Users can also send messages using curl commands for HTTP or via MQTT.
 Here are some examples:
 
 **Using HTTP**:
+
 ```bash
 curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/senml+json" -H "Authorization: Client <client_secret>" https://localhost/http/m/<domain_id>/c/<channel_id> -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
 **Using MQTT**:
+
 ```bash
 mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```  
@@ -135,14 +177,12 @@ mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> 
 
 More information on how to send messages via the terminal can be found in the **Developer Docs**, under the [**Messaging section** in **Developer Tools**](/docs/dev-guide/messaging).
 
-:::    
+:::
 
-  
 The messages table will then update to include the message sent with the latest message appearing first.
 Using the filter options, you can filter through a wide range of messages based on the protocol, publisher or even value.
 
 ![Messages Table](../img/users-guide/group-sent-messages-page.png)
-
 
 Some advanced filters allow the user to filter based on the required value type, such as boolean or string values.
 The time filter allows the user to select a date and define a specific time window using the date-time picker.
@@ -152,6 +192,5 @@ With these values you can get the `Maximum`, `Minimum`, `Average` and `Count` va
 The user can also download a list of messages based on selected filters and view them in a `.csv` file by clicking the `Download Messages` button at the top right of the messages table.  
 
 ![Download Form](../img/users-guide/group-download-messages.png)
-
 
 Messages provide a core service for our IoT platform especially when it comes to the Dashboards service.
