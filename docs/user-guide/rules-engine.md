@@ -331,7 +331,7 @@ function logicFunction()
   return {
     n = message.payload.sensor,
     v = message.payload.temperature,
-    t = os.time()
+    u = message.payload.unit
   }
 end
 ```
