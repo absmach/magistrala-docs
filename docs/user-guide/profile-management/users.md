@@ -6,7 +6,7 @@ title: Profile Management
 
 Each user has access to a **Profile Page**, where personal information, security settings, and preferences can be updated.
 
-Clicking on the `user profile picture` or `avatar` at the top right opens a popover.
+Clicking the `user profile picture` or `avatar` at the top right opens a popover.
 
 ### Standard User Menu
 
@@ -26,8 +26,7 @@ The **Account** tab allows users to update their names, email and upload a profi
 
 ### Password
 
-The **Password** tab focuses on security. Users can change their password by entering their current password, followed by the new password (which MUST pass verification) and its confirmation.
-> **Note:** After updating the password, the current session will be terminated, requiring the user to log in again with the new credentials.
+The **Password** tab focuses on security. Users can change their password by entering their current password, followed by the new password (which **must** pass verification) and its confirmation.
 
 ![Profile Tab 2](../../img/profile-management/jdoe-password-tab.png)
 
