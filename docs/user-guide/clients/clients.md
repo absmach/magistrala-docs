@@ -37,13 +37,13 @@ After creating a client, you will be able to see the created client on the clien
 
 ![View client](../../img/clients/client-view.png)
 
-This will lead you to the client configuration page, where you can view all the client configurations.
+This will lead you to the client configuration page, where you can view all the client details.
 
 ![View client configurations](../../img/clients/client-view-config.png)
 
 ## Configurations
 
-This page consists of both the client configurations which are the client details and the bootstrap configuration which are the bootstrap details for the client.
+This page consists of key information relating to the specific Client which can be retrieved in an instance. There are fields such as Tags and Metadata that assist in further classification and search functionalites for the clients.
 
 ### Client Configuration
 
@@ -55,11 +55,12 @@ This section enables a user to update the following client details:
 4. Metadata
 5. Status
 
-To update a field, click on the `pencil` icon on the far end of the field to edit. Once you have updated the value, click on the `tick` icon to update the changes or the `cross` icon to cancel the change. To update the client status, toggle the switch on the far end of the status field.
+To update a field, click on the `pencil` icon on the far end of the field to edit. Once you have updated the value, click on the `check` icon to update the changes or the `cross` icon to cancel the change. To update the client status, toggle the switch on the far end of the status field.
+Metadata MUST be a valid JSON object to be considered valid. Tags require the user to click `Enter` after each tag to have the entry recognised as valid Tag.
 
-![Edit client](../../img/clients/client-update.png)
+![Edit client](../../img/clients/client-edit-config.png)
 
-### Bootstrap Configuration
+<!-- ### Bootstrap Configuration
 
 Bootstrap configuration of a client allows bootstrapping of the device (self-starting process that proceeds without external input). Further details of bootstrapping are discussed in the [Bootstrap section](bootstraps.md).
 
@@ -79,7 +80,7 @@ A dialog box will appear allowing you to enter the following fields
    - Client Key
    - CA Cert
 
-![Bootstrap configuration dialog](../../img/clients/client-bootstrap-dialog.png)
+![Bootstrap configuration dialog](../../img/clients/client-bootstrap-dialog.png) -->
 
 ## Connect to a Channel
 
@@ -105,18 +106,16 @@ This will open up a dialog that allows you to select which connection type you w
 
 ![Disconnect channel dialog](../../img/clients/client-disc-channel-dialog.png)
 
-## Client Members
-
-### Roles
+## Client Roles
 
 Roles allow you to group a specific set of actions and allocate them to users.
 To create a role, navigate to the roles section on the client navbar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
 
-![Create client role](../../img/clients/client-create-role.png)
+![Create client role](../../img/clients/client-roles.png)
 
-#### Role Information
+### Role Information
 
-![Client role information](../../img/clients/client-create-role-dialog.png)
+![Client role information](../../img/clients/client-role-create.png)
 
 The role name is complusory. You can optionally provide the role actions by selecting from the available actions. You can also optionally provide the members by searching for a user with their **username**.
 
@@ -132,31 +131,52 @@ The following is the list of available actions for a client:
 - view_role_users
 - remove_role_users
 
-#### Update
+#### Update Client Roles
+
+Clicking the Role in the Role Table leads to the individual Role Page. Here there are two tables for the Role Actions and the assigned Role Members.
 
 To update a role name, click on the `pencil` icon on the far right end of the field, update the value then click on the `tick` icon to update the changes or the `cross` icon to cancel the changes.
 
-![Update role name](../../img/clients/client-role-update.png)
+![Update role name](../../img/clients/client-update-role.png)
 
-To update the **actions** and **members** click on the `pencil` icon, it will pop up a dialog box allowing you to select the actions and users you want to add.
+To update the **Role Actions** click on the `pencil` icon, it will pop up a dialog box allowing you to select the actions and users you want to add.
 
-![Update role actions](../../img/clients/client-role-add-actions.png)
+![Update role actions](../../img/clients/client-update-role-actions.png)
 
-![Update role members](../../img/clients/client-role-add-members.png)
+To update the **Role Members**, click the `Add Members` button. A popup dialog will appear with the list of Domain Members from which a user can select.
 
-#### Delete
+![Update role members](../../img/clients/client-role-update-members.png)
 
-You can also delete actions and members by clicking on the `trash` icon. It pops up a dialog that allows you to select which action or member you want to remove. Optionally you can delete all of the actions or members by clicking on the `Delete All Actions` or `Delete All Members` buttons.
+#### Delete Client Roles
+
+You can also delete actions and members by clicking on the `trash` icon. It pops up a dialog that allows you to select which action you want to remove. There is also an option for clearning the whole list if that is needed as well.
 
 ![Delete role actions](../../img/clients/client-role-delete-actions.png)
-![Delete role members](../../img/clients/client-role-delete-members.png)
 
-### Users
+When it comes to **Role Members** , you can clear the whole table with the `Delete All Members` which will lead to this alert dialog:
 
-> This feature is currently under development :hammer:
+![Delete All Role Members](../../img/clients/clients-delete-all-role-members-dialog.png)
+
+To delete specific members from the Role Members Table, click on the `trash` icon.
+
+![Delete role members](../../img/clients/client-delete-role-members.png)
+
+## Client Members
+
+While we can create new members from the **Roles** section alongside the new roles actions, we can also assign members to the client through the **Members** Section.
+
+Clicking on the `Assign Member` button will open a dialog box that allows the user to select amongst the Domain Members present as well as the Roles present in the Client.
+
+![Assign Members](../../img/clients/client-members.png)
 
 ## Audit Logs
 
-Audit logs track all **group events**, from **creation** to **updates** and **disabling**.
+Audit logs track all **client-related events**, including creation, updates, role changes, and connection activity.
 
-> This feature is currently under development :hammer:
+Each log entry displays the **operation type**, a **timestamp**, and optional **details** for deeper inspection.
+
+You can search logs by operation type using the search input above the log table.
+
+The most recent operations—such as `client.view`, `client.create`, and `channel.connect`—are displayed at the top.
+
+![Client Audit Logs](../../img/clients/client-auditlogs.png)
