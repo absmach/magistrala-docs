@@ -137,22 +137,26 @@ export MG_UI_DOCKER_ACCEPT_EULA=yes
 ```
 
 Once everything is installed and built, execute the following command from the project root:
+
 ```bash
 make run
 ```
 Or, to prevent Docker logs from flooding the terminal:
+
 ```bash
 make run args=-d
 ```
 #### Quick summary
-Assuming you have all the necessary tools installed, you can run Magistrala with just four commands:
+
+Assuming all required tools are installed and the necessary ports are available, you can run Magistrala with just four commands:
+
 ```bash
 git clone https://github.com/absmach/magistrala.git
 cd magistrala
 export MG_UI_DOCKER_ACCEPT_EULA=yes
 make run args=-d
 ```
-
+Go to [http://localhost:3000](http://localhost:3000) to start using UI.
 
 ### Suggested workflow
 
