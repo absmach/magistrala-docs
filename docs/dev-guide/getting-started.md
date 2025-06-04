@@ -70,7 +70,7 @@ make <microservice_name>
 For example:
 
 ```bash
-make Bootstrap
+make botostrap
 ```
 
 will build the Bootstrap microservice.
@@ -121,15 +121,38 @@ make docker_dev_<microservice_name>
 
 Commands `make dockers` and `make dockers_dev` are similar. The main difference is that building images in the development mode is done on the local machine, rather than an intermediate image, which makes building images much faster. Before running this command, corresponding binary needs to be built in order to make changes visible. This can be done using `make` or `make <service_name>` command. Commands `make dockers_dev` and `make docker_dev_<service_name>` should be used only for development to speed up the process of image building. **For deployment images, commands from section above should be used.**
 
-## Step 4 - Run Magistrala
+## Step 4 – Run Magistrala
 
-Once everything is installed and built, execute the following command from project root:
+To run Magistrala with its **UI components**, you must accept the [Absmach End User License Agreement (EULA)](https://github.com/absmach/eula).
+This EULA applies **only to the Magistrala UI services**.
 
+**The Magistrala core remains free and open-source, licensed under the Apache 2.0 License.**
+
+> This step is optional and only required if you want to use the UI services.
+
+To accept the UI EULA, set the following environment variable:
+
+```bash
+export MG_UI_DOCKER_ACCEPT_EULA=yes
+```
+
+Once everything is installed and built, execute the following command from the project root:
 ```bash
 make run
 ```
+Or, to prevent Docker logs from flooding the terminal:
+```bash
+make run args=-d
+```
+#### Quick summary
+Assuming you have all the necessary tools installed, you can run Magistrala with just four commands:
+```bash
+git clone https://github.com/absmach/magistrala.git
+cd magistrala
+export MG_UI_DOCKER_ACCEPT_EULA=yes
+make run args=-d
+```
 
-This will initialize Magistrala docker composition, which will output the logs from the containers.
 
 ### Suggested workflow
 
