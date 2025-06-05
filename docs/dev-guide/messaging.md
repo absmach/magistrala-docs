@@ -12,7 +12,7 @@ To publish message over channel, client should send following request:
 curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/senml+json" -H "Authorization: Client <client_secret>" https://localhost/http/m/<domain_id>/c/<channel_id> -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
-Note that if you're going to use senml message format, you should always send messages as an array.
+Note that if you're going to use SenML message format, you should always send messages as an array.
 
 For more information about the HTTP messaging service API, please check out the [API documentation][http-api].
 
@@ -330,25 +330,6 @@ NATS supports MQTT in a NATS cluster, with the replication factor automatically 
 - NATS does not support QoS 2 messages. Hence Magistrala inherently does not support QoS 2 messages.
 - MQTT wildcard "#" may cause the NATS server to create two subscriptions.
 - MQTT concurrent sessions may result in the new connection being evicted instead of the existing one.
-
-### Vernemq MQTT Broker
-
-VerneMQ is a powerful MQTT publish/subscribe message broker designed to implement the OASIS industry standard MQTT protocol. It is built to take messaging and IoT applications to the next level by providing a unique set of features related to scalability, reliability, high-performance, and operational simplicity.
-
-Key features of VerneMQ include:
-
-- Low Entry and Exit Risk: VerneMQ is open-source and Apache 2 licensed, allowing unrestricted commercial re-use without upfront investment.
-- Carrier-Grade Reliability: Built on OTP (Open Telecom Platform), VerneMQ leverages telecom-grade technology for soft-realtime, distributed control, and messaging applications. It is highly fault-tolerant and capable of continuous operation.
-- Scalability: VerneMQ can scale to handle millions of clients, limited only by the underlying hardware. You can easily add nodes to a VerneMQ cluster for horizontal scalability.
-- Cluster Operations & Monitoring: VerneMQ comes with built-in extensible metrics systems and allows cluster-wide instant live reconfiguration. It focuses on production tooling and enterprise operations for operational peace of mind.
-- Lower Total Cost of Ownership (TCO): VerneMQ offers a favourable TCO compared to many messaging Platform-as-a-Service (PaaS) solutions.
-- Full MQTT Support: VerneMQ implements the full MQTT 3.1, 3.1.1, and 5.0 specifications, including various QoS levels, authentication and authorization options, TLS/SSL encryption, WebSockets support, clustering, and more.
-
-#### Vernemq MQTT Architecture
-
-VerneMQ is designed from the ground up to work as a distributed message broker, ensuring continued operation even in the event of node or network failures. It can easily scale both horizontally and vertically to handle large numbers of concurrent clients.
-
-VerneMQ uses a master-less clustering technology, which means there are no special nodes like masters or slaves to consider when adding or removing nodes, making cluster operation safe and simple. This allows MQTT clients to connect to any cluster node and receive messages from any other node. However, it acknowledges the challenges of fulfilling MQTT specification guarantees in a distributed environment, particularly during network partitions.
 
 ## Message Broker
 

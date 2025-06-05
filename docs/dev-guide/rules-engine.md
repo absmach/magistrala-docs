@@ -52,21 +52,21 @@ type Rule struct {
 }
 ```
 
-| Property       | Description                              | Required |
-|-----------------|------------------------------------------|----------|
-| `id`            | Unique identifier for the rule.           | Auto-generated |
-| `name`          | Descriptive name of the rule.             | ✅       |
-| `domain`        | Domain ID associated with the rule.       | ✅       |
-| `input_channel` | Channel to listen for incoming messages     | ✅       |
-| `input_topic`   | Topic within the input channel.           | ✅       |
-| `logic`         | Lua script defining message processing.   | ✅       |
-| `output_channel`| Channel to which processed messages are sent. | Optional |
-| `output_topic`  | Topic within the output channel.         | Optional |
-| `schedule`      | Scheduling configuration           | Optional |
-| `status`        | Rule state (`enabled` or `disabled` or `deleted`)  | ✅       |
-| `created_at`    | Timestamp when the rule was created.     | Auto-generated |
-| `updated_at`    | Timestamp when the rule was last updated.| Auto-generated |
-| `metadata`       |  Additional rule metadata                | Optional  |
+| Property         | Description                                       | Required       |
+| ---------------- | ------------------------------------------------- | -------------- |
+| `id`             | Unique identifier for the rule.                   | Auto-generated |
+| `name`           | Descriptive name of the rule.                     | ✅             |
+| `domain`         | Domain ID associated with the rule.               | ✅             |
+| `input_channel`  | Channel to listen for incoming messages           | ✅             |
+| `input_topic`    | Topic within the input channel.                   | ✅             |
+| `logic`          | Lua script defining message processing.           | ✅             |
+| `output_channel` | Channel to which processed messages are sent.     | Optional       |
+| `output_topic`   | Topic within the output channel.                  | Optional       |
+| `schedule`       | Scheduling configuration                          | Optional       |
+| `status`         | Rule state (`enabled` or `disabled` or `deleted`) | ✅             |
+| `created_at`     | Timestamp when the rule was created.              | Auto-generated |
+| `updated_at`     | Timestamp when the rule was last updated.         | Auto-generated |
+| `metadata`       | Additional rule metadata                          | Optional       |
 
 ### Scheduling Rules
 
@@ -83,12 +83,12 @@ type Schedule struct {
 }
 ```
 
-| Property          | Description                           |
-|--------------------|---------------------------------------|
-| `start_datetime`   | Date/time when the rule becomes active.|
-| `time`             | Time at which the rule runs.          |
+| Property           | Description                                               |
+| ------------------ | --------------------------------------------------------- |
+| `start_datetime`   | Date/time when the rule becomes active.                   |
+| `time`             | Time at which the rule runs.                              |
 | `recurring`        | Recurrence pattern: `None`, `Daily`, `Weekly`, `Monthly`. |
-| `recurring_period` | Number of intervals between executions.|
+| `recurring_period` | Number of intervals between executions.                   |
 
 **Recurring Patterns Explained:**
 
@@ -503,13 +503,13 @@ curl --location --request DELETE 'http://localhost:9008/8353542f-d8f1-4dce-b787-
 
 **Responses:**
 
-| Status Code | Description           |
-|--------------|-----------------------|
-| `204`       | Rule deleted.           |
-| `400`       | Invalid rule ID.        |
-| `401`       | Unauthorized access.    |
-| `404`       | Rule not found.         |
-| `500`       | Internal server error.  |
+| Status Code | Description            |
+| ----------- | ---------------------- |
+| `204`       | Rule deleted.          |
+| `400`       | Invalid rule ID.       |
+| `401`       | Unauthorized access.   |
+| `404`       | Rule not found.        |
+| `500`       | Internal server error. |
 
 ### Enable Rule
 
@@ -524,13 +524,13 @@ curl --location --request PUT 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af
 
 **Responses:**
 
-| Status Code | Description           |
-|--------------|-----------------------|
-| `200`       | Rule enabled successfully.           |
-| `400`       | Invalid rule ID.        |
-| `401`       | Unauthorized access.    |
-| `404`       | Rule not found.         |
-| `500`       | Internal server error.  |
+| Status Code | Description                |
+| ----------- | -------------------------- |
+| `200`       | Rule enabled successfully. |
+| `400`       | Invalid rule ID.           |
+| `401`       | Unauthorized access.       |
+| `404`       | Rule not found.            |
+| `500`       | Internal server error.     |
 
 ---
 
@@ -549,13 +549,13 @@ curl --location --request PUT 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af
 
 **Responses:**
 
-| Status Code | Description           |
-|--------------|-----------------------|
-| `200`       | Rule disabled successfully.          |
-| `400`       | Invalid rule ID.        |
-| `401`       | Unauthorized access.    |
-| `404`       | Rule not found.         |
-| `500`       | Internal server error.  |
+| Status Code | Description                 |
+| ----------- | --------------------------- |
+| `200`       | Rule disabled successfully. |
+| `400`       | Invalid rule ID.            |
+| `401`       | Unauthorized access.        |
+| `404`       | Rule not found.             |
+| `500`       | Internal server error.      |
 
 ---
 
@@ -565,13 +565,13 @@ curl --location --request PUT 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af
 **Description:** Enables a previously disabled rule.
 
 | HTTP Code | Description                          |
-|-----------|--------------------------------------|
-| `400`     | Invalid request or parameters.        |
-| `401`     | Unauthorized: Missing/invalid token.  |
-| `403`     | Forbidden: Access denied.             |
-| `404`     | Resource not found.                   |
-| `415`     | Unsupported content type.             |
-| `500`     | Internal server error.                |
+| --------- | ------------------------------------ |
+| `400`     | Invalid request or parameters.       |
+| `401`     | Unauthorized: Missing/invalid token. |
+| `403`     | Forbidden: Access denied.            |
+| `404`     | Resource not found.                  |
+| `415`     | Unsupported content type.            |
+| `500`     | Internal server error.               |
 
 ## 🌟 Best Practices
 

@@ -70,7 +70,7 @@ make <microservice_name>
 For example:
 
 ```bash
-make botostrap
+make bootstrap
 ```
 
 will build the Bootstrap microservice.

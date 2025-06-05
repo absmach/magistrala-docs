@@ -20,7 +20,7 @@ Once everything is installed, execute the following command from the LoRa Server
 docker-compose up
 ```
 
-**Troubleshouting:** Magistrala and LoRa Server use their own MQTT brokers which by default occupy MQTT port `1883`. If both are ran on the same machine different ports must be used. You can fix this on Magistrala side by configuring the environment variable `MG_MQTT_ADAPTER_MQTT_PORT`.
+**Troubleshooting:** Magistrala and LoRa Server use their own MQTT brokers which by default occupy MQTT port `1883`. If both are ran on the same machine different ports must be used. You can fix this on Magistrala side by configuring the environment variable `MG_MQTT_ADAPTER_MQTT_PORT`.
 
 ## Setup LoRa Server
 
@@ -44,15 +44,15 @@ Once everything is running and the LoRa Server is provisioned, execute the follo
 docker-compose -f docker/addons/lora-adapter/docker-compose.yml up -d
 ```
 
-**Troubleshouting:** The lora-adapter subscribes to the LoRa Server MQTT broker and will fail if the connection is not established. You must ensure that the environment variable `MG_LORA_ADAPTER_MESSAGES_URL` is propertly configured.
+**Troubleshooting:** The lora-adapter subscribes to the LoRa Server MQTT broker and will fail if the connection is not established. You must ensure that the environment variable `MG_LORA_ADAPTER_MESSAGES_URL` is properly configured.
 
-**Remark:** By defaut, `MG_LORA_ADAPTER_MESSAGES_URL` is set as `tcp://lora.mqtt.magistrala.io:1883` in the [docker-compose.yml][lora-docker-compose] file of the adapter. If you run the composition without configure this variable you will start to receive messages from our demo server.
+**Remark:** By default, `MG_LORA_ADAPTER_MESSAGES_URL` is set as `tcp://lora.mqtt.magistrala.io:1883` in the [docker-compose.yml][lora-docker-compose] file of the adapter. If you run the composition without configure this variable you will start to receive messages from our demo server.
 
 ### Route Map
 
 The lora-adapter use [Redis][redis] database to create a route map between both systems. As in Magistrala we use Channels to connect Clients, LoRa Server uses Applications to connect Devices.
 
-The lora-adapter uses the matadata of provision events emitted by Magistrala system to update his route map. For that, you must provision Magistrala Channels and Clients with an extra metadata key in the JSON Body of the HTTP request. It must be a JSON object with key `lora` which value is another JSON object. This nested JSON object should contain `app_id` or `dev_eui` field. In this case `app_id` or `dev_eui` must be an existent Lora application ID or device EUI:
+The lora-adapter uses the metadata of provision events emitted by Magistrala system to update his route map. For that, you must provision Magistrala Channels and Clients with an extra metadata key in the JSON Body of the HTTP request. It must be a JSON object with key `lora` which value is another JSON object. This nested JSON object should contain `app_id` or `dev_eui` field. In this case `app_id` or `dev_eui` must be an existent Lora application ID or device EUI:
 
 **Channel structure:**
 
