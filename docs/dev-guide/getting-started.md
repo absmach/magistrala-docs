@@ -7,7 +7,7 @@ Welcome to the **Magistrala Developer Guide**! This guide provides comprehensive
 
 ## Fast Start
 
-If you want to try Magistrala right away without installing Go or building anything manually, just run the following:
+To spin up magistrala and start using its messaging platform and dashboard UI, run the following commands:
 
 ```bash
 git clone https://github.com/absmach/magistrala.git
@@ -16,7 +16,9 @@ export MG_UI_DOCKER_ACCEPT_EULA=yes
 make run args=-d
 ```
 
-Then open [http://localhost:3000](http://localhost:3000) in your browser.
+Once the services are running, open [http://localhost:3000](http://localhost:3000) in your browser.
+
+This is the Magistrala web-based platform, where you can manage clients, channels, messages, and view system activity in real time.
 
 > This runs Magistrala with the UI using prebuilt Docker images.
 
