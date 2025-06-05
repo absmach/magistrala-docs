@@ -161,3 +161,8 @@ pre code {
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
+
+.markdown a {
+  color: hsl(var(--primary));
+  font-weight: 500;
+}
