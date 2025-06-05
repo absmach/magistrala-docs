@@ -5,9 +5,34 @@ title: Getting Started
 
 Welcome to the **Magistrala Developer Guide**! This guide provides comprehensive instructions for installing, building, running, and interacting with Magistrala, an advanced messaging platform. Follow the steps below to get started with Magistrala development, understand its architecture, and interact with the system using the **Magistrala CLI**.
 
-## Step 1 - Install Magistrala
+## Fast Start
 
-### Clone the Repository
+If you want to try Magistrala right away without installing Go or building anything manually, just run the following:
+
+```bash
+git clone https://github.com/absmach/magistrala.git
+cd magistrala
+export MG_UI_DOCKER_ACCEPT_EULA=yes
+make run args=-d
+```
+
+Then open [http://localhost:3000](http://localhost:3000) in your browser.
+
+> This runs Magistrala with the UI using prebuilt Docker images.
+
+You can now continue below to:
+
+- [Provision the system](#step-6---provision-the-system)
+- [Send messages](#send-messages)
+- [Use the CLI](#step-5---install-the-cli)
+
+If you're interested in building from source, see [Developer Setup](#developer-setup) section below.
+
+## Developer Setup
+
+### Step 1 - Install Magistrala
+
+#### Clone the Repository
 
 Magistrala source can be found in the official [Magistrala GitHub repository][magistrala-repo]. You should fork this repository in order to make changes to the project. The forked version of the repository should be cloned using the following:
 
@@ -18,7 +43,7 @@ cd $SOMEPATH/magistrala
 
 **Note:** If your `$SOMEPATH` is equal to `$GOPATH/src/github.com/absmach/magistrala`, make sure that your `$GOROOT` and `$GOPATH` do not overlap (otherwise, go modules won't work).
 
-## Step 2 - Prerequisites
+### Step 2 - Prerequisites
 
 Before building Magistrala, install the following tools:
 
@@ -32,9 +57,9 @@ Before building Magistrala, install the following tools:
 **Environment Setup**:  
 Ensure that `$GOPATH/bin` is added to your system’s `$PATH`.
 
-## Step 3 - Build Magistrala
+### Step 3 - Build Magistrala
 
-### Build All Services
+#### Build All Services
 
 Use the _GNU Make_ tool to build all Magistrala services:
 
@@ -59,7 +84,7 @@ Build artifacts will be put in the `build` directory.
 
 > N.B. All Magistrala services are built as a statically linked binaries. This way they can be portable (transferred to any platform just by placing them there and running them) as they contain all needed libraries and do not relay on shared system libraries. This helps creating [FROM scratch][scratch-docker] dockers.
 
-### Build Individual Microservice
+#### Build Individual Microservice
 
 Individual microservices can be built with:
 
@@ -81,7 +106,7 @@ The response will be:
 CGO_ENABLED=0 GOOS= GOARCH=amd64 GOARM= go build -tags nats --tags nats -ldflags "-s -w -X 'github.com/absmach/magistrala.BuildTime=2025-02-11_14:54:15' -X 'github.com/absmach/magistrala.Version=unknown' -X 'github.com/absmach/magistrala.Commit=ddc43c482f6c98f3a4d49aa1d609bfae9e0e7d34'" -o build/bootstrap cmd/bootstrap/main.go
 ```
 
-### Build Dockers
+#### Build Dockers
 
 Dockers can be built with:
 
@@ -105,7 +130,7 @@ make docker_bootstrap
 >
 > N.B. The `clients-db` and `users-db` containers are built from a vanilla PostgreSQL docker image downloaded from docker hub which does not persist the data when these containers are rebuilt. Thus, **rebuilding of all docker containers with `make dockers` or rebuilding the `clients-db` and `users-db` containers separately with `make docker_clients-db` and `make docker_users-db` respectively, will cause data loss. All your users, clients, channels and connections between them will be lost!** As we use this setup only for development, we don't guarantee any permanent data persistence. Though, in order to enable data retention, we have configured persistent volumes for each container that stores some data. If you want to update your Magistrala dockerized installation and want to keep your data, use `make cleandocker` to clean the containers and images and keep the data (stored in docker persistent volumes) and then `make run` to update the images and the containers. Check the [Cleaning up your dockerized Magistrala setup][cleanup-docker] section for details. Please note that this kind of updating might not work if there are database changes.
 
-### Building Docker images for development
+#### Building Docker images for development
 
 In order to speed up build process, you can use commands such as:
 
@@ -121,9 +146,10 @@ make docker_dev_<microservice_name>
 
 Commands `make dockers` and `make dockers_dev` are similar. The main difference is that building images in the development mode is done on the local machine, rather than an intermediate image, which makes building images much faster. Before running this command, corresponding binary needs to be built in order to make changes visible. This can be done using `make` or `make <service_name>` command. Commands `make dockers_dev` and `make docker_dev_<service_name>` should be used only for development to speed up the process of image building. **For deployment images, commands from section above should be used.**
 
-## Step 4 – Run Magistrala
+### Step 4 – Run Magistrala
 
-To run Magistrala with its **UI components**, you must accept the [Absmach End User License Agreement (EULA)](https://github.com/absmach/eula).
+To run Magistrala with its UI components, you must accept the [Absmach End User License Agreement (EULA)](https://github.com/absmach/eula).
+
 This EULA applies **only to the Magistrala UI services**.
 
 **The Magistrala core remains free and open-source, licensed under the Apache 2.0 License.**
@@ -141,12 +167,14 @@ Once everything is installed and built, execute the following command from the p
 ```bash
 make run
 ```
+
 Or, to prevent Docker logs from flooding the terminal:
 
 ```bash
 make run args=-d
 ```
-#### Quick summary
+
+### Quick summary
 
 Assuming all required tools are installed and the necessary ports are available, you can run Magistrala with just four commands:
 
@@ -156,6 +184,7 @@ cd magistrala
 export MG_UI_DOCKER_ACCEPT_EULA=yes
 make run args=-d
 ```
+
 Go to [http://localhost:3000](http://localhost:3000) to start using UI.
 
 ### Suggested workflow
@@ -210,7 +239,7 @@ docker-compose -f docker/docker-compose.yml -f docker/docker-compose.nats-debugg
 
 If you want to clean your whole dockerized Magistrala installation you can use the `make pv=true cleandocker` command. Please note that **by default the `make cleandocker` command will stop and delete all of the containers and images, but NOT DELETE persistent volumes**. If you want to delete the gathered data in the system (the persistent volumes) please use the following command `make pv=true cleandocker` (pv = persistent volumes). This form of the command will stop and delete the containers, the images and will also delete the persistent volumes.
 
-## Step 5 - Install the CLI
+### Step 5 - Install the CLI
 
 The **Magistrala CLI** is the primary interface for interacting with the system.
 
@@ -222,11 +251,11 @@ wget -O- https://github.com/absmach/magistrala/releases/download/0.14.0/magistra
 
 > Make sure that `$GOBIN` is added to your `$PATH` so that `magistrala-cli` command can be accessible system-wide
 
-### Build magistrala-cli
+#### Build magistrala-cli
 
 Build `magistrala-cli` if the pre-built CLI is not compatible with your OS, i.e MacOS. Please see the [CLI][cli] for further details.
 
-## Step 6 - Provision the System
+### Step 6 - Provision the System
 
 Once installed, you can use the CLI to quick-provision the system for testing:
 
@@ -331,11 +360,11 @@ magistrala-clients | {"level":"info","message":"Method add_policy for client wit
 
 This proves that these provisioning commands were sent from the CLI to the Magistrala system.
 
-## Step 7 - Interact with Magistrala
+### Step 7 - Interact with Magistrala
 
 With Magistrala running, you can now send messages.
 
-### Send Messages
+#### Send Messages
 
 Once system is provisioned, a `client` can start sending messages on a `channel`:
 
