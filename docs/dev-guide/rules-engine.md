@@ -159,7 +159,7 @@ Magistrala Rules Engine only processes messages that conform to the [SenML (Sens
 ```json
 [
   {
-    "bn": "zgrada1/sprat1_hodnik/",
+    "bn": "building1/floor1/hallway/",
     "n": "temperature",
     "u": "Cel",
     "v": 23.5
@@ -169,7 +169,7 @@ Magistrala Rules Engine only processes messages that conform to the [SenML (Sens
     "vs": "OK"
   }
 ]
-````
+```
 
 #### SenML Message Constraints
 
