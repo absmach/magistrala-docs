@@ -240,8 +240,6 @@ This means:
 - Rules matching `input_topic` or using `message.subtopic` must use **dot-separated format**
 - Every empty segment (e.g. double slashes `//`) is removed
 
----
-
 #### Message Processing
 
 When a message arrives on a rule's input channel, the Rules Engine:
