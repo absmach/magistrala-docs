@@ -152,6 +152,94 @@ end
 
 The script should return a value if it triggers an action. Otherwise, it should return `nil`.
 
+### Supported Message Format (SenML)
+
+Magistrala Rules Engine only processes messages that conform to the [SenML (Sensor Measurement Lists)](https://www.rfc-editor.org/rfc/rfc8428.html) specification. Incorrectly formatted messages are silently ignored by the Rules Engine and Writer services. Below is a valid example:
+
+```json
+[
+  {
+    "bn": "building1/floor1/hallway/",
+    "n": "temperature",
+    "u": "Cel",
+    "v": 23.5
+  },
+  {
+    "n": "status",
+    "vs": "OK"
+  }
+]
+```
+
+#### SenML Message Constraints
+
+Each message must be a **JSON array of SenML records**. Each object inside the array must follow these rules:
+
+| Field                 | Rule                                                                               |
+| --------------------- | ---------------------------------------------------------------------------------- |
+| `n`                   | **Exactly one per record.** Represents the measurement name. Do **not** repeat it. |
+| `v`, `vs`, `vb`, `vd` | **Only one of these fields per record.** Multiple value fields are invalid.        |
+| `bn`                  | Optional base name prepended to all `n` values.                                    |
+| `u`                   | Optional measurement unit (e.g., `"Cel"`, `"V"`, `"A"`).                           |
+| `t`                   | Optional relative timestamp.                                                       |
+
+##### Invalid Example (duplicate `n` and multiple values)
+
+```json
+[
+  {
+    "n": "temperature",
+    "v": 23.5,
+    "n": "status",
+    "vs": "OK"
+  }
+]
+```
+
+##### Invalid Example (more than one value field)
+
+```json
+[
+  {
+    "n": "status",
+    "v": 1,
+    "vs": "OK"
+  }
+]
+```
+
+##### Special Characters in `n`
+
+Avoid using special characters in the `n` (name) field, such as:
+
+- Slashes (`/`)
+- Emojis
+- Symbols like `@`, `#`, `:`
+
+These may break internal parsing or rule pattern matching.
+
+#### Topic Rewriting and `.` Operator
+
+MQTT topics received by Magistrala are rewritten into dot-separated strings for Rules Engine processing. For example:
+
+Topic:
+
+```bash
+m/<domain_id>/c/<channel_id>/building1/floor2/temp
+```
+
+Becomes:
+
+```bash
+channels.<channel_id>.building1.floor2.temp
+```
+
+This means:
+
+- MQTT `/` separators are rewritten as `.` internally
+- Rules matching `input_topic` or using `message.subtopic` must use **dot-separated format**
+- Every empty segment (e.g. double slashes `//`) is removed
+
 #### Message Processing
 
 When a message arrives on a rule's input channel, the Rules Engine:
