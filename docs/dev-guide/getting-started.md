@@ -3,7 +3,7 @@ title: Getting Started
 ---
 
 
-Welcome to the **Magistrala Developer Guide**! This guide provides comprehensive instructions for installing, building, running, and interacting with Magistrala, an advanced messaging platform. Follow the steps below to get started with Magistrala development, understand its architecture, and interact with the system using the **Magistrala CLI**.
+Welcome to the **Magistrala Developer Guide**! This guide provides comprehensive instructions for installing, building, running, and interacting with Magistrala, an advanced messaging platform. Follow the steps below to get started with Magistrala development, understand its architecture, and interact with the system.
 
 ## Fast Start
 
@@ -19,7 +19,7 @@ make run args=-d
 Once the services are running, open [http://localhost:3000](http://localhost:3000) in your browser to view the UI. This is the Magistrala web-based platform, where you can manage clients, channels, messages, and view system activity in real time.
 
 > This runs Magistrala with the UI using prebuilt Docker images.
-
+<br/>
 You can now continue below to:
 
 - [Provision the system](#step-6---provision-the-system)
@@ -155,7 +155,7 @@ This EULA applies **only to the Magistrala UI services**.
 **The Magistrala core remains free and open-source, licensed under the Apache 2.0 License.**
 
 > This step is optional and only required if you want to use the UI services.
-
+<br/>
 To accept the UI EULA, set the following environment variable:
 
 ```bash
