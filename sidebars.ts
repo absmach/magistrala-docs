@@ -164,11 +164,6 @@ const sidebars: SidebarsConfig = {
       label: "Certs",
     },
     {
-      type: "doc",
-      id: "dev-guide/kubernetes",
-      label: "Kubernetes",
-    },
-    {
       type: "category",
       label: "Extensions",
       items: [
