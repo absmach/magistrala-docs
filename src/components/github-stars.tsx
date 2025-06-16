@@ -35,7 +35,7 @@ export const GithubStarButton = () => {
                     Stars
                 </div>
                 <span className="tw-border-l-2 tw-flex tw-justify-center">
-                    {stars !== null ? stars.toLocaleString() : "54"}{" "}
+                    {stars? stars.toLocaleString() : "95"}{" "}
                 </span>
             </Link>
         </Button>
