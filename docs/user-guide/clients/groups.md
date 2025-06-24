@@ -213,3 +213,5 @@ Each log entry displays the **operation type**, a **timestamp**, and optional **
 You can search logs by operation type using the search input above the log table.
 
 The most recent operations—such as `group.view`, `group.create` and `group.assign`—are displayed at the top.
+
+![Client Audit Logs](../../img/clients/groups-audit-logs.png)
