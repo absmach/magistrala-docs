@@ -32,7 +32,7 @@ The **Create Switch** dialog box contains the following settings:
 - **Channel (*Required*)** - Select the channel that the switch will communicate through.
 - **Client (*Required*)** - Choose the connected device that will receive the switch command.
 - **Value Name (*Required*)** - Enter the name of the value being controlled (e.g., **airflow** or **voltage**).
-- **Unit** - Must be set to **Boolean** (`true` or `false` values).
+- **Subtopic** - Subtopic for the message.
 - **Advanced Settings**
   - **Title** - A custom name for the switch card on the dashboard.
 
@@ -60,6 +60,7 @@ To edit a **Switch Card**, click the `pencil` icon in the top-right corner of th
 - **Channel** - Change the assigned communication channel.
 - **Client** - Select a different connected device.
 - **Value Name** - Modify the controlled value.
+- **Subtopic** - Modify the subtopic value.
 - **Title** - Update the displayed title.
 
 ![Edit Switch Dialog](../../img/dashboards/edit-switch.png)
@@ -107,6 +108,7 @@ The **Create Slider** dialog contains the following settings:
 - **Channel (*Required*)** - Select the channel that the slider will communicate through.
 - **Client (*Required*)** - Choose the connected device that will receive the numeric value.
 - **Value Name (*Required*)** - Enter the name of the value being controlled (e.g., `airflow`, `voltage`).
+- **Subtopic** - Enter the appropriate subtopic for the message.
 - **Unit** - Choose the appropriate unit (e.g., volts, percentage, degrees).
 - **Advanced Settings**
   - **Title** - A custom name for the slider card.
@@ -138,6 +140,7 @@ To edit a Slider Card, click the **Pencil Icon** in the top-right corner of the 
 - **Channel** - Change the assigned communication channel.
 - **Client** - Select a different connected device.
 - **Value Name** - Modify the value being controlled.
+- **Subtopic** - Modify the subtopic for the message.
 - **Title** - Update the displayed title.
 - **Minimum & Maximum Values** - Adjust the slider range.
 - **Steps** - Define the increment between values.
