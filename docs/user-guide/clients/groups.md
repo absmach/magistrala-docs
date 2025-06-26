@@ -214,4 +214,23 @@ You can search logs by operation type using the search input above the log table
 
 The most recent operations—such as `group.view`, `group.create` and `group.assign`—are displayed at the top.
 
-![Client Audit Logs](../../img/clients/groups-audit-logs.png)
+![Group Audit Logs](../../img/clients/groups-audit-logs.png)
+
+### These details may include:
+
+- `created_at`: Timestamp of group creation  
+- `updated_at`: Timestamp of the last update  
+- `id`: Unique group ID  
+- `name`: Full group name, e.g., `"Harlem Block A"`  
+- `parent`: UUID of the parent group, if applicable  
+- `status`: Whether the group is `"enabled"` or `"disabled"`  
+- `super_admin`: Indicates if the group is flagged as a super admin  
+- `domain`: Associated domain UUID  
+- `request_id`: Unique request UUID for tracing  
+- `user_id`: UUID of the user who performed the action  
+- `updated_by`: UUID of the user who last updated the group  
+- `token_type`: The type of token used for the action (e.g., `"access token"`)
+
+This enables users to **trace changes**, **audit hierarchy**, and **verify authorization events** efficiently.
+
+![View Group Audit Log Actions](../../img/clients/groups-audit-logs-action-buttons.png)

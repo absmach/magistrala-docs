@@ -262,3 +262,22 @@ You can search logs by operation type using the search input above the log table
 The most recent operations—such as `channel.view`, `channel.create`, and `channel.connect`—are displayed at the top.
 
 ![Channel Audit Logs](../../img/clients/channel-logs.png)
+
+Clicking on the `View` button at the end of each row opens a modal displaying structured details about the selected operation.
+
+These details may include:
+
+- `created_at`: Timestamp of creation  
+- `id`: Unique channel ID  
+- `name`: Full channel name, e.g., `"15 Regent St"`  
+- `status`: Whether the channel is `"enabled"` or `"disabled"`  
+- `super_admin`: Indicates if the channel was flagged as a super admin  
+- `domain`: Associated domain UUID  
+- `request_id`: Unique request UUID for tracing  
+- `user_id`: UUID of the user who performed the action  
+- `tags`: A list of contextual tags like `"West End Block A"`, `"London"`, `"Floor 3"`  
+- `token_type`: The type of token used for the action (e.g., `"access token"`)
+
+This enables users to **trace changes**, **audit security**, and **diagnose issues** efficiently.
+
+![CView Channel Audit Log Actions](../../img/clients/channel-audit-action-button.png)
