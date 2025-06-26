@@ -216,7 +216,9 @@ The most recent operations—such as `group.view`, `group.create` and `group.ass
 
 ![Group Audit Logs](../../img/clients/groups-audit-logs.png)
 
-### These details may include:
+Clicking on the `Details` button at the end of each row opens a modal displaying structured details about the selected operation.
+
+These details may include:
 
 - `created_at`: Timestamp of group creation  
 - `updated_at`: Timestamp of the last update  

@@ -181,7 +181,7 @@ The most recent operations—such as `client.view`, `client.create`, and `client
 
 ![Client Audit Logs](../../img/clients/client-audit-logs.png)
 
-Clicking on the `View` button at the end of each row opens a modal displaying structured details about the selected operation.
+Clicking on the `Details` button at the end of each row opens a modal displaying structured details about the selected operation.
 
 These details may include:
 

@@ -263,7 +263,7 @@ The most recent operations—such as `channel.view`, `channel.create`, and `chan
 
 ![Channel Audit Logs](../../img/clients/channel-logs.png)
 
-Clicking on the `View` button at the end of each row opens a modal displaying structured details about the selected operation.
+Clicking on the `Details` button at the end of each row opens a modal displaying structured details about the selected operation.
 
 These details may include:
 
