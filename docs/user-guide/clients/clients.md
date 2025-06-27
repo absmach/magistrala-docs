@@ -171,12 +171,33 @@ Clicking on the `Assign Member` button will open a dialog box that allows the us
 
 ## Audit Logs
 
-Audit logs track all **client-related events**, including creation, updates, role changes, and connection activity.
+Audit logs track all **client-related events**, including **creation**, **updates**, **disabling**, **connectivity** and **role changes**
 
 Each log entry displays the **operation type**, a **timestamp**, and optional **details** for deeper inspection.
 
 You can search logs by operation type using the search input above the log table.
 
-The most recent operations—such as `client.view`, `client.create`, and `channel.connect`—are displayed at the top.
+The most recent operations—such as `client.view`, `client.create`, and `client.connect`—are displayed at the top.
 
-![Client Audit Logs](../../img/clients/client-auditlogs.png)
+![Client Audit Logs](../../img/clients/client-audit-logs.png)
+
+Clicking on the `Details` button at the end of each row opens a modal displaying structured details about the selected operation.
+
+These details may include:
+
+- `created_at`: Timestamp of creation  
+- `updated_at`: Timestamp of the last update  
+- `id`: Unique client ID  
+- `name`: Full client name, e.g., `"Apartment A1 Floor 1 135 W 135th St Water Meter"`  
+- `status`: Whether the client is `"enabled"` or `"disabled"`  
+- `super_admin`: Indicates if the client was flagged as a super admin  
+- `domain`: Associated domain UUID  
+- `user_id`: UUID of the user who performed the action  
+- `updated_by`: Same as `user_id` for updates  
+- `request_id`: Unique request UUID for tracing  
+- `tags`: A list of contextual tags like `"Harlem Block A"`, `"New York"`, `"Water Meter"`  
+- `token_type`: The type of token used for the action (e.g., `"access token"`)
+
+This enables users to **trace changes**, **audit security**, and **diagnose issues** efficiently.
+
+![View Client Audit Log Actions](../../img/clients/client-audit-action-button.png)

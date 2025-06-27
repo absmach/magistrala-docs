@@ -206,4 +206,33 @@ To assign channels to a group, click on the `Assign Channels` button. This will 
 
 ## Audit Logs
 
-Audit logs track all **group events**, from **creation** to **updates** and **disabling**.
+Audit logs track all **group-related events**, including **creation**, **updates**, **disabling** and **role changes**.
+
+Each log entry displays the **operation type**, a **timestamp**, and optional **details** for deeper inspection.
+
+You can search logs by operation type using the search input above the log table.
+
+The most recent operations—such as `group.view`, `group.create` and `group.assign`—are displayed at the top.
+
+![Group Audit Logs](../../img/clients/groups-audit-logs.png)
+
+Clicking on the `Details` button at the end of each row opens a modal displaying structured details about the selected operation.
+
+These details may include:
+
+- `created_at`: Timestamp of group creation  
+- `updated_at`: Timestamp of the last update  
+- `id`: Unique group ID  
+- `name`: Full group name, e.g., `"Harlem Block A"`  
+- `parent`: UUID of the parent group, if applicable  
+- `status`: Whether the group is `"enabled"` or `"disabled"`  
+- `super_admin`: Indicates if the group is flagged as a super admin  
+- `domain`: Associated domain UUID  
+- `request_id`: Unique request UUID for tracing  
+- `user_id`: UUID of the user who performed the action  
+- `updated_by`: UUID of the user who last updated the group  
+- `token_type`: The type of token used for the action (e.g., `"access token"`)
+
+This enables users to **trace changes**, **audit hierarchy**, and **verify authorization events** efficiently.
+
+![View Group Audit Log Actions](../../img/clients/groups-audit-logs-action-buttons.png)
