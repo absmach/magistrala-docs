@@ -9,13 +9,28 @@ Users can define rules by visually combining input, logic, and output nodes to d
 
 ## Features
 
+### 1. Creation and Management
+
 - **Create Rules**: Define the name of a new rule and initiate creation.
 - **Quick Actions**: View, copy ID, enable/disable, or delete a rule directly from the list.
+
+### 2. Node Configuration
+
 - **Input Nodes**: Attach an MQTT subscriber input by selecting the channel and topic.
-- **Logic Nodes**: Use either comparison blocks or Lua scripts to define logic conditions.
+- **Logic Nodes**: Define conditions using comparison blocks, Lua scripts, or Go scripts.
 - **Output Nodes**: Output processed data to MQTT publishers, Email recipients, or PostgreSQL databases.
-- **Lua Script Integration**: Use custom Lua scripts with a required `logicFunction()` for advanced logic.
-- **Templated Messaging**: Use `{{result}}`, `{{result.key}}`, and `{{message.key}}` to inject dynamic values into messages.
+
+### 3. Scripting and Templating
+
+- **Lua Script Editor**: Use custom Lua scripts with a required `logicFunction()` for logic processing.
+- **Go Script Editor**: Write Go-based logic for more advanced use cases (requires Go syntax compliance).
+- **Go Text Templating**: Use dynamic value injection with:
+  - `{{.Result}}`
+  - `{{.Result.<key>}}`
+  - `{{.Message.<key>}}`
+
+### 4. Scheduling and Execution
+
 - **Scheduling**: Define execution windows with start time, specific time, recurring intervals, and periods.
 - **Connection Layout**: Visually connect all nodes to complete and activate a rule.
 
@@ -77,10 +92,11 @@ On the rule page, you can configure the following:
 
 ### 2. Logic Node
 
-After setting the input, you can define the logic of your rule using one of two options:
+After setting the input, define your rule’s logic using one of three options:
 
 1. Comparison Block
 2. Lua Script Editor
+3. Go Script Editor
 
 The logic nodes support different message payloads as inputs.  
 To utilize the message payload, you can use `message.<key>` in the input. For example if your message is a single SenML message, you can do `message.payload.v` to get the value.
@@ -91,34 +107,36 @@ Use `if`, `and` and `or` conditions to evaluate message payloads:
 
 ![comparison node](../img/rules/comparison-node.png)
 
-> We also support nested objects `message.<key>.<key>` e.g., `message.payload.sensor.temperature`.
+**Supported Payload Structures**:
 
-For SenML message formats, you can have the following option of keys:
+- Nested objects: `message.<key>.<key>` (e.g., `message.payload.sensor.temperature`).
+- **SenML fields**: `v` (numeric), `vs` (string), `vb` (boolean), `vd` (data), `s` (sum).
 
-1. `v`
-2. `vs`
-3. `vb`
-4. `vd`
-5. `s`
-
-Depending on the type of data you have you can compare the two by changing the type of the comparison value. It can either be `Num` , `Bool` or `String`. The comparison block also supports multiple conditions using the `and` or `or` operator
+**Multiple Conditions**:  
+Chain conditions with `and` / `or`:
 
 ![Add multiple conditions](../img/rules/add-multiple-conditions.png)
 
-#### Lua Script Editor
+#### Script Editors
 
-To write custom logic, you can select the editor option of the logic node.
+The script editor allows you to toggle between Lua and Go modes using the selector at the top of the editor:
 
-![editor node](../img/rules/editor-node.png)
+![toggle script node](../img/rules/toggle-script-nodes.png)
 
-This allows you to write Lua script code to process your message. Your Lua script should be wrapped in a function called `logicFunction()` and return a result. The result can be a primitive value or an object.
+**Toggle between:**
 
-The Lua script supports the utilization of the `message` object that we subscribe to by using Lua tables to get any values in the message.
+- Lua script mode (default)
+- Go script mode
 
-The editor allows you to return either a lua script table or a primitive value.
+##### Lua Script Editor
+
+Write custom logic in Lua. Wrap code in `logicFunction()` and return a primitive or table:
+
+![lua editor node](../img/rules/lua-editor-node.png)
+
 Example:
 
-```Lua title="Returns an object"
+```Lua title="Return an object (e.g., converted temperature)"
 function logicFunction()
   local converted_temp = (message.payload.v * 1.8 + 32)
   return {n = "Temp_fahrenheit", v = converted_temp, u = "°F", }
@@ -131,10 +149,21 @@ function logicFunction()
 end
 ```
 
-> **Note:** Output nodes **will only be triggered if the logic node returns a truthy result**.
->
-> If the logic node returns `false`, **the connected output nodes will not be executed**.
->
+##### Go Script Editor
+
+Write Go-based logic for advanced use cases. Return a value or struct:
+
+![go editor node](../img/rules/go-editor-node.png)
+
+Example:
+
+```go
+
+```
+
+> **Note:**  
+> Output nodes **only trigger if the script returns a truthy value**.  
+> If the logic node returns `false`, **the connected output nodes will not be executed**.  
 > This allows for conditional flows, ensuring actions such as MQTT publishing, email alerts, or database inserts only occur when the specified logic conditions are satisfied.
 
 ### 3. Output Node
@@ -161,25 +190,21 @@ Select the Channel Publisher as the output node and enter the channel and topic.
 
 #### Email
 
-Send the result of message processing to specified email recipients..
-Select the Email output node and enter the following information:
+Send results via email with templated fields:
 
 ![email variables](../img/rules/email-variables.png)
 
-- Specify one or more recipient email addresses.
-- Specify subject and body message.
-
-```Lua
-Subject: Current Temperature
+```go title="Subject"
+Current Volume
 ```
 
 - Use dynamic template fields:
-  - `{{result}}` — the entire result from logic block
-  - `{{result.key}}` — a specific field from the result
-  - `{{message.key}}` — a field from the original message
+  - `{{.Result}}` — the entire result from logic block
+  - `{{.Result.<key>}}` — a specific field from the result
+  - `{{.Message.<key>}}` — a field from the original message
 
-```Lua
-Message: Current temperature in degrees celsius is {{message.payload.v}} {{message.payload.u}} while the temperature in degrees fahrenheit is {{result.value}} {{result.unit}}.
+```go title="Message"
+ Current volume is {{(index .Result 0).v}} {{(index .Result 0).u}}.
 ```
 
 ![email node](../img/rules/email-node.png)
@@ -198,21 +223,21 @@ Store message processing results to your PostgreSQL database. Select the Postgre
 - Table name
 - Map data to table columns using templates
 
-```Lua
+```go title="Go template mapping"
 {
-  "channel" = "{{message.channel}}",
-  "value" = "{{result.value}}",
-  "unit" = "{{result.unit}}"
+  "channel": "{{.Message.Channel}}",
+  "value":   "{{(index .Result 0).v}}",
+  "unit":    "{{(index .Result 0).u}}"
 }
 ```
 
 ![PostgreSQL node](../img/rules/postgres-node.png)
 
-#### Magistrala DB
+#### Internal DB
 
 To be able to store messages in the internal Magistrala DB, you need to create a rule that processes the results. More information about this is in the [Store Messages](#store-messages) section.
 
-![Magistrala DB rule example](../img/rules/magistrala-db-rule.png)
+![Magistrala DB rule example](../img/rules/internal-db-rule.png)
 
 #### Alarms
 
@@ -226,11 +251,12 @@ You can inject dynamic values from your message or logic result using templating
 
 Available template variables:
 
-| Variable          | Description                                                   |
-| ----------------- | ------------------------------------------------------------- |
-| `{{result}}`      | Entire object or primitive value returned from the logic node |
-| `{{result.key}}`  | Specific field from the logic result object                   |
-| `{{message.key}}` | Field from the input message                                  |
+| Variable                | Description                        | Example                   |
+| ----------------------- | ---------------------------------- | ------------------------- |
+| `{{.Result}}`           | Entire output from the logic node. | `{{.Result}}`             |
+| `{{.Result.<key>}}`     | Field from the logic result.       | `{{.Result.v}}`           |
+| `{{.Message.<key>}}`    | Field from the input message       | `{{.Message.Channel}}`    |
+| `{{(index .Result 0)}}` | Access slices/arrays               | `{{(index .Result 0).v}}` |
 
 These variables work in outputs like:
 
@@ -239,15 +265,15 @@ These variables work in outputs like:
 - PostgreSQL (column mapping)
 
 ```Lua title="Example usage in Email message"
-Current temperature is {{message.payload.v}}°C  or ({{result.value}}°F).
+Current temperature is {{.Result.CelValue}}°C  or ({{.Result.FarValue}}°F).
 
 ```
 
 ```Lua title="Example usage in PostgreSQL column mapping"
 {
-  channel = "{{message.channel}}",
-  value =  "{{result.value}}",
-  unit = "{{result.unit}}"
+  "channel": "{{.Message.Channel}}",
+  "value":   "{{(index .Result 0).v}}",
+  "unit":    "{{(index .Result 0).u}}"
 }
 
 ```
@@ -338,6 +364,7 @@ end
 
 > This returns a valid SenML message the internal DB will accept.
 
+<br/>
 Then set your output node to store this result using the Magistrala internal DB option.
 
 ![Storage with json input](../img/rules/json-input.png)
