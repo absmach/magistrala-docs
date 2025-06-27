@@ -158,7 +158,14 @@ Write Go-based logic for advanced use cases. Return a value or struct:
 Example:
 
 ```go
+  package main
 
+  import (
+      m "messaging"
+  )
+  func logicFunction() any {
+      return m.message.Payload
+  }
 ```
 
 > **Note:**  
@@ -350,9 +357,9 @@ Assume your incoming payload is:
 }
 ```
 
-Use the following Lua script to convert it:
+Use the following scripts to convert it:
 
-```Lua
+```Lua title="Lua script"
 function logicFunction()
   return {
     n = message.payload.sensor,
@@ -360,6 +367,21 @@ function logicFunction()
     u = message.payload.unit
   }
 end
+```
+
+```go title="Go script"
+package main
+import (
+  m "messaging"
+)
+
+func logicFunction() any {
+return {
+    n: m.message.payload.sensor,
+    v: m.message.payload.temperature,
+    u: m.message.payload.unit
+  }
+}
 ```
 
 > This returns a valid SenML message the internal DB will accept.
@@ -371,12 +393,23 @@ Then set your output node to store this result using the Magistrala internal DB 
 
 ### Example: Input is SenML
 
-If your message payload is already SenML format, you can just return the message payload directly in your Lua script function:
+If your message payload is already SenML format, you can just return the message payload directly in your script functions:
 
-```lua
+```lua title="Lua script"
 function logicFunction()
   return message.payload
 end
+```
+
+```go title="Go script"
+  package main
+
+  import (
+      m "messaging"
+  )
+  func logicFunction() any {
+      return m.message.Payload
+  }
 ```
 
 ![Storage with senml input](../img/rules/rule.png)
