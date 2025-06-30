@@ -3,9 +3,7 @@ title: Gauges
 ---
 
 
-**Gauges** are essential widgets for visualizing the latest values from a connected **Client** or **Channel**. They provide an intuitive way to track metrics such as voltage, speed, or temperature.
-
-  <!-- ![Gauge Chart Example](../../img/dashboards/gauge-chartexample.png) -->
+**Gauges** are essential widgets for visualizing the latest values from a connected **Client** or **Channel**. They offer a clear and intuitive way to monitor real-time metrics such as voltage, temperature, or speed.
 
 Magistrala offers different types of gauges, including:
 
@@ -13,82 +11,104 @@ Magistrala offers different types of gauges, including:
 - **Temperature Gauge**
 - **Speed Gauge**
 
-Each gauge widget can be configured to show specific values based on the connected devices. Below is an overview of how to create and configure each gauge type.
+Each gauge can be configured to display values based on a specific data source. Below is an overview of how to create and configure each gauge type.
 
 ---
 
 ### Simple Gauge
 
-The **Simple Gauge** widget displays the latest value from a selected data source, like voltage, pressure, or other metrics. The gauge is customizable, allowing users to set the minimum and maximum value range, update intervals and title.
+The **Simple Gauge** widget displays the most recent value from a selected data source,  such as voltage or pressure. A user can configure the gauge to define value ranges, update intervals, units, and styling.
 
 #### Create a Simple Gauge
+
+To create a Simple Gauge:
 
 1. Ensure the dashboard is in **Edit Mode**.
 2. Click the `Add Widget` button and select **Simple Gauge** from the widget list. This will open the **Create Gauge Chart** dialog.
 
-  ![Simple Gauge Selection](../../img/dashboards/gauge-type-filter.png)
+    ![Simple Gauge Selection](../../img/dashboards/gauge-type-filter.png)
 
-3.**Gauge Type**: Select **Simple Gauge** from the dropdown.  
-4. **Channel**: Choose the **Channel** that will provide the data for the gauge.  
-5. **Client**: Select the **Client** (device/entity) that is connected to the Channel whose data will be visualized.  
-6. **Value Name**: Specify the name of the value to fetch messages (e.g., `demovoltage`).  
+3. In the Create Gauge Chart dialog, configure the following:  
 
-  ![Simple Gauge Configuration](../../img/dashboards/create-simplegauge.png)
+    Data Source Configuration:
 
-**Time Window Section**  
-7. **From**: Set the from date.  
-8. **To Value**: Set the to date.  
-9. **Aggregation Interval**: Select an aggregation interval e.g maximum.  
-10. **Aggregation Interval**: Enter an aggregation interval e.g 10s
+    - **Gauge Type**: Select Simple Gauge.
 
- ![Gauge Timewindow](../../img/dashboards/gaugechart-timewindow.png)
+    - **Channel**: Choose the channel providing the data.
 
-**Settings Section**  
-11. **Minimum Value**: Set the minimum value for the gauge, which could represent the lower limit of the metric you're tracking (e.g., `50000` for voltage).  
-12. **Maximum Value**: Set the maximum value for the gauge (e.g., `100000` for voltage).  
-13. **Update Interval**: Specify how frequently the gauge should update its value (in seconds). For instance, an interval of `600` seconds means the gauge will update every 10 minutes.  
-14. **Title**: Enter a descriptive title for the gauge (e.g., "Monical Voltage").  
-15. **Unit**: Select the unit needed for the Simple Gauge. Available units can be chosen from the list:  
+    - **Client**: Select the device associated with the channel.
 
-  ![Gauge Settings](../../img/dashboards/settings-gaugechart.png)
+    - **Value Name**: Specify the metric to display (e.g., volume).
 
-After configuring the gauge, click `Create` to save and add the widget to the dashboard.  
+     ![Simple Gauge Configuration](../../img/dashboards/create-simplegauge.png)
 
-Once the widget is added, the gauge will immediately begin displaying the latest value based on the applied settings.
+    Time Window Section:
 
-  ![Simple Gauge Created](../../img/dashboards/new-simplegauge.png)
+      - **From / To**: Define the start and end of the time range.
+
+      - **Aggregation Type**: Choose how to aggregate the values (e.g., Maximum, Average).
+
+      - **Aggregation Interval**: Set the interval (e.g., 10s).
+
+      ![Gauge Timewindow](../../img/dashboards/gaugechart-timewindow.png)
+
+      Settings Section:
+
+      **Minimum / Maximum Value**: Define the value range for the gauge.
+
+      **Update Interval**: Set how often the gauge should refresh (e.g., 600 seconds = 10 minutes).
+
+      **Title**: Add a meaningful title (e.g., "Absmach Temperature Sensor").
+
+      **Unit**: Choose from available units relevant to the data.
+
+        ![Gauge Settings](../../img/dashboards/settings-gaugechart.png)
+
+    Once configured, click `Create` to add the widget. The gauge will immediately begin displaying the latest value based on the applied settings.
+
+   ![Simple Gauge Created](../../img/dashboards/new-simplegauge.png)
 
 ### Temperature Gauge
 
-The **Temperature Gauge** widget operates similarly to the Simple Gauge but is specifically designed for **temperature** values. It displays the latest temperature data from a connected device.
+The **Temperature Gauge** is tailored to display temperature data with unit options and a design optimized for temperature monitoring.
 
 #### Create a Temperature Gauge
 
-1. Start by putting the dashboard in **Edit Mode**.
-2. Click `Add Widget` and select **Temperature Gauge** from the list. This will open the temperature gauge configuration dialog.
-3. **Gauge Type**: Select **Temperature Gauge** from the dropdown.
-4. **Channel**: Choose the **Channel** that will provide the temperature data.
-5. **Client**: Select the **Client** (device) connected to the channel.
-6. **Value Name**: Enter the value name for the temperature data that will be used to fetch messages(e.g., `tempValue`).
+1. Enter **Edit Mode** and click **Add Widget**.
+2. Select **Temperature Gauge** from the widget list.
 
-  ![Temperature Gauge Configuration](../../img/dashboards/create-temperature-gauge.png)
+   ![Temperature Gauge Configuration](../../img/dashboards/create-temperature-gauge.png)
 
-**Time Window Section**  
-7. **From**: Set the from date.  
-8. **To Value**: Set the to date.  
-9. **Aggregation Interval**: Select an aggregation interval e.g maximum.  
-10. **Aggregation Interval**: Enter an aggregation interval e.g 10s
+3. Configure the following fields:
+    Data Source Configuration:
 
-**Settings Section**  
-11. **Minimum Value**: Set the minimum value for the gauge (e.g., `0` for temperatures in degrees Celsius).  
-12. **Maximum Value**: Set the maximum value for the gauge (e.g., `200` for temperatures in degrees Celsius).  
-13. **Update Interval**: Define the update frequency (in seconds), such as `60` seconds for a 5-minute update cycle.  
-14. **Title**: Provide a title for the temperature gauge (e.g., "Monical Temperature Gauge").  
-15. **Unit**: Select the unit needed for the temperature gauge. It will show up on the gauge chart. The options available are Degrees Celcius, Kelvin and Farenheight as shown below:  
+      **Gauge Type**: Select Temperature Gauge.
 
-  ![Temperature Gauge Settings](../../img/dashboards/temperature-gauge-units.png)
+      **Channel**: Choose the source of temperature data.
+
+      **Client**: Select the associated device.
+
+      **Value Name**: Define the key used to retrieve temperature values (e.g., temperature).
+
+     Time Window Section:
+
+      **From /To**: Specify the desired time window.
+
+      **Aggregation Type**: Choose how values are aggregated.
+
+      **Aggregation Interval**: Define the aggregation interval (e.g., 10s).
+
+      Settings Section:
+
+      **Minimum /Maximum Value**: Set an appropriate temperature range (e.g., 0–200°C).
+
+      **Update Interval**: Define how frequently the data should refresh.
+
+      **Title**: Provide a title for the gauge (e.g., "Absmach Temperature Sensor").
+
+    ![Temperature Gauge Settings](../../img/dashboards/temperature-gauge-units.png)
   
-Click **Create** to add the Temperature Gauge to your dashboard. The gauge will immediately start reflecting the latest temperature readings.  
+  Click `Create` to add the widget to the dashboard. The gauge will immediately start reflecting the latest temperature readings.  
 
   ![Temperature Gauge Created](../../img/dashboards/new-temperaturegauge.png)
 
@@ -96,34 +116,44 @@ Click **Create** to add the Temperature Gauge to your dashboard. The gauge will 
 
 ### Speed Gauge
 
-The **Speed Gauge** widget tracks speed or velocity values from connected devices. It functions similarly to the Simple and Temperature Gauges, but with units and appearance tailored to speed data.
+The **Speed Gauge** is ideal for tracking real-time speed or velocity values from connected devices. It functions similarly to other gauges but is styled and labeled for speed data.
 
 #### Create a Speed Gauge
 
-1. Ensure the dashboard is in **Edit Mode**.
-2. Click `Add Widget` and select **Speed Gauge** from the list of available widgets.
-3. **Gauge Type**: Select **Speed Gauge**.
-4. **Channel**: Select the **Channel** providing the speed data.
-5. **Client**: Choose the connected **Client** (device).
-6. **Value Name**: Enter the name of the value that corresponds to speed (e.g., `speedValue`).
+1. Enable **Edit Mode** on the dashboard.
+2. Click `Add Widget` and select **Speed Gauge** from the widget options.
+   ![Speed Gauge Configuration](../../img/dashboards/create-speedgauge.png)
+3. Configure the following fields:
+    Data Source Configuration:
 
-  ![Speed Gauge Configuration](../../img/dashboards/create-speedgauge.png)
-**Time Window Section**  
-7. **From**: Set the from date.  
-8. **To Value**: Set the to date.  
-9. **Aggregation Interval**: Select an aggregation interval e.g maximum.  
-10. **Aggregation Interval**: Enter an aggregation interval e.g 10s
+    **Gauge Type**: Select Speed Gauge.
 
-**Settings Section**  
-11. **Minimum Value**: Set the minimum speed value (e.g., `0`).  
-12. **Maximum Value**: Set the maximum speed value (e.g., `1000` for kilometers per hour).  
-13. **Update Interval**: Set how frequently the gauge should refresh (e.g., every `60` seconds).  
-14. **Title**: Provide a title for the speed gauge (e.g., "Monical Speed Gauge").  
-15. **Unit**: Select the unit needed for the simple gauge. It will show up on the gauge chart. There is a list of Units you can choose from for speed gauge.  
+    **Channel**: Choose the data source.
+
+    **Client**: Select the relevant device.
+
+    **Value Name**: Enter the key for the speed value (e.g., speedValue).
+
+    Time Window Section:
+
+    **From/ To**: Set the time range to fetch data.
+
+    **Aggregation Type**: Choose a method (e.g., Maximum).
+
+    **Aggregation Interval**: Enter a value (e.g., 10s).
+
+    Settings Section:
+    **Minimum/ Maximum Value**: Define the value range (e.g., 0–1000 km/h).
+
+    **Update Interval**: Set the refresh rate (e.g., 60 seconds).
+
+    **Title**: Enter a descriptive name (e.g., "Absmach Machine Speed Gauge").
+
+    **Unit**: Choose the appropriate speed unit from the list.
 
    ![Speed Gauge Settings](../../img/dashboards/create-speedgauge-unit.png)
 
- Click **Create** to save the Speed Gauge widget. The gauge will then start showing the latest speed data.  
+  Click `Create` to finalize the widget. The gauge will start displaying the latest speed data.
 
    ![Speed Gauge Created](../../img/dashboards/new-speedgauge.png)
 
@@ -131,12 +161,12 @@ The **Speed Gauge** widget tracks speed or velocity values from connected device
 
 ### Edit the Gauge
 
-The gauge can be edited later by clicking the `pencil` icon on the widget. This allows for adjustments to data sources, value names, titles or other settings.
+A user can edit any existing gauge widget by clicking the `pencil` icon on the top-right corner of the widget. This opens the settings sheet, where configuration changes can be made to the **data source**, **labels**, **time window**, or **visual properties**.
 
   ![Simple Gauge Editing](../../img/dashboards/edit-gauge-settings.png)
 
-#### **Conclusion**
+#### Conclusion
 
-**Gauges** provide an effective and visual way to track live data for various metrics. Whether monitoring voltage, temperature, or speed, these widgets offer flexibility in displaying the most important data from connected IoT devices.
+**Gauges** provide a real-time snapshot of key metrics in an easy-to-understand visual format. Whether tracking voltage, temperature, or speed, gauge widgets offer the flexibility and precision needed for monitoring connected devices.
 
-Each gauge can be customized with specific value ranges, update intervals, and labels, making them adaptable to any use case. Existing gauges can also be edited to adjust settings as monitoring needs evolve.
+Each gauge can be tailored through settings like value ranges, units, update frequency, and labels. As monitoring needs evolve, gauges can be updated at any time to reflect the most relevant data.

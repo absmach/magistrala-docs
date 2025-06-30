@@ -3,54 +3,63 @@ title: Bar Chart
 ---
 
 
-Similar to the Line Chart, the Bar Chart follows a comparable timeseries format in its dialog box.
+Bar Charts provide a clear, comparative view of data across categories or time intervals. Like other timeseries widgets, they support multiple data sources, time window configuration, and data aggregation to give users meaningful insights into their data.
 
 ### Create a Bar Chart
 
-To create a Bar Chart, first ensure that the dashboard is in Edit Mode.
-Click on the `Add Widget` button, which will open a dialog box displaying all available widgets.
-Select the **Bar Chart** option from the list.
-
-This will open the **Create Bar Chart** dialog, where the chart’s settings and data sources can be configured.
+To create a Bar Chart, a user must first ensure the dashboard is in **Edit Mode**.
+Click the `Add Widget` button and select **Bar Chart** from the list of available widgets. This opens the **Create Bar Chart** dialog, where the chart’s data sources, time window and settings can be configured.
 
 #### Configuring the Bar Chart
+
+Start by setting up a single data source.
+
+- **Value Name**: The specific metric to visualize, such as voltage or temperature.
+- **Channel**: The channel providing the data to be plotted.
+- **Client**:  The device or entity connected to the selected channel.
+- **Label**:   A custom label to identify the data source on the chart.
+- **Bar color**: The fill color for bars.
+
+To include more data streams, a user can click the `Add Source` button.
 
 Just like with the line chart, the fields marked with an asterisk are required and must be filled in before clicking `Create` button.
 
 ![Create Bar Chart](../../img/dashboards/create-barchart.png)
 
-Once the data sources are set, define a **Time Window** by specifying the "From" and "To" dates, which will limit the displayed data to the chosen time interval.
-In the **Settings** tab, further customize the chart by adjusting its appearance, including the update interval and other relevant properties.
-After configuring everything, click the `Create` button to save the Bar Chart widget.
-The dialog will close, and the Bar Chart will be added to the dashboard.
+A **Time Window** can be applied by setting the _From_ and _To_ dates. This constrains the chart to display data only within the specified range.
+In the **Settings** tab, a user can further adjust properties such as the Data Points and other styling options.
+
+After configuration, click the `Create` button to add the Bar Chart to the dashboard.
 
 ![Created Bar Chart](../../img/dashboards/new-barchart.png)
 
 ### Edit the Bar Chart
 
-An existing bar chart can be edited at any time by clicking the `pencil` icon in the top-right corner of the chart. This will open an edit sheet on the right, where data sources, labels, time window, and other settings can be modified.
-
-1. **Add Data Sources**: You can add more data sources by clicking the `Add Source` button and providing additional channels, clients, and labels.
-2. **Delete Data Sources**: Remove a data source by clicking the `trash` icon next to the specific source to be deleted.
+To edit an existing Bar Chart, a user can click the `pencil` icon in the top-right corner of the widget. This opens the settings sheet on the right, where chart properties such as data sources, time window, and title can be modified.
 
 ![Edit Bar Chart](../../img/dashboards/edit-barchart.png)
 
-In this section, the chart title, labels, and intervals can also be modified as needed.
-Once all changes are made, click the `Update` button to save the modifications.
+1. **Add Data Sources**: Click the Add Source button to include additional channels and labels.
+2. **Removing Data Sources**:  Click the `trash` icon next to a source to delete it.
+3. **Editing Chart Title**: Update chart title.
+4. **Modifying Time Window**: Specify new From and To dates to change the time range of displayed data.
+5. **Aggregation**: Apply aggregation by selecting a method (e.g., Minimum, Maximum, Average), set timewindow and interval (e.g., every 10 minutes).
+In this section, the chart title, labels, and intervals can also be modified as needed.  
+
+After applying changes, click the `Update` button. A confirmation message will appear, and the chart will refresh with the updated settings. For example, selecting a time window from 01:00 to 01:30 will constrain the data to that 30-minute period.
+
+![To From Bar Chart](../../img/dashboards/to-from-barchart.png)
 
 ![Edited Bar Chart](../../img/dashboards/edited-barchart.png)
 
-The **Time Window** settings can further filter the data shown in the chart by specifying a specific time range.
-For example, selecting a time window from 17:30 to 19:30 will constrain the data to that two-hour period.
 Additionally, **Aggregation** can be applied to the data points.
+In the example below, an Aggregation Interval of **15 minutes** is used along with the **Minimum** aggregation method. This results in the chart displaying the lowest value recorded during each 15-minute segment over a two-hour period.
 
-These settings group the data and allow for more meaningful summaries.
-For instance, applying aggregation with an interval of 10 minutes and selecting "Minimum" will display the lowest value recorded for each 10-minute interval over a two-hour time window.
-
-After applying these settings, the resulting chart will show aggregated values based on the specified criteria.
+![Aggregation Settings](../../img/dashboards/aggregation-barchart-settings.png)
 
 ![Aggregated Bar Chart](../../img/dashboards/min-barchart.png)
 
-#### **Conclusion**
+#### Conclusion
 
-With the ability to add, edit, and delete data sources, along with fine-tuning time windows and aggregation, Bar Charts provide a versatile way to visualize data on the dashboard.
+Bar Charts offer a clear, flexible way to visualize discrete values across time or categories. With support for multiple data sources, aggregation, and customizable styling, they are a powerful addition to any dashboard.
+By allowing users to add, edit, or remove data streams and adjust time-based filters, Bar Charts provide valuable insights through a visual format that’s easy to interpret.

@@ -4,59 +4,62 @@ title: Line Chart
 
 ### Create a Line Chart
 
-To create a Line Chart, first ensure that the dashboard is in **Edit Mode**.
-Click on the `Add Widget` button, which will open a dialog box displaying all the available widgets.
-Select the **Line Chart** option from the list.
+To create a Line Chart, the dashboard must first be switched to **Edit Mode**.
+Clicking on the `Add Widget` button opens a dialog box displaying all the available widgets.
+From this list, the **Line Chart** option should be selected.
 
-This will open the **Create Line Chart** dialog, where the chart's settings and data sources can be configured.
+This action opens the **Create Line Chart** dialog, where settings and data sources can be configured.
+
+![Line Chart Create](../../img/dashboards/single-data-linechart.png)
 
 #### Configuring the Line Chart
 
-Start by setting up a single data source.
+The configuration begins with setting up a single data source.
 
-- **Value Name**: Enter the name of the value used to fetch the messages.
-- **Channel**: Choose the channel connected to the device that should be tracked.
-- **Client**: Select the client connected to the specified channel.
-- **Label**: Provide a label to track each data source clearly on the chart.
-- **Line Color**:  Use the color picker to choose a color for the line.
+- **Value Name**: The name of the value used to fetch the messages.
+- **Channel**: The channel connected to the device being tracked.
+- **Client**: The client associated with the selected channel.
+- **Label**: A clear label for identifying each data source on the chart.
+- **Line Color**:  A chosen color for the line using the color picker.
 
-![Line Chart data Source](../../img/dashboards/single-data-linechart.png)
+![Line data source](../../img/dashboards/datafiled-linechart.png)
 
-Once the data sources are configured, define a **Time Window** by specifying the "From" and "To" dates to restrict the data to a specific time interval.
+With the data sources defined, the next step is  optionally specify a **Time Window**. This is done by selecting the "From" and "To" dates, restricting the data to a specific time range.
 
-In the **Settings** tab, the **Line Width** can also be adjusted to set the thickness of the lines based on visual preferences.
+![Line time window](../../img/dashboards/timewindow-linechart.png)
 
-Once satisfied with the settings, click the `Create` button to save the Line Chart widget. This will close the dialog and add the new Line Chart to the dashboard.
+Alternatively, under the **Settings** tab, the **Line Width** can also be adjusted. This changes the thickness of the chart lines to suit visual preferences.
+
+![Line time window](../../img/dashboards/linewidth.png)
+
+Once the configuration is complete, clicking the `Create` button saves the Line Chart widget. The dialog closes, and the new chart appears on the dashboard.
+
+![Line chart create button](../../img/dashboards/create-linechart.png)
 
 ![LineChart Created](../../img/dashboards/created-linechart.png)
 
 ### Edit the Line Chart
 
-The Line Chart can be edited at any time by clicking the `pencil` icon on the widget. This will open a settings sheet on the right, where the chart’s data sources, labels, intervals, and title can be modified.
+To edit a Line Chart, a user can click the `pencil` icon on the widget. This opens a settings sheet on the right, where chart properties such as **data sources**, **labels**, **intervals**, and the **title** can be updated.
 
 ![Adjusting Line Chart dataSources](../../img/dashboards/edit-linechart-sheet.png)
 
-At this point, the labels, intervals, and chart title can also be edited.
-Clicking the `Update` button will save the changes and adjust the chart according to the new settings. A confirmation message (toast notification) will appear to confirm that the update has been applied.
-
-![Edited Line Chart](../../img/dashboards/new-linechart.png)
-
-The data can be further manipulated using the **Time Window** settings. For example, the data can be restricted to a specific interval, such as one hour, as shown in the following settings:
+The chart’s data can be refined by adjusting the **Time Window** for example, narrowing the range to a single hour using specific _From_ and _To_ values. This ensures the chart displays only data within the selected timeframe.
 
 ![Edit time window](../../img/dashboards/to-from-linechart.png)
 
-This adjustment will ensure the chart displays data within the defined time frame, ensuring that the final data point is at or before the specified _To_ date.
-
-Additionally, **Aggregation** can be applied to the data points. Aggregation requires a "From" value, a "To" value, and an interval. These settings help structure the query to the database for aggregated data.
+For deeper analysis, a user can enable **Aggregation** within the same settings panel. By setting a **From** date, **To** date, and an **interval** (e.g., 15 minutes), the data is grouped accordingly. This configures the query to return aggregated results.
 
 ![Aggregation Line Chart](../../img/dashboards/aggregation-linechart-settings.png)
 
-In the example above, the chart is set to show the **Maximum** value over 10-minute intervals within a 100-minute time window.
-
-The resulting chart will look like this:
+In the example below, the chart displays the **Maximum** values aggregated over 15-minute intervals within a 2-hour window:
 
 ![Maximum Aggregates Line Charts](../../img/dashboards/max-linechart.png)
 
-#### **Conclusion**
+After making changes, a user can click the `Update` button at the bottom of the settings sheet. A confirmation message (toast notification) will appear to indicate that the update was successful.
 
-Line Charts are an effective tool for visualizing trends and changes in data over time. They provide a clear, precise representation of data points, making it easy to track fluctuations, compare multiple data sources, and identify patterns. With customizable settings like data aggregation, time windows, and line styling, line charts offer flexibility for detailed data analysis, helping users make informed decisions based on real-time or historical data insights.
+![Edited Line Chart](../../img/dashboards/line-livedata.png)
+
+#### Conclusion
+
+Line Charts are a powerful tool for visualizing trends and changes in data over time. They offer a clear and precise view of data points, enabling users to track fluctuations, compare multiple data sources, and identify patterns with ease. With customizable settings such as data aggregation, time windows, and line styling, Line Charts provide the flexibility needed for detailed analysis, helping users make informed decisions based on both real-time and historical insights.
