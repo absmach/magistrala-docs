@@ -8,9 +8,10 @@ Each user has access to a **Profile Page**, where personal information, security
 
 Clicking the `user profile picture` or `avatar` at the top right opens a popover.
 
-### Standard User Menu
+## Standard User Menu
 
 - **Profile**
+- **Personal Access Tokens**
 - **Domains**
 - **Logout**
 
@@ -42,8 +43,12 @@ Magistrala currently supports **English**, **German**, and **Serbian** languages
 
 ## Password Recovery
 
-If a user forgets their password, they can click the `Forgot Password` link on the login page. This directs them to a page where they enter their email address to receive a password reset link.
+Users who forget their password can click the `Forgot Password` link on the login page.
+
+![Forgot Password Link](../../img/profile-management/forgot-pass.png)
+
+They’ll be prompted to enter their email address to receive a reset link.
 
 ![Forgot Password](../../img/profile-management/forgot-password2.png)
 
-The reset password link contains a unique token. Clicking the link redirects the user to the **Reset Password** page, where a new password can be created and confirmed. After resetting the password, the user can log into the system with the new credentials.
+The link includes a unique token and redirects the user to a **Reset Password** page, where they can create and confirm a new password. Once updated, they can log in with their new credentials.
