@@ -30,19 +30,19 @@ To create a Simple Gauge:
 
 3. In the Create Gauge Chart dialog, configure the following:  
 
-    Data Source Configuration:
+    - Data Source Configuration:
 
-    - **Gauge Type**: Select Simple Gauge.
+      - **Gauge Type**: Select Simple Gauge.
 
-    - **Channel**: Choose the channel providing the data.
+      - **Channel**: Choose the channel providing the data.
 
-    - **Client**: Select the device associated with the channel.
+      - **Client**: Select the device associated with the channel.
 
-    - **Value Name**: Specify the metric to display (e.g., volume).
+      - **Value Name**: Specify the metric to display (e.g., volume).
 
      ![Simple Gauge Configuration](../../img/dashboards/create-simplegauge.png)
 
-    Time Window Section:
+    - Time Window Section:
 
       - **From / To**: Define the start and end of the time range.
 
@@ -52,15 +52,15 @@ To create a Simple Gauge:
 
       ![Gauge Timewindow](../../img/dashboards/gaugechart-timewindow.png)
 
-      Settings Section:
+    - Settings Section:
 
-      **Minimum / Maximum Value**: Define the value range for the gauge.
+      - **Minimum / Maximum Value**: Define the value range for the gauge.
 
-      **Update Interval**: Set how often the gauge should refresh (e.g., 600 seconds = 10 minutes).
+      - **Update Interval**: Set how often the gauge should refresh (e.g., 600 seconds = 10 minutes).
 
-      **Title**: Add a meaningful title (e.g., "Absmach Temperature Sensor").
+      - **Title**: Add a meaningful title (e.g., "Absmach Temperature Sensor").
 
-      **Unit**: Choose from available units relevant to the data.
+      - **Unit**: Choose from available units relevant to the data.
 
         ![Gauge Settings](../../img/dashboards/settings-gaugechart.png)
 
@@ -80,31 +80,31 @@ The **Temperature Gauge** is tailored to display temperature data with unit opti
    ![Temperature Gauge Configuration](../../img/dashboards/create-temperature-gauge.png)
 
 3. Configure the following fields:
-    Data Source Configuration:
+    - Data Source Configuration:
 
-      **Gauge Type**: Select Temperature Gauge.
+      - **Gauge Type**: Select Temperature Gauge.
 
-      **Channel**: Choose the source of temperature data.
+      - **Channel**: Choose the source of temperature data.
 
-      **Client**: Select the associated device.
+      - **Client**: Select the associated device.
 
-      **Value Name**: Define the key used to retrieve temperature values (e.g., temperature).
+      - **Value Name**: Define the key used to retrieve temperature values (e.g., temperature).
 
-     Time Window Section:
+    - Time Window Section:
 
-      **From /To**: Specify the desired time window.
+      - **From /To**: Specify the desired time window.
 
-      **Aggregation Type**: Choose how values are aggregated.
+      - **Aggregation Type**: Choose how values are aggregated.
 
-      **Aggregation Interval**: Define the aggregation interval (e.g., 10s).
+      - **Aggregation Interval**: Define the aggregation interval (e.g., 10s).
 
-      Settings Section:
+    - Settings Section:
 
-      **Minimum /Maximum Value**: Set an appropriate temperature range (e.g., 0–200°C).
+      - **Minimum /Maximum Value**: Set an appropriate temperature range (e.g., 0–200°C).
 
-      **Update Interval**: Define how frequently the data should refresh.
+      - **Update Interval**: Define how frequently the data should refresh.
 
-      **Title**: Provide a title for the gauge (e.g., "Absmach Temperature Sensor").
+      - **Title**: Provide a title for the gauge (e.g., "Absmach Temperature Sensor").
 
     ![Temperature Gauge Settings](../../img/dashboards/temperature-gauge-units.png)
   
@@ -124,32 +124,32 @@ The **Speed Gauge** is ideal for tracking real-time speed or velocity values fro
 2. Click `Add Widget` and select **Speed Gauge** from the widget options.
    ![Speed Gauge Configuration](../../img/dashboards/create-speedgauge.png)
 3. Configure the following fields:
-    Data Source Configuration:
+    - Data Source Configuration:
 
-    **Gauge Type**: Select Speed Gauge.
+      - **Gauge Type**: Select Speed Gauge.
 
-    **Channel**: Choose the data source.
+      - **Channel**: Choose the data source.
 
-    **Client**: Select the relevant device.
+      - **Client**: Select the relevant device.
 
-    **Value Name**: Enter the key for the speed value (e.g., speedValue).
+      - **Value Name**: Enter the key for the speed value (e.g., speedValue).
 
-    Time Window Section:
+    - Time Window Section:
 
-    **From/ To**: Set the time range to fetch data.
+      - **From/ To**: Set the time range to fetch data.
 
-    **Aggregation Type**: Choose a method (e.g., Maximum).
+      - **Aggregation Type**: Choose a method (e.g., Maximum).
 
-    **Aggregation Interval**: Enter a value (e.g., 10s).
+      - **Aggregation Interval**: Enter a value (e.g., 10s).
 
-    Settings Section:
-    **Minimum/ Maximum Value**: Define the value range (e.g., 0–1000 km/h).
+    - Settings Section:
+      - **Minimum/ Maximum Value**: Define the value range (e.g., 0–1000 km/h).
 
-    **Update Interval**: Set the refresh rate (e.g., 60 seconds).
+      - **Update Interval**: Set the refresh rate (e.g., 60 seconds).
 
-    **Title**: Enter a descriptive name (e.g., "Absmach Machine Speed Gauge").
+      - **Title**: Enter a descriptive name (e.g., "Absmach Machine Speed Gauge").
 
-    **Unit**: Choose the appropriate speed unit from the list.
+      - **Unit**: Choose the appropriate speed unit from the list.
 
    ![Speed Gauge Settings](../../img/dashboards/create-speedgauge-unit.png)
 
