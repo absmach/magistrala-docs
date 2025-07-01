@@ -80,7 +80,7 @@ To create an alarm, first define an alarm rule in the Rules Engine.
 
    ![Alarm rule](../img/alarms/alarm-rule.png)
 
-Below is a Lua script example for checking water level thresholds:
+Below are examples of Lua and Go scripts for checking water level thresholds:
 
 ```Lua title="Lua script"
 function logicFunction()
@@ -138,7 +138,7 @@ type alarm struct {
 
 func logicFunction() any {
   results := []alarm{}
-  threshold := 30.0
+  threshold := 20000.0
   pld, ok := m.message.Payload.([]any)
   if !ok {
   panic("invalid payload")
