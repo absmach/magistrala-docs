@@ -68,9 +68,9 @@ To create an alarm, first define an alarm rule in the Rules Engine.
 
 4. Add an **Editor** block as the logic node.
 
-   ![Logic options](../img/alarms/logic-options.png)
-
    ![Logic node](../img/alarms/logic-node.png)
+
+   ![Logic options](../img/alarms/logic-options.png)
 
 5. Add the **Alarm** node as the output node.
 
@@ -80,12 +80,12 @@ To create an alarm, first define an alarm rule in the Rules Engine.
 
    ![Alarm rule](../img/alarms/alarm-rule.png)
 
-Below is a Lua script example for checking temperature thresholds:
+Below are examples of Lua and Go scripts for checking water level thresholds:
 
 ```Lua title="Lua script"
 function logicFunction()
     local results = {}
-    local threshold = 30
+    local threshold = 20000
 
     for _, msg in ipairs(message.payload) do
         local value = msg.v
@@ -121,68 +121,68 @@ end
 package main
 
 import (
-	m "messaging"
-	"fmt"
-	"strconv"
+  m "messaging"
+  "fmt"
+  "strconv"
 )
 
 
 type alarm struct {
-	Measurement string
-	Value       string
-	Threshold   string
-	Cause       string
-	Unit        string
-	Severity    uint8
+  Measurement string
+  Value       string
+  Threshold   string
+  Cause       string
+  Unit        string
+  Severity    uint8
 }
 
 func logicFunction() any {
-	results := []alarm{}
-	threshold := 30.0
-	pld, ok := m.message.Payload.([]any)
-	if !ok {
-		panic("invalid payload")
-	}
-	for _, m := range pld {
-		if m == nil {
-			continue
-		}
-		msg, ok := m.(map[string]any)
-		if !ok {
-			panic("not map")
-		}
+  results := []alarm{}
+  threshold := 20000.0
+  pld, ok := m.message.Payload.([]any)
+  if !ok {
+  panic("invalid payload")
+  }
+  for _, m := range pld {
+  if m == nil {
+  continue
+  }
+  msg, ok := m.(map[string]any)
+  if !ok {
+    panic("not map")
+  }
 
-		value := msg["v"].(float64)
-		unit := msg["u"].(string)
-		msmnt := msg["n"].(string)
-		var severity uint8
-		var cause string
+  value := msg["v"].(float64)
+  unit := msg["u"].(string)
+  msmnt := msg["n"].(string)
+  var severity uint8
+  var cause string
 
-		switch {
-		case value >= threshold*1.5:
-			severity = 5
-			cause = "Critical level exceeded"
-		case value >= threshold*1.2:
-			severity = 4
-			cause = "High level detected"
-		case value >= threshold:
-			severity = 3
-			cause = "Threshold reached"
-		}
+  switch {
+  case value >= threshold*1.5:
+  severity = 5
+  cause = "Critical level exceeded"
+  case value >= threshold*1.2:
+   severity = 4
+  cause = "High level detected"
+  case value >= threshold:
+   severity = 3
+   cause = "Threshold reached"
+  }
 
-		result := alarm{
-			Measurement: msmnt,
-			Value:       strconv.FormatFloat(value, 'f', -1, 64),
-			Threshold:   strconv.FormatFloat(threshold, 'f', -1, 64),
-			Cause:       cause,
-			Unit:        unit,
-			Severity:    severity,
-		}
-		results = append(results, result)
-	}
-	fmt.Println("returning", len(results))
+  result := alarm{
+   Measurement: msmnt,
+   Value:       strconv.FormatFloat(value, 'f', -1, 64),
+   Threshold:   strconv.FormatFloat(threshold, 'f', -1, 64),
+   Cause:       cause,
+   Unit:        unit,
+   Severity:    severity,
+  }
+  results = append(results, result)
+ }
+ fmt.Println("returning", len(results))
 
-	return results
+ return results
 }
 ```
 
