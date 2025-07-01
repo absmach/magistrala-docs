@@ -210,7 +210,7 @@ Current Volume
   - `{{.Result.<key>}}` — a specific field from the result
   - `{{.Message.<key>}}` — a field from the original message
 
-```go title="Message"
+```go title="Content"
  Current volume is {{(index .Result 0).v}} {{(index .Result 0).u}}.
 ```
 
