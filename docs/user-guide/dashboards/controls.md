@@ -87,7 +87,7 @@ Switch Cards are ideal for simple device control:
 
 ## Slider Control
 
-The **Slider Card** allows a user to send numeric values to a connected device through a channel. It’s perfect for use cases such as adjusting **temperature**, **voltage**, or f**an speed**.
+The **Slider Card** allows a user to send numeric values to a connected device through a channel. It’s perfect for use cases such as adjusting **temperature**, **voltage**, or **fan speed**.
 
 ### Create a Slider Card
 

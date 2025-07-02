@@ -152,7 +152,7 @@ Here is an example of a gauge chart with the unit set to *kWh* :
 
 ##### Control Widgets
 
-**Control widgets** also require minimum and maximum values. A step value determines the increment or decrement per movement and defaults to 10:
+In **Control widgets**, sliders require minimum and maximum values. The step value defines the increment or decrement for each movement and defaults to 10.
 
 ![Slider chart settings](../../img/dashboards/settings-slider.png)
 
@@ -223,7 +223,8 @@ Tag filtering applies to all entities except **groups**. To filter by tag, enter
 
 ![Tag Filter](../../img/dashboards/tag-filter-charts.png)
 
-> Filter by status and tag only apply to the cards (table and count cards).  
+> Filter by status and tag only apply to the cards (table and count cards).
+<br/>
 
 Here is an example of a count card displaying enabled entities with the tag `Floor 1`
 

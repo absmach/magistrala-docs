@@ -5,7 +5,8 @@ title: Dashboard Guide
 ### Create a New Dashboard
 
 After logging into a **Domain**, navigate to **Dashboards** tab and click on the `+ Create` button. A dialog box will prompt you to enter a dashboard name and optionally add a description, tags, a thumbnail, and a sharing option. Sharing options can be none, domain members, selected users or public.
-> To find out more about the available share options check out updating the share state section below.  
+> To learn more about the available share options, see the [**Update Dashboard Share State**](#update-dashboard-share-state) section below.
+<br/>
 
 ![Dashboard Creation](../../img/dashboards/create-dash.png)
 
@@ -51,7 +52,7 @@ The available sharing options are:
 
 ![Domain Members Dashboard](../../img/dashboards/dashboard-domain.png)
 
-- Selected Users - Only specific users can access the dashboard
+- Selected Users - Only specific domain members can access the dashboard
 
 ![Selected Users Share Option](../../img/dashboards/share-selected-dialog.png)
 
@@ -90,6 +91,7 @@ Magistrala allows dashboards to be uploaded in .JSON format.
 
 By clicking the `Upload` button at the top of the dashboard table, a dialog box will open, allowing users to select and upload a _.JSON_ file containing the required fields for a complete dashboard.
 > Make sure your file includes the dashboard **name**, **layout**, and **metadata**.  
+<br/>
 
 The uploaded dashboard will then appear in the list with the uploaded data.
 
@@ -111,8 +113,7 @@ Toggling **Edit Mode** enables dashboard editing features. In this mode, users c
 
 #### Choose a Layout
 
-Layouts allow a user to select the layout type suitable for your needs.
-There are **desktop**, **laptop**, **tablet**, **phone** or **small phone** layouts. This adjust the width of the dashboard grid for better responsiveness.
+Layouts allow users to select a layout type that suits their needs, optimizing the dashboard for different screen sizes. Available options include layouts for **desktop**, **laptop**, **tablet**, **phone** or **small phone** — each adjusting the dashboard grid width for better responsiveness.
 
 ![Dashboard Layouts](../../img/dashboards/layouts.png)
 
