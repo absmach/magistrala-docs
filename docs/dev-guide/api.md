@@ -2135,6 +2135,18 @@ Content-Length: 660
 }
 ```
 
+> **Note**: The `<service_port>` depends on the **active reader service** you're using. The example above uses the **HTTP interface** of the Postgres Reader.
+>
+> - Use `9009` for the **Postgres Reader** (HTTP)
+> - Use `9011` for the **Timescale Reader** (HTTP)
+>
+> If you're using **gRPC** instead of HTTP, refer to the following gRPC ports:
+>
+> - `7009` for **Postgres Reader** (gRPC)
+> - `7011` for **Timescale Reader** (gRPC)
+>
+> Ensure your `curl` or client command is targeting the correct service and port based on your setup (HTTP vs gRPC).
+
 ## Groups
 
 ### Create group
