@@ -115,6 +115,7 @@ function logicFunction()
 
     return results
 end
+return logicFunction()
 ```
 
 ```go title="Go script"

@@ -141,12 +141,14 @@ function logicFunction()
   local converted_temp = (message.payload.v * 1.8 + 32)
   return {n = "Temp_fahrenheit", v = converted_temp, u = "°F", }
 end
+return logicFunction()
 ```
 
 ```Lua title="Returns a primitive"
 function logicFunction()
   return (message.payload.v * 1.8 + 32)
 end
+return logicFunction()
 ```
 
 ##### Go Script Editor
@@ -367,6 +369,7 @@ function logicFunction()
     u = message.payload.unit
   }
 end
+return logicFunction()
 ```
 
 ```go title="Go script"
@@ -399,6 +402,7 @@ If your message payload is already SenML format, you can just return the message
 function logicFunction()
   return message.payload
 end
+return logicFunction()
 ```
 
 ```go title="Go script"
