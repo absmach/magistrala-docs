@@ -2,11 +2,19 @@
 title: Maps
 ---
 
-## **Marker Map**
+## Overview
 
-**Marker Maps** are used to visualize the locations of entities, such as devices or channels, on a map. This makes them particularly useful for tracking the geographical locations of various IoT assets in a visual interface.
+**Maps** are powerful visual tools used to display the real-time or historical geographic locations of entities such as devices, channels, or groups. There are two types of map widgets:
 
-Marker Maps work by retrieving latitude and longitude data from the metadata of the entities. A typical metadata entry for an entity’s location might look like this:
+- **Marker Map** – Displays static locations using metadata.
+
+- **Route Map** – Displays the movement of entities over time using location messages.
+
+## Marker Map
+
+**Marker Maps** are used to plot the current location of entities on a map using the latitude and longitude provided in their metadata.
+
+A sample metadata entry:
 
 ```json
 {
@@ -17,39 +25,39 @@ Marker Maps work by retrieving latitude and longitude data from the metadata of 
 }
 ```
 
-These coordinates are then used to place a marker on the map. Users can add multiple data sources, such as different devices or channels, to visualize them on the same map.
+These coordinates are used to place markers for each entity on the map.
 
 ### Create a Marker Map
 
-To create a Marker Map, ensure that the dashboard is in **Edit Mode**. Then, click the `Add Widget` button and select **Marker Map** from the list of available widgets.
+- Ensure the dashboard is in **Edit Mode**.
 
-This will open the **Create Marker Map** dialog, where users can configure the data sources and appearance of the map.
+- Click `Add Widget` and select **Marker Map**.
+
+- The **Create Marker Map** dialog will appear.
 
 ![Create Marker Map Dialog](../../img/dashboards/markermap-dialog.png)
 
 #### Configure the Marker Map
 
-1. **Entity Type**: Choose the type of entity whose location data will be visualized. The available options include:
-   - **Client** (device)
-   - **Channel**
-   - **Group**
+1. **Entity Type**: Select the type of entity to visualize (**Client**, **Channel**, **Group**).
 
    ![Entity Type Selection](../../img/dashboards/markermap-entities.png)  
-2. **Channel**: Select the specific entity whose location data will be displayed. For this example, a channel with pre-configured metadata will be plotted.  3. **Label**: Provide a label for the marker, which will help identify it on the map.  
-3. **Color**: Choose a color for the marker to distinguish it from others.  
-4. **Add Source**: Multiple data sources (entities) can be added to the map by clicking `Add Source`.  
-5. **Delete Source**: A data source can be removed by clicking the `trash` icon next to it.
+2. **Channel**: Choose the specific entity with metadata location.
+3. **Label**: Provide a label for the marker (shown on hover or click)
+4. **Color**: Pick a color to identify the marker.
+5. **Add Source**: Use this to add multiple entities.  
+6. **Delete Source**:  Remove a data source using the `trash` icon.
 
    ![Create Channel Marker Map](../../img/dashboards/datasosurce-markermap.png)
 
 **Settings Section**  
-7. **Title**: Set a title for the map (e.g., "Marker Map"). This title will appear at the top of the map.  
-8. **Latitude Key**: Specify the metadata key that contains the latitude value. By default, it is set to `latitude`, but it can be modified if a different key is used.  
-9. **Longitude Key**: Similarly, set the metadata key for the longitude. The default is `longitude`.  
+7. **Title**: Title for the map (e.g., Devices Map).  
+8. **Latitude Key**: Metadata key for latitude (default: **latitude**).  
+9. **Longitude Key**: Metadata key for longitude (default: **longitude**).  
 
   ![Marker Map Settings](../../img/dashboards/create-marker-dialog.png)
 
-Once all the required fields are completed, click the `Create` button to add the Marker Map to the dashboard. The map will automatically center on the specified locations based on the metadata.
+Click `Create` to add the map to the dashboard.
 
 ![Channel Marker Map](../../img/dashboards/new-markermap2.png)
 
@@ -79,9 +87,9 @@ Once changes have been made, click `Update` to apply the modifications. The upda
 
 Marker Maps offer an intuitive way to visualize the physical locations of IoT devices or channels on a dashboard. The flexibility to add multiple data sources, customize markers, and retrieve position data from metadata or messages ensures that this widget is adaptable to various use cases. By integrating real-time location data, Marker Maps enable users to track and monitor their assets effectively.
 
-## **Route Map**
+## Route Map
 
-**Route Maps** display the path or movement of a device or entity based on the location messages sent over time. Unlike Marker Maps, which rely on metadata, Route Maps depend on message data from a connected channel-client pair. These messages contain latitude and longitude values, which are used to trace the route on the map. This feature is particularly useful for tracking the movement of devices over time.
+**Route Maps** visualize the path of a device based on message data over time. Instead of using metadata, they rely on messages with location values.
 
 ### How Route Maps Work
 
@@ -117,7 +125,7 @@ This will open the **Create Route Map** dialog, where users can configure the da
 #### Settings Section
 
 1. **Time Window**: In the advanced settings, you can define a time range (`From Date` and `To Date`). This setting will limit the messages displayed on the map to a specific time interval. The route will display all the messages sent within this window, with the pointer indicating the last message before the `To Date` timestamp.  
-2. **Update Interval**: Set how frequently the map should refresh to display new messages.  
+2. **Data Points**: Set how many data points to be displayed.  
 3. **Title**: Set a title for the map (e.g., "Device Route"). This title will appear at the top of the map.  
 4. **Latitude Key**: Specify the key in the message that contains the latitude value. By default, this is set to `latitude`, but you can modify it if your message uses a different key.  
 5. **Longitude Key**: Specify the key in the message that contains the longitude value. The default is `longitude`, but this can be changed as needed.  
