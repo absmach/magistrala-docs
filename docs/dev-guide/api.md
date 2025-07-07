@@ -2083,16 +2083,16 @@ Connection: keep-alive
 
 ### Read Messages
 
-Reads messages from database for a given channel
+Reads messages from database for a given channel.
 
 ```bash
-curl -sSiX GET http://localhost:<service_port>/m/<domain_id>/c/<channel_id>?[offset=<offset>]&[limit=<limit>] -H "Authorization: Client <client_secret>"
+curl -sSiX GET http://localhost:<service_port>/<domain_id>/channels/<channel_id>/messages?[offset=<offset>]&[limit=<limit>] -H "Authorization: Bearer <access_token>"
 ```
 
-For example:
+For example
 
 ```bash
-curl -sSiX GET http://localhost:9009/m/6a45444c-4c89-46f9-a284-9e731674726a/c/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8 -H "Authorization: Client a83b9afb-9022-4f9e-ba3d-4354a08c273a"
+curl -sSiX GET http://localhost:9009/6a45444c-4c89-46f9-a284-9e731674726a/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/messages -H "Authorization: Client a83b9afb-9022-4f9e-ba3d-4354a08c273a"
 
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -2134,6 +2134,11 @@ Content-Length: 660
     ]
 }
 ```
+
+> **Note**: The `<service_port>` depends on the **active reader service** you're using. The example above uses the **HTTP interface** of the Postgres Reader.
+>
+> - Use `9009` for the **Postgres Reader** (HTTP)
+> - Use `9011` for the **Timescale Reader** (HTTP)
 
 ## Groups
 
