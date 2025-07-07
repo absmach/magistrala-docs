@@ -90,8 +90,8 @@ To log in to the Magistrala system, you need to create a `user_token`.
 ```bash
 curl -sSiX POST http://localhost/users/tokens/issue -H "Content-Type: application/json" -d @- << EOF
 {
-  "identity": "<user_name> | <useramen>",
-  "secret": "<user_secret>"
+  "username": "<user_name> | <username>",
+  "password": "<user_secret>"
 }
 EOF
 ```
@@ -101,8 +101,8 @@ For example:
 ```bash
 curl -sSiX POST http://localhost/users/tokens/issue -H "Content-Type: application/json" -d @- << EOF
 {
-  "identity": "john.doe@email.com",
-  "secret": "12345678"
+  "username": "john.doe@email.com",
+  "password": "12345678"
 }
 EOF
 
