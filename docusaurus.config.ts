@@ -1,7 +1,7 @@
 import { themes as prismThemes } from "prism-react-renderer";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
-import tailwindPlugin from "./plugins/tailwind-config.cjs";
+// import tailwindPlugin from "./plugins/tailwind-config.cjs";
 
 const config: Config = {
   title: "Magistrala",
@@ -23,7 +23,7 @@ const config: Config = {
   },
 
   plugins: [
-    tailwindPlugin,
+    // tailwindPlugin,
     [
       require.resolve("@easyops-cn/docusaurus-search-local"),
       {
@@ -40,7 +40,7 @@ const config: Config = {
       "classic",
       {
         docs: {
-          routeBasePath: "/docs",
+          routeBasePath: "/",
           sidebarPath: "sidebars.ts",
           editUrl: "https://github.com/absmach/magistrala-docs/blob/main",
         },
