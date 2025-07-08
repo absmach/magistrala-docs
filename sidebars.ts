@@ -4,7 +4,7 @@ const sidebars: SidebarsConfig = {
   userSidebar: [
     {
       type: "doc",
-      id: "user-guide/index",
+      id: "index",
       label: "Overview",
     },
     {
