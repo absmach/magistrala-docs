@@ -2341,5 +2341,5 @@ Example of disconnect event:
    ```
 
 [redis-streams]: https://redis.io/topics/streams-intro
-[mg-docker-compose]: https://github.com/absmach/magistrala/blob/main/docker/docker-compose.yml
+[mg-docker-compose]: https://github.com/absmach/supermq/blob/main/docker/docker-compose.yaml
 [bootstrap-docker-compose]: https://github.com/absmach/magistrala/blob/main/docker/addons/bootstrap/docker-compose.yml

@@ -116,7 +116,7 @@ The OPC-UA adapter can be used in an industrial setup to monitor process values 
 
 Clients on magistrala can be created to represent these devices and the channels can be created to represent the data points on the devices. The OPC-UA adapter can then be used to subscribe to the OPC-UA server and forward the data to the NATS message broker. This data can then be consumed by other services in the Magistrala system, and further processing done if need be.
 
-[opcua-adapter]: https://github.com/absmach/magistrala/tree/main/opcua
+[opcua-adapter]: https://github.com/absmach/supermq-contrib/tree/main/opcua
 [opcua-arch]: https://en.wikipedia.org/wiki/OPC_Unified_Architecture
 [public-opcua]: https://github.com/node-opcua/node-opcua/wiki/publicly-available-OPC-UA-Servers-and-Clients
 [redis]: https://redis.io/
