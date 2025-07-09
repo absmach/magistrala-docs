@@ -175,7 +175,7 @@ mosquitto_pub -I <client_name> -u <client_id> -P <client_secret> -t m/<domain_id
 
 :::info
 
-More information on how to send messages via the terminal can be found in the **Developer Docs**, under the [**Messaging section** in **Developer Tools**](/docs/dev-guide/messaging).
+More information on how to send messages via the terminal can be found in the **Developer Docs**, under the [**Messaging section** in **Developer Tools**](/docs/dev-guide/messaging.md).
 
 :::
 
