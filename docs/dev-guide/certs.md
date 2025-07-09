@@ -156,5 +156,5 @@ For more information about the Certification service API, please check out the [
 
 [vault-pki-engine]: https://learn.hashicorp.com/tutorials/vault/pki-engine
 [meodor-vault]: https://github.com/mteodor/vault
-[api-docs]: https://github.com/absmach/magistrala/blob/main/api/openapi/certs.yml
+[api-docs]: https://docs.api.supermq.abstractmachines.fr/?urls.primaryName=api%2Fcerts.yaml
 [magistrala-vault]: https://github.com/absmach/magistrala/blob/main/docker/addons/vault/README.md#setup

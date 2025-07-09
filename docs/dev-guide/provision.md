@@ -52,7 +52,7 @@ access-control-expose-headers: Location
 {"access_token":"eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzk0ODU4MDYsImlhdCI6MTczOTQ4MjIwNiwiaXNzIjoic3VwZXJtcS5hdXRoIiwidHlwZSI6MCwidXNlciI6IjBkNDA5NDgyLTA3MzctNDVlYS04Mjg0LTViZDg4MDU5ZjYyNSJ9.nFeihdM7KQJKr_2WQaKUFqBGWVw1qfjh0N6Uc5C6UXc2ugtm4LCf0sjDawi9ok_szk0fQeWWX8bqOsnEvhobZA","refresh_token":"eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzk1Njg2MDYsImlhdCI6MTczOTQ4MjIwNiwiaXNzIjoic3VwZXJtcS5hdXRoIiwidHlwZSI6MSwidXNlciI6IjBkNDA5NDgyLTA3MzctNDVlYS04Mjg0LTViZDg4MDU5ZjYyNSJ9.DbaMpgVPtL7ER5wlsFmVtC3izKgjB66qsl1beT0qnlcWcfp7NQyvBtT0EW3OyibcqG56SnqO0ye1mzaJLgViqg"}
 ```
 
-For more information about the Users service API, please check out the [API documentation](https://absmach.github.io/magistrala/?urls.primaryName=users.yml).
+For more information about the Users service API, please check out the [API documentation](https://docs.api.supermq.abstractmachines.fr/?urls.primaryName=api%2Fusers.yaml).
 
 ## System Provisioning
 
@@ -376,7 +376,7 @@ date: Tue, 04 Apr 2023 09:57:53 GMT
 access-control-expose-headers: Location
 ```
 
-For more information about the Clients service API, please check out the [API documentation](https://absmach.github.io/magistrala/?urls.primaryName=clients.yml).
+For more information about the Clients service API, please check out the [API documentation](https://docs.api.supermq.abstractmachines.fr/?urls.primaryName=api%2Fclients.yaml).
 
 ## Provision Service
 
@@ -644,7 +644,7 @@ MG_AGENT_BOOTSTRAP_ID=gateway MG_AGENT_BOOTSTRAP_KEY=external_key MG_AGENT_BOOTS
 
 Agent will retrieve connections parameters and connect to Magistrala cloud.
 
-For more information about the Provision service API, please check out the [API documentation](https://github.com/absmach/magistrala/blob/master/api/provision.yml).
+For more information about the Provision service API, please check out this [API documentation](https://github.com/absmach/magistrala/tree/main/provision#readme).
 
 [magistrala]: https://github.com/absmach/magistrala
 [bootstrap]: https://github.com/absmach/magistrala/tree/main/bootstrap
