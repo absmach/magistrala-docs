@@ -40,7 +40,7 @@ const config: Config = {
       "classic",
       {
         docs: {
-          routeBasePath: "/docs",
+          routeBasePath: "/",
           sidebarPath: "sidebars.ts",
           editUrl: "https://github.com/absmach/magistrala-docs/blob/main",
         },

@@ -4,7 +4,7 @@ title: API
 
 ## Reference
 
-API reference in the Swagger UI can be found at: [https://api.magistrala.abstractmachines.fr][api]
+The API reference is available at the [Magistrala API documentation site](https://docs.api.magistrala.abstractmachines.fr/)
 
 ## Users
 
@@ -2643,5 +2643,3 @@ Content-Type: application/json
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 ```
-
-[api]: https://absmach.github.io/magistrala

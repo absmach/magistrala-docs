@@ -166,9 +166,7 @@ Agent, on the other hand, returns a response SenML of the following form:
 
 ### Remote Commands
 
-EdgeX defines SMA commands in the following [RAML file][edgex-raml]
-
-Commands are:
+EdgeX defines SMA commands as
 
 - OPERATION
 - CONFIG
@@ -568,7 +566,6 @@ magistrala-mqtt   | {"level":"info","message":"Publish - client ID export-88529f
 [bootstraping]: ./bootstrap.md#bootstrapping
 [provision]: ./provision.md
 [edgex-repo]: https://github.com/edgexfoundry/edgex-go
-[edgex-raml]: https://github.com/edgexfoundry/edgex-go/blob/master/api/raml/system-agent.raml
 [conftoml]: https://github.com/absmach/export/blob/master/configs/config.toml
 [docker-compose]: https://github.com/absmach/magistrala/blob/main/docker/docker-compose.yml
 [env]: https://github.com/absmach/export#environmet-variables
