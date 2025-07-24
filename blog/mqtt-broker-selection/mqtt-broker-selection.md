@@ -10,19 +10,19 @@ Based on popularity and size, we can narrow down the search for a broker to the 
 
 1. [EMQX](https://github.com/emqx/emqx) - Released in 2012. Written in Erlang
 
-2. [Mosquitto](https://github.com/eclipse-mosquitto/mosquitto) — Released in 2009. Written in C/C++
+2. [Mosquitto](https://github.com/eclipse-mosquitto/mosquitto) - Released in 2009. Written in C/C++
 
-3. [NanoMQ](https://github.com/nanomq/nanomq)—Released in 2020. Written in C
+3. [NanoMQ](https://github.com/nanomq/nanomq) - Released in 2020. Written in C
 
-4. [VerneMQ](https://github.com/vernemq/vernemq)— Released in 2014. Written in Erlang
+4. [VerneMQ](https://github.com/vernemq/vernemq) - Released in 2014. Written in Erlang
 
 The above represent the brokers with the most influence in the open-source community based on their GitHub stars and contributions.
 
 As SuperMQ also has an internal message broker, two more contenders are introduced, which are primarily message brokers but offer support for MQTT.
 
-5. [RabbitMQ](https://github.com/rabbitmq)—Released in 2007. Written in Erlang
+5. [RabbitMQ](https://github.com/rabbitmq) - Released in 2007. Written in Erlang
 
-6. [NATS](https://github.com/nats-io)—Released in 2011. Written in Go
+6. [NATS](https://github.com/nats-io) - Released in 2011. Written in Go
 
 ## The criteria
 
