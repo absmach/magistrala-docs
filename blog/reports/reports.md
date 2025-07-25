@@ -400,30 +400,46 @@ curl --location 'http://localhost:9017/{{DOMAINID}}/reports?action=download' \
     "config": {
         "from": "now()-2h",
         "to": "now()",
-        "title": "Temperature Data Export",
+        "title": "Temperature Data",
         "file_format": "csv"
     },
     "metrics": [
         {
             "channel_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
             "name": "temperature",
-            "client_ids": ["g7h8i9j0-k1l2-3456-m789-n012p345q678", "h8i9j0k1-l2m3-4567-n890-o123p456q789"]
+            "client_ids": ["de0fbc2b-6224-4c02-95ef-fb4dfce4ba02", "0a8e82d6-d7aa-436f-9987-6486f165d7c5"]
         }
     ]
 }' --output temperature_data.csv
 ```
 
-**Pro tip**: Notice the `--output` flag - this saves the CSV directly to a file instead of displaying it in the terminal.
+**Note**: The `--output` flag - this saves the CSV directly to a file instead of displaying it in the terminal.
 
-#### Sample PDF Output
+#### Sample Report Outputs: From Standard to Extraordinary
 
-Here's what your generated reports actually look like. This PDF was created using the default template with current sensor data:
+**Default Template - Professional and Clean**
 
-![Sample Report PDF](./sample-report.png)
+Here's what you get out of the box. This PDF uses the default template with clean styling that works for most business needs:
 
-#### Sample CSV Output
+![Sample Default Report PDF](./sample-report.png)
 
-Here's what your CSV reports look like when you need data in spreadsheet format:
+**Custom Template - Branded for Your Organization**
+
+Want to add your company branding? Here's the same data with a custom template featuring company colors and styling:
+
+![Sample Custom Report PDF](./custom-report.png)
+
+**Cyberpunk Theme - Because Why Not?**
+
+This is where it gets fun. With full HTML/CSS control, you can create reports that match any aesthetic. Here's a cyberpunk-themed report that turns boring sensor data into something from Blade Runner:
+
+![Sample Custom Report PDF](./cyberpunk-theme.png)
+
+**The only limit is your imagination.** Whether you need corporate-standard reports for the board meeting, branded dashboards for clients, or creative themes that make data exciting, the template system gives you complete creative control. You can build anything from minimalist designs to elaborate visual experiences.
+
+**CSV Output - Data Analysis Ready**
+
+For when you need the numbers in spreadsheet format:
 
 ```csv
 Lab Current
@@ -438,6 +454,8 @@ Time,Value,Unit,Protocol,Subtopic
 2010-06-08 18:01:12,10.33,A,http,lab
 ```
 
-This shows how you can completely customize the look and feel while maintaining compatibility with the PDF generation system.
+### Conclusion
 
-These examples show how flexible the reporting system is - you can mix protocols, customize output formats, and set up different schedules based on your actual needs. Whether you're monitoring critical systems in real-time, generating monthly reports for finance, or pulling data from multiple sensor types, the system adapts to your requirements.
+After working with Magistrala's reporting system for months, what strikes me most is how it gets out of your way and lets you focus on what matters - turning your IoT data into insights that actually help your team make decisions. The beauty isn't just in the technical capabilities (though the custom templating and multi-protocol support are genuinely impressive) - it's in how it adapts to real-world workflows. Need a quick CSV export for analysis? Two minutes. Want branded PDFs for executive meetings? The template system has you covered. Managing dozens of sensor types across different protocols? No problem.
+
+I've seen teams go from manually exporting data and fighting with spreadsheets to having automated reports that just work. The facilities team gets their daily temperature summaries, the finance team has their monthly energy reports, and the ops team can monitor system health - all without anyone having to remember to run queries or format data. The reporting system does what good infrastructure should do: it becomes invisible once it's working, freeing you up to focus on the insights rather than the mechanics of data extraction.
