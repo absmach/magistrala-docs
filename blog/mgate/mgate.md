@@ -16,7 +16,7 @@ The extensible nature of mGate allows developers to customize it to fit various 
 
 Some of the key features of mGate are highlighted below:
 
-![mGate features](/blog/mgate/mgate-features.png "mGate features")
+![mGate features](./mgate-features.png "mGate features")
 
 ### Multi-Protocol Support
 
@@ -72,7 +72,7 @@ The can be procedurally described as:
 
 The process flow is shown in the image below:
 
-![mGate process flow](/blog/mgate/mgate.png "mGate process flow")
+![mGate process flow](./mgate.png "mGate process flow")
 
 mGate can parse and understand protocol packages, and upon their detection, it calls external event handlers. mGate specifies the interface for the Event handler as follows:
 
@@ -115,7 +115,7 @@ The Handler interface is inspired by MQTT protocol control packets; if the under
 What better way to demonstrate the power of mGate than to run a demo for a real world use case for this. The demo is based on how [SuperMQ](https://github.com/absmach/supermq) uses mGate for authorization and authentication. SuperMQ is a distributed, highly scalable, and secure open-source cloud platform for messaging and event-driven architecture (EDA). The platform has its own authentication and authorization system which it uses for clients connecting to it through all supported protocols. To achieve this auth has to be done protocol-agnostic. This is where mGate shines. To show how this works we will walk through a demo using a simple MQTT broker, mGate running in standalone mode and two simple MQTT clients.
 The diagram below shows the test setup:
 
-![mGate test setupt](/blog/mgate/mgate-test-flow.png "mGate test setup")
+![mGate test setupt](./mgate-test-flow.png "mGate test setup")
 
 ### Requirements
 
