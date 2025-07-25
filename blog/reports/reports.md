@@ -145,24 +145,6 @@ For example, this metric configuration:
 
 Will retrieve all "lab2:current" sensor readings from the specified channel and device, filtered to only include messages with "test" subtopic that came via HTTP protocol, using the standard messages table format.
 
-#### Best Practices for Metric Design
-
-1. **Always specify `channel_id` and `name`** - These are mandatory and heavily indexed
-2. **Use `client_ids` for device-specific reports** - Maps to the `publisher` field in the database
-3. **Leverage `subtopic` for logical grouping** - Helps organize data by location, sensor type, etc.
-4. **Consider `protocol` for multi-protocol environments** - Useful when the same data comes via different protocols
-
-### What Makes This Architecture Smart
-
-The key insight here is **separation of concerns**. The reports service doesn't try to understand every IoT protocol or manage message storage. Instead:
-
-- **Readers service** handles all the heavy data lifting
-- **Reports service** focuses on formatting and scheduling
-- **Message brokers** handle the real-time data ingestion
-- **PostgreSQL** stores both the raw data and report configurations
-
-This means you can scale each piece independently. Having trouble with report generation? Scale up the reports service. Need to handle more sensor data? Scale the readers service.
-
 #### Template Validation Requirements
 
 When you create custom HTML templates, Magistrala validates them to ensure they'll work correctly with the PDF generation system. Your template must include:
