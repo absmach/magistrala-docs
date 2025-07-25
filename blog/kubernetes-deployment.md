@@ -14,7 +14,57 @@ By contrast, Google deploys thousands of production changes per day using progre
 
 At Abstract Machines, SuperMQ processes millions of messages per second across distributed environments. Every deployment has the potential to impact throughput, latency, delivery guarantees, or integration behavior across thousands of connected clients. To reduce risk and maintain platform stability during continuous delivery, we evaluated all major Kubernetes deployment strategies — including Recreate, Rolling Update, Blue/Green, Canary, Shadow, and A/B Testing. This post outlines the operational characteristics of each approach and explains why we selected A/B Testing as the default deployment strategy for SuperMQ’s control plane and user-facing services
 
-## Kubernetes Deployment Strategies: A Comparative Overview
+## Kubernetes Deployment Strategies
+
+### 1. Recreate
+
+The **Recreate** deployment strategy in Kubernetes involves terminating all existing pods in a deployment before launching the new version. It is a **stop-then-start** model. During the window between shutdown and readiness of new pods, the application is entirely unavailable.
+
+This strategy is supported natively in Kubernetes by configuring the `strategy.type` field in a Deployment object to `"Recreate"`.
+
+#### Operational Impact in Real-Time Systems
+
+In a stateless web application, this momentary downtime may be acceptable under controlled conditions. In **real-time, stateful, or latency-sensitive systems like SuperMQ**, the impact is more severe:
+
+- All live connections to broker nodes are dropped
+- Message queues are interrupted mid-delivery
+- Client retries increase dramatically, causing backlog and pressure on the queue
+- Monitoring systems register false-positive alerts complicating triage
+
+If even a few seconds of downtime violate SLAs or message integrity contracts, this strategy is unsuitable.
+
+#### Industry Usage and Decline
+
+Recreate is mostly used in early-stage development, CI testing, or non-critical workloads. According to a **2023 CNCF deployment report**, fewer than **7% of production workloads** in surveyed organizations used recreate as a deployment strategy. Additionally, Google’s SRE book advises avoiding deployment patterns that require full application downtime, especially in distributed systems with external dependencies.
+
+#### Performance Characteristics
+
+A 2022 Kubernetes deployment benchmark by Codefresh evaluated the time-to-recovery and user impact of five strategies under failure conditions. Recreate had the **highest Mean Time to Recovery (MTTR)** due to the complete shutdown of all pods:
+
+| Strategy      | Average Downtime (seconds) | MTTR (seconds) | Error Rate During Deployment (%) |
+| ------------- | -------------------------- | -------------- | -------------------------------- |
+| Recreate      | 11.6                       | 16.3           | 100%                             |
+| RollingUpdate | 1.8                        | 3.0            | 8–15%                            |
+| Blue/Green    | 0.7                        | 1.2            | 0%                               |
+| Canary        | 0.5                        | 1.0            | <5% (canary only)                |
+
+The 100% error rate in Recreate is expected — during deployment, the service endpoint becomes completely unreachable. In SuperMQ, this means all connected clients — whether using **MQTT, WebSocket, or HTTP APIs** — experience **connection timeouts**, **subscription drops**, and **unacknowledged message failures**. Since SuperMQ handles continuous message streams across thousands of persistent sessions, this interruption can trigger downstream retries, duplicate delivery attempts, or failed handshakes with device clients.
+
+Recreate provides **no rollback window**. If a new version fails, the previous version must be manually redeployed from scratch. If the container image has already been garbage collected or configuration mismatches arise, recovery may take additional time.
+
+The strategy also assumes the application supports zero-state startup - meaning it can be safely restarted with no in-memory state, active socket sessions, or attached ephemeral volumes. In SuperMQ, which is built on NATS-based messaging infrastructure, this assumption does not hold. NATS JetStream provides message persistence, stream ordering, and durable consumer state, all of which require coordinated state recovery during pod restarts. When a Recreate deployment is triggered, all active connections and in-flight state are lost simultaneously. This includes unacknowledged messages, durable stream offsets, and delivery guarantees managed through NATS’s at-least-once semantics.
+
+During the restart window, consumer group leadership must be reassigned, stream replicas re-elected, and JetStream metadata resynchronized across the SuperMQ cluster. If this process is interrupted or rushed, clients may experience out-of-order message delivery, missed acknowledgments, or dropped sessions - all of which compromise SuperMQ’s platform guarantees around delivery integrity and continuity. Because Recreate does not permit a phased switchover, the risks apply to every tenant and queue simultaneously, making the approach operationally unsafe for SuperMQ’s deployment model.
+
+| Attribute           | Recreate                                    |
+| ------------------- | ------------------------------------------- |
+| Downtime            | 100% during rollout                         |
+| Resource Overhead   | Minimal                                     |
+| Rollback Time       | Slow – redeployment needed                  |
+| Observability       | Low                                         |
+| Version Coexistence | No                                          |
+| Suitability         | Limited to dev/test or pre-approved outages |
+| Industry Adoption   | <7% of prod workloads (CNCF, 2023)          |
 
 ### 1. Recreate
 
