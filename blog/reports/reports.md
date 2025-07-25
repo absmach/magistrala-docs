@@ -163,6 +163,34 @@ The key insight here is **separation of concerns**. The reports service doesn't 
 
 This means you can scale each piece independently. Having trouble with report generation? Scale up the reports service. Need to handle more sensor data? Scale the readers service.
 
+#### Template Validation Requirements
+
+When you create custom HTML templates, Magistrala validates them to ensure they'll work correctly with the PDF generation system. Your template must include:
+
+**Required Template Fields:**
+- `{{$.Title}}` - Report title
+- `{{$.GeneratedDate}}` and `{{$.GeneratedTime}}` - Generation timestamps  
+- `{{.Metric.Name}}`, `{{.Metric.ClientID}}`, `{{.Metric.ChannelID}}` - Metric information
+- `{{len .Messages}}` - Record count
+- `{{range .Messages}}...{{end}}` - Data iteration block
+- `{{formatTime .Time}}`, `{{formatValue .}}`, `{{.Unit}}`, `{{.Protocol}}`, `{{.Subtopic}}` - Message fields
+
+**Required HTML Structure:**
+- Valid HTML5 document with `<!DOCTYPE html>`
+- Complete `<html>`, `<head>`, `<body>`, and `<style>` tags
+- Proper table structure with `<table>`, `<thead>`, `<tbody>`, `<th>`, `<td>`
+- Expected table headers: Time, Value, Unit, Protocol, Subtopic
+
+**Required CSS Classes:**
+- `.page` - Main page container
+- `.header` - Report header section
+- `.content-area` - Main content area
+- `.metrics-section` - Metrics information display
+- `.data-table` - Data table styling
+- `.footer` - Report footer
+
+The validation system ensures your custom templates maintain compatibility with the PDF generation engine while giving you complete creative control over the visual design.
+
 ## Examples
 
 Let me walk you through real-world examples and show you how to build reports that actually work in production.
