@@ -1,8 +1,16 @@
 # MQTT Broker Selection
 
+## Summary
+
+This blog compares popular open-source MQTT brokers—EMQX, Mosquitto, NanoMQ, VerneMQ, RabbitMQ, and NATS—against key criteria such as licensing, MQTT protocol support, performance, scalability, security, and monitoring. After evaluating their strengths and trade-offs, we explain why RabbitMQ was selected to power MQTT support in SuperMQ, our distributed and open-source cloud platform designed for IoT.
+
 ## Introduction
 
 SuperMQ is a distributed, highly scalable, and secure open-source cloud platform. Remember this; it will be useful for later. One of the key pillars of the platform is its multiprotocol support. A use case for the platform is in the ever-growing field of IoT (Internet of Things). It would therefore be remiss if it did not support one of the most popular protocols in the field, MQTT. To achieve this we had to select an MQTT broker that would work under the hood. Following an analytical review of the landscape, we settled on [RabbitMQ](https://www.rabbitmq.com/). The following is a summary of what we considered and eventually why we chose our broker.
+
+![SuperMQ architecture](/blog/mqtt-broker-selection/supermq-architecture.png "SuperMQ architecture")
+
+_A simplification of the architecture of SuperMQ to show where the broker sits_
 
 ## The contenders
 
@@ -26,7 +34,14 @@ As SuperMQ also has an internal message broker, two more contenders are introduc
 
 ## The criteria
 
-To choose a broker, a set of analytical criteria was established. The main goal was to make sure we did not compromise the SuperMQ offering but instead enriched it. For our consideration we will define the following:
+To choose a broker, a set of analytical criteria was established. The main goal was to make sure we did not compromise the SuperMQ offering but instead enriched it. For our consideration we will define the following criteria:
+
+- Licensing and open‑source commitment
+- Protocol support (MQTT versions, QoS, retained messages, LWT)
+- Performance: connections, throughput, latency
+- Scalability and clustering
+- Security: TLS, authentication, authorization
+- Management and monitoring capabilities
 
 ### Distribution and licensing
 
@@ -39,6 +54,8 @@ From the list of our contenders, RabbitMQ, VerneMQ, and NATS have an Apache 2.0 
 The MQTT protocol has features set out by the [MQTT specifications.](https://mqtt.org/mqtt-specification/)
 
 We would like to offer support for various versions of MQTT (v3.1, v3.1.1, and v5). Furthermore, we aim to offer support for various levels of QoS (Quality of Service), Retained Messages, and Last Will and Testament (LWT).
+
+### Feature support summary
 
 | Feature Area                 | Mosquitto       | EMQX            | VerneMQ         | RabbitMQ        | NanoMQ      | NATS        |
 | ---------------------------- | --------------- | --------------- | --------------- | --------------- | ----------- | ----------- |
@@ -73,6 +90,17 @@ It is at this point where it is important to note that NanoMQ was authored by EM
 
 Limited comparison benchmarks are available for NATS as an MQTT broker; we can attribute it to being less popular as compared to our other contenders as an MQTT broker.
 
+### Perfomance summary
+
+| Broker    | Connections Supported (per node) | Message Throughput (messages/second) | Latency                                              |
+| :-------- | :------------------------------- | :----------------------------------- | :--------------------------------------------------- |
+| EMQX      | Millions (e.g., 4M+)             | 28K (sustainable)                    | 6.4 ms per 1000 messages/second                      |
+| Mosquitto | Lower                            | Lower than EMQX/VerneMQ              | Higher than EMQX/NanoMQ (can be ~40ms)               |
+| NanoMQ    | Lower                            | Lower than EMQX/VerneMQ              | Lower at low connections, higher at high connections |
+| VerneMQ   | Millions                         | 10K (sustainable)                    | 8.7 ms per 1000 messages/second                      |
+| RabbitMQ  | Millions                         | 17K                                  | 2.880 milliseconds (average forward latency)         |
+| NATS      | Limited benchmark data           | Limited benchmark data               | Limited benchmark data                               |
+
 With SuperMQ we wanted a highly performant broker, and EMQX, VerneMQ, and RabbitMQ seem to be at the top of the pile.
 
 ### Scalability
@@ -99,15 +127,15 @@ This serves as a nice-to-have, as SuperMQ relies on [Mgate for authentication an
 
 ### Management and monitoring
 
-Support for observability and metrics is another must-have for building this highly scalable platform.
+Observability was another critical factor:
 
-EMQX, RabbitMQ, VerneMQ, and NATS natively support exporting Prometheus metrics. NanoMQ and Mosquitto do not support this natively, but we have found third-party extensions for this.
+- **Native Prometheus metrics**: EMQX, RabbitMQ, VerneMQ, and NATS support this out of the box.
 
-EMQX offers a web-based dashboard for monitoring of clusters. The dashboard is nice to have, but SuperMQ already has metrics visualization methodologies.
+- **HTTP APIs**: All except Mosquitto provide HTTP APIs for configuration and monitoring.
 
-All the brokers, save for Mosquitto, offer HTTP API for configuration and monitoring, which is very nice.
+- **Dashboards**: EMQX includes a web dashboard, but SuperMQ already has internal visualization tools.
 
-In Mosquitto, monitoring is mainly through its $SYS topic tree; users subscribe to standard MQTT clients for broker statistics, and it relies on third-party tools for more advanced visualization.
+Mosquitto relies on $SYS topics and third‑party tools for advanced monitoring.
 
 ## Conclusion
 
