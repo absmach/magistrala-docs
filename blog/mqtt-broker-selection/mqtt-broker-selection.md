@@ -8,7 +8,7 @@ This blog compares popular open-source MQTT brokers—EMQX, Mosquitto, NanoMQ, V
 
 SuperMQ is a distributed, highly scalable, and secure open-source cloud platform. Remember this; it will be useful for later. One of the key pillars of the platform is its multiprotocol support. A use case for the platform is in the ever-growing field of IoT (Internet of Things). It would therefore be remiss if it did not support one of the most popular protocols in the field, MQTT. To achieve this we had to select an MQTT broker that would work under the hood. Following an analytical review of the landscape, we settled on [RabbitMQ](https://www.rabbitmq.com/). The following is a summary of what we considered and eventually why we chose our broker.
 
-![SuperMQ architecture](/blog/mqtt-broker-selection/supermq-architecture.png "SuperMQ architecture")
+![SuperMQ architecture](./supermq-architecture.png "SuperMQ architecture")
 
 _A simplification of the architecture of SuperMQ to show where the broker sits_
 
