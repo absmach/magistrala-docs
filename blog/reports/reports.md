@@ -170,7 +170,6 @@ Let me walk you through real-world examples and show you how to build reports th
 Let me walk you through setting up a real report - the kind we actually use in production. This one pulls temperature data from our warehouse sensors and emails a summary to the facilities team every morning:
 
 ```go
-// This is what a real report config looks like
 reportConfig := reports.ReportConfig{
     Name:        "Daily Temperature Summary",
     Description: "Hourly temperature averages from all warehouse sensors",
@@ -191,7 +190,7 @@ reportConfig := reports.ReportConfig{
     },
     Metrics: []reports.ReqMetric{
         {
-            ChannelID: "temperature-sensors",
+            ChannelID: "04ead9d9-f054-4aaf-8765-88765e324635",
             Name:      "temperature",
             ClientIDs: []string{"f47ac10b-58cc-4372-a567-0e02b2c3d479", "6ba7b810-9dad-11d1-80b4-00c04fd430c8", "6ba7b811-9dad-11d1-80b4-00c04fd430c8"},
             Protocol:  "mqtt",
@@ -216,7 +215,7 @@ This is the most common operation - generating a report immediately and download
 ```bash
 curl --location 'http://localhost:9017/{{DOMAINID}}/reports?action=download' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
+--header 'Authorization: Bearer {{ACCESS_TOKEN}}' \
 --data-raw '{
     "name": "lab 1 report",
     "description": "lab 1 sensors report",
@@ -245,7 +244,7 @@ Set up a report that runs automatically every day:
 ```bash
 curl --location 'http://localhost:9017/{{DOMAINID}}/reports/configs' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
+--header 'Authorization: Bearer {{ACCESS_TOKEN}}' \
 --data-raw '{
     "name": "Daily Temperature Summary",
     "description": "Hourly temperature averages from warehouse sensors",
@@ -266,7 +265,7 @@ curl --location 'http://localhost:9017/{{DOMAINID}}/reports/configs' \
     },
     "metrics": [
         {
-            "channel_id": "temperature-sensors",
+            "channel_id": "04ead9d9-f054-4aaf-8765-88765e324635",
             "name": "temperature",
             "client_ids": ["f47ac10b-58cc-4372-a567-0e02b2c3d479", "6ba7b810-9dad-11d1-80b4-00c04fd430c8"],
             "protocol": "mqtt"
@@ -287,7 +286,7 @@ Sometimes you need data in spreadsheet format:
 ```bash
 curl --location 'http://localhost:9017/{{DOMAINID}}/reports?action=download' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
+--header 'Authorization: Bearer {{ACCESS_TOKEN}}' \
 --data-raw '{
     "name": "Energy Data Export",
     "config": {
@@ -298,7 +297,7 @@ curl --location 'http://localhost:9017/{{DOMAINID}}/reports?action=download' \
     },
     "metrics": [
         {
-            "channel_id": "energy-meters",
+            "channel_id": "04ead9d9-f054-4aaf-8765-88765e324635",
             "name": "power_consumption"
         }
     ]
@@ -311,7 +310,7 @@ Check what reports you have set up:
 
 ```bash
 curl --location 'http://localhost:9017/{{DOMAINID}}/reports/configs?limit=10&offset=0&status=enabled' \
---header 'Authorization: Bearer YOUR_ACCESS_TOKEN'
+--header 'Authorization: Bearer {{ACCESS_TOKEN}}'
 ```
 
 #### Enable/Disable a Scheduled Report
@@ -388,130 +387,6 @@ curl --location --request DELETE 'http://localhost:9017/{{DOMAINID}}/reports/con
 
 **Note**: Replace `{{REPORT_CONFIG_ID}}` with your actual report configuration ID. You can get this ID from the response when you create a report or by listing your existing reports.
 
-#### Multi-Protocol Weather Monitoring
-
-When your sensors use different protocols, you can pull data from all of them in one report:
-
-```bash
-curl --location 'http://localhost:9017/{{DOMAINID}}/reports?action=download' \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
---data-raw '{
-    "name": "Multi-Protocol Weather Summary",
-    "description": "Weather data from MQTT, HTTP, and CoAP sensors",
-    "config": {
-        "from": "now()-7d",
-        "to": "now()",
-        "title": "Weekly Weather Summary",
-        "file_format": "pdf",
-        "aggregation": {
-            "agg_type": "avg",
-            "interval": "6h"
-        }
-    },
-    "metrics": [
-        {
-            "channel_id": "weather-station",
-            "name": "humidity",
-            "protocol": "mqtt",
-            "subtopic": "sensors/humidity"
-        },
-        {
-            "channel_id": "weather-station", 
-            "name": "pressure",
-            "protocol": "http"
-        },
-        {
-            "channel_id": "weather-station",
-            "name": "wind_speed",
-            "protocol": "coap"
-        }
-    ]
-}'
-```
-
-#### Monthly Financial Reports
-
-Generate reports that finance teams actually want to read:
-
-```bash
-curl --location 'http://localhost:9017/{{DOMAINID}}/reports/configs' \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
---data-raw '{
-    "name": "Monthly Energy Consumption",
-    "description": "Energy usage for billing and analysis",
-    "schedule": {
-        "start_datetime": "2024-02-01T08:00:00Z",
-        "recurring": "monthly",
-        "recurring_period": 1
-    },
-    "config": {
-        "from": "now()-30d",
-        "to": "now()",
-        "title": "Energy Usage Analysis",
-        "file_format": "csv",
-        "aggregation": {
-            "agg_type": "sum",
-            "interval": "24h"
-        }
-    },
-    "metrics": [
-        {
-            "channel_id": "energy-meters",
-            "name": "power_consumption",
-            "client_ids": ["a1b2c3d4-e5f6-7890-abcd-ef1234567890", "b2c3d4e5-f6a7-8901-bcde-f23456789012", "c3d4e5f6-a7b8-9012-cdef-345678901234"]
-        }
-    ],
-    "email": {
-        "to": ["finance@company.com", "facilities@company.com"],
-        "subject": "Monthly Energy Report",
-        "content": "Monthly energy consumption report is attached."
-    }
-}'
-```
-
-#### System Health Monitoring
-
-For critical system monitoring with high-frequency checks:
-
-```bash
-curl --location 'http://localhost:9017/{{DOMAINID}}/reports/configs' \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
---data-raw '{
-    "name": "System Health Check",
-    "description": "Hourly system status monitoring",
-    "schedule": {
-        "start_datetime": "2024-01-01T00:00:00Z",
-        "recurring": "hourly",
-        "recurring_period": 1
-    },
-    "config": {
-        "from": "now()-15m",
-        "to": "now()",
-        "title": "System Status",
-        "file_format": "json",
-        "aggregation": {
-            "agg_type": "count",
-            "interval": "1m"
-        }
-    },
-    "metrics": [
-        {
-            "channel_id": "system-monitors",
-            "name": "heartbeat",
-            "client_ids": ["d4e5f6a7-b8c9-0123-def4-56789012345a", "e5f6a7b8-c9d0-1234-ef56-789012345abc", "f6a7b8c9-d0e1-2345-f678-90123456789d"]
-        }
-    ],
-    "email": {
-        "to": ["ops@company.com"],
-        "subject": "System Health Alert",
-        "content": "Hourly system health check results."
-    }
-}'
-```
-
 #### Quick Data Export for Analysis
 
 Sometimes you just need to grab data quickly for analysis:
@@ -519,7 +394,7 @@ Sometimes you just need to grab data quickly for analysis:
 ```bash
 curl --location 'http://localhost:9017/{{DOMAINID}}/reports?action=download' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
+--header 'Authorization: Bearer {{ACCESS_TOKEN}}' \
 --data-raw '{
     "name": "Quick Temperature Analysis",
     "config": {
@@ -530,7 +405,7 @@ curl --location 'http://localhost:9017/{{DOMAINID}}/reports?action=download' \
     },
     "metrics": [
         {
-            "channel_id": "lab-sensors",
+            "channel_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
             "name": "temperature",
             "client_ids": ["g7h8i9j0-k1l2-3456-m789-n012p345q678", "h8i9j0k1-l2m3-4567-n890-o123p456q789"]
         }
@@ -540,46 +415,28 @@ curl --location 'http://localhost:9017/{{DOMAINID}}/reports?action=download' \
 
 **Pro tip**: Notice the `--output` flag - this saves the CSV directly to a file instead of displaying it in the terminal.
 
-#### Using Custom HTML Templates
+#### Sample PDF Output
 
-If you need custom styling or branding, you can include your own HTML template. Here's an example with a simplified template:
+Here's what your generated reports actually look like. This PDF was created using the default template with current sensor data:
 
-```bash
-curl --location 'http://localhost:9017/{{DOMAINID}}/reports?action=download' \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
---data-raw '{
-    "name": "Custom Branded Report",
-    "description": "Report with custom styling and branding",
-    "config": {
-        "from": "now()-24h",
-        "to": "now()",
-        "title": "Daily Operations Report",
-        "file_format": "pdf"
-    },
-    "metrics": [
-        {
-            "channel_id": "operations-sensors",
-            "name": "temperature",
-            "client_ids": ["i9j0k1l2-m3n4-5678-o901-p234q567r890", "j0k1l2m3-n4o5-6789-p012-q345r678s901"]
-        }
-    ],
-    "report_template": "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"><title>{{.Title}}</title><style>:root{--primary-color:#e74c3c;--secondary-color:#c0392b;--subtle-color:#ecf0f1;--table-header-bg:#f8f9fa;--alternate-row:#fdfdfd;--text-primary:#2c3e50;--text-secondary:#7f8c8d;--white:#fff;--header-height:35mm;--footer-height:20mm;--page-padding:15mm}*{margin:0;padding:0;box-sizing:border-box}body{font-family:\"Helvetica Neue\",Arial,sans-serif;background-color:var(--white);color:var(--text-primary);line-height:1.5}.page{max-width:210mm;min-height:297mm;padding:var(--page-padding) 10mm;margin:5mm auto 0;background:var(--white);box-shadow:0 0 15px rgba(0,0,0,0.1);position:relative;display:flex;flex-direction:column}.header{height:var(--header-height);position:relative;flex-shrink:0;display:flex;flex-direction:column;border-bottom:3px solid var(--primary-color)}.company-logo{text-align:center;font-size:24px;font-weight:bold;color:var(--primary-color);margin-bottom:10px}.header-title{font-size:18px;font-weight:600;color:var(--secondary-color);text-align:center;margin-bottom:5px}.header-date{font-size:11px;color:var(--text-secondary);text-align:center;font-style:italic}.content-area{flex-grow:1;display:flex;flex-direction:column;min-height:0;padding:20px 0}.metrics-section{margin-bottom:20px;background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%);padding:15px;border-radius:8px;border-left:4px solid var(--primary-color)}.metrics-title{font-size:16px;font-weight:bold;color:var(--secondary-color);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px}.metric-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.metric-label{font-weight:600;color:var(--text-primary);font-size:11px}.metric-value{color:var(--text-primary);font-size:11px;font-weight:400}.record-count{text-align:right;font-size:10px;font-style:italic;color:var(--text-secondary);margin:15px 0;font-weight:500}.data-table{width:100%;border-collapse:collapse;margin-top:10px;box-shadow:0 2px 8px rgba(0,0,0,0.1);border-radius:6px;overflow:hidden}.data-table th{background:linear-gradient(135deg,var(--primary-color) 0%,var(--secondary-color) 100%);color:white;font-weight:bold;font-size:11px;padding:12px 8px;text-align:center;text-transform:uppercase;letter-spacing:0.5px}.data-table td{padding:10px 8px;font-size:10px;text-align:center;border-bottom:1px solid #e9ecef}.data-table tr:nth-child(even){background-color:#f8f9fa}.data-table tr:hover{background-color:#e3f2fd;transition:background-color 0.2s ease}.footer{height:var(--footer-height);border-top:2px solid var(--subtle-color);padding-top:10px;flex-shrink:0;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%)}.footer-generated{font-size:8px;font-style:italic;color:var(--text-secondary)}.footer-page{font-size:9px;font-weight:bold;color:var(--text-primary)}.footer-company{font-size:8px;color:var(--text-secondary);font-weight:500}@media print{.page{box-shadow:none;margin:0;max-width:none;height:297mm;min-height:auto;page-break-after:always}.page:last-child{page-break-after:auto}}</style></head><body>{{$totalPages := len .Reports}}{{$globalPage := 0}}{{range $index, $report := .Reports}}{{$globalPage = add $globalPage 1}}<div class=\"page\"><div class=\"header\"><div class=\"company-logo\">ACME Corp</div><div class=\"header-title\">{{$.Title}}</div><div class=\"header-date\">Generated on {{$.GeneratedDate}}</div></div><div class=\"content-area\"><div class=\"metrics-section\"><div class=\"metrics-title\">Sensor Metrics</div><div class=\"metric-info\"><div class=\"metric-label\">Metric Name:</div><div class=\"metric-value\">{{.Metric.Name}}</div>{{if .Metric.ClientID}}<div class=\"metric-label\">Device ID:</div><div class=\"metric-value\">{{.Metric.ClientID}}</div>{{end}}<div class=\"metric-label\">Channel ID:</div><div class=\"metric-value\">{{.Metric.ChannelID}}</div><div class=\"metric-label\">Protocol:</div><div class=\"metric-value\">{{.Metric.Protocol}}</div></div></div><div class=\"record-count\">Total Data Points: {{len .Messages}}</div><table class=\"data-table\"><thead><tr><th>Timestamp</th><th>Value</th><th>Unit</th><th>Protocol</th><th>Subtopic</th></tr></thead><tbody>{{range .Messages}}<tr><td>{{formatTime .Time}}</td><td>{{formatValue .}}</td><td>{{.Unit}}</td><td>{{.Protocol}}</td><td>{{.Subtopic}}</td></tr>{{end}}</tbody></table></div><div class=\"footer\"><div class=\"footer-generated\">Generated: {{$.GeneratedTime}}</div><div class=\"footer-company\">Confidential - Internal Use Only</div><div class=\"footer-page\">Page {{$globalPage}} of {{$totalPages}}</div></div></div>{{end}}</body></html>"
-}'
+![Sample Report PDF](./sample-report.png)
+
+#### Sample CSV Output
+
+Here's what your CSV reports look like when you need data in spreadsheet format:
+
+```csv
+Lab Current
+
+Report Information:
+Name,lab:current
+Device ID,de0fbc2b-6224-4c02-95ef-fb4dfce4ba02
+Channel ID,04ead9d9-f054-4aaf-8765-88765e324635
+
+Time,Value,Unit,Protocol,Subtopic
+2010-06-08 18:01:11,1.70,A,http,lab
+2010-06-08 18:01:12,10.33,A,http,lab
 ```
-
-**Key differences in this custom template:**
-- **Custom branding**: "ACME Corp" logo and company footer
-- **Red color scheme**: Uses `#e74c3c` instead of the default blue
-- **Enhanced styling**: Gradients, shadows, and hover effects
-- **Grid layout**: Metrics displayed in a 2-column grid
-- **Custom typography**: "Helvetica Neue" font family
-
-**Template structure breakdown:**
-- **CSS Variables**: Easy color customization at the top
-- **Required elements**: All mandatory classes and template fields are included
-- **Responsive design**: Looks good both on screen and when printed
-- **Professional styling**: Clean, modern appearance suitable for business reports
 
 This shows how you can completely customize the look and feel while maintaining compatibility with the PDF generation system.
 
