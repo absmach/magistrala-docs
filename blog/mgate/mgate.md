@@ -1,3 +1,21 @@
+---
+slug: mgate-iot-api-gateway
+title: "mGate: Lightweight IoT API Gateway with Auth and Multi-Protocol Support"
+authors: gateru
+description: Introduction to mGate, a lightweight IoT API gateway with multi-protocol support, real-time packet handling, and built-in auth.
+tags: [
+	iot
+	api gateway
+	MQTT
+	HTTP
+	WebSocket
+	authentication
+	authorization
+	open-source
+	scalability
+]
+---
+
 # mGate
 
 ## Summary
