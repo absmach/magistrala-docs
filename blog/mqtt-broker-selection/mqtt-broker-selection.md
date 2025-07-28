@@ -1,3 +1,20 @@
+---
+slug: mqtt-broker-selection
+title: Selecting an MQTT broker for the SuperMQ messaging platform
+authors: gateru
+description: Description of how and why we selected our current MQTT broker.
+tags:
+  [
+    mqtt,
+    iot,
+    message-broker,
+    rabbitmq,
+    distributed-systems,
+    scalability,
+    open-source
+  ]
+---
+
 # MQTT Broker Selection
 
 ## Summary
