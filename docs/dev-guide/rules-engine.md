@@ -2,29 +2,53 @@
 title: Rules Engine
 ---
 
+The **Rules Engine** in Magistrala provides powerful, flexible message processing via scriptable rules. Each rule can consume real-time input, run on a schedule, and forward results to multiple output targets including channels, alarms, emails, databases, and more.
 
-The **Rules Engine** in Magistrala provides a flexible and efficient way to process messages by applying custom rules to incoming data streams. This engine allows users to define rules, apply logic using scripts, and forward messages to output channels based on specified conditions.
+## Key Features
 
-Rules can be scheduled, executed on a recurring basis, and enabled or disabled. This documentation outlines the core concepts, available operations, and API usage for the Rules Engine.
+1. **Scriptable logic** - Use Lua or Go to define message execution behavior.
+2. **Flexible execution** - Rules can be triggered from input messages, schedules or both.
+3. **Pluggable outputs** - Built-in support for alamrs, channels, email, Postgres, and SenML writers.
+4. **Secure, scoped execution** - Using domain-level isolation and bearer token authorization.
+5. **Disabled rules** - Rules can be disabled individually to prevent further executions. They can also be enabled to re-start their executions.
 
 ## Architecture
 
-The Rules Engine operates by:
+![rules engine architecture](../diagrams/rules_engine_architecture.jpg)
 
-1. Listening for messages on configured input channels
-2. Processing these messages through Lua scripts
-3. Optionally publishing results to output channels
-4. Supporting scheduled rule execution based on various recurring patterns
+The Magistrala Rules Engine is designed for **real-time** and **scheduled message processing**. Its architecture revolves around applying custom business logic to incoming messages or scheduled triggers and forwarding results to one or more output targets.
 
-## Overview
+### Data Flow Summary
 
-The Rules Engine enables automated message transformation, filtering, and forwarding. Key functionalities include:
+1. **Input**
+   The engine **subscribes to a channel** (and optionally a topic) to receive messages from devices, services, or pipelines in real time.
 
-- **Rule Creation:** Define logic to process incoming messages.
-- **Rule Execution:** Apply Lua scripts to incoming messages dynamically.
-- **Scheduled Rules:** Run rules at specified intervals.
-- **Real-Time Processing:** Process messages as they arrive.
-- **Output Redirection:** Forward processed messages to specified output channels.
+   > If no schedule is defined, the rule executes **every time** a new message arrives on the configured channel/topic.
+
+2. **Schedule**
+   If a schedule is defined, the rule will **automatically execute** based on the configured:
+
+- Start time
+- Execution time
+- Recurrence (daily, weekly, monthly)
+- Recurring Interval (e.g 1,2,3 etc) - For example if recurrence is daily and interval is 2, it will repeat every 2 days.
+
+3. **Logic**
+   The incoming message or scheduled execution is processed using a user-defined script, written in:
+
+- Lua
+- Go
+
+> The logic must return a **non-nil value** for outputs to be invoked.
+
+4. **Output(s)**
+   If the script returns a value, the rules fowards the result to one or more outputs. Supported output types include:
+
+- Channel - Forward the result to another channel and/or topic.
+- Internal DB - Save processed data internally.
+- Postgres DB - Store result in a connected Postgres database table.
+- Alarm - Raise and alarm event with a severity level.
+- Email - Send notifications to configured recipients.
 
 ## Core Concepts
 
@@ -99,10 +123,12 @@ type Schedule struct {
 #### How Scheduling Works
 
 1. **Initialization**:
+
    - The scheduler starts when the service begins running via `StartScheduler()`
    - It uses a ticker to check for rules that need to be executed at regular intervals
 
 2. **Rule Evaluation**:
+
    - For each tick, the scheduler:
      - Gets all enabled rules scheduled before the current time
      - For each rule, checks if it should run using `shouldRunRule()`
@@ -110,6 +136,7 @@ type Schedule struct {
 
 3. **Execution Timing**:
    The `shouldRunRule()` function determines if a rule should run by checking:
+
    - If the rule's start time has been reached
    - If the current time matches the scheduled execution time
    - For recurring rules:
@@ -290,14 +317,14 @@ The Rules Engine service provides the following operations:
 
 To create a new rule for processing messages use the following request body:
 
-- `name`: Rule name  
-- `domain`: Domain ID this rule belongs to  
-- `input_channel`: Input channel for receiving messages  
-- `input_topic`: Input topic for receiving messages  
-- `logic`: Rule processing logic script  
-- `output_channel`: Output channel for processed messages (optional)  
-- `output_topic`: Output topic for processed messages (optional)  
-- `schedule`: Rule execution schedule (optional)  
+- `name`: Rule name
+- `domain`: Domain ID this rule belongs to
+- `input_channel`: Input channel for receiving messages
+- `input_topic`: Input topic for receiving messages
+- `logic`: Rule processing logic script
+- `output_channel`: Output channel for processed messages (optional)
+- `output_topic`: Output topic for processed messages (optional)
+- `schedule`: Rule execution schedule (optional)
 - `status`: Rule status (`enabled` or `disabled`)
 
 **Example command:**
@@ -425,10 +452,10 @@ The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules`
 
 **Query Parameters:**
 
-- `offset`: Pagination offset  
-- `limit`: Maximum number of results  
-- `input_channel`: Filter by input channel  
-- `output_channel`: Filter by output channel  
+- `offset`: Pagination offset
+- `limit`: Maximum number of results
+- `input_channel`: Filter by input channel
+- `output_channel`: Filter by output channel
 - `status`: Filter by rule status
 
 **Example command:**
@@ -577,7 +604,7 @@ curl --location --request PATCH 'http://localhost:9008/8353542f-d8f1-4dce-b787-4
 ```
 
 ### Delete Rule
-  
+
 This function deletes an existing rule.
 
 The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}`
@@ -624,7 +651,7 @@ curl --location --request PUT 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af
 
 ### Disable Rule
 
-This function disables a rule, preventing it from processing messages.  
+This function disables a rule, preventing it from processing messages.
 
 The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}/enable`
 
