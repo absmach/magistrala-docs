@@ -424,199 +424,153 @@ The Rules Engine service provides the following operations:
 - `list_rules` - Query rules with filtering options
 - `view_rule` - Retrieve a specific rule
 - `update_rule` - Modify an existing rule
-- `update_rule_tags`
-- `update_rule_scheduler`
+- `update_rule_tags`- Modify tags
+- `update_rule_scheduler` - Update rule schedule
 - `delete_rule` - Delete a rule
 - `enable_rule` - Activate a rule
 - `disable_rule` - Deactivate a rule
 
 ### Create Rule
 
-To create a new rule for processing messages use the following request body:
-
-- `name`: Rule name
-- `domain`: Domain ID this rule belongs to
-- `input_channel`: Input channel for receiving messages
-- `input_topic`: Input topic for receiving messages
-- `logic`: Rule processing logic script
-- `output_channel`: Output channel for processed messages (optional)
-- `output_topic`: Output topic for processed messages (optional)
-- `schedule`: Rule execution schedule (optional)
-- `status`: Rule status (`enabled` or `disabled`)
+Endpoint: `POST /{domain_id}/rules`
 
 **Example command:**
 
 ```bash
-curl --location 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules' \
+curl --location 'http://localhost:9008/<your_domain_id>/rules' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer <access_token>' \
+--header 'Authorization: Bearer <your_access_token>' \
 --data '{
   "name": "High Temperature Alert",
-  "input_channel": "sensors",
+  "input_channel": "<your_channel_id>",
   "input_topic": "temperature",
   "logic": {
     "type": 0,
-    "value": "if message.payload > 30 then return '\''Temperature too high!'\'' end"
+    "value": "function logicFunction() return message.payload end return logicFunction()"
   },
-  "output_channel": "alerts",
-  "output_topic": "temperature",
+  "outputs": [
+    {
+      "type": "save_senml"
+    }
+  ],
   "schedule": {
-    "start_datetime": "2024-01-01T00:00",
-    "time": "2024-01-01T09:00",
+    "start_datetime": "2025-07-29T09:00:00Z", // must be greater than the current date-time
+    "time": "2025-07-29T11:00:00Z",
     "recurring": "daily",
     "recurring_period": 1
   }
 }'
 ```
 
-This request:
-
-- Creates a temperature monitoring rule
-- Processes messages from the "sensors" channel
-- Checks for temperatures above 30 degrees
-- Publishes alerts to the "alerts" channel
-- Runs daily at 9 AM
-
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules`
-
-These are the required headers:
-
-- `Content-Type: application/json` - Specifies the request body format
-- `Authorization: Bearer <access_token>` - Your authentication token
-
-#### Example Rule Structure
-
-Here's a breakdown of the rule structure:
-
-```json
+```json title="Response"
 {
+  "id": "d4b5c393-70fc-4399-829c-070df5205698",
   "name": "High Temperature Alert",
-  "input_channel": "sensors",
+  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "input_channel": "3214f360-cebd-449b-bc3c-9020a3be403a",
   "input_topic": "temperature",
   "logic": {
     "type": 0,
-    "value": "if message.payload > 30 then return 'Temperature too high!' end"
+    "value": "function logicFunction() return message.payload end return logicFunction()"
   },
-  "output_channel": "alerts",
-  "output_topic": "temperature",
+  "outputs": [{ "type": "save_senml" }],
   "schedule": {
-    "start_datetime": "2024-01-01T00:00",
-    "time": "2024-01-01T09:00",
+    "start_datetime": "2025-07-29T04:52:21Z",
+    "time": "2025-07-29T04:52:21Z",
     "recurring": "daily",
     "recurring_period": 1
-  }
+  },
+  "status": "enabled",
+  "created_at": "2025-07-29T04:52:21.358252Z",
+  "created_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a",
+  "updated_at": "0001-01-01T00:00:00Z",
+  "updated_by": ""
 }
 ```
 
-This rule:
-
-1. Listens on the "sensors" channel, "temperature" topic
-2. Checks if temperature exceeds 30 degrees
-3. If true, publishes an alert message
-4. Runs daily at 9 AM
-
 ### View Rule
 
-This retrieves the details of a specific rule by rule ID.
-
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}`
+Enpoint: `Get /{domain_id}/rules/{rule_id}`
 
 **Example command:**
 
 ```bash
-curl --location 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules/rule123' \
---header 'Authorization: Bearer <access_token>'
+curl --location 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>' \
+--header 'Authorization: Bearer <your_access_token>'
 ```
 
-**Expected Response:**
-
-```json
+```json title="Response"
 {
-  "id": "string",
-  "name": "string",
-  "domain": "string",
-  "metadata": {
-    "additionalProp1": "string",
-    "additionalProp2": "string",
-    "additionalProp3": "string"
-  },
-  "input_channel": "string",
-  "input_topic": "string",
+  "id": "d4b5c393-70fc-4399-829c-070df5205698",
+  "name": "High Temperature Alert",
+  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "input_channel": "3214f360-cebd-449b-bc3c-9020a3be403a",
+  "input_topic": "temperature",
   "logic": {
-    "script": "string"
+    "type": 0,
+    "value": "function logicFunction() return message.payload end return logicFunction()"
   },
-  "output_channel": "string",
-  "output_topic": "string",
+  "outputs": [{ "type": "save_senml" }],
   "schedule": {
-    "start_datetime": "2025-02-14T08:55:15.144Z",
-    "time": "2025-02-14T08:55:15.144Z",
-    "recurring": "None",
+    "start_datetime": "2025-07-29T04:52:21Z",
+    "time": "2025-07-30T04:52:21Z",
+    "recurring": "daily",
     "recurring_period": 1
   },
   "status": "enabled",
-  "created_at": "2025-02-14T08:55:15.144Z",
-  "created_by": "string",
-  "updated_at": "2025-02-14T08:55:15.144Z",
-  "updated_by": "string"
+  "created_at": "2025-07-29T04:52:21.358252Z",
+  "created_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a",
+  "updated_at": "2025-07-29T04:52:45.844481Z",
+  "updated_by": ""
 }
 ```
 
 ### List Rules
 
-This lists all rules with optional filters.
-
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules`
+Endpoint: `GET /{domain_id}/rules`
 
 **Query Parameters:**
 
 - `offset`: Pagination offset
 - `limit`: Maximum number of results
 - `input_channel`: Filter by input channel
-- `output_channel`: Filter by output channel
 - `status`: Filter by rule status
 
 **Example command:**
 
 ```bash
-curl --location 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules?input_channel=sensors&status=enabled' \
---header 'Authorization: Bearer <access_token>'
+curl --location 'http://localhost:9008/<your_domain_id>/rules?input_channel=<your_channel_id>&status=enabled' \
+--header 'Authorization: Bearer <your_access_token>'
 ```
 
-**Expected Response:**
-
-```json
+```json title="Response"
 {
-  "total": 0,
   "offset": 0,
   "limit": 10,
+  "total": 1,
   "rules": [
     {
-      "id": "string",
-      "name": "string",
-      "domain": "string",
-      "metadata": {
-        "additionalProp1": "string",
-        "additionalProp2": "string",
-        "additionalProp3": "string"
-      },
-      "input_channel": "string",
-      "input_topic": "string",
+      "id": "d4b5c393-70fc-4399-829c-070df5205698",
+      "name": "High Temperature Alert",
+      "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+      "input_channel": "3214f360-cebd-449b-bc3c-9020a3be403a",
+      "input_topic": "temperature",
       "logic": {
-        "script": "string"
+        "type": 0,
+        "value": "function logicFunction() return message.payload end return logicFunction()"
       },
-      "output_channel": "string",
-      "output_topic": "string",
+      "outputs": [{ "type": "save_senml" }],
       "schedule": {
-        "start_datetime": "2025-02-14T08:57:14.717Z",
-        "time": "2025-02-14T08:57:14.717Z",
-        "recurring": "None",
+        "start_datetime": "2025-07-29T04:52:21Z",
+        "time": "2025-07-30T04:52:21Z",
+        "recurring": "daily",
         "recurring_period": 1
       },
       "status": "enabled",
-      "created_at": "2025-02-14T08:57:14.717Z",
-      "created_by": "string",
-      "updated_at": "2025-02-14T08:57:14.717Z",
-      "updated_by": "string"
+      "created_at": "2025-07-29T04:52:21.358252Z",
+      "created_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a",
+      "updated_at": "2025-07-29T04:52:45.844481Z",
+      "updated_by": ""
     }
   ]
 }
@@ -624,159 +578,172 @@ curl --location 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rule
 
 ### Update Rule
 
-This is to update an existing rule.
-
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}`
+Endpoint: `PATCH /{domain_id}/rules/{rule_id}`
 
 **Example command:**
 
 ```bash
-curl --location --request PUT 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules/rule123' \
+curl --location --request PATCH 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer <access_token>' \
+--header 'Authorization: Bearer <your_access_token>' \
 --data '{
-  "name": "High Temp Alert",
-  "input_channel": "sensors",
-  "input_topic": "temperature",
-  "logic": {
-    "type": 0,
-    "value": "if message.payload > 35 then return '\''Critical Temp!'\'' end"
-  },
-  "output_channel": "alerts",
-  "output_topic": "temperature_critical",
-  "status": "enabled"
+  "name": "High Temp Alert Updated"
 }'
 ```
 
-**Expected Response:**
-
-```bash
+```json title="Response"
 {
-  "id": "rule123",
-  "name": "High Temp Alert",
-  "input_channel": "sensors",
-  "input_topic": "temperature",
+  "id": "d4b5c393-70fc-4399-829c-070df5205698",
+  "name": "High Temp Alert Updated",
+  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "input_channel": "",
+  "input_topic": "",
   "logic": {
     "type": 0,
-    "value": "if message.payload > 35 then return 'Critical Temp!' end"
+    "value": "function logicFunction() return message.payload end return logicFunction()"
   },
-  "output_channel": "alerts",
-  "output_topic": "temperature_critical",
+  "outputs": [{ "type": "save_senml" }],
+  "schedule": {
+    "start_datetime": "2025-07-29T04:52:21Z",
+    "time": "2025-07-30T04:52:21Z",
+    "recurring": "daily",
+    "recurring_period": 1
+  },
   "status": "enabled",
-  "created_at": "2024-02-14T10:00:00Z",
-  "created_by": "user123",
-  "updated_at": "2024-02-16T09:00:00Z",
-  "updated_by": "user789"
+  "created_at": "2025-07-29T04:52:21.358252Z",
+  "created_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a",
+  "updated_at": "2025-07-29T05:07:49.681315Z",
+  "updated_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a"
+}
+```
+
+### Update Rule Tags
+
+Endpoint: `PATCH /{domain_id}/rules/{rule_id}/tags`
+
+**Example command:**
+
+```bash
+curl --location --request PATCH 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>/tags' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <your_access_token>' \
+--data '{
+  "tags": ["tag1","tag2"]
+}'
+```
+
+```json title="Response"
+{
+  "id": "d4b5c393-70fc-4399-829c-070df5205698",
+  "name": "High Temp Alert Updated",
+  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "tags": ["tag1", "tag2"],
+  "input_channel": "",
+  "input_topic": "",
+  "logic": {
+    "type": 0,
+    "value": "function logicFunction() return message.payload end return logicFunction()"
+  },
+  "outputs": [{ "type": "save_senml" }],
+  "schedule": {
+    "start_datetime": "2025-07-29T04:52:21Z",
+    "time": "2025-07-30T04:52:21Z",
+    "recurring": "daily",
+    "recurring_period": 1
+  },
+  "status": "enabled",
+  "created_at": "2025-07-29T04:52:21.358252Z",
+  "created_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a",
+  "updated_at": "2025-07-29T05:10:54.991749Z",
+  "updated_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a"
 }
 ```
 
 ### Update Rule Scheduler
 
-This is to update an existing rule schedule.
-
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}/schedule`
+Endpoint: `PATCH /{domain_id}/rules/{rule_id}/schedule`
 
 **Example command:**
 
 ```bash
-curl --location --request PATCH 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules/rule123/schedule' \
+curl --location --request PATCH 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>/schedule' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer <access_token>' \
+--header 'Authorization: Bearer <your_access_token>' \
 --data '{
     "schedule": {
-        "recurring": "daily",
-        "recurring_period": 1,
-        "start_datetime": "2025-04-30T17:22:00.000Z",
-        "time": "0001-01-01T18:00:00.000Z"
-    }
+    "start_datetime": "2025-07-29T10:52:21Z",
+    "time": "2025-07-30T04:52:21Z",
+    "recurring": "weekly",
+    "recurring_period": 2
+  }
 }'
 ```
 
-**Expected Response:**
-
-```bash
+```json title="Response"
 {
-  "id": "rule123",
-  "name": "High Temp Alert",
-  "input_channel": "sensors",
-  "input_topic": "temperature",
+  "id": "d4b5c393-70fc-4399-829c-070df5205698",
+  "name": "High Temp Alert Updated",
+  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "tags": ["tag1", "tag2"],
+  "input_channel": "",
+  "input_topic": "",
   "logic": {
     "type": 0,
-    "value": "if message.payload > 35 then return 'Critical Temp!' end"
+    "value": "function logicFunction() return message.payload end return logicFunction()"
   },
+  "outputs": [{ "type": "save_senml" }],
   "schedule": {
-    "recurring": "daily",
-    "recurring_period": 1,
-    "start_datetime": "2025-04-30T17:22:00.000Z",
-    "time": "0001-01-01T18:00:00.000Z"
+    "start_datetime": "2025-07-29T10:52:21Z",
+    "time": "2025-07-30T04:52:21Z",
+    "recurring": "weekly",
+    "recurring_period": 2
   },
-  "output_channel": "alerts",
-  "output_topic": "temperature_critical",
   "status": "enabled",
-  "created_at": "2024-02-14T10:00:00Z",
-  "created_by": "user123",
-  "updated_at": "2024-02-16T09:00:00Z",
-  "updated_by": "user789"
+  "created_at": "2025-07-29T04:52:21.358252Z",
+  "created_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a",
+  "updated_at": "2025-07-29T05:13:05.877133Z",
+  "updated_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a"
 }
 ```
-
-### Delete Rule
-
-This function deletes an existing rule.
-
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}`
-
-**Example Command:**
-
-```bash
-curl --location --request DELETE 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules/rule123' \
---header 'Authorization: Bearer <access_token>'
-```
-
-**Responses:**
-
-| Status Code | Description            |
-| ----------- | ---------------------- |
-| `204`       | Rule deleted.          |
-| `400`       | Invalid rule ID.       |
-| `401`       | Unauthorized access.   |
-| `404`       | Rule not found.        |
-| `500`       | Internal server error. |
-
-### Enable Rule
-
-This function enables a rule for processing.
-
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}/enable`
-
-```bash
-curl --location --request PUT 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules/rule123/enable' \
---header 'Authorization: Bearer <access_token>'
-```
-
-**Responses:**
-
-| Status Code | Description                |
-| ----------- | -------------------------- |
-| `200`       | Rule enabled successfully. |
-| `400`       | Invalid rule ID.           |
-| `401`       | Unauthorized access.       |
-| `404`       | Rule not found.            |
-| `500`       | Internal server error.     |
 
 ---
 
 ### Disable Rule
 
-This function disables a rule, preventing it from processing messages.
-
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}/enable`
+Endpoint: `POST /{domain_id}/rules/{rule_id}/disable`
 
 **Example Command:**
 
 ```bash
-curl --location --request PUT 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules/rule123/disable' \
---header 'Authorization: Bearer <access_token>'
+curl --location --request POST 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>/disable' \
+--header 'Authorization: Bearer <your_access_token>' \
+```
+
+```json title="Response"
+{
+  "id": "d4b5c393-70fc-4399-829c-070df5205698",
+  "name": "High Temp Alert Updated",
+  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "tags": ["tag1", "tag2"],
+  "input_channel": "",
+  "input_topic": "",
+  "logic": {
+    "type": 0,
+    "value": "function logicFunction() return message.payload end return logicFunction()"
+  },
+  "outputs": [{ "type": "save_senml" }],
+  "schedule": {
+    "start_datetime": "2025-07-29T10:52:21Z",
+    "time": "2025-07-30T04:52:21Z",
+    "recurring": "weekly",
+    "recurring_period": 2
+  },
+  "status": "disabled",
+  "created_at": "2025-07-29T04:52:21.358252Z",
+  "created_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a",
+  "updated_at": "2025-07-29T05:16:36.254008Z",
+  "updated_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a"
+}
 ```
 
 **Responses:**
@@ -791,10 +758,79 @@ curl --location --request PUT 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af
 
 ---
 
-## Error Codes
+### Enable Rule
 
-**Endpoint:** `PUT /{domainID}/rules/{ruleID}/enable`  
-**Description:** Enables a previously disabled rule.
+Endpoint: `POST /{domain_id}/rules/{rule_id}/enable`
+
+The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}/enable`
+
+```bash
+curl --location --request POST 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>/enable' \
+--header 'Authorization: Bearer <your_access_token>' \
+```
+
+```json title="Response"
+{
+  "id": "d4b5c393-70fc-4399-829c-070df5205698",
+  "name": "High Temp Alert Updated",
+  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "tags": ["tag1", "tag2"],
+  "input_channel": "",
+  "input_topic": "",
+  "logic": {
+    "type": 0,
+    "value": "function logicFunction() return message.payload end return logicFunction()"
+  },
+  "outputs": [{ "type": "save_senml" }],
+  "schedule": {
+    "start_datetime": "2025-07-29T10:52:21Z",
+    "time": "2025-07-30T04:52:21Z",
+    "recurring": "weekly",
+    "recurring_period": 2
+  },
+  "status": "enabled",
+  "created_at": "2025-07-29T04:52:21.358252Z",
+  "created_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a",
+  "updated_at": "2025-07-29T05:17:12.534919Z",
+  "updated_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a"
+}
+```
+
+**Responses:**
+
+| Status Code | Description                |
+| ----------- | -------------------------- |
+| `200`       | Rule enabled successfully. |
+| `400`       | Invalid rule ID.           |
+| `401`       | Unauthorized access.       |
+| `404`       | Rule not found.            |
+| `500`       | Internal server error.     |
+
+---
+
+### Delete Rule
+
+Endpoint: `DELETE /{domain_id}/rules/{rule_id}`
+**Example Command:**
+
+```bash
+curl --location --request DELETE 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>' \
+--header 'Authorization: Bearer <your_access_token>' \
+```
+
+**Responses:**
+
+| Status Code | Description            |
+| ----------- | ---------------------- |
+| `204`       | Rule deleted.          |
+| `400`       | Invalid rule ID.       |
+| `401`       | Unauthorized access.   |
+| `404`       | Rule not found.        |
+| `500`       | Internal server error. |
+
+---
+
+## Error Codes
 
 | HTTP Code | Description                          |
 | --------- | ------------------------------------ |
@@ -807,8 +843,9 @@ curl --location --request PUT 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af
 
 ## 🌟 Best Practices
 
-1. **Use Descriptive Names:** Make rule names clear and meaningful.
-2. **Optimize Lua Scripts:** Keep scripts simple and efficient.
-3. **Regularly Monitor Rules:** Periodically review rule execution logs.
-4. **Schedule Wisely:** Avoid overlapping schedules for performance efficiency.
-5. **Test New Rules:** Test rules in a controlled environment before deployment.
+1. **Use Descriptive Names** – Choose names that clearly convey the rule's purpose.
+2. **Validate Your Scripts** – Whether Lua or Go, ensure the script returns the correct output format.
+3. **Regularly Monitor Rules** – Periodically review rule execution logs.
+4. **Schedule Thoughtfully** – Avoid overlapping rule executions unless necessary.
+5. **Keep Output Aligned** – Match your logic output format to the selected output type (e.g., alarm, database, publish).
+6. **Test New Rules** – Test rules in a controlled environment before deployment.
