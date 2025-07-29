@@ -137,9 +137,31 @@ Navigate to the clients tab on the group top nav. While on this page:
 
 ## Step 7: Connect Clients to Channels
 
+While on the view client page:
+
+1. Navigate to the connections tab on the client top nav
+2. Click the `Connect` button, select the channels you want to connect to, and the connection type - `subscribe` (read messages in the channel) or `publish` (send messages in the channel) or `both`.
+
+You can optionally connect a client via the connections tab in the channel section.
+
 ## Step 8: Create a Rule to Save Messages
 
+To be able to store messages in the Magistrala internal storage, you need to create a rule for this. Our Rules Engine provides powerful, flexible message processing via scriptable rules.
+To create a rule:
+
+1. Navigate to the `Rules` page on the sidebar. This page allows you to list, create and manage rules.
+2. Click on `+ Create` to start creating a rule.This will redirect you to the create rule page.
+3. While on this page, you are able to add an input node, logic node, and output node(s). To learn more about these please view our user guide docs on the [Rules Engine](https://docs.magistrala.abstractmachines.fr/user-guide/rules-engine#view-a-rule).
+4. To store messages being sent in the channel, select the input node, and choose the channel you want to store messages for. You can optionally add the topic to filter the messages being stored.
+5. Select `Add Logic` to add the logic node. Select the `Code Editor`. The default code provided (Lua script) allows you to store messages if you send messages in SenML format. If you send messages in another format e.g. JSON, please refer to our [storage guide](https://docs.magistrala.abstractmachines.fr/user-guide/rules-engine#store-messages) on how to convert the messages to SenML format.
+6. Click `Add Output` and select `Internal DB` option as the output node.
+7. You can optionally connect the nodes together to visually illustrate the data flow.
+8. Once everything is set, click `Save Rule` to save the rule. This will open a dialog box, requesting for you to provide the rule name. Please provide a descriptive name so as to keep proper track of what the rules do.
+9. You can optionally set a schedule to trigger the rule execution at specific periods.
+
 ## Step 9: Send a Message in a Channel via the UI
+
+To send a message in a channel via the UI, go back to the view channel page and click on the
 
 ## Step 10: Create Alarms using Rules
 
