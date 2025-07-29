@@ -44,68 +44,90 @@ The Magistrala Rules Engine is designed for **real-time** and **scheduled messag
 4. **Output(s)**
    If the script returns a value, the rules fowards the result to one or more outputs. Supported output types include:
 
-- Channel - Forward the result to another channel and/or topic.
-- Internal DB - Save processed data internally.
-- Postgres DB - Store result in a connected Postgres database table.
-- Alarm - Raise and alarm event with a severity level.
-- Email - Send notifications to configured recipients.
+- _Channel_ - Forward the result to another channel and/or topic.
+- _Internal DB_ - Save processed data internally.
+- _Postgres DB_ - Store result in a connected Postgres database table.
+- _Alarm_ - Raise and alarm event with a severity level.
+- _Email_ - Send notifications to configured recipients.
 
 ## Core Concepts
 
-**Rules** define the logic for processing messages. Each rule specifies an input channel, processing logic, and an optional output channel.
+Rules define the logic for processing messages. Each rule may specify:
 
-Here is the rule structure:
+- An **input channel** and **topic** to subscribe to (optional if the rule is scheduled).
+- A **processing script** written in Lua or Go.
+- A list of **outputs** that define where to send or store the results.
+- An optional **schedule** to control when the rule is executed.
+- A rule must have **at least one** of `input` or `schedule` to be executed.
+
+### Rule Structure
 
 ```go
 type Rule struct {
- ID            string    `json:"id"`
- Name          string    `json:"name"`
- DomainID      string    `json:"domain"`
- Metadata      Metadata  `json:"metadata,omitempty"`
- InputChannel  string    `json:"input_channel"`
- InputTopic    string    `json:"input_topic"`
- Logic         Script    `json:"logic"`
- OutputChannel string    `json:"output_channel,omitempty"`
- OutputTopic   string    `json:"output_topic,omitempty"`
- Schedule      Schedule  `json:"schedule,omitempty"`
- Status        Status    `json:"status"`
- CreatedAt     time.Time `json:"created_at,omitempty"`
- CreatedBy     string    `json:"created_by,omitempty"`
- UpdatedAt     time.Time `json:"updated_at,omitempty"`
- UpdatedBy     string    `json:"updated_by,omitempty"`
+  ID           string            `json:"id"`
+  Name         string            `json:"name"`
+  DomainID     string            `json:"domain"`
+  Metadata     Metadata          `json:"metadata,omitempty"`
+  Tags         []string          `json:"tags,omitempty"`
+  InputChannel string            `json:"input_channel"`
+  InputTopic   string            `json:"input_topic"`
+  Logic        Script            `json:"logic"`
+  Outputs      Outputs           `json:"outputs,omitempty"`
+  Schedule     schedule.Schedule `json:"schedule,omitempty"`
+  Status       Status            `json:"status"`
+  CreatedAt    time.Time         `json:"created_at"`
+  CreatedBy    string            `json:"created_by"`
+  UpdatedAt    time.Time         `json:"updated_at"`
+  UpdatedBy    string            `json:"updated_by"`
 }
 ```
 
-| Property         | Description                                       | Required       |
-| ---------------- | ------------------------------------------------- | -------------- |
-| `id`             | Unique identifier for the rule.                   | Auto-generated |
-| `name`           | Descriptive name of the rule.                     | ✅             |
-| `domain`         | Domain ID associated with the rule.               | ✅             |
-| `input_channel`  | Channel to listen for incoming messages           | ✅             |
-| `input_topic`    | Topic within the input channel.                   | ✅             |
-| `logic`          | Lua script defining message processing.           | ✅             |
-| `output_channel` | Channel to which processed messages are sent.     | Optional       |
-| `output_topic`   | Topic within the output channel.                  | Optional       |
-| `schedule`       | Scheduling configuration                          | Optional       |
-| `status`         | Rule state (`enabled` or `disabled` or `deleted`) | ✅             |
-| `created_at`     | Timestamp when the rule was created.              | Auto-generated |
-| `updated_at`     | Timestamp when the rule was last updated.         | Auto-generated |
-| `metadata`       | Additional rule metadata                          | Optional       |
+| Property        | Description                                       | Required       |
+| --------------- | ------------------------------------------------- | -------------- |
+| `id`            | Unique identifier for the rule.                   | Auto-generated |
+| `name`          | Descriptive name of the rule.                     | ✅             |
+| `domain`        | Domain ID associated with the rule.               | ✅             |
+| `tags`          | Optional list of tags for categorization          | Optional       |
+| `input_channel` | Channel to listen for incoming messages           | ✅             |
+| `input_topic`   | Topic within the input channel.                   | ✅             |
+| `logic`         | Script (Lua or Go) defining message processing.   | ✅             |
+| `outputs`       | List of outputs to send results to.               | ✅             |
+| `schedule`      | Scheduling configuration                          | Optional       |
+| `status`        | Rule state (`enabled` or `disabled` or `deleted`) | ✅             |
+| `created_at`    | Timestamp when the rule was created.              | Auto-generated |
+| `updated_at`    | Timestamp when the rule was last updated.         | Auto-generated |
+| `metadata`      | Additional rule metadata                          | Optional       |
+
+> **Note**: A rule must have either an `input_channel` or a `schedule` or both. If `input_channel` is omitted, the rule only executes on schedule.
 
 ### Scheduling Rules
 
-Rules can be scheduled to run at specific times or on a recurring basis.
-
-#### Schedule Structure
-
 ```go
 type Schedule struct {
-    StartDateTime   time.Time  // When the schedule becomes active
-    Time            time.Time  // Specific time for the rule to run
-    Recurring       Recurring  // None, Daily, Weekly, Monthly
-    RecurringPeriod uint      // Interval between executions: 1 = every interval, 2 = every second interval, etc.
+  StartDateTime   time.Time `json:"start_datetime,omitempty"`
+  Time            time.Time `json:"time,omitempty"`
+  Recurring       Recurring `json:"recurring,omitempty"`
+  RecurringPeriod uint      `json:"recurring_period,omitempty"`
 }
 ```
+
+| Property         | Description                                               |
+| ---------------- | --------------------------------------------------------- |
+| start_datetime   | When the rule becomes active.                             |
+| time             | Time of day the rule is scheduled to run                  |
+| recurring        | Recurrence pattern (`None`, `Daily`, `Weekly`, `Monthly`) |
+| recurring_period | Interval multiplier (e.g. 2 = every second interval)      |
+
+**Recurring Patterns Explained:**
+
+- **Daily:** Runs every day at the specified time.
+- **Weekly:** Runs on the same day of the week.
+- **Monthly:** Runs on the same day each month.
+
+#### Scheduling Behavior:
+
+- If schedule is present and input_channel is not set, the rule runs at scheduled intervals.
+- If both are present, the rule can execute based on incoming messages and on schedule.
 
 | Property           | Description                                               |
 | ------------------ | --------------------------------------------------------- |
@@ -156,59 +178,56 @@ For example, to run a rule:
 - Every other week: Set recurring to "weekly" with recurring_period = 2
 - Monthly on the 1st: Set recurring to "monthly" with recurring_period = 1
 
-### Rule Logic with LUA Scripts
+### Rule Logic
 
-The Rules Engine uses **Lua scripts** to define the processing logic for incoming messages. Lua scripts can access message attributes like:
+Scripts define the logic to process messages. Two scripting types are supported:
 
-- `message.channel`
-- `message.subtopic`
-- `message.publisher`
-- `message.protocol`
-- `message.payload`
+| Type | Language | Key Info                                       |
+| ---- | -------- | ---------------------------------------------- |
+| 0    | Lua      | Lightweight and flexible scripting language    |
+| 1    | Go       | Scripts compiled and executed using Go plugins |
 
-The script should return a value if it triggers an action. Otherwise, it should return `nil`.
-
-**Example Lua Script:**
+Lua Example:
 
 ```lua
--- Check if the message contains a temperature reading
-if message.name == "temperature" and message.value > 25 then
-    return "Temperature above threshold!"
+function logicFunction()
+  local converted_temp = (message.payload.v * 1.8 + 32)
+  return {n = "Temp_fahrenheit", v = converted_temp, u = "°F"}
 end
+return logicFunction()
+```
+
+Go Example:
+
+```go
+package main
+import (
+    m "messaging"
+)
+func logicFunction() any {
+    return m.message.Payload
+}
 ```
 
 The script should return a value if it triggers an action. Otherwise, it should return `nil`.
 
-### Supported Message Format (SenML)
+### Supported Message Formats
 
-Magistrala Rules Engine only processes messages that conform to the [SenML (Sensor Measurement Lists)](https://www.rfc-editor.org/rfc/rfc8428.html) specification. Incorrectly formatted messages are silently ignored by the Rules Engine and Writer services. Below is a valid example:
+The Rules Engine supports multiple message formats, but when **storing messages to the internal database**, the payload **must be in SenML format**.  
+Valid SenML Example:
 
 ```json
 [
-  {
-    "bn": "building1/floor1/hallway/",
-    "n": "temperature",
-    "u": "Cel",
-    "v": 23.5
-  },
-  {
-    "n": "status",
-    "vs": "OK"
-  }
+  { "bn": "building1/", "n": "temperature", "u": "Cel", "v": 23.5 },
+  { "n": "status", "vs": "OK" }
 ]
 ```
 
-#### SenML Message Constraints
+#### Constraints:
 
-Each message must be a **JSON array of SenML records**. Each object inside the array must follow these rules:
-
-| Field                 | Rule                                                                               |
-| --------------------- | ---------------------------------------------------------------------------------- |
-| `n`                   | **Exactly one per record.** Represents the measurement name. Do **not** repeat it. |
-| `v`, `vs`, `vb`, `vd` | **Only one of these fields per record.** Multiple value fields are invalid.        |
-| `bn`                  | Optional base name prepended to all `n` values.                                    |
-| `u`                   | Optional measurement unit (e.g., `"Cel"`, `"V"`, `"A"`).                           |
-| `t`                   | Optional relative timestamp.                                                       |
+- Each entry must have a unique `n`
+- Only one value field (`v`, `vs`, `vb`, `vd`) per entry
+- `bn`, `u`, and `t` are optional
 
 ##### Invalid Example (duplicate `n` and multiple values)
 
@@ -245,6 +264,123 @@ Avoid using special characters in the `n` (name) field, such as:
 
 These may break internal parsing or rule pattern matching.
 
+### Output Handling
+
+The **outputs** field allows a rule to define **multiple destinations** or **actions** for its result. Supported output types include:
+
+1. **channels**: Publishes the result to a specific channel/topic.
+2. **save_senml**: Stores messages in Magistrala’s internal database.
+3. **save_remote_pg**: Forwards the result to an external PostgreSQL database.
+4. **alarms**: Triggers an alarm with a structured severity report.
+5. **email**: Sends a notification email.
+
+#### channels
+
+```go
+type ChannelPublisher struct {
+  Type    string  `json:"type"`
+  Channel string  `json:"channel"`
+  Topic   string  `json:"topic"`
+}
+```
+
+#### save_senml
+
+```go
+type SenML struct {
+  Type    string  `json:"type"`
+}
+```
+
+#### save_remote_pg
+
+```go
+type Postgres struct {
+  Type    string  `json:"type"`
+  Host     string `json:"host"`
+  Port     int    `json:"port"`
+  User     string `json:"user"`
+  Password string `json:"password"`
+  Database string `json:"database"`
+  Table    string `json:"table"`
+  Mapping  string `json:"mapping"`
+}
+```
+
+#### alarms
+
+```go
+type Alarms struct {
+  Type    string  `json:"type"`
+  RuleID  string  `json:"rule_id"`
+}
+```
+
+#### email
+
+```go
+type Email struct {
+  Type    string    `json:"type"`
+  To      []string  `json:"to"`
+  Subject string    `json:"subject"`
+  Content string    `json:"content"`
+}
+```
+
+Each output type expects a different data structure depending on its destination.
+For example, if your output is save_senml, it expects the result of the logic to be a valid SenML message.
+e.g.
+
+```lua
+function logicFunction()
+  return {
+    n = message.payload.sensor,
+    v = message.payload.temperature,
+    u = message.payload.unit
+  }
+end
+return logicFunction()
+```
+
+If the output is an alarm, it expects the result of the logic to be a valid alarm object.
+e.g.
+
+```lua
+function logicFunction()
+    local results = {}
+    local threshold = 20000
+
+    for _, msg in ipairs(message.payload) do
+        local value = msg.v
+        local severity
+        local cause
+
+        if value >= threshold * 1.5 then
+            severity = 5
+            cause = "Critical level exceeded"
+        elseif value >= threshold * 1.2 then
+            severity = 4
+            cause = "High level detected"
+        elseif value >= threshold then
+            severity = 3
+            cause = "Threshold reached"
+        end
+
+        table.insert(results, {
+            measurement = msg.n,
+            value = tostring(value),
+            threshold = tostring(threshold),
+            cause = cause,
+            unit = msg.unit,
+            severity = severity
+        })
+    end
+
+    return results
+end
+return logicFunction()
+```
+
 #### Topic Rewriting and `.` Operator
 
 MQTT topics received by Magistrala are rewritten into dot-separated strings for Rules Engine processing. For example:
@@ -267,27 +403,6 @@ This means:
 - Rules matching `input_topic` or using `message.subtopic` must use **dot-separated format**
 - Every empty segment (e.g. double slashes `//`) is removed
 
-#### Message Processing
-
-When a message arrives on a rule's input channel, the Rules Engine:
-
-1. Creates a Lua environment
-2. Injects the message as a global variable with the following structure:
-
-   ```lua
-   message = {
-     channel = "channel_name",
-     subtopic = "subtopic_name",
-     publisher = "publisher_id",
-     protocol = "protocol_name",
-     created = timestamp,
-     payload = [byte_array]
-   }
-   ```
-
-3. Executes the rule's Lua script
-4. If the script returns a non-nil value and an output channel is configured, publishes the result
-
 ### Rule Status
 
 Rules can have one of the following statuses:
@@ -305,13 +420,15 @@ The Rules Engine API exposes several endpoints for managing rules. All requests 
 
 The Rules Engine service provides the following operations:
 
-- `AddRule` - Create a new rule
-- `ViewRule` - Retrieve a specific rule
-- `UpdateRule` - Modify an existing rule
-- `ListRules` - Query rules with filtering options
-- `RemoveRule` - Delete a rule
-- `EnableRule` - Activate a rule
-- `DisableRule` - Deactivate a rule
+- `create_rule` - Create a new rule
+- `list_rules` - Query rules with filtering options
+- `view_rule` - Retrieve a specific rule
+- `update_rule` - Modify an existing rule
+- `update_rule_tags`
+- `update_rule_scheduler`
+- `delete_rule` - Delete a rule
+- `enable_rule` - Activate a rule
+- `disable_rule` - Deactivate a rule
 
 ### Create Rule
 
