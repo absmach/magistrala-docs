@@ -82,3 +82,28 @@ update:
   label: Update
   permalink: /update
   description: Blog posts about updates and changes to Magistrala.
+
+IoT:
+  label: IoT
+  permalink: /iot
+  description: Posts about Internet of Things (IoT) solutions and technologies.
+
+Alarms:
+  label: Alarms
+  permalink: /alarms
+  description: Content about alarm systems and notification management in IoT.
+
+Monitoring:
+  label: Monitoring
+  permalink: /monitoring
+  description: Posts about monitoring IoT devices and systems.
+
+Real-time:
+  label: Real-time
+  permalink: /real-time
+  description: Content about real-time data processing and monitoring.
+
+Rules Engine:
+  label: Rules Engine
+  permalink: /rules-engine
+  description: Posts about rule-based processing and automation systems.

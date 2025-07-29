@@ -10,6 +10,8 @@ description: "Technical guide to Magistrala's alarm system architecture, showing
 
 Magistrala has put into place an alarm system that fully integrates сonverged IoT monitoring. The Rules Engine service is utilized by the system as an alarm generation and context processing service over raw sensor data. It offers an end-to-end solution to the IoT alarm management problems ranging from simple limits checking to intricate multi-condition use cases. Having this architecture allows an organization to go beyond simplistic threshold notifications to implement intricate policies beyond business rule disregard sensor data that is context-aware and produces alarms that make sense.
 
+<!-- truncate -->
+
 ### Common Use Cases
 
 Magistrala's alarm system addresses diverse IoT monitoring scenarios:
@@ -212,29 +214,29 @@ To create an alarm rule that generates alarms when conditions are met:
 
 1. Go to the **Rules** page and create a new rule.
 
-   ![Create alarm rule](img/create-rule.png)
+   ![Create alarm rule](../../docs/img/alarms/create-rule.png)
 
 2. Click the rule in the table to open its details.
 
-   ![View alarm rule](img/view-rule.png)
+   ![View alarm rule](../../docs/img/alarms/view-rule.png)
 
 3. Add an **Input** node, providing the channel and topic.
 
-   ![Input options](img/input-options.png)
+   ![Input options](../../docs/img/alarms/input-options.png)
 
-   ![Input variables](img/input-variables.png)
+   ![Input variables](../../docs/img/alarms/input-variables.png)
 
-   ![Input node](img/input-node.png)
+   ![Input node](../../docs/img/alarms/input-node.png)
 
 4. Add an **Editor** block as the logic node.
 
-   ![Logic node](img/logic-node.png)
+   ![Logic node](../../docs/img/alarms/logic-node.png)
 
-   ![Logic options](img/logic-options.png)
+   ![Logic options](../../docs/img/alarms/logic-options.png)
 
 5. Add the **Alarm** node as the output node.
 
-   ![Output options](img/output-options.png)
+   ![Output options](../../docs/img/alarms/output-options.png)
 
 6. Configure the logic script using Lua or Go to define alarm conditions. Example Lua script for water level monitoring:
 
@@ -278,7 +280,7 @@ To create an alarm rule that generates alarms when conditions are met:
 
 7. Save the rule.
 
-   ![Alarm rule](img/alarm-rule.png)
+   ![Alarm rule](../../docs/img/alarms/alarm-rule.png)
 
 #### Viewing Alarms
 
