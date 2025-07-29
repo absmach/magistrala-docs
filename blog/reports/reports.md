@@ -1,8 +1,8 @@
 ---
 slug: iot-data-reports
-title: Building IoT Data Reports with Magistrala: A Developer's Deep Dive
+title: "Building IoT Data Reports with Magistrala: A Developer's Deep Dive"
 authors: steve
-description: A practical guide to building robust IoT reports with Magistrala's reporting system - from real-time data aggregation to automated PDF generation and email delivery.
+description: "A practical guide to building robust IoT reports with Magistrala's reporting system - from real-time data aggregation to automated PDF generation and email delivery."
 tags:
   [
     iot,
@@ -25,6 +25,8 @@ tags:
 If you've been working with IoT systems for a while, you know that collecting sensor data is just the beginning. The real challenge is turning that flood of telemetry into actionable insights that actually help your team make decisions. That's where Magistrala's reporting system comes in.
 
 After spending months working with this feature, I wanted to share what I've learned about building robust IoT reports. Magistrala's reporting service has become one of our go-to tools for everything from daily operational summaries to executive dashboards.
+
+<!-- truncate -->
 
 ## System Architecture
 
