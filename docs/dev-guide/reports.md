@@ -8,9 +8,9 @@ The **Reports Service** in Magistrala provides a streamlined way to generate and
 
 The Reports Service operates through three main components:
 
-1. **Report Configurations**: Define what data to collect and how to process it
-2. **Scheduler**: Handles recurring report generation based on defined schedules
-3. **Generator Engine**: Generates human-readable reports in various formats.
+1. **Report Configurations**: Define what data to collect and how to process it.
+2. **Scheduler**: Handles recurring report generation based on defined schedules.
+3. **Generator Engine**: Generates human-readable reports in various formats..
 
 ![reports_architecture](../diagrams/reports_architecture.svg)
 
@@ -108,20 +108,20 @@ type AggConfig struct {
 
 ### Example configurations:
 
-- Daily sales report at 8 AM: **DAILY** + **08:00**
-- Weekly energy summary every Monday: **WEEKLY** + **00:00**
-- Monthly inventory report: **MONTHLY** + **09:00**
+- Daily sales report at 8 AM: **DAILY** + **08:00**.
+- Weekly energy summary every Monday: **WEEKLY** + **00:00**.
+- Monthly inventory report: **MONTHLY** + **09:00**.
 
 ### Report Generation
 
 Data Collection
 
-1. Connects to Magistrala's time-series database
+1. Connects to Magistrala's time-series database.
 2. Collects data using configured:
-    - Time range (From/To)
-    - Aggregation method
-    - Metric filters
-3. Supports complex queries across multiple devices and channels
+    - Time range (From/To).
+    - Aggregation method.
+    - Metric filters.
+3. Supports complex queries across multiple devices and channels.
 
 ## Output Formats
 
@@ -343,8 +343,8 @@ curl --location --request DELETE 'http://localhost:9008/domains/{domainID}/repor
 
 Templates can be used in two ways:
 
-1. **Configuration-level Template**: Set a custom template for a specific report configuration
-2. **Request-level Template**: Include a template in individual report generation requests
+1. **Configuration-level Template**: Set a custom template for a specific report configuration.
+2. **Request-level Template**: Include a template in individual report generation requests.
 
 #### Configuration-level Usage
 
@@ -580,10 +580,10 @@ For users who want maximum control and minimal requirements, here's the absolute
 ```
 
 This minimal template includes only:
-- ✅ HTML structure (`<!DOCTYPE html>`, `<html>`, `<head>`, `<body>`, `<style>`)
-- ✅ Essential variables (`{{$.Title}}`, `{{range .Messages}}`, `{{formatTime .Time}}`, `{{formatValue .}}`, `{{end}}`)
-- ✅ Essential CSS classes (`.page`, `.data-table`)
-- ✅ Basic table structure (`<table>`, `<thead>`, `<tbody>`, `<th>`, `<td>`)
+- ✅ HTML structure (`<!DOCTYPE html>`, `<html>`, `<head>`, `<body>`, `<style>`).
+- ✅ Essential variables (`{{$.Title}}`, `{{range .Messages}}`, `{{formatTime .Time}}`, `{{formatValue .}}`, `{{end}}`).
+- ✅ Essential CSS classes (`.page`, `.data-table`).
+- ✅ Basic table structure (`<table>`, `<thead>`, `<tbody>`, `<th>`, `<td>`).
 
 ### Template Breakdown
 
@@ -599,25 +599,25 @@ This example demonstrates how all required elements work together:
 ```
 
 #### 2. Required Template Variables ✅
-- `{{$.Title}}` - Used in `<title>` and header section
-- `{{$.GeneratedDate}}` - Displayed in header date area
-- `{{$.GeneratedTime}}` - Shown in footer
-- `{{.Metric.Name}}` - Metric name in info section
-- `{{.Metric.ClientID}}` - Device ID (with conditional display)
-- `{{.Metric.ChannelID}}` - Channel ID in info section
-- `{{len .Messages}}` - Record count display
-- `{{range .Messages}}...{{end}}` - Iterates through data
-- `{{formatTime .Time}}` - Formats timestamps
-- `{{formatValue .}}` - Formats values
-- `{{.Unit}}`, `{{.Protocol}}`, `{{.Subtopic}}` - Data fields
+- `{{$.Title}}` - Used in `<title>` and header section.
+- `{{$.GeneratedDate}}` - Displayed in header date area.
+- `{{$.GeneratedTime}}` - Shown in footer.
+- `{{.Metric.Name}}` - Metric name in info section.
+- `{{.Metric.ClientID}}` - Device ID (with conditional display).
+- `{{.Metric.ChannelID}}` - Channel ID in info section.
+- `{{len .Messages}}` - Record count display.
+- `{{range .Messages}}...{{end}}` - Iterates through data.
+- `{{formatTime .Time}}` - Formats timestamps.
+- `{{formatValue .}}` - Formats values.
+- `{{.Unit}}`, `{{.Protocol}}`, `{{.Subtopic}}` - Data fields.
 
 #### 3. Required CSS Classes ✅
-- `.page` - Main page container with layout properties
-- `.header` - Header section styling
-- `.content-area` - Main content area with flex layout
-- `.metrics-section` - Metrics information styling
-- `.data-table` - Table styling and layout
-- `.footer` - Footer section positioning
+- `.page` - Main page container with layout properties.
+- `.header` - Header section styling.
+- `.content-area` - Main content area with flex layout.
+- `.metrics-section` - Metrics information styling.
+- `.data-table` - Table styling and layout.
+- `.footer` - Footer section positioning.
 
 #### 4. Required Table Elements ✅
 ```html
@@ -642,10 +642,10 @@ This example demonstrates how all required elements work together:
 ```
 
 #### 5. Template Functions Usage ✅
-- `{{add $globalPage 1}}` - Increment page counter
-- `{{formatTime .Time}}` - Format Unix timestamps
-- `{{formatValue .}}` - Format message values
-- `{{len .Messages}}` - Count messages
+- `{{add $globalPage 1}}` - Increment page counter.
+- `{{formatTime .Time}}` - Format Unix timestamps.
+- `{{formatValue .}}` - Format message values.
+- `{{len .Messages}}` - Count messages.
 
 #### 6. Template Control Structures ✅
 ```html
@@ -664,12 +664,12 @@ This example demonstrates how all required elements work together:
 
 ### Advanced Features Demonstrated
 
-1. **CSS Custom Properties**: Using CSS variables for consistent theming
-2. **Responsive Design**: Viewport meta tag and flexible layouts
-3. **Print Optimization**: `@media print` styles for PDF generation
-4. **Visual Enhancements**: Gradients, shadows, and modern styling
-5. **Conditional Content**: Using `{{if}}` to show optional fields
-6. **Page Counting**: Variable manipulation for page numbers
+1. **CSS Custom Properties**: Using CSS variables for consistent theming.
+2. **Responsive Design**: Viewport meta tag and flexible layouts.
+3. **Print Optimization**: `@media print` styles for PDF generation.
+4. **Visual Enhancements**: Gradients, shadows, and modern styling.
+5. **Conditional Content**: Using `{{if}}` to show optional fields.
+6. **Page Counting**: Variable manipulation for page numbers.
 
 ### Template Validation
 
@@ -678,18 +678,18 @@ The system uses a tiered validation approach that gives users maximum control:
 #### Essential Validation (Strict)
 These elements are absolutely required for PDF generation:
 
-- **HTML Structure**: Must include proper HTML5 structure
-- **Essential Variables**: Must include `{{$.Title}}`, `{{range .Messages}}`, `{{formatTime .Time}}`, `{{formatValue .}}`, and `{{end}}`
-- **Essential CSS**: Must define `.page` and `.data-table` classes
-- **Template Blocks**: All `{{range}}`, `{{if}}`, `{{with}}` must have corresponding `{{end}}`
-- **Table Structure**: If using `.data-table`, must include `<table>`, `<thead>`, `<tbody>`, `<th>`, `<td>`
+- **HTML Structure**: Must include proper HTML5 structure.
+- **Essential Variables**: Must include `{{$.Title}}`, `{{range .Messages}}`, `{{formatTime .Time}}`, `{{formatValue .}}`, and `{{end}}`.
+- **Essential CSS**: Must define `.page` and `.data-table` classes.
+- **Template Blocks**: All `{{range}}`, `{{if}}`, `{{with}}` must have corresponding `{{end}}`.
+- **Table Structure**: If using `.data-table`, must include `<table>`, `<thead>`, `<tbody>`, `<th>`, `<td>`.
 
 #### Recommended Validation (Warnings)
 These elements improve report quality but don't prevent PDF generation:
 
 - **Recommended Variables**: `{{$.GeneratedDate}}`, `{{$.GeneratedTime}}`, `{{.Metric.Name}}`, etc.
-- **Recommended CSS**: `.header`, `.content-area`, `.metrics-section`, `.footer`
-- **Table Headers**: Standard column headers for consistency
+- **Recommended CSS**: `.header`, `.content-area`, `.metrics-section`, `.footer`.
+- **Table Headers**: Standard column headers for consistency.
 
 #### Validation Levels
 
@@ -730,20 +730,20 @@ warnings, err := template.ValidateWithRecommendations()
 ### Default Template
 
 If no custom template is provided, the system uses a built-in default template that includes:
-- Professional styling with corporate color scheme
-- Responsive layout optimized for PDF generation
-- Automatic page breaks for multi-metric reports
-- Header and footer sections with metadata
-- Sortable data tables with alternating row colors
+- Professional styling with corporate color scheme.
+- Responsive layout optimized for PDF generation.
+- Automatic page breaks for multi-metric reports.
+- Header and footer sections with metadata.
+- Sortable data tables with alternating row colors.
 
 ### Best Practices
 
-1. **Start with the default template** as a reference for required structure
-2. **Test template validation** before using in production
-3. **Use semantic CSS classes** for maintainable styling
-4. **Consider PDF constraints** when designing layouts
-5. **Include proper error handling** for missing data fields
-6. **Validate template blocks** are properly closed  
+1. **Start with the default template** as a reference for required structure.
+2. **Test template validation** before using in production.
+3. **Use semantic CSS classes** for maintainable styling.
+4. **Consider PDF constraints** when designing layouts.
+5. **Include proper error handling** for missing data fields.
+6. **Validate template blocks** are properly closed.  
 
 ### API Operations
 
@@ -1031,7 +1031,7 @@ curl --location 'http://localhost:9008/{domainID}/reports/configs/{reportID}' \
 ```
 
 5. Enable Report Configuration
-Activate a scheduled report configuration
+Activate a scheduled report configuration.
 
 Endpoint:
 `POST /{domainID}/reports/configs/{reportID}/enable`
@@ -1042,7 +1042,7 @@ curl --location http://localhost:9008/domains/{domainID}/reports/configs/{report
 ```
 
 6. Disable Report Configuration
-Pause a scheduled report generation
+Pause a scheduled report generation.
 
 Endpoint:
 `POST /{domainID}/reports/configs/{reportID}/disable`
@@ -1053,7 +1053,7 @@ curl --location http://localhost:9008/domains/{domainID}/reports/configs/{report
 ```
 
 7. Update Report Configuration
-Modify an existing report configuration
+Modify an existing report configuration.
 
 Endpoint:
 `PATCH /{domainID}/reports/configs/{reportID}`
@@ -1074,7 +1074,7 @@ curl --location --request PATCH 'http://localhost:9008/domains/{domainID}/report
 ```
 
 8. Update Report Template
-Update the custom HTML template for a report configuration
+Update the custom HTML template for a report configuration.
 
 Endpoint:
 `PUT /{domainID}/reports/configs/{reportID}/template`
@@ -1089,7 +1089,7 @@ curl --location --request PUT 'http://localhost:9008/domains/{domainID}/reports/
 ```
 
 9. View Report Template
-Retrieve the current template for a report configuration
+Retrieve the current template for a report configuration.
 
 Endpoint:
 `GET /{domainID}/reports/configs/{reportID}/template`
@@ -1100,7 +1100,7 @@ curl --location 'http://localhost:9008/domains/{domainID}/reports/configs/{repor
 ```
 
 10. Delete Report Template
-Remove a custom template (reverts to default template)
+Remove a custom template (reverts to default template).
 
 Endpoint:
 `DELETE /{domainID}/reports/configs/{reportID}/template`
