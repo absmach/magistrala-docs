@@ -5,17 +5,18 @@ authors: ian
 description: Learn how we built a dynamic, scriptable Rules Engine that enables real-time IoT message transformation using Lua and Go, complete with scheduling, observability, and a visual UI.
 tags:
   [
-    microservices,
-    iot,
-    rules-engine,
-    lua,
-    golang,
-    real-time-processing,
-    edge-computing,
-    open-source,
-    observability,
-    scheduling,
-    low-code,
+    Magistrala,
+    Microservices,
+    IoT,
+    Rules-engine,
+    Lua,
+    Golang,
+    Real-time-processing,
+    Edge-computing,
+    Open Source,
+    Observability,
+    Scheduling,
+    Low-code,
   ]
 ---
 
@@ -35,6 +36,8 @@ With our rules engine, users get to enjoy the following features:
 2. **Real-time** or **custom** scheduled processing
 3. Multiple output options (Internal DB, external PostgreSQL DB, alarms, publishing to a channel, Email notification)
 4. All rules are **managed per-domain**, enabling multi-tenant or isolated rule environments.
+
+<!-- truncate -->
 
 ---
 
@@ -104,7 +107,7 @@ The fields available are:
 - **Recurring** - The interval at which the rule should recur(e.g., hourly, daily, weekly)
 - **Recurring Period** - The frequency at which the rule should recur (e.g., 1,2 ).
 
-> This means if *recurring=daily*, and the *recurring period=2*, then the rule will be executed **once every two days**.
+> This means if _recurring=daily_, and the _recurring period=2_, then the rule will be executed **once every two days**.
 
 Schedule config example:
 
@@ -316,6 +319,6 @@ Exposes Prometheus-style metrics.
 
 ## Conclusion
 
-This micro-service puts **real-time decision-making power** into your hands. Whether you are building an alerting system, filtering messages, or automating scheduled tasks, the Rules Engine lets you do it dynamically - with safety, flexibility, and observability built in.  
+This micro-service puts **real-time decision-making power** into your hands. Whether you are building an alerting system, filtering messages, or automating scheduled tasks, the Rules Engine lets you do it dynamically - with safety, flexibility, and observability built in.
 
 No redeployments. No vendor lock-in. Just write your logic and let it run.

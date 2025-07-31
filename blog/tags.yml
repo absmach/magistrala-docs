@@ -82,3 +82,53 @@ update:
   label: Update
   permalink: /update
   description: Blog posts about updates and changes to Magistrala.
+
+Microservices:
+  label: Microservices
+  permalink: /microservices
+  description: Posts discussing Magistrala's microservices architecture and distributed design.
+
+IoT:
+  label: IoT
+  permalink: /iot
+  description: Articles exploring Internet of Things (IoT) technologies and applications using Magistrala.
+
+Rules-engine:
+  label: Rules Engine
+  permalink: /rules-engine
+  description: Deep dives into Magistrala's rule-based automation and event processing engine.
+
+Lua:
+  label: Lua
+  permalink: /lua
+  description: Posts about writing rule logic with Lua scripting in the Magistrala Rules Engine.
+
+Golang:
+  label: Golang
+  permalink: /golang
+  description: Posts about building, extending, or integrating Magistrala services using Go (Golang).
+
+Real-time-processing:
+  label: Real-Time Processing
+  permalink: /real-time-processing
+  description: Content focused on processing IoT data in real time using Magistrala.
+
+Edge-computing:
+  label: Edge Computing
+  permalink: /edge-computing
+  description: Articles on processing data closer to IoT devices with edge computing strategies using Magistrala.
+
+Observability:
+  label: Observability
+  permalink: /observability
+  description: Insights into monitoring, logging, and tracing with Magistrala for better system visibility.
+
+Scheduling:
+  label: Scheduling
+  permalink: /scheduling
+  description: Posts about task scheduling and rule execution timing within the Magistrala platform.
+
+Low-code:
+  label: Low-Code
+  permalink: /low-code
+  description: Posts about building IoT solutions with minimal code using Magistrala's low-code capabilities.
