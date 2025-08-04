@@ -8,7 +8,7 @@ The **Rules Engine** in Magistrala provides powerful, flexible message processin
 
 1. **Scriptable logic** - Use Lua or Go to define message execution behavior.
 2. **Flexible execution** - Rules can be triggered from input messages, schedules or both.
-3. **Pluggable outputs** - Built-in support for alamrs, channels, email, Postgres, and SenML writers.
+3. **Pluggable outputs** - Built-in support for alarms, channels, email, Postgres, and SenML writers.
 4. **Secure, scoped execution** - Using domain-level isolation and bearer token authorization.
 5. **Disabled rules** - Rules can be disabled individually to prevent further executions. They can also be enabled to re-start their executions.
 
@@ -42,7 +42,7 @@ The Magistrala Rules Engine is designed for **real-time** and **scheduled messag
 > The logic must return a **non-nil value** for outputs to be invoked.
 
 4. **Output(s)**
-   If the script returns a value, the rules fowards the result to one or more outputs. Supported output types include:
+   If the script returns a value, the rules forwards the result to one or more outputs. Supported output types include:
 
 - _Channel_ - Forward the result to another channel and/or topic.
 - _Internal DB_ - Save processed data internally.
@@ -89,7 +89,7 @@ type Rule struct {
 | `domain`        | Domain ID associated with the rule.               | ✅             |
 | `tags`          | Optional list of tags for categorization          | Optional       |
 | `input_channel` | Channel to listen for incoming messages           | ✅             |
-| `input_topic`   | Topic within the input channel.                   | ✅             |
+| `input_topic`   | Topic within the input channel.                   | Optional       |
 | `logic`         | Script (Lua or Go) defining message processing.   | ✅             |
 | `outputs`       | List of outputs to send results to.               | ✅             |
 | `schedule`      | Scheduling configuration                          | Optional       |
@@ -128,13 +128,6 @@ type Schedule struct {
 
 - If schedule is present and input_channel is not set, the rule runs at scheduled intervals.
 - If both are present, the rule can execute based on incoming messages and on schedule.
-
-| Property           | Description                                               |
-| ------------------ | --------------------------------------------------------- |
-| `start_datetime`   | Date/time when the rule becomes active.                   |
-| `time`             | Time at which the rule runs.                              |
-| `recurring`        | Recurrence pattern: `None`, `Daily`, `Weekly`, `Monthly`. |
-| `recurring_period` | Number of intervals between executions.                   |
 
 **Recurring Patterns Explained:**
 
