@@ -207,10 +207,10 @@ These fields are absolutely necessary for PDF generation:
 
 | Variable | Description | Usage Example |
 |----------|-------------|---------------|
-| `{{"{{$.Title}}"}}` | Report title | `<title>{{"{{$.Title}}"}}</title>` |
-| `{{"{{range .Messages}}...{{end}}"}}` | Message iteration block | `{{"{{range .Messages}}"}}<tr>...</tr>{{"{{end}}"}}` |
-| `{{"{{formatTime .Time}}"}}` | Formatted timestamp | `<td>{{"{{formatTime .Time}}"}}</td>` |
-| `{{"{{formatValue .}}"}}` | Formatted message value | `<td>{{"{{formatValue .}}"}}</td>` |
+| `{{$.Title}}` | Report title | `<title>{{$.Title}}</title>` |
+| `{{range .Messages}}...{{end}}` | Message iteration block | `{{range .Messages}}<tr>...</tr>{{end}}` |
+| `{{formatTime .Time}}` | Formatted timestamp | `<td>{{formatTime .Time}}</td>` |
+| `{{formatValue .}}` | Formatted message value | `<td>{{formatValue .}}</td>` |
 
 #### Recommended Template Variables (Optional)
 
@@ -218,11 +218,11 @@ These fields enhance the report but are not strictly required:
 
 | Variable | Description | Usage Example |
 |----------|-------------|---------------|
-| `{{"{{$.GeneratedDate}}"}}` | Generation date | `<div>{{"{{$.GeneratedDate}}"}}</div>` |
-| `{{"{{$.GeneratedTime}}"}}` | Generation time | `<span>{{"{{$.GeneratedTime}}"}}</span>` |
-| `{{"{{.Metric.Name}}"}}` | Metric name | `<td>{{"{{.Metric.Name}}"}}</td>` |
-| `{{"{{.Metric.ChannelID}}"}}` | Channel identifier | `<td>{{"{{.Metric.ChannelID}}"}}</td>` |
-| `{{"{{len .Messages}}"}}` | Message count | `<span>{{"{{len .Messages}}"}}</span>` |
+| `{{$.GeneratedDate}}` | Generation date | `<div>{{$.GeneratedDate}}</div>` |
+| `{{$.GeneratedTime}}` | Generation time | `<span>{{$.GeneratedTime}}</span>` |
+| `{{.Metric.Name}}` | Metric name | `<td>{{.Metric.Name}}</td>` |
+| `{{.Metric.ChannelID}}` | Channel identifier | `<td>{{.Metric.ChannelID}}</td>` |
+| `{{len .Messages}}` | Message count | `<span>{{len .Messages}}</span>` |
 
 #### Conditional Template Variables (Use if Needed)
 
@@ -230,10 +230,10 @@ These fields are only required if your data uses them:
 
 | Variable | Description | When Required |
 |----------|-------------|---------------|
-| `{{"{{.Metric.ClientID}}"}}` | Device/client identifier | When filtering by specific devices |
-| `{{"{{.Unit}}"}}` | Value unit | When measurements have units |
-| `{{"{{.Protocol}}"}}` | Protocol type | When protocol filtering is used |
-| `{{"{{.Subtopic}}"}}` | Message subtopic | When subtopic filtering is used |
+| `{{.Metric.ClientID}}` | Device/client identifier | When filtering by specific devices |
+| `{{.Unit}}` | Value unit | When measurements have units |
+| `{{.Protocol}}` | Protocol type | When protocol filtering is used |
+| `{{.Subtopic}}` | Message subtopic | When subtopic filtering is used |
 
 #### Essential CSS Classes (Required)
 
@@ -294,10 +294,10 @@ Templates have access to these custom functions:
 
 | Function | Purpose | Usage |
 |----------|---------|-------|
-| `formatTime` | Format Unix timestamp | `{{"{{formatTime .Time}}"}}` |
-| `formatValue` | Format message value | `{{"{{formatValue .}}"}}` |
-| `add` | Add two integers | `{{"{{add $a $b}}"}}` |
-| `sub` | Subtract two integers | `{{"{{sub $a $b}}"}}` |
+| `formatTime` | Format Unix timestamp | `{{formatTime .Time}}` |
+| `formatValue` | Format message value | `{{formatValue .}}` |
+| `add` | Add two integers | `{{add $a $b}}` |
+| `sub` | Subtract two integers | `{{sub $a $b}}` |
 
 ### Template Management API
 
@@ -394,7 +394,7 @@ Here's a complete working template that demonstrates all required elements:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>{{"{{$.Title}}"}}</title>
+    <title>{{$.Title}}</title>
     <style>
         /* CSS Variables for consistent theming */
         :root {
@@ -447,17 +447,17 @@ Here's a complete working template that demonstrates all required elements:
     </style>
 </head>
 <body>
-    {{"{{$totalPages := len .Reports}}"}}
-    {{"{{$globalPage := 0}}"}}
-    {{"{{range $index, $report := .Reports}}"}}
-    {{"{{$globalPage = add $globalPage 1}}"}}
+    {{$totalPages := len .Reports}}
+    {{$globalPage := 0}}
+    {{range $index, $report := .Reports}}
+    {{$globalPage = add $globalPage 1}}
     
     <div class="page">
         <div class="header">
             <div class="header-content">
                 <div class="header-logo">MAGISTRALA</div>
-                <div class="header-title">{{"{{$.Title}}"}}</div>
-                <div class="header-date">{{"{{$.GeneratedDate}}"}}</div>
+                <div class="header-title">{{$.Title}}</div>
+                <div class="header-date">{{$.GeneratedDate}}</div>
             </div>
         </div>
         
@@ -513,8 +513,8 @@ Here's a complete working template that demonstrates all required elements:
         
         <div class="footer">
             <div class="footer-content">
-                <div class="footer-generated">Generated: {{"{{$.GeneratedTime}}"}}</div>
-                <div class="footer-page">Page {{"{{$globalPage}}"}} of {{"{{$totalPages}}"}}</div>
+                <div class="footer-generated">Generated: {{$.GeneratedTime}}</div>
+                <div class="footer-page">Page {{$globalPage}} of {{$totalPages}}</div>
             </div>
         </div>
     </div>
@@ -531,7 +531,7 @@ For users who want maximum control and minimal requirements, here's the absolute
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{"{{$.Title}}"}}</title>
+    <title>{{$.Title}}</title>
     <style>
         .page {
             padding: 20px;
@@ -553,9 +553,9 @@ For users who want maximum control and minimal requirements, here's the absolute
     </style>
 </head>
 <body>
-    {{"{{range .Reports}}"}}
+    {{range .Reports}}
     <div class="page">
-        <h1>{{"{{$.Title}}"}}</h1>
+        <h1>{{$.Title}}</h1>
         
         <table class="data-table">
             <thead>
@@ -581,7 +581,7 @@ For users who want maximum control and minimal requirements, here's the absolute
 
 This minimal template includes only:
 - ✅ HTML structure (`<!DOCTYPE html>`, `<html>`, `<head>`, `<body>`, `<style>`).
-- ✅ Essential variables (`{{"{{$.Title}}"}}`, `{{"{{range .Messages}}"}}`, `{{"{{formatTime .Time}}"}}`, `{{"{{formatValue .}}"}}`, `{{"{{end}}"}}`).
+- ✅ Essential variables (`{{$.Title}}`, `{{range .Messages}}`, `{{formatTime .Time}}`, `{{formatValue .}}`, `{{end}}`).
 - ✅ Essential CSS classes (`.page`, `.data-table`).
 - ✅ Basic table structure (`<table>`, `<thead>`, `<tbody>`, `<th>`, `<td>`).
 
@@ -599,15 +599,15 @@ This example demonstrates how all required elements work together:
 ```
 
 #### 2. Required Template Variables ✅
-- `{{"{{$.Title}}"}}` - Used in `<title>` and header section.
-- `{{"{{$.GeneratedDate}}"}}` - Displayed in header date area.
-- `{{"{{$.GeneratedTime}}"}}` - Shown in footer.
-- `{{"{{.Metric.Name}}"}}` - Metric name in info section.
-- `{{"{{.Metric.ClientID}}"}}` - Device ID (with conditional display).
-- `{{"{{.Metric.ChannelID}}"}}` - Channel ID in info section.
-- `{{"{{len .Messages}}"}}` - Record count display.
-- `{{"{{range .Messages}}...{{end}}"}}` - Iterates through data.
-- `{{"{{formatTime .Time}}"}}` - Formats timestamps.
+- `{{$.Title}}` - Used in `<title>` and header section.
+- `{{$.GeneratedDate}}` - Displayed in header date area.
+- `{{$.GeneratedTime}}` - Shown in footer.
+- `{{.Metric.Name}}` - Metric name in info section.
+- `{{.Metric.ClientID}}` - Device ID (with conditional display).
+- `{{.Metric.ChannelID}}` - Channel ID in info section.
+- `{{len .Messages}}` - Record count display.
+- `{{range .Messages}}...{{end}}` - Iterates through data.
+- `{{formatTime .Time}}` - Formats timestamps.
 - `{{formatValue .}}` - Formats values.
 - `{{.Unit}}`, `{{.Protocol}}`, `{{.Subtopic}}` - Data fields.
 
@@ -642,10 +642,10 @@ This example demonstrates how all required elements work together:
 ```
 
 #### 5. Template Functions Usage ✅
-- `{{"{{add $globalPage 1}}"}}` - Increment page counter.
-- `{{"{{formatTime .Time}}"}}` - Format Unix timestamps.
-- `{{"{{formatValue .}}"}}` - Format message values.
-- `{{"{{len .Messages}}"}}` - Count messages.
+- `{{add $globalPage 1}}` - Increment page counter.
+- `{{formatTime .Time}}` - Format Unix timestamps.
+- `{{formatValue .}}` - Format message values.
+- `{{len .Messages}}` - Count messages.
 
 #### 6. Template Control Structures ✅
 ```html
@@ -699,16 +699,18 @@ The following elements are **mandatory** for template validation to pass:
 - All `{{if}}` blocks must have corresponding `{{end}}` tags  
 - All `{{with}}` blocks must have corresponding `{{end}}` tags
 
+
 #### Common Validation Errors
 
 | Error Type | Description | Example | Solution |
 |------------|-------------|---------|----------|
-| **Template syntax error** | Invalid Go template syntax | `{{"{{range .Messages"}}` (missing closing `}}"}}`) | Fix template syntax: `{{"{{range .Messages}}"}}` |
-| **Missing essential field: {{"{{$.Title}}"}}** | Template lacks title variable | Template without `{{"{{$.Title}}"}}` | Add `{{"{{$.Title}}"}}` somewhere in template |
-| **Missing essential field: {{"{{range .Messages}}"}}** | Template lacks message iteration | No `{{"{{range .Messages}}"}}` block | Add `{{"{{range .Messages}}...{{end}}"}}` block |
-| **Missing essential field: {{"{{formatTime .Time}}"}}** | Template lacks time formatting | No `{{"{{formatTime .Time}}"}}` in range block | Add `{{"{{formatTime .Time}}"}}` inside messages range |
-| **Missing essential field: {{"{{formatValue .}}"}}** | Template lacks value formatting | No `{{"{{formatValue .}}"}}` in range block | Add `{{"{{formatValue .}}"}}` inside messages range |
-| **Missing essential field: {{"{{end}}"}}** | Template lacks proper block closure | `{{"{{range .Messages}}"}}` without `{{"{{end}}"}}` | Ensure all blocks are properly closed |
+| **Template syntax error** | Invalid Go template syntax | `{{range .Messages"}}` (missing closing `}}`) | Fix template syntax: `{{range .Messages}}` |
+| **Missing essential field: $.Title** | Template lacks title variable | Template without `{{$.Title}}` | Add `{{$.Title}}` somewhere in template |
+| **Missing essential field: range .Messages** | Template lacks message iteration | No `{{range .Messages}}` block | Add `{{range .Messages}}`...`{{end}}` block |
+| **Missing essential field: formatTime .Time** | Template lacks time formatting | No `{{formatTime .Time}}` in range block | Add `{{formatTime .Time}}` inside messages range |
+| **Missing essential field: formatValue .** | Template lacks value formatting | No `{{formatValue .}}` in range block | Add `{{formatValue .}}` inside messages range |
+| **Missing essential field: end** | Template lacks proper block closure | `{{range .Messages}}` without `{{end}}` | Ensure all blocks are properly closed |
+
 
 #### Validation Examples
 
