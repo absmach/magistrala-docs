@@ -82,3 +82,43 @@ update:
   label: Update
   permalink: /update
   description: Blog posts about updates and changes to Magistrala.
+
+Iot:
+  label: IoT
+  permalink: /iot
+  description: Posts about Internet of Things solutions and implementations.
+
+coap:
+  label: CoAP
+  permalink: /coap
+  description: Content about Constrained Application Protocol for IoT devices.
+
+constrained-devices:
+  label: Constrained Devices
+  permalink: /constrained-devices
+  description: Posts about resource-limited IoT devices and embedded systems.
+
+udp:
+  label: UDP
+  permalink: /udp
+  description: Content related to User Datagram Protocol for lightweight communication.
+
+golang:
+  label: Go
+  permalink: /golang
+  description: Posts about Go programming language and its IoT applications.
+
+real-time:
+  label: Real-time
+  permalink: /real-time
+  description: Content about real-time data processing and streaming.
+
+senml:
+  label: SenML
+  permalink: /senml
+  description: Content about Sensor Measurement Lists format for IoT data.
+
+message-broker:
+  label: Message Broker
+  permalink: /message-broker
+  description: Posts about message brokers for IoT data routing and processing.
