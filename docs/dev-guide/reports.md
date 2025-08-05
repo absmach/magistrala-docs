@@ -673,59 +673,108 @@ This example demonstrates how all required elements work together:
 
 ### Template Validation
 
-The system uses a tiered validation approach that gives users maximum control:
+The system performs comprehensive validation on report templates to ensure they can generate valid PDF reports. The validation process uses Go's template parser to check both syntax and required fields.
 
-#### Essential Validation (Strict)
-These elements are absolutely required for PDF generation:
+#### Template Validation Process
 
-- **HTML Structure**: Must include proper HTML5 structure.
-- **Essential Variables**: Must include `{{$.Title}}`, `{{range .Messages}}`, `{{formatTime .Time}}`, `{{formatValue .}}`, and `{{end}}`.
-- **Essential CSS**: Must define `.page` and `.data-table` classes.
-- **Template Blocks**: All `{{range}}`, `{{if}}`, `{{with}}` must have corresponding `{{end}}`.
-- **Table Structure**: If using `.data-table`, must include `<table>`, `<thead>`, `<tbody>`, `<th>`, `<td>`.
+When a template is provided (either during report config creation, template update, or report generation), the system validates:
 
-#### Recommended Validation (Warnings)
-These elements improve report quality but don't prevent PDF generation:
+1. **Template Syntax**: Uses Go's `text/template` parser to verify the template has valid Go template syntax
+2. **Essential Fields**: Ensures all required template variables and control structures are present
+3. **Template Structure**: Validates that template blocks are properly opened and closed
 
-- **Recommended Variables**: `{{$.GeneratedDate}}`, `{{$.GeneratedTime}}`, `{{.Metric.Name}}`, etc.
-- **Recommended CSS**: `.header`, `.content-area`, `.metrics-section`, `.footer`.
-- **Table Headers**: Standard column headers for consistency.
+#### Required Template Elements
 
-#### Validation Levels
+The following elements are **mandatory** for template validation to pass:
 
-```go
-// Basic validation (required for PDF generation)
-err := template.Validate()
+##### 1. Essential Template Variables
+- `{{$.Title}}` - Report title (must be present somewhere in the template)
+- `{{range .Messages}}` - Loop structure to iterate through message data
+- `{{formatTime .Time}}` - Function to format message timestamps  
+- `{{formatValue .}}` - Function to format message values
+- `{{end}}` - Closing tag for the range block
 
-// Extended validation with recommendations
-warnings, err := template.ValidateWithRecommendations()
-```
+##### 2. Template Control Structures
+- All `{{range}}` blocks must have corresponding `{{end}}` tags
+- All `{{if}}` blocks must have corresponding `{{end}}` tags  
+- All `{{with}}` blocks must have corresponding `{{end}}` tags
 
 #### Common Validation Errors
 
-| Error Type | Description | Solution |
-|------------|-------------|----------|
-| **Missing HTML elements** | Template lacks required HTML structure | Add `<!DOCTYPE html>`, `<html>`, `<head>`, `<body>`, `<style>` |
-| **Missing essential fields** | Template lacks critical variables | Add `{{$.Title}}`, `{{range .Messages}}`, `{{formatTime .Time}}`, `{{formatValue .}}`, `{{end}}` |
-| **Unmatched template blocks** | `{{range}}`, `{{if}}`, `{{with}}` without `{{end}}` | Ensure all blocks are properly closed |
-| **Missing essential CSS** | Template lacks `.page` or `.data-table` classes | Define required CSS classes |
-| **Incomplete table structure** | Table elements missing when using `.data-table` | Add complete table structure |
+| Error Type | Description | Example | Solution |
+|------------|-------------|---------|----------|
+| **Template syntax error** | Invalid Go template syntax | `{{range .Messages` (missing closing `}}`) | Fix template syntax: `{{range .Messages}}` |
+| **Missing essential field: {{$.Title}}** | Template lacks title variable | Template without `{{$.Title}}` | Add `{{$.Title}}` somewhere in template |
+| **Missing essential field: {{range .Messages}}** | Template lacks message iteration | No `{{range .Messages}}` block | Add `{{range .Messages}}...{{end}}` block |
+| **Missing essential field: {{formatTime .Time}}** | Template lacks time formatting | No `{{formatTime .Time}}` in range block | Add `{{formatTime .Time}}` inside messages range |
+| **Missing essential field: {{formatValue .}}** | Template lacks value formatting | No `{{formatValue .}}` in range block | Add `{{formatValue .}}` inside messages range |
+| **Missing essential field: {{end}}** | Template lacks proper block closure | `{{range .Messages}}` without `{{end}}` | Ensure all blocks are properly closed |
 
-#### Flexible Usage Examples
+#### Validation Examples
 
-**Ultra-minimal template (passes validation):**
+**✅ Valid minimal template:**
 ```html
 <!DOCTYPE html>
-<html><head><title>{{$.Title}}</title><style>.page{padding:20px;}.data-table{width:100%;}</style></head>
-<body>{{range .Reports}}<div class="page"><table class="data-table"><thead><tr><th>Time</th><th>Value</th></tr></thead><tbody>{{range .Messages}}<tr><td>{{formatTime .Time}}</td><td>{{formatValue .}}</td></tr>{{end}}</tbody></table></div>{{end}}</body></html>
+<html>
+<head><title>{{$.Title}}</title></head>
+<body>
+  <h1>{{$.Title}}</h1>
+  {{range .Messages}}
+    <p>Time: {{formatTime .Time}}, Value: {{formatValue .}}</p>
+  {{end}}
+</body>
+</html>
 ```
 
-**With optional fields (better user experience):**
+**❌ Invalid template (missing formatTime):**
 ```html
 <!DOCTYPE html>
-<html><head><title>{{$.Title}}</title><style>/* ... */</style></head>
-<body>{{range .Reports}}<div class="page"><h1>{{$.Title}}</h1><p>Generated: {{$.GeneratedTime}}</p><p>Metric: {{.Metric.Name}}</p><table class="data-table"><!-- ... --></table></div>{{end}}</body></html>
+<html>
+<head><title>{{$.Title}}</title></head>
+<body>
+  <h1>{{$.Title}}</h1>
+  {{range .Messages}}
+    <p>Value: {{formatValue .}}</p>  <!-- Missing formatTime .Time -->
+  {{end}}
+</body>
+</html>
 ```
+
+**❌ Invalid template (syntax error):**
+```html
+<!DOCTYPE html>
+<html>
+<head><title>{{$.Title}}</title></head>
+<body>
+  <h1>{{$.Title}}</h1>
+  {{range .Messages}}
+    <p>Time: {{formatTime .Time}}, Value: {{formatValue .}}</p>
+  {{end  <!-- Missing closing }} -->
+</body>
+</html>
+```
+
+#### When Validation Occurs
+
+Template validation is performed during:
+
+1. **Report Config Creation** (`POST /configs`) - If `report_template` field is provided
+2. **Template Update** (`PUT /configs/{reportID}/template`) - Always validates the new template
+3. **Report Generation** (`POST /`) - If `report_template` field is provided in the request
+
+If validation fails, the API returns HTTP 400 with a descriptive error message indicating what's missing or incorrect.
+
+#### Optional vs Required Elements
+
+The validation focuses only on elements absolutely necessary for report generation. The following are **optional** and not validated:
+
+- HTML structure (DOCTYPE, html, head, body tags)
+- CSS styling and classes
+- Additional template variables like `{{$.GeneratedDate}}`, `{{.Metric.Name}}`, etc.
+- Table structures and formatting
+- Custom functions beyond `formatTime` and `formatValue`
+
+This approach gives developers maximum flexibility while ensuring the core functionality works correctly.
 
 ### Default Template
 
