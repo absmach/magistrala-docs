@@ -1,6 +1,12 @@
-title: SuperMQ Storage
+---
+slug: supermq-storage-architecture
+title: SuperMQ Storage Architecture
+authors: jeff-mboya
+description: Dive deep into how SuperMQ uses PostgreSQL, TimescaleDB, and SpiceDB to build a scalable, secure, and performant storage architecture for IoT messaging.
+tags: ['IoT', 'PostgreSQL', 'TimescaleDB', 'SpiceDB', 'Polyglot Persistence', 'Storage Architecture', 'SuperMQ']
+---
 
-# Introduction
+## Introduction
 
 Building a modern IoT messaging platform is no small feat. And when that platform is engineered to be distributed, highly scalable, and secure, the complexity increases exponentially. Why? The goal quickly shifts from just handling a high volume of messages to managing an ecosystem that connects countless users and millions of devices interacting through a mix of communication protocols. So, how do you manage your most valuable asset - your data - at this scale?
 
@@ -19,6 +25,8 @@ The table below provides a high-level overview of the above strategy, which will
 | Core Entity Metadata     | PostgreSQL          |
 | Time-Series Message Data | TimescaleDB         |
 | Authorization Data       | SpiceDB             |
+
+> SuperMQ also supports writing and reading messages using Cassandra, InfluxDB, or MongoDB. The databases are used through separate services. Writers receive messages from the internal broker and store them. Readers provide HTTP APIs for querying stored messages. The services are optional and can be used if needed based on your environment.
 
 ## Core Metadata
 
@@ -93,7 +101,7 @@ FROM connections AS conn
 JOIN clients AS c ON conn.client_id = c.id AND conn.domain_id = c.domain_id
 WHERE conn.channel_id = $1
   AND c.status = 0
-  AND c.tags @> '{"region": "EU"}';
+  AND c.tags @> '["region:EU", "status:active"]';
 ````
 
 This query is fast, accurate, and protected by the schema itself.
@@ -128,7 +136,7 @@ Finding a single database that excels across all the above fronts is challenging
 
 We love Postgres. It is the gold standard for relational databases, offering unmatched reliability and the full power of SQL. But out of the box, a standard PostgreSQL table would quickly buckle under our load. As a single messages table grows into the billions of rows, its B-tree indexes become monstrously large. Once the indexes no longer fit in memory, write throughput plummets. Benchmarks show this clearly: The ingestion rate of PostgreSQL rate can crash from over 100,000 rows/sec to just a few thousand once a table exceeds 50 million rows. One  can argue that the tables can be manually partitioned, but this is a complex, error-prone process that one has to manage by themselves forever.
 
-![Hypertable](../static/img/PostgreSQL-Performance-Degradation.png)
+![Hypertable](PostgreSQL-Performance-Degradation.png)
 
 The chart above visualizes this exact performance cliff. On the left, write throughput is high and stable while the indexes of the table fit within RAM. As the table grows past a critical point, the database can no longer hold the indexes in memory and must constantly read from disk. This "disk thrashing" state is shown on the right, where performance collapses to a fraction of its original rate.
 
@@ -136,20 +144,30 @@ In benchmarks published by TigerData, declarative partitioning in PostgreSQL can
 
 ### The InfluxDB Querying Limitation
 
-InfluxDB is purpose-built for time-series data and is incredibly fast at ingestion. For simple metrics (CPU, temperature), it’s a fantastic tool. However, its query language and data model are optimized for time-based lookups, not the rich, multi-faceted queries our users demand. Answering a question like:
+InfluxDB is purpose-built for time-series data and is incredibly fast at ingestion. For simple metrics like CPU usage or raw sensor values, it is a fantastic tool. However, its query language and data model are optimized primarily for time-based lookups, not the rich, multi-attribute queries required in real-world IoT deployments.
 
-> Show me all `payment_failed` messages for customer `acme-corp` in the `EU` region from last `Tuesday` that had a specific header flag
+Take a typical SuperMQ use case:
 
-is significantly more complex and less efficient in a non-SQL database. This level of flexibility is non-negotiable for SuperMQ. By contrast, TimescaleDB runs on SQL. Complex filters, joins, and aggregations are not just possible — they’re fast.
+> Show me all temperature readings from cold-storage sensors in Warehouse-19, tagged with `"region:EU"` and `"status:active"`, where the value exceeded 5°C, on Tuesday last week.
+
+In InfluxDB, this becomes significantly harder and less efficient to execute. First, all filtering attributes (region, status, zone, etc.) must be stored as tags (not fields) to be indexed. But tags in InfluxDB come with cardinality limitations, especially when each device has a unique tag set. Also, the lack of native join support means metadata like `location` or `owner` must be denormalized into each series, bloating storage and introducing inconsistency risks.
+
+By contrast, TimescaleDB runs on PostgreSQL, meaning complex filters, joins, and aggregations are not just possible — they’re optimized. You can join time-series messages with metadata from `clients`, `zones`, or `users`, and express nuanced queries with full SQL flexibility.
 
 In benchmarks comparing the two:
 
-- TimescaleDB was 3.4x to 71x faster than InfluxDB for real-world, complex queries.
-- It delivered real-time responses (10–100ms), while InfluxDB took tens of seconds on similar workloads.
-- For threshold-based queries (e.g., where temperature > X), TimescaleDB was 1.75x to 8.6x faster.
-- And on top of that, using TimescaleDB results in 10x better resource utilization (even with 30 % higher requests) when compared to InfluxDB
+- TimescaleDB was 3.4x to 71x faster than InfluxDB for real-world, multi-dimensional queries.
+- It delivered sub-second responses (10–100ms), while InfluxDB often took multiple seconds on similar loads.
+- For threshold-based queries (e.g., `temperature > 5°C`), TimescaleDB was 1.75x to 8.6x faster.
+- It also achieved 10x better resource efficiency, even while handling 30% more query volume.
 
-Queries are only part of the picture. Let’s talk about insert performance. If you’re only writing data from a handful of sources, InfluxDB might be fine. In fact, in a benchmark with just 100 devices, it outperformed TimescaleDB by ~30%. But that’s not SuperMQ’s world. We regularly deal with tens of thousands to millions of distinct message sources, each tagged with unique metadata. And under that kind of cardinality, InfluxDB collapses. Write speeds drop, memory errors kick in, and entire queries begin to crash.
+Queries are only part of the picture. Let’s talk about insert performance.
+
+If you’re ingesting data from a small number of temperature sensors, InfluxDB might be acceptable. In fact, in a benchmark with just 100 devices, it slightly outperformed TimescaleDB.
+
+But that’s not the world SuperMQ operates in.
+
+We routinely handle hundreds of thousands to millions of concurrently publishing devices — industrial chillers, smart meters, air quality sensors — each pushing telemetry with unique tags, locations, and context. This high-cardinality workload is where InfluxDB begins to fail: write throughput collapses, memory usage spikes, and queries start crashing.
 
 In fact, TigerData’s benchmark shows:
 
@@ -159,9 +177,9 @@ In fact, TigerData’s benchmark shows:
 | 4,000 devices      | 100%                        | 226%                           |
 | 100,000 devices    | 100%                        | 264%                           |
 | 1 million devices  | 100%                        | 294%                           |
-| 10 million devices | 100%                        | **443%**                       |
+| 10 million devices | 100%                        | 443%                       |
 
-TimescaleDB achieves ~3.5x better insert throughput at scale — and without crashing or needing to babysit batch sizes. This, of course, is no surprise, as high cardinality is a well-known limitation of InfluxDB (source: [GitHub](https://github.com/search?q=repo%3Ainfluxdata%2Finfluxdb+%22high+cardinality%22&type=Issues)).
+TimescaleDB achieves \~3.5x better insert throughput at scale — and without crashing or requiring tuning of batch sizes and shard configurations. This should come as no surprise: high cardinality is a well-documented pain point in InfluxDB ([source](https://github.com/search?q=repo%3Ainfluxdata%2Finfluxdb+%22high+cardinality%22&type=Issues)).
 
 ### The Compromise of Other NoSQL Databases
 
@@ -178,7 +196,7 @@ The core feature that makes TimescaleDB effective is the hypertable. From a user
 
 For example, let’s say we have a hypertable with a chunk_interval set to 1 day – meaning each chunk corresponds to one day. In that case, we will have a situation as shown in the picture below, all rows for the 1st of August will go to one chunk, all rows for the 2nd of August to another, and so on. If then a new row comes for the 17th of August, a new chunk for this date will be created as it does not yet exist and the row will be inserted into it.
 
-![Hypertable](../static/img/hypertable.png)
+![Hypertable](hypertable.png)
 
 And behind the scenes, something even cooler is at play. In traditional databases, you usually have to choose: do you want fast inserts (row-based storage), or do you want fast analytics (columnar storage)? The hybrid row-columnar storage engine in TimescaleDB says - why not both? It automatically stores data in the format that makes the most sense based on where it is in its lifecycle:
 
@@ -187,7 +205,7 @@ And behind the scenes, something even cooler is at play. In traditional database
 
 By default, each chunk covers 7 days. You can change this to better suit your needs. However, to maintain a high performance when scaling, choose strategic chunk size and limit the number of hypertables in your services. why? because when the chunks are too big (i.e., you store too much data per partition), the benefit of partitioning diminishes because you have more data in the partition than the PostgreSQL cache available to manage it, similar to having one large regular PostgreSQL table. But if you have too many chunks (i.e., you store only a little data per partition), you may overwhelm the query planner or create extra overhead in other management areas.
 
-![timescaledb vs postgresql hypertable comparison](../static/img/hypertable_comparison.png)
+![timescaledb vs postgresql hypertable comparison](hypertable_comparison.png)
 
 Nonetheless, the architecture provides two benefits:
 
@@ -221,7 +239,7 @@ ORDER BY msg.time DESC
 LIMIT 100;
 ```
 
-The above query is only possible because the `messages` hypertable and the `clients` and `users` standard PostgreSQL tables reside in the same database. TimescaleDB's query planner will first use chunk pruning to narrow down the messages data to only the most recent chunks, and then perform an efficient join against the other tables. 
+The above query is only possible because the `messages` hypertable and the `clients` and `users` standard PostgreSQL tables reside in the same database. TimescaleDB's query planner will first use chunk pruning to narrow down the messages data to only the most recent chunks, and then perform an efficient join against the other tables.
 
 To perform the same query in InfluxDB, the data model must be fundamentally different. Since InfluxDB does not support server-side relational joins, all necessary metadata — like `owner` and `location` — must be denormalized and stored as tags alongside every single temperature reading. Assuming that data structure, the query is:
 
@@ -318,7 +336,7 @@ Let’s make this concrete with our example:
 
 **"Can user alice, who belongs to group\:eng\_team, which has editor rights on domain\:smart\_building, publish to channel\:hvac\_updates owned by client\:sensor\_12?"**
 
-#### The PostgreSQL Nightmare
+### The PostgreSQL Nightmare
 
 This would require a monstrously complex, multi-level recursive query. You would have to:
 
@@ -386,5 +404,32 @@ An HVAC sensor (a SuperMQ client) in `"Building-A"` is configured to publish tem
    ```
 
    The database scans only the relevant time chunks and returns the requested data, which the application then renders on the manager's dashboard.
+
+## Optional Message Storage Services
+
+As mentioned before, in addition to the default databases (PostgreSQL, TimescaleDB, and SpiceDB), SuperMQ supports other storage systems that can be used for message persistence. These are implemented as separate writer and reader services. They are useful when the deployment environment or integration needs require different databases.
+
+The supported databases are:
+
+| Database  | Writer Service     | Reader Service     |
+| --------- | ------------------ | ------------------ |
+| Cassandra | `cassandra-writer` | `cassandra-reader` |
+| InfluxDB  | `influxdb-writer`  | `influxdb-reader`  |
+| MongoDB   | `mongodb-writer`   | `mongodb-reader`   |
+
+### What do these services do?
+
+- **Writers** listen to internal message streams (via the message broker) and store messages in the selected database.
+- **Readers** provide an HTTP API for retrieving messages from the database.
+
+Each service includes:
+
+- A database connection
+- Basic logging, metrics, and telemetry
+- Support for gRPC-based authorization
+
+### When to use them
+
+These services are optional. They are available when PostgreSQL or TimescaleDB is not a good fit, or when a project already uses one of the supported databases. They follow the same message structure as the default pipeline, so switching between backends does not require changes to the core message format.
 
 In cocnlusion, the polyglot architecture avoids the trade-offs of one-size-fits-all systems. Each system does one job well, and together they form a platform that is consistent, scalable, and secure by design.
