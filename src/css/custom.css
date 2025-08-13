@@ -1,27 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
 :root {
-  --ifm-color-primary: #073763;
-  --ifm-color-primary-dark: #062e54;
-  --ifm-color-primary-darker: #052749;
-  --ifm-color-primary-darkest: #041d37;
-  --ifm-color-primary-light: #0d4980;
-  --ifm-color-primary-lighter: #155795;
-  --ifm-color-primary-lightest: #1f68ad;
+  --ifm-color-primary: #1e40af;
+  --ifm-color-primary-dark: #1d4ed8;
+  --ifm-color-primary-darker: #1e40af;
+  --ifm-color-primary-darkest: #1e3a8a;
+  --ifm-color-primary-light: #3b82f6;
+  --ifm-color-primary-lighter: #60a5fa;
+  --ifm-color-primary-lightest: #93c5fd;
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(7, 55, 99, 0.1);
+  --docusaurus-highlighted-code-line-bg: rgba(37, 99, 235, 0.1);
 }
 
-[data-theme='dark'] {
-  --ifm-color-primary: #073763;
-  --ifm-color-primary-dark: #062e54;
-  --ifm-color-primary-darker: #052749;
-  --ifm-color-primary-darkest: #041d37;
-  --ifm-color-primary-light: #0d4980;
-  --ifm-color-primary-lighter: #155795;
-  --ifm-color-primary-lightest: #1f68ad;
-  --docusaurus-highlighted-code-line-bg: rgba(255, 255, 255, 0.05);
+[data-theme="dark"] {
+  --ifm-color-primary: #4285f4;
+  --ifm-color-primary-dark: #3367d6;
+  --ifm-color-primary-darker: #2a56c6;
+  --ifm-color-primary-darkest: #1d4ed8;
+  --ifm-color-primary-light: #5a95f5;
+  --ifm-color-primary-lighter: #85b1f7;
+  --ifm-color-primary-lightest: #c0d6fb;
+  --docusaurus-highlighted-code-line-bg: rgba(255, 255, 255, 0.1);
 }
 
 h1,
@@ -32,6 +32,15 @@ h5,
 h6 {
   color: #184D91;
   font-weight: 600;
+}
+
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+  color: #264aad;
 }
 
 /* Ensure code blocks use a monospace font */
@@ -62,14 +71,14 @@ pre code {
 }
 
 .markdown ol {
-  list-style-type: decimal; 
+  list-style-type: decimal;
   padding-left: 2rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
 
 .markdown ul {
-  list-style-type: disc; 
+  list-style-type: disc;
   padding-left: 2rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -78,4 +87,21 @@ pre code {
 .markdown a {
   color: hsl(var(--primary));
   font-weight: 500;
+}
+
+.navbar__logo {
+  height: 70px;
+  display: flex;
+  align-items: center;
+}
+
+.navbar__logo img {
+  height: 70px;
+  width: auto;
+  align-items: center;
+}
+
+@media screen and (max-width: 996px) {
+  .navbar__logo { height: 50px; }
+  .navbar__logo img { height: 50px; }
 }
