@@ -11,8 +11,8 @@ site_url: https://docs.magistrala.abstractmachines.fr
 edit_uri: ""
 theme:
   name: material
-  logo: img/logo.png
-  favicon: img/favicon.png
+  logo: img/Magistrala_logo_landscape_black.svg
+  favicon: img/Magistrala_logo_square_black.svg
   icon:
     repo: fontawesome/brands/github
 
