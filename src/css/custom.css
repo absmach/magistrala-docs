@@ -43,7 +43,6 @@ h6 {
   color: #264aad;
 }
 
-/* Ensure code blocks use a monospace font */
 code,
 pre,
 pre code {
@@ -62,10 +61,8 @@ pre code {
   color: white;
 }
 
-.navbar__link,
 .footer__link-item {
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: 0.1rem;
 }
@@ -89,8 +86,8 @@ pre code {
   font-weight: 500;
 }
 
+/* Navbar Styling */
 .navbar__logo {
-  height: 70px;
   display: flex;
   align-items: center;
 }
@@ -99,9 +96,16 @@ pre code {
   height: 70px;
   width: auto;
   align-items: center;
+  margin-bottom: 0.1rem;
 }
 
-@media screen and (max-width: 996px) {
-  .navbar__logo { height: 50px; }
-  .navbar__logo img { height: 50px; }
+.navbar__items--right {
+  gap: 0.5rem;
+}
+
+.navbar__search {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin-bottom: 1rem;
 }
