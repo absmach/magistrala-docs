@@ -5,11 +5,11 @@ title: Quick Start Guide
 Magistrala leverages **SuperMQ** as the backbone for its **Services**, handling the creation, deletion, updating, and retrieval of user accounts, clients and channels.
 Users in Magistrala must have **unique credentials**, including a `username`, `secret`, and `email` address upon creation.
 
-This guide will take you through the core services for a quick set up of Magistrala and a walkthrough its services and components.
+This guide will take you through the core services for a quick setup of Magistrala and a walkthrough of its services and components.
 
 ## Sign Up
 
-To get started, create an account by providing the following details in the sign up page:
+To get started, create an account by providing the following details in the Sign Up page:
 
 - **First and last name**
 - **An email address**
@@ -17,13 +17,15 @@ To get started, create an account by providing the following details in the sign
 
 ![Sign Up](../img/users-guide/registeruser.png)
 
+> **NB:** Please review and accept our Terms of Service and Privacy Policy to proceed with registration.
+
 Once registered, the user will be redirected to the **Domains Homepage**, where they can create and manage multiple domains.
 
 ![Domain Homepage](../img/users-guide/janedoe-domainshome.png)
 
 ## Log In
 
-Incase you already have an account, you can log in with your email/username and password.
+In case you already have an account, you can log in with your email/username and password.
 
 ![Login](../img/users-guide/main-login.png)
 
@@ -33,7 +35,8 @@ Upon logging in, users are redirected to the **Domain Selection Page**.
 
 A **Domain** is a workspace that allows you to manage **Clients**, **Channels**, **Groups**, **Dashboards**, **Members**,  **Rules**  and **Bootstrap** services. A user can create as many domains as they please.
 
-Click on the `+ Create` button on the top right to create a new domain. Since multiple domains can have the same name, you must add an **alias** which will be a unique descriptor for the domain.
+Click the `+ Create` button in the top-right corner to start. In addition to the domain name, you’ll need to set a **route**, a unique, user-friendly alias for the domain’s ID. This route makes it easier to reference or subscribe to the domain without using its full UUID.  
+The route is defined only at creation and cannot be changed later, so choose something short, clear, and descriptive.  
 
 ![Domain Create](../img/users-guide/jdoe-create-domain.png)
 
@@ -45,7 +48,7 @@ We will delve deeper into Domains in another section. For now you need to be abl
 
 Once logged in, you will be directed to the **Homepage** where you can view all the available entities in the domain.
 
-On the sidebar navigation, click on **Groups** under the _Client Management_ section to be redirected to the groups page.
+On the sidebar navigation, click on **Groups** under the _Clients Management_ section to be redirected to the groups page.
 
 ![Groups Page](../img/users-guide/jdoe-groups-page.png)
 
@@ -56,19 +59,22 @@ To create a group, click on the `+ Create` button present on the top-left corner
 ## Create a Client
 
 A **Client** represents a device connected to Magistrala, capable of communication with other devices.
+It can be a **physical** or **virtual** device that sends and receives messages, often through **embedded systems**.
 
-They are physical or virtual devices that can send and receive messages through **embedded systems**.
+When you create a client within a specific group, it is automatically assigned to that group and can be connected to **any channel in the domain**.
 
-Any Client created while in the group can be connected to any channel within the group.
+To create a new client, go to the **Clients** page of the desired group and click the `+ Create` button.  
+A dialog will appear asking for details such as:
 
-A **new client** can be created by navigating to the **Clients Page** section of the Group and clicking the `+ Create Client` button.
-A dialog box will open, requiring fields such as **Name**.
-You can add a unique key for the client, although one is automatically generated.
-Additionally, **tags** can be assigned to clients for better organization and filtering.
+- **Name** (required)  
+- **Key** (optional) - The client key is used to authorize the device to send messages. If left blank, a key is auto-generated during client creation. Users may also provide their own key, and it can be edited later.  
+- **Tags** (optional, for organization and filtering)  
+
+Adding tags can help you quickly locate and manage clients in larger setups.
 
 ![Create Client](../img/users-guide/group-client-create.png)
 
-A user can also create bulk clients by clicking on the `+ Create Clients` button. This will lead to a dialogbox that takes in a _.CSV_  file with the clients' details filled in correctly as seen in these [samples](https://github.com/absmach/magistrala-ui/tree/main/samples).
+A user can also create bulk clients by clicking on the `Upload` button. This will lead to a dialog box that takes in a _.CSV_  file with the client's details filled in correctly as seen in these [samples](https://github.com/absmach/magistrala-ui/tree/main/samples).
 
 The file should have the following fields in order:
 
@@ -81,29 +87,38 @@ The file should have the following fields in order:
 ### View a Client
 
 Once created, a **group-client** can be viewed and updated in the unique Client's ID page.
-To access the page, click on the Client in the Clients' table.
+To open this page, click on the desired client in the **Clients** table.
 
-The client's data can be updated in this page and its ID and secret copied as well.
+From the Client Details page, you can:
+
+- Update the client’s information  
+- Copy its **ID** and **secret**  
+- Manage its connections
+- Manage the Client's **Roles** as well as **Members**
+- View the Client's audit logs
 
 ![View Client](../img/users-guide/group-client-view.png)
 
-There **Connections** tab in the **group-client page** is where a User can connect a Client to a Channel.
+The **Connections** tab in the **group-client page** is where a User can connect a Client to a Channel.
 
 ## Create a Channel
 
-Channels are considered as message conduits.
+Channels act as **message conduits**, enabling communication between clients.
 
-They are responsible for the messages exchange between Clients and act as message topic that can be be **published** or **subscribed** to by multiple Clients.
+They serve as topics that multiple clients can **publish** to or **subscribe** from, allowing seamless device-to-device messaging.  
+While subtopics are supported for more granular message routing, they are optional for basic interactions.
 
-Each Client can **publish or subscribe** to a Channel, facilitating seamless device-to-device communication. Although subtopics can exist, they are not required for basic interactions.
+Each channel has a **route**, which is a user-friendly alias for the channel’s ID.  
+The route makes it easier to reference or subscribe to the channel without needing the full UUID.  
+It is defined **only during creation** and cannot be changed later, so choose something short, clear, and descriptive.
 
-To create a channel, navigate to the fourth tab under the groups and click on `+ Create`. This will open a dialog box which will take in a unique Channel name. Much like the Clients, clicking on `+ Create Channels` will allow a user to upload a _.CSV_ file with multiple channels.
+To create a channel, navigate to the fourth tab under the groups and click on `+ Create`. This will open a dialog box which will take in a unique Channel name. Much like the Clients, clicking on `Upload` will allow a user to upload a _.CSV_ file with multiple channels.
 
 ![Create Group Channel](../img/users-guide/group-channel-create.png)
 
 ### View a Channel
 
-After the Channel is created, clicking on it while it is on the Channel's table leads to the Channel View Page.
+After the Channel is created, clicking on it while it is on the Channels table leads to the Channel View Page.
 
 ![View Group Channel](../img/users-guide/group-channel-view.png)
 
@@ -116,35 +131,51 @@ Clients can be connected to channels in groups. This is done in the **Connection
 
 ## Create a Rule
 
-To be able to save any messages to our Magistrala database, a rule must be created and saved.
-Rules Engine takes care of this procedure.
+To store any messages in the Magistrala database, you must first create and save a **Rule** using **Rules Engine**.  
+
 Navigate to the **Rules Engine** section on the navigation bar and click on `+ Create`.
-This will open a dialog box onto which you can enter the Rule name.
+You will be taken directly to the **Rule Creation** page, where you can start building your rule by adding the required nodes.
 
 ![Create Rule](../img/users-guide/create-rule.png)
 
-Once created the Rule will show up on the table present on the page.
+---
+
+### Building the Rule
+
+1. **Add Input Node**  
+   - Click **Add Input** and choose **Channel Subscriber**.  
+   - Select the channel you want to subscribe to from the list.  
+   - (Optional) Add a **topic** for more specific filtering.  
+   - The input node will now appear on the canvas.
+
+2. **Add Logic Node**  
+   - Click **Add Logic** and choose **Lua Script Editor**.  
+   - There is a default **logicFunction** that can return the SenML payload of incoming messages or you can enter your own rule logic, for example:  
+
+>```lua
+>function logicFunction()
+>  return message.payload
+>end
+>```
+
+3. **Add Output Node**
+    - Click **Add Output** and choose **Internal DB** to store messages in the Magistrala Postgres database.
+
+4. **(Optional) Add Schedule**
+    - Click **Add Schedule** to open the scheduler dialog.
+    - Set the **Start Time**, **Recurring Interval**, and **Recurring Period** as needed.
+
+  ![Add Schedule](../img/users-guide/create-rule-schedule.png)
 
 ### Save a Rule
 
-Click on the Rule just created to be able to view its properties.
-Select the **Input Node** on the Rule page. This will bring up a dialog box which will allow you to select a **Channel Subscriber** as the input type. Then select the **channel** which will be subscribed to from the list of channels as well as the **topic** of the payload.
-The Input Node will then appear on the screen.
-
-Next, set up the input logic of your Rule. You can select the `Lua Script Editor` from the two options present.
-Once the Code Editor appears ensure to add the following Lua Script that will be used to define your Rule logic.
-
-```lua
-function logicFunction()
-  return message.payload
-end
-```
-
-This will be able to return the SenML payload of the messsages published.
-
-Finally select the **Internal DB** option from the **Output Node** dialog option which will store the messages in the internal Magistrala Postgres DB.
+Once you have added all required nodes (**Input**, **Logic**, and **Output**), click **Save Rule**.  
+A dialog will appear where you can enter the **Rule Name** and optional **Tags**.  
+Click **Create** to save the rule.
 
 ![Save Rule](../img/users-guide/save-rule.png)
+
+Your new rule will now appear in the Rules table, ready to process incoming messages.
 
 > More information about Rules Creation and Updating can be found in the [Rules Engine Section](./rules-engine.md)
 
