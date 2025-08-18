@@ -36,13 +36,13 @@ Upon logging in, users are redirected to the **Domain Selection Page**.
 A **Domain** is a workspace that allows you to manage **Clients**, **Channels**, **Groups**, **Dashboards**, **Members**,  **Rules**  and **Bootstrap** services. A user can create as many domains as they please.
 
 Click the `+ Create` button in the top-right corner to start. In addition to the domain name, you’ll need to set a **route**, a unique, user-friendly alias for the domain’s ID. This route makes it easier to reference or subscribe to the domain without using its full UUID.  
-The route is defined only at creation and cannot be changed later, so choose something short, clear, and descriptive.  
+**The route is defined only at creation and cannot be changed later, so choose something short, clear, and descriptive.**  
 
 ![Domain Create](../img/users-guide/jdoe-create-domain.png)
 
 Once you create a domain, you are given **admin** role over the domain by default. You are able to perform all actions available over the domain and all the entities provisioned inside the domain. You can also assign or invite members to the domain with various levels of permissions. Click on the respective card to log into a domain of your choice.
 
-We will delve deeper into Domains in another section. For now you need to be able to log into a Domain to move on to **Groups**.
+We will delve deeper into Domains in [another section](./domain-management/domain.md). For now you need to be able to log into a Domain to move on to **Groups**.
 
 ## Create a Group
 
