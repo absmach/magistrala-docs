@@ -6,7 +6,7 @@ title: Domain
 
 Navigate to the `Domain` section in the side navigation under **Domain Management** to find out more about the domain.
 
-Here, a user can edit the Domain **Name**, **Alias**, **Tags**, **Metadata** and **Logo** as well as copy the Domain ID.
+Here, a user can edit the Domain **Name**, **Tags**, **Metadata** and **Logo** as well as copy the Domain ID and **Route**.
 
 The Domain status can be disabled by clicking the `Disable` button or enabled by the `Enable` button. Disabling the domain will revoke access for users who aren't domain admins.
 
