@@ -5,7 +5,7 @@ import tailwindPlugin from "./plugins/tailwind-config.cjs";
 
 const config: Config = {
   title: "Magistrala",
-  favicon: "img/Magistrala_logo_square_black.svg",
+  favicon: "img/Magistrala_logo_square_white.svg",
 
   url: "https://docs.magistrala.abstractmachines.fr",
   baseUrl: "/",
