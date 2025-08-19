@@ -2,64 +2,75 @@
 title: Groups
 ---
 
-**Groups** in Magistrala can be anything really. They are used to group clients and channels together. This enables assigning of users to a group of channels and clients with a particular role.
+**Groups** in Magistrala are collections that organize **clients** and **channels** together.  
+They make it easier to assign users with specific roles to a set of related channels and clients.
 
 ## Create a Group
 
-To create a group, click on the `+ Create` button present on the top of the group sidebar. You can also create multiple groups by uploading a _.csv_ file with group **names** and any other fields you would like to add.
+To create a group, click on the `+ Create` button present on the top of the **Groups** sidebar. You can also create multiple groups by uploading a _.csv_ file with group **names** and any other fields you would like to add.
 
 ![Create group](../../img/clients/group-create-button.png)
 
-You can be able to create groups in bulk by uploading a _.csv_ file with the following fields in order:
+### Bulk Creation
 
-1. Name (Required)
-2. Metadata
-3. Description
+Groups can be created in bulk using a `.csv` file with the following fields (in order):
 
-A sample of the groups _.csv_ file can be found [here](https://github.com/absmach/magistrala-ui/blob/main/samples/groups.csv).
+1. **Name** (Required)  
+2. **Metadata**  
+3. **Description**  
+
+A [sample groups CSV file](https://github.com/absmach/magistrala-ui/blob/main/samples/groups.csv) is available for reference.
 
 ![Bulk create groups](../../img/clients/groups-bulk-create.png)
 
 ### Group Information
 
-Add a group _name_ and optionally a _description_, _metadata_ and a _parent group_.
+When creating a group, you must provide a **name** and can optionally add a **description**, **metadata**, and a **parent group**.
 
 ![Group information](../../img/clients/group-information.png)
 
-The parent group would add hierarchy to the group making it a child of the parent group you have selected. Actions within a role in the parent group trickle down to the children groups.
+If a **parent group** is selected, the new group becomes its child.  
+This creates a hierarchy where role actions assigned in the parent group are automatically inherited by all child groups.
+
+![Create Group with Parent](../../img/clients/group-create-with-parent.png)
 
 ## View a Group
 
-After creating a group, it will show up on the page as the first group created.
+After creation, the group will appear in the **Groups sidebar**.
 
 ![View Group](../../img/clients/group-view.png)
 
 ## Update a Group
 
-While on the View Group Page, you are allowed to update the group details such as the name, description, metadata and the status.  
+While on the **View Group** page, you are allowed to update the group details such as the **name**, **description**, **metadata**, and **status**.
 To update a field, click on the `pencil` icon on the far end of the field to edit. Once you have updated the value, click on the `check` icon to update the changes or the `cross` icon to cancel the change.
 
 ![Edit Group](../../img/clients/group-update-view.png)
 
-A group can also be disabled or enabled by toggling the switch on the far end of the status field.
+Groups can also be **enabled or disabled** by toggling the switch in the **Status** field.  
 
 ![Disabled Group](../../img/clients/group-disabled.png)
 
-You can delete a group permanently from the database by clicking on the `Delete Group` button.
-This will open an alert dialog that will prompt you to enter the complete group name correctly to ensure confirmation of the deletion.
+To permanently delete a group, click the **Delete Group** button.  
+You will be asked to re-enter the group’s name to confirm before deletion is finalized.
 
 ![Delete Group](../../img/clients/group-delete.png)
 
-A group can also be shared to another domain member with specific group roles attached. Clicking on the `Share` button opens up a dialog that needs a Member as well as a Role.
-We will discuss these Group Roles in the next section.
+## Share a Group
+
+A group can also be shared to another domain member with specific **group roles** attached. Clicking on the `Share` button opens up a dialog that needs a Member as well as a Role.
+
+Group Roles will be explained in the next section.
 
 ![Share Group](../../img/clients/group-share.png)
+
+## Manage Parent Groups
 
 To remove a child from the hierarchy it currently resides in, simply click on the `Remove Parent` button. This will remove it from the tier in the group sidebar and have it lose all the role actions and members it previously had access to.
 
 ![Remove Parent Group](../../img/clients/group-remove-parent.png)
 
-In the case of a group without a Parent, the button will instead prompt you to select a Parent group from the current list of groups.
+In the case of a group without a parent, the button will instead prompt you to select a parent group from the current list of groups.
 
 ![Add Parent Group](../../img/clients/group-add-parent.png)
 
@@ -67,7 +78,7 @@ In the case of a group without a Parent, the button will instead prompt you to s
 
 ### Create Group Roles
 
-Roles allow you to group a specific set of actions and allocate them to users.
+**Roles** allow you to group a specific set of actions and allocate them to users.
 To create a role, navigate to the **Roles** section on the group navbar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
 
 ![Create Group Role](../../img/clients/group-role-create.png)
@@ -147,15 +158,15 @@ The following is the list of available actions for a group:
 
 ### Update Group Roles
 
-To update a role name, click on the `pencil` icon on the far right end of the field, update the value then click on the `check` icon to update the changes or the `cross` icon to cancel the changes.
+To update a **role name**, click on the `pencil` icon on the far right end of the field, update the value then click on the `check` icon to update the changes or the `cross` icon to cancel the changes.
 
 ![Update role name](../../img/clients/group-role-update.png)
 
-To update the **actions** click on the `pencil` icon, it will pop up a dialog box allowing you to select the actions you want to add.
+To update the **actions** click on the `pencil` iconA dialog will appear where you can select additional actions.
 
 ![Update role actions](../../img/clients/group-role-actions.png)
 
-When it comes to the Group Role Members, we have a separate table for the users. You can add more members by clicking on the `Add Members` button which will open up a dialog.
+To manage **role members**, open the Members table and click **Add Members**. A dialog will allow you to search and assign users.  
 
 ![Update role members](../../img/clients/group-role-members-add.png)
 
@@ -180,27 +191,30 @@ We have the capacity to add users by assigning them to a group in the **Members*
 
 ![View Group Users](../../img/clients/group-asssign-member.png)
 
-Through the use of the `trash` icon on each row to delete specific members from the group.
+To remove members, use the **trash** icon next to each user.  
 
 ## Group Clients
 
-Magistrala provides the capacity to create clients directly in the group level.  
-A user is able to **create**, **update**, **disable**, **enable**, **delete**, **assign**, and **connect** clients on the group level. These functionalities are described better in the [clients](clients.md) section.
+Groups support managing **clients** directly at the group level.  
+From here, you can **create**, **update**, **enable**, **disable**, **delete**, **assign**, and **connect** clients.  
+(See the [Clients](clients.md) section for a full overview of client functionality.)
 
 ![Group clients](../../img/clients/group-clients.png)
 
-To assign clients to a group, click on the `Assign Clients` button. This will open a dialog box where you can select multiple clients to assign to the group.
+To assign clients to a group, click on the `Assign Clients` button.
+A dialog will open where you can select multiple clients to attach to the group.
 
 ![Assign Group clients](../../img/clients/assign-group-clients.png)
 
 ## Group Channels
 
-Magistrala provides the capacity to create channels directly in the group level.  
-A user is able to **create**, **update**, **disable**, **enable**, **delete**, **assign**, and **connect** channels on the group level. These functionalities are described better in the [channels](channels.md) section
+Groups also support managing **channels** directly at the group level.  
+You can **create**, **update**, **enable**, **disable**, **delete**, **assign**, and **connect** channels.  
+(See the [Channels](channels.md) section for more details.)
 
 ![Group channels](../../img/clients/group-channels.png)
 
-To assign channels to a group, click on the `Assign Channels` button. This will open a dialog box where you can select multiple channels to assign to the group.
+To assign channels to a group, click on the `Assign Channels` button. A dialog will open where you can select multiple channels to attach to the group.
 
 ![Assign Group channels](../../img/clients/assign-group-channels.png)
 

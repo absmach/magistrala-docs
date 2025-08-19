@@ -135,11 +135,11 @@ The following is the list of available actions for a client:
 
 Clicking the Role in the Role Table leads to the individual Role Page. Here there are two tables for the Role Actions and the assigned Role Members.
 
-To update a role name, click on the `pencil` icon on the far right end of the field, update the value then click on the `tick` icon to update the changes or the `cross` icon to cancel the changes.
+To update a **role name**, click on the `pencil` icon on the far right end of the field, update the value then click on the `tick` icon to update the changes or the `cross` icon to cancel the changes.
 
 ![Update role name](../../img/clients/client-update-role.png)
 
-To update the **Role Actions** click on the `pencil` icon, it will pop up a dialog box allowing you to select the actions and users you want to add.
+To update the **Role Actions** click on the `pencil` icon, it will pop up a dialog box allowing you to select the actions you want to add.
 
 ![Update role actions](../../img/clients/client-update-role-actions.png)
 
@@ -149,11 +149,11 @@ To update the **Role Members**, click the `Add Members` button. A popup dialog w
 
 #### Delete Client Roles
 
-You can also delete actions and members by clicking on the `trash` icon. It pops up a dialog that allows you to select which action you want to remove. There is also an option for clearning the whole list if that is needed as well.
+You can also delete actions and members by clicking on the `trash` icon. It pops up a dialog that allows you to select which action you want to remove. There is also an option for clearing the whole list if that is needed as well.
 
 ![Delete role actions](../../img/clients/client-role-delete-actions.png)
 
-When it comes to **Role Members** , you can clear the whole table with the `Delete All Members` which will lead to this alert dialog:
+When it comes to **Role Members**, you can clear the whole table with the `Delete All Members` which will lead to this alert dialog:
 
 ![Delete All Role Members](../../img/clients/clients-delete-all-role-members-dialog.png)
 
