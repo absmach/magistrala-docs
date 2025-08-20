@@ -8,13 +8,13 @@ Clients are able to **publish** or **subscribe** to a channel depending on their
 
 ## Create a Channel
 
-To create a channel, click on the `+ Create` button present on the top-left corner of the page. You can also create multiple channels by clicking on the `+ Upload` button and uploading a _.csv_ file.
+To create a channel, click on the `+ Create` button present on the top-left corner of the page. You can also create multiple channels by clicking on the `+ Upload` button and uploading a `.csv` file.
 
 ![Create channel](../../img/clients/channel-create-buttons.png)
 
 ### Channel Information
 
-Add a channel **_name_** and optionally **_tags_** and **_metadata_**.
+Add a channel **name** and optionally **tags** and **metadata**.
 
 ![Channel information](../../img/clients/channel-create.png)
 
@@ -22,11 +22,11 @@ Add a channel **_name_** and optionally **_tags_** and **_metadata_**.
 
 You can be able to create channels in bulk by uploading a _.csv_ file with the following fields in order:
 
-1. Name (Required)
-2. Metadata
-3. Tags
+1. **Name** (Required)
+2. **Metadata**
+3. **Tags**
 
-A sample of the channels _.csv_ file can be found [here](https://github.com/absmach/magistrala-ui/blob/main/samples/channels.csv).
+A [sample channels CSV file](https://github.com/absmach/magistrala-ui/blob/main/samples/channels.csv) is available.
 
 ![Bulk create channels](../../img/clients/channels-bulk-create.png)
 
@@ -49,7 +49,7 @@ In the channel settings page, you will be able to update the following channel d
 3. Status
 4. Tags
 
-To update a field, click on the `pencil` icon on the far end of the field to edit. Once you have updated the value, click on the `check` icon to update the changes or the `cross` icon to cancel the change. To update the channel status, toggle the switch on the far end of the status field.
+To update a field, click on the **pencil** icon on the far end of the field to edit. Once you have updated the value, click on the **check** icon to update the changes or the `cross` icon to cancel the change. To update the channel status, toggle the switch on the far end of the status field.
 
 This is an example of updating tags.
 
@@ -57,20 +57,17 @@ This is an example of updating tags.
 
 ## Connect to a Client
 
-Navigate to the `Connections` section of the channel navigation. This will lead you to the connections page where you can view the clients connected to a channel.
+Navigate to the **Connections** tab on the channel sidebar. This will lead you to the connections page where you can view the clients connected to a channel.
 
 ![Connections page](../../img/clients/channel-connections.png)
 
 In this page you are able to add a connection by clicking on the `Connect` button on the top right corner.
 
-This opens up a dialog box that allows you to select the clients you want to connect and with which connection type.
-
+A dialog will open where you can select clients and connection types. A client can have both connection types selected.  
 There are two connection type options:
 
-1. **Publish**: Allows the client to send messages in the channel
-2. **Subscribe**: Allows the client to read messages in the channel
-
- A client can have both connection types selected.  
+1. **Publish**: allows the client to send messages in the channel
+2. **Subscribe**: allows the client to read messages in the channel  
 
 ![Connect client](../../img/clients/channel-connect-client.png)
 
@@ -84,8 +81,9 @@ This will open up a dialog that allows you to select which connection type you w
 
 ## Channel Roles
 
-Roles allow you to group a specific set of actions and allocate them to users.
-Navigate to the **Roles** section of the channel sidebar. This will lead you to a table of all the available roles in the channel.
+Roles define a set of actions that can be allocated to users.
+
+Navigate to the **Roles** tab of the channel sidebar. This will lead you to a table of all the available roles in the channel.
 
 To create a role, navigate to the roles section on the client navbar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
 
@@ -115,14 +113,15 @@ The following is the list of available actions for a channel:
 
 ### Update Channel Role Name
 
-Clicking on a Channel Role leads you to the Role page with itss Role Actions and Role Members table.
-To update a role name, click on the `pencil` icon on the far right end of the field, update the value then click on the `check` icon to update the changes or the `cross` icon to cancel the changes.
+Click a role in the **Roles table** to open its page. The page has two tables for the **Role Actions** and the assigned **Role Members**.
+
+To update a role name, click on the **pencil** icon on the far right end of the field, update the value then click on the **check** icon to update the changes or the `cross` icon to cancel the changes.
 
 ![Update role name](../../img/clients/channel-role-update.png)
 
 ### Update Channel Role Actions
 
-To update the **role actions**, click the pencil icon on the row. Updating Role Actions will open a dialog box allowing you to select the Role Actions you want to add. This list will include all available actions that are not currently among your Role Actions.
+To update the **role actions**, click the **pencil** icon on the row. It will open a dialog box allowing you to select the Role Actions you want to add. This list will include all available actions that are not currently among your Role Actions.
 
 ![Update role actions](../../img/clients/channel-role-add-actions.png)
 
@@ -130,15 +129,13 @@ To update the **role actions**, click the pencil icon on the row. Updating Role 
 
 Members are listed in a separate table below the **Role Actions** section.
 
-![Channel role members](../../img/clients/channel-role-members.png)
-
 To add new members to the channel under the current role click on `Add Members` button. The pop-up dialog will allow you to add any user that is a member of the domain to the channel. The users will show up on a dropdown menu.
 
 ![Channel role add members](../../img/clients/channel-role-add-members.png)
 
 ### Delete Channel Role
 
-If you would like to remove or delete any Role Action, click on the `Trash` icon. It pops up a dialog that allows you to select which Role Action you want to remove. Optionally you can delete all of the Role Actions by clicking on the `Delete All Actions` button.
+If you would like to remove or delete any **Role Action**, click on the **trash** icon. It pops up a dialog that allows you to select which Role Action you want to remove. Optionally you can delete all of the Role Actions by clicking on the `Delete All Actions` button.
 
 ![Delete role actions](../../img/clients/channel-role-delete-actions.png)
 
@@ -148,7 +145,7 @@ Clicking on the `Delete All Members` button will open an alert pop-up that reque
 
 ![Delete role members](../../img/clients/channel-role-delete-members.png)
 
-To delete individual members in a channel role, click on the `trash` icon on the Member row. This will open up a confirmation dialog.
+To delete specific members from the Role Members Table, click on the **trash** icon.
 
 ![Delete role member](../../img/clients/channel-role-member-delete.png)
 
@@ -173,7 +170,7 @@ The roles presented will also be the very same Channel Roles from above.
 
 ### Unassign Channel Members
 
-To unassign a specific member from a channel, simply click on the `Trash` Icon on their row in the table. This will bring up a confirmation dialog.
+To unassign a specific member from a channel, simply click on the **trash** Icon on their row in the table. This will bring up a confirmation dialog.
 
 ![Unassign role members](../../img/clients/channel-members-unassign.png)
 
@@ -185,15 +182,24 @@ While on channels, a user can view, send and download messages associated to the
 
 ### Send Messages
 
-A connected client can be used as a publisher to send a message via the _HTTP_ protocol while on the Magistrala UI.
-To send a message navigate to the Messages section and click on the `Send Message` button.
-On the dialog that comes up there are some key fields that must be filled.
-These fields include:
+The **Send Message** feature allows you to publish sensor or device data directly from the Magistrala UI.  
+A connected client acts as the publisher, and the message can be sent over different supported protocols (**HTTP**, **MQTT**, **CoAP**, **WebSocket**).
 
-1. **Name** - This is the base name of the message.
-2. **Value Type** - This would determine the nature of the payload being sent. It could vary between _number_, _boolean_, _string_, or _data-value_.
-3. **Value** - This is the actual value received from the sensor.
+To send a message navigate to the **Messages** section and click on the `Send Message` button.
+In the dialog box, fill in the required fields:
+
+#### Required Fields
+
+1. **Name** - The base name of the message (e.g., `volume`, `temperature`).
+2. **Value Type** - This would determine the nature of the payload being sent. It could vary between:
+     - _number_
+     - _boolean_
+     - _string_
+     - _data-value_
+3. **Value** - This is the actual measurement or reading (e.g., `6354.886`).
 4. **Publisher** - This is the **connected** Client which can be selected from an infinite select. From this client the backend will get the special _Client-Key_ which will be used to send the message.
+
+#### Optional Fields
 
 Additional optional fields that help enhance message clarity:
 
@@ -202,16 +208,50 @@ Additional optional fields that help enhance message clarity:
 
 ![Send Message](../../img/clients/send-messages.png)
 
-Messages sent are in SenML format.
-The Magistrala UI also sends these messages via _HTTP_.
-A user can send their messages using the command terminal over other protocols such as MQTT or WebSocket.
-Further information on these protocols is discussed [here](../../dev-guide/messaging.md).
+### Message Format
 
-For a message to be saved on the Magistrala database, a Rule must be created in Rules Engine in relation to the specific channel and topic. This has been further discussed in the [**Rules Engine** documentation](../rules-engine.md).
+Messages are sent in **SenML format**, ensuring interoperability and structured data exchange.  
+
+By default, messages sent via the Magistrala UI use the **HTTP** protocol,  
+but you can also use CLI tools to send them through other protocols.
+
+For detailed instructions on each protocol, see the [Messaging Guide](../../dev-guide/messaging.md).
+
+### Saving Messages
+
+For a message to be saved on the Magistrala database, a **Rule** must be created in Rules Engine in relation to the specific channel and topic. This has been further discussed in the [**Rules Engine** documentation](../rules-engine.md).
 
 The messages table will then update to include the message sent with the latest message appearing first.
 
 ![Messages Table](../../img/clients/messages-table.png)
+
+### Using CLI Tools
+
+Magistrala provides CLI-ready commands for different messaging protocols. These commands are automatically generated in the **Send Message** dialog after you fill in the form.
+
+#### Example: MQTT
+
+```bash
+mosquitto_pub -I "Apartment A303 Harlem Block A Water Meter" -u a2fad4bc-4992-46d5-89cd-7b9a3dcfdc12 -P defa2b7b-3b9f-49dd-bcda-be6b941db96a -t m/292f15fe-6a8c-4d7d-adc5-8b68dcdfd19b/c/403937cb-87f9-49d4-9867-1b137cf81e70 -h localhost -m '[{"n":"volume","bu":"L","u":"L","bt":1755693352880000000,"v":67382.6452}]'
+```
+
+#### Example: CoAP
+
+```bash
+coap-cli post m/292f15fe-6a8c-4d7d-adc5-8b68dcdfd19b/c/403937cb-87f9-49d4-9867-1b137cf81e70 -a defa2b7b-3b9f-49dd-bcda-be6b941db96a -d '[{"n":"volume","bu":"L","u":"L","bt":1755693352880000000,"v":67382.6452}]' -H 0.0.0.0 -p 5683
+```
+
+#### Example: WebSocket
+
+```bash
+wscat -c "ws://localhost:8186/m/292f15fe-6a8c-4d7d-adc5-8b68dcdfd19b/c/403937cb-87f9-49d4-9867-1b137cf81e70/?authorization=defa2b7b-3b9f-49dd-bcda-be6b941db96a" -x '[{"n":"volume","bu":"L","u":"L","bt":1755693352880000000,"v":67382.6452}]'
+```
+
+#### Example: HTTP
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/senml+json" -H "Authorization: Client defa2b7b-3b9f-49dd-bcda-be6b941db96a" http://localhost:8008/m/292f15fe-6a8c-4d7d-adc5-8b68dcdfd19b/c/403937cb-87f9-49d4-9867-1b137cf81e70/ -d '[{"n":"volume","bu":"L","u":"L","bt":1755693352880000000,"v":67382.6452}]'
+```
 
 ### Filter Messages
 
@@ -280,4 +320,4 @@ These details may include:
 
 This enables users to **trace changes**, **audit security**, and **diagnose issues** efficiently.
 
-![CView Channel Audit Log Actions](../../img/clients/channel-audit-action-button.png)
+![View Channel Audit Log Actions](../../img/clients/channel-audit-action-button.png)

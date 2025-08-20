@@ -138,7 +138,7 @@ The following is the list of available actions for a client:
 
 #### Update Client Roles
 
-Click a role in the **Roles table** to open its page. The oage has two tables for the **Role Actions** and the assigned **Role Members**.
+Click a role in the **Roles table** to open its page. The page has two tables for the **Role Actions** and the assigned **Role Members**.
 
 To update a **role name**, click on the **pencil** icon on the far right end of the field, update the value then click on the **check** icon to update the changes or the **cross** icon to cancel the changes.
 
