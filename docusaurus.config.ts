@@ -5,7 +5,7 @@ import tailwindPlugin from "./plugins/tailwind-config.cjs";
 
 const config: Config = {
   title: "Magistrala",
-  favicon: "img/favicon.png",
+  favicon: "img/Magistrala_logo_square_white.svg",
 
   url: "https://docs.magistrala.abstractmachines.fr",
   baseUrl: "/",
@@ -73,8 +73,8 @@ const config: Config = {
     navbar: {
       logo: {
         alt: "Magistrala Logo",
-        srcDark: "img/logo-dark.png",
-        src: "img/logo-light1.png",
+        srcDark: "img/Magistrala_logo_landscape_white.svg",
+        src: "img/Magistrala_logo_landscape_black.svg",
       },
       items: [
         {
@@ -126,7 +126,7 @@ const config: Config = {
             },
             {
               label: "Twitter",
-              href: "hhttps://twitter.com/absmach",
+              href: "https://twitter.com/absmach",
             },
           ],
         },
