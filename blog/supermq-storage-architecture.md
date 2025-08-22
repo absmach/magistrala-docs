@@ -30,12 +30,12 @@ The table below provides a high-level overview of the above strategy, which will
 
 ## Core Metadata
 
-As mentioend before, at the core of SuperMQ’s architecture are a set of foundational domain entities that define how messaging, identity, and access control are structured across the platform. These include:
+As mentioned before, at the core of SuperMQ’s architecture are a set of foundational domain entities that define how messaging, identity, and access control are structured across the platform. These include:
 
 - `Users`: Authenticate and manage resources
 - `Clients`: Represent devices or applications
 - `Groups`: Organize users and clients hierarchically
-- `Channels`: Define topics for message routingsss
+- `Channels`: Define topics for message routing
 
 All the above metadata in SuperMQ is stored in PostgreSQL, which acts as the system of record for the control plane. The data defines not just what exists in the platform, but how it relates, who can access it, and how messages are routed. Unlike the high-frequency message payloads that flow through the system, the above metadata changes relatively infrequently. But when it does, it must be updated atomically, consistently, and reliably, because it forms the foundation of the entire system.
 
@@ -65,7 +65,7 @@ Let’s make this concrete.
 
 ### Client-to-Channel Connection
 
-Imagine a SuperMQ tenant issues an API call to connect a `client`to a `channel`. This operation touches multiple critical entities: the client, the channel, and the domain context that governs them.
+Imagine a SuperMQ tenant issues an API call to connect a `client` to a `channel`. This operation touches multiple critical entities: the client, the channel, and the domain context that governs them.
 
 In **PostgreSQL**, this relationship is enforced through a normalized schema:
 
@@ -134,13 +134,13 @@ Finding a single database that excels across all the above fronts is challenging
 
 ### The PostgreSQL Scaling Problem
 
-We love Postgres. It is the gold standard for relational databases, offering unmatched reliability and the full power of SQL. But out of the box, a standard PostgreSQL table would quickly buckle under our load. As a single messages table grows into the billions of rows, its B-tree indexes become monstrously large. Once the indexes no longer fit in memory, write throughput plummets. Benchmarks show this clearly: The ingestion rate of PostgreSQL rate can crash from over 100,000 rows/sec to just a few thousand once a table exceeds 50 million rows. One  can argue that the tables can be manually partitioned, but this is a complex, error-prone process that one has to manage by themselves forever.
+We love Postgres. It is the gold standard for relational databases, offering unmatched reliability and the full power of SQL. But out of the box, a standard PostgreSQL table would quickly buckle under our load. As a single messages table grows into the billions of rows, its B-tree indexes become monstrously large. Once the indexes no longer fit in memory, write throughput plummets. Benchmarks show this clearly: The ingestion rate of PostgreSQL can crash from over 100,000 rows/sec to just a few thousand once a table exceeds 50 million rows. One  can argue that the tables can be manually partitioned, but this is a complex, error-prone process that one has to manage by themselves forever.
 
 ![Hypertable](PostgreSQL-Performance-Degradation.png)
 
 The chart above visualizes this exact performance cliff. On the left, write throughput is high and stable while the indexes of the table fit within RAM. As the table grows past a critical point, the database can no longer hold the indexes in memory and must constantly read from disk. This "disk thrashing" state is shown on the right, where performance collapses to a fraction of its original rate.
 
-In benchmarks published by TigerData, declarative partitioning in PostgreSQL can improve some aspects of query latency, but still required manual creation of partitions, constant monitoring for data gaps, and complex management of retention logic. Even then, TimescaleDB outperforms it by up to 1,000x on real queries, while remaining 100% Postgres-compatible.
+In benchmarks published by TigerData, declarative partitioning in PostgreSQL can improve some aspects of query latency, but still requires manual creation of partitions, constant monitoring for data gaps, and complex management of retention logic. Even then, TimescaleDB outperforms it by up to 1,000x on real queries, while remaining 100% Postgres-compatible.
 
 ### The InfluxDB Querying Limitation
 
@@ -183,13 +183,13 @@ TimescaleDB achieves \~3.5x better insert throughput at scale — and without cr
 
 ### The Compromise of Other NoSQL Databases
 
-We briefly considered other NoSQL databases. They are either too specific (optimized only for sequential reads) or lack the transactional integrity and rich query capabilities we need. Building our own storage layer was out of the question — we’d rather stand on the shoulders of giants - and TimescaleDB allows us to do just that.
+We briefly considered other NoSQL databases. They are either too specific (optimized only for sequential reads) or lack the transactional integrity and rich query capabilities we need. Building our own storage layer was out of the question - we’d rather stand on the shoulders of giants - and TimescaleDB allows us to do just that.
 
 ### TimescaleDB
 
 TimescaleDB is not a completely separate database technology; it is implemented as an extension for PostgreSQL. As a result, SuperMQ gains best-in-class time-series capabilities without the overhead of introducing and managing an entirely new database system. The platform leverages the same connection protocols, client libraries, and backup tools already in place for PostgreSQL. This makes creating and working with hypertables similar to standard Postgres.
 
-The core feature that makes TimescaleDB effective is the hypertable. From a user point of view, a hypertable looks like simple singular tables, but it is, in fact, much more – an abstraction (or more precisely a virtual view) of many smaller, regular PostgreSQL tables called chunks. Each chunk is defined by a time range and only contains data that falls within that time range. When TimescaleDB creates a chunk, the creation time is stored in the catalog metadata. Chunk creation time is not the same as the partition ranges for the data contained in the chunk. When a new record is inserted into a hypertable, one of the following two things happens in the background:
+The core feature that makes TimescaleDB effective is the hypertable. From a user point of view, a hypertable looks like simple singular table, but it is, in fact, much more – an abstraction (or more precisely a virtual view) of many smaller, regular PostgreSQL tables called chunks. Each chunk is defined by a time range and only contains data that falls within that time range. When TimescaleDB creates a chunk, the creation time is stored in the catalog metadata. Chunk creation time is not the same as the partition ranges for the data contained in the chunk. When a new record is inserted into a hypertable, one of the following two things happens in the background:
 
 - If the chunk with the appropriate time range already exists, the record is simply inserted in that chunk
 - Otherwise, if the chunk does not yet exist, it is first created and then the record is inserted into it
@@ -203,7 +203,7 @@ And behind the scenes, something even cooler is at play. In traditional database
 - Recent data lives in the rowstore
 - Older data gets compressed into the columnstore
 
-By default, each chunk covers 7 days. You can change this to better suit your needs. However, to maintain a high performance when scaling, choose strategic chunk size and limit the number of hypertables in your services. why? because when the chunks are too big (i.e., you store too much data per partition), the benefit of partitioning diminishes because you have more data in the partition than the PostgreSQL cache available to manage it, similar to having one large regular PostgreSQL table. But if you have too many chunks (i.e., you store only a little data per partition), you may overwhelm the query planner or create extra overhead in other management areas.
+By default, each chunk covers 7 days. You can change this to better suit your needs. However, to maintain a high performance when scaling, choose strategic chunk size and limit the number of hypertables in your services. Why? Because when the chunks are too big (i.e., you store too much data per partition), the benefit of partitioning diminishes because you have more data in the partition than the PostgreSQL cache available to manage it, similar to having one large regular PostgreSQL table. But if you have too many chunks (i.e., you store only a little data per partition), you may overwhelm the query planner or create extra overhead in other management areas.
 
 ![timescaledb vs postgresql hypertable comparison](hypertable_comparison.png)
 
@@ -261,7 +261,7 @@ from(bucket: "iot_platform")
 
 Thus, executing the same logic with a separate time-series database like InfluxDB would require:
 
-1. A query the PostgreSQL database to find the ID for `'user-alice'`.
+1. A query to the PostgreSQL database to find the ID for `'user-alice'`.
 2. A query to PostgreSQL again to find all client IDs owned by that user that are in `'Building 7'`.
 3. Your application code to construct a massive query to InfluxDB with a huge `WHERE... IN (...)` clause containing all the client IDs.
 
@@ -279,7 +279,7 @@ A typical SuperMQ permission check involves multiple layers:
 
 Expressing and evaluating the above logic using a relational schema would require recursive joins, join tables, and nested queries. The above approach leads to complex queries, limits in query planning, and coordination overhead across services.
 
-To address this, SuperMQ externalizes all access control logic to **SpiceDB**. Zanzibar manages permissions across products like Google Drive, YouTube, and Docs by modeling authorization as a graph of relationships rather than a set of roles. It operates at a mind-boggling scale, processing millions of authorization checks per second across trillions of access control lists (ACLs), with 95% of checks returning in under 10 milliseconds.
+To address this, SuperMQ externalizes all access control logic to SpiceDB, an open-source permissions database inspired by Google's Zanzibar system. Zanzibar manages permissions across products like Google Drive, YouTube, and Docs by modeling authorization as a graph of relationships rather than a set of roles. It operates at a mind-boggling scale, processing millions of authorization checks per second across trillions of access control lists (ACLs), with 95% of checks returning in under 10 milliseconds.
 
 SpiceDB introduces three primitives:
 
@@ -432,4 +432,4 @@ Each service includes:
 
 These services are optional. They are available when PostgreSQL or TimescaleDB is not a good fit, or when a project already uses one of the supported databases. They follow the same message structure as the default pipeline, so switching between backends does not require changes to the core message format.
 
-In cocnlusion, the polyglot architecture avoids the trade-offs of one-size-fits-all systems. Each system does one job well, and together they form a platform that is consistent, scalable, and secure by design.
+In conclusion, the polyglot architecture avoids the trade-offs of one-size-fits-all systems. Each system does one job well, and together they form a platform that is consistent, scalable, and secure by design.
