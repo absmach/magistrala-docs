@@ -12,6 +12,8 @@ Building a modern IoT messaging platform is no small feat. And when that platfor
 
 A common temptation is to throw a single, massive database at the problem. But that’s a recipe for disaster -  a classic “jack of all trades, master of none” that quickly buckles under pressure. It not only creates performance bottlenecks, but also limits scalability, and opens the door to security risks. The truth is, the data flowing through a modern IoT messaging platform isn’t all the same. It comes in many forms - structured, unstructured, relational, temporal - and each type has its own specific needs.
 
+<!--truncate-->
+
 That is where SuperMQ takes a smarter path. Rather than forcing every kind of data into a single model, it embraces Polyglot Persistence - a strategy that is as practical as it is powerful. The idea is simple: use the right tool for the job. So, how does SuperMQ put this into practice? It breaks down its data needs like this:
 
 - Core Metadata: It includes entities like users, clients (devices or applications), groups, and channels.
