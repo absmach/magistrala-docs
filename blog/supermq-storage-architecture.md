@@ -1,7 +1,7 @@
 ---
 slug: supermq-storage-architecture
 title: SuperMQ Storage Architecture
-authors: jeff-mboya
+authors: jeff
 description: Dive deep into how SuperMQ uses PostgreSQL, TimescaleDB, and SpiceDB to build a scalable, secure, and performant storage architecture for IoT messaging.
 tags: ['IoT', 'PostgreSQL', 'TimescaleDB', 'SpiceDB', 'Polyglot Persistence', 'Storage Architecture', 'SuperMQ']
 ---
