@@ -4,8 +4,8 @@ title: Billing
 
 > Please note that this service is only available to **Magistrala Cloud** users.
 
-The **Billing** service allows users to view and subscribe to billing plans, manage payment methods and billing information and download generated invoices and receipts.  
-Magistrala uses a trusted **third-party payment processor (Paddle)** to handle sensitive payment information.  
+The **Billing** service allows users to view and subscribe to billing plans, manage payment methods and billing information and download generated invoices.
+Magistrala uses a trusted **third-party payment processor** to handle sensitive payment information.  
 This ensures that Magistrala never stores or has access to your card credentials.
 
 Navigate to the **Billing** tab in the side navigation bar.  
@@ -42,7 +42,7 @@ To update a billing plan from the current `Free` plan or any other, click `Updat
 
 ![Billing-plans](../../img/billing/sub-plans.png)
 
-The subscription status can be either **active**, where the user has already been charged, or **pending**, where the process is not yet finished and the subscription is inactive.
+The subscription status can be **active**, meaning the user has an active subscription, **waiting for payment**, meaning the payment process has not yet been completed, or **canceled**, meaning the subscription has been terminated.
 
 ![Billing-plan-completed](../../img/billing/completed-sub.png)
 
