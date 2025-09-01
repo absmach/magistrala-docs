@@ -52,9 +52,9 @@ To create an alarm, first define an alarm rule in the Rules Engine.
 
 1. Go to the **Rules** page and create a new rule.
 
-   ![Create alarm rule](../img/alarms/create-rule.png)
+   ![View Rules Page](../img/alarms/view-rules.png)
 
-2. Click the rule in the table to open its details.
+2. Click the `+ Create Rule` button in the table to open a new rule page.
 
    ![View alarm rule](../img/alarms/view-rule.png)
 
@@ -68,15 +68,20 @@ To create an alarm, first define an alarm rule in the Rules Engine.
 
 4. Add an **Editor** block as the logic node.
 
+   ![Logic options](../img/alarms/logic-options.png)
+
    ![Logic node](../img/alarms/logic-node.png)
 
-   ![Logic options](../img/alarms/logic-options.png)
 
 5. Add the **Alarm** node as the output node.
 
    ![Output options](../img/alarms/output-options.png)
 
-6. Save the rule.
+6. Save the rule by clicking on `Save Rule` which will open a popover for the Alarm Rule name.
+
+   ![Create alarm rule](../img/alarms/create-rule.png)
+
+7. You can then view the Rule.
 
    ![Alarm rule](../img/alarms/alarm-rule.png)
 
