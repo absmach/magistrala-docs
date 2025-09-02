@@ -72,7 +72,6 @@ To create an alarm, first define an alarm rule in the Rules Engine.
 
    ![Logic node](../img/alarms/logic-node.png)
 
-
 5. Add the **Alarm** node as the output node.
 
    ![Output options](../img/alarms/output-options.png)
