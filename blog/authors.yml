@@ -21,3 +21,11 @@ musilah:
   title: 'Software Engineer'
   url: 'https://github.com/Musilah'
   email: 'nataleigh.nk@gmail.com'
+
+steve: 
+  name: 'Steve Munene'
+  title: 'Software Engineer'
+  url: 'https://github.com/nyagamunene'
+  email: 'stevenyaga2014@gmail.com'
+  socials:
+    twitter: 'https://x.com/stevemecht'
