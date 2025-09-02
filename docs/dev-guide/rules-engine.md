@@ -2,93 +2,132 @@
 title: Rules Engine
 ---
 
+The **Rules Engine** in Magistrala provides powerful, flexible message processing via scriptable rules. Each rule can consume real-time input, run on a schedule, and forward results to multiple output targets including channels, alarms, emails, databases, and more.
 
-The **Rules Engine** in Magistrala provides a flexible and efficient way to process messages by applying custom rules to incoming data streams. This engine allows users to define rules, apply logic using scripts, and forward messages to output channels based on specified conditions.
+## Key Features
 
-Rules can be scheduled, executed on a recurring basis, and enabled or disabled. This documentation outlines the core concepts, available operations, and API usage for the Rules Engine.
+1. **Scriptable logic** - Use Lua or Go to define message execution behavior.
+2. **Flexible execution** - Rules can be triggered from input messages, schedules or both.
+3. **Pluggable outputs** - Built-in support for alarms, channels, email, Postgres, and SenML writers.
+4. **Secure, scoped execution** - Using domain-level isolation and bearer token authorization.
+5. **Disabled rules** - Rules can be disabled individually to prevent further executions. They can also be enabled to re-start their executions.
 
 ## Architecture
 
-The Rules Engine operates by:
+![rules engine architecture](../diagrams/rules_engine_architecture.jpg)
 
-1. Listening for messages on configured input channels
-2. Processing these messages through Lua scripts
-3. Optionally publishing results to output channels
-4. Supporting scheduled rule execution based on various recurring patterns
+The Magistrala Rules Engine is designed for **real-time** and **scheduled message processing**. Its architecture revolves around applying custom business logic to incoming messages or scheduled triggers and forwarding results to one or more output targets.
 
-## Overview
+### Data Flow Summary
 
-The Rules Engine enables automated message transformation, filtering, and forwarding. Key functionalities include:
+1. **Input**
+   The engine **subscribes to a channel** (and optionally a topic) to receive messages from devices, services, or pipelines in real time.
 
-- **Rule Creation:** Define logic to process incoming messages.
-- **Rule Execution:** Apply Lua scripts to incoming messages dynamically.
-- **Scheduled Rules:** Run rules at specified intervals.
-- **Real-Time Processing:** Process messages as they arrive.
-- **Output Redirection:** Forward processed messages to specified output channels.
+   > If no schedule is defined, the rule executes **every time** a new message arrives on the configured channel/topic.
+
+2. **Schedule**
+   If a schedule is defined, the rule will **automatically execute** based on the configured:
+
+- Start time
+- Execution time
+- Recurrence (daily, weekly, monthly)
+- Recurring Interval (e.g 1,2,3 etc) - For example if recurrence is daily and interval is 2, it will repeat every 2 days.
+
+3. **Logic**
+   The incoming message or scheduled execution is processed using a user-defined script, written in:
+
+- Lua
+- Go
+
+> The logic must return a **non-nil value** for outputs to be invoked.
+
+4. **Output(s)**
+   If the script returns a value, the rules forwards the result to one or more outputs. Supported output types include:
+
+- _Channel_ - Forward the result to another channel and/or topic.
+- _Internal DB_ - Save processed data internally.
+- _Postgres DB_ - Store result in a connected Postgres database table.
+- _Alarm_ - Raise and alarm event with a severity level.
+- _Email_ - Send notifications to configured recipients.
 
 ## Core Concepts
 
-**Rules** define the logic for processing messages. Each rule specifies an input channel, processing logic, and an optional output channel.
+Rules define the logic for processing messages. Each rule may specify:
 
-Here is the rule structure:
+- An **input channel** and **topic** to subscribe to (optional if the rule is scheduled).
+- A **processing script** written in Lua or Go.
+- A list of **outputs** that define where to send or store the results.
+- An optional **schedule** to control when the rule is executed.
+- A rule must have **at least one** of `input` or `schedule` to be executed.
+
+### Rule Structure
 
 ```go
 type Rule struct {
- ID            string    `json:"id"`
- Name          string    `json:"name"`
- DomainID      string    `json:"domain"`
- Metadata      Metadata  `json:"metadata,omitempty"`
- InputChannel  string    `json:"input_channel"`
- InputTopic    string    `json:"input_topic"`
- Logic         Script    `json:"logic"`
- OutputChannel string    `json:"output_channel,omitempty"`
- OutputTopic   string    `json:"output_topic,omitempty"`
- Schedule      Schedule  `json:"schedule,omitempty"`
- Status        Status    `json:"status"`
- CreatedAt     time.Time `json:"created_at,omitempty"`
- CreatedBy     string    `json:"created_by,omitempty"`
- UpdatedAt     time.Time `json:"updated_at,omitempty"`
- UpdatedBy     string    `json:"updated_by,omitempty"`
+  ID           string            `json:"id"`
+  Name         string            `json:"name"`
+  DomainID     string            `json:"domain"`
+  Metadata     Metadata          `json:"metadata,omitempty"`
+  Tags         []string          `json:"tags,omitempty"`
+  InputChannel string            `json:"input_channel"`
+  InputTopic   string            `json:"input_topic"`
+  Logic        Script            `json:"logic"`
+  Outputs      Outputs           `json:"outputs,omitempty"`
+  Schedule     schedule.Schedule `json:"schedule,omitempty"`
+  Status       Status            `json:"status"`
+  CreatedAt    time.Time         `json:"created_at"`
+  CreatedBy    string            `json:"created_by"`
+  UpdatedAt    time.Time         `json:"updated_at"`
+  UpdatedBy    string            `json:"updated_by"`
 }
 ```
 
-| Property         | Description                                       | Required       |
-| ---------------- | ------------------------------------------------- | -------------- |
-| `id`             | Unique identifier for the rule.                   | Auto-generated |
-| `name`           | Descriptive name of the rule.                     | ✅             |
-| `domain`         | Domain ID associated with the rule.               | ✅             |
-| `input_channel`  | Channel to listen for incoming messages           | ✅             |
-| `input_topic`    | Topic within the input channel.                   | ✅             |
-| `logic`          | Lua script defining message processing.           | ✅             |
-| `output_channel` | Channel to which processed messages are sent.     | Optional       |
-| `output_topic`   | Topic within the output channel.                  | Optional       |
-| `schedule`       | Scheduling configuration                          | Optional       |
-| `status`         | Rule state (`enabled` or `disabled` or `deleted`) | ✅             |
-| `created_at`     | Timestamp when the rule was created.              | Auto-generated |
-| `updated_at`     | Timestamp when the rule was last updated.         | Auto-generated |
-| `metadata`       | Additional rule metadata                          | Optional       |
+| Property        | Description                                       | Required       |
+| --------------- | ------------------------------------------------- | -------------- |
+| `id`            | Unique identifier for the rule.                   | Auto-generated |
+| `name`          | Descriptive name of the rule.                     | ✅             |
+| `domain`        | Domain ID associated with the rule.               | ✅             |
+| `tags`          | Optional list of tags for categorization          | Optional       |
+| `input_channel` | Channel to listen for incoming messages           | ✅             |
+| `input_topic`   | Topic within the input channel.                   | Optional       |
+| `logic`         | Script (Lua or Go) defining message processing.   | ✅             |
+| `outputs`       | List of outputs to send results to.               | ✅             |
+| `schedule`      | Scheduling configuration                          | Optional       |
+| `status`        | Rule state (`enabled` or `disabled` or `deleted`) | ✅             |
+| `created_at`    | Timestamp when the rule was created.              | Auto-generated |
+| `updated_at`    | Timestamp when the rule was last updated.         | Auto-generated |
+| `metadata`      | Additional rule metadata                          | Optional       |
+
+> **Note**: A rule must have either an `input_channel` or a `schedule` or both. If `input_channel` is omitted, the rule only executes on schedule.
 
 ### Scheduling Rules
 
-Rules can be scheduled to run at specific times or on a recurring basis.
-
-#### Schedule Structure
-
 ```go
 type Schedule struct {
-    StartDateTime   time.Time  // When the schedule becomes active
-    Time            time.Time  // Specific time for the rule to run
-    Recurring       Recurring  // None, Daily, Weekly, Monthly
-    RecurringPeriod uint      // Interval between executions: 1 = every interval, 2 = every second interval, etc.
+  StartDateTime   time.Time `json:"start_datetime,omitempty"`
+  Time            time.Time `json:"time,omitempty"`
+  Recurring       Recurring `json:"recurring,omitempty"`
+  RecurringPeriod uint      `json:"recurring_period,omitempty"`
 }
 ```
 
-| Property           | Description                                               |
-| ------------------ | --------------------------------------------------------- |
-| `start_datetime`   | Date/time when the rule becomes active.                   |
-| `time`             | Time at which the rule runs.                              |
-| `recurring`        | Recurrence pattern: `None`, `Daily`, `Weekly`, `Monthly`. |
-| `recurring_period` | Number of intervals between executions.                   |
+| Property         | Description                                               |
+| ---------------- | --------------------------------------------------------- |
+| start_datetime   | When the rule becomes active.                             |
+| time             | Time of day the rule is scheduled to run                  |
+| recurring        | Recurrence pattern (`None`, `Daily`, `Weekly`, `Monthly`) |
+| recurring_period | Interval multiplier (e.g. 2 = every second interval)      |
+
+**Recurring Patterns Explained:**
+
+- **Daily:** Runs every day at the specified time.
+- **Weekly:** Runs on the same day of the week.
+- **Monthly:** Runs on the same day each month.
+
+#### Scheduling Behavior:
+
+- If schedule is present and input_channel is not set, the rule runs at scheduled intervals.
+- If both are present, the rule can execute based on incoming messages and on schedule.
 
 **Recurring Patterns Explained:**
 
@@ -99,10 +138,12 @@ type Schedule struct {
 #### How Scheduling Works
 
 1. **Initialization**:
+
    - The scheduler starts when the service begins running via `StartScheduler()`
    - It uses a ticker to check for rules that need to be executed at regular intervals
 
 2. **Rule Evaluation**:
+
    - For each tick, the scheduler:
      - Gets all enabled rules scheduled before the current time
      - For each rule, checks if it should run using `shouldRunRule()`
@@ -110,6 +151,7 @@ type Schedule struct {
 
 3. **Execution Timing**:
    The `shouldRunRule()` function determines if a rule should run by checking:
+
    - If the rule's start time has been reached
    - If the current time matches the scheduled execution time
    - For recurring rules:
@@ -129,59 +171,56 @@ For example, to run a rule:
 - Every other week: Set recurring to "weekly" with recurring_period = 2
 - Monthly on the 1st: Set recurring to "monthly" with recurring_period = 1
 
-### Rule Logic with LUA Scripts
+### Rule Logic
 
-The Rules Engine uses **Lua scripts** to define the processing logic for incoming messages. Lua scripts can access message attributes like:
+Scripts define the logic to process messages. Two scripting types are supported:
 
-- `message.channel`
-- `message.subtopic`
-- `message.publisher`
-- `message.protocol`
-- `message.payload`
+| Type | Language | Key Info                                       |
+| ---- | -------- | ---------------------------------------------- |
+| 0    | Lua      | Lightweight and flexible scripting language    |
+| 1    | Go       | Scripts compiled and executed using Go plugins |
 
-The script should return a value if it triggers an action. Otherwise, it should return `nil`.
-
-**Example Lua Script:**
+Lua Example:
 
 ```lua
--- Check if the message contains a temperature reading
-if message.name == "temperature" and message.value > 25 then
-    return "Temperature above threshold!"
+function logicFunction()
+  local converted_temp = (message.payload.v * 1.8 + 32)
+  return {n = "Temp_fahrenheit", v = converted_temp, u = "°F"}
 end
+return logicFunction()
+```
+
+Go Example:
+
+```go
+package main
+import (
+    m "messaging"
+)
+func logicFunction() any {
+    return m.message.Payload
+}
 ```
 
 The script should return a value if it triggers an action. Otherwise, it should return `nil`.
 
-### Supported Message Format (SenML)
+### Supported Message Formats
 
-Magistrala Rules Engine only processes messages that conform to the [SenML (Sensor Measurement Lists)](https://www.rfc-editor.org/rfc/rfc8428.html) specification. Incorrectly formatted messages are silently ignored by the Rules Engine and Writer services. Below is a valid example:
+The Rules Engine supports multiple message formats, but when **storing messages to the internal database**, the payload **must be in SenML format**.  
+Valid SenML Example:
 
 ```json
 [
-  {
-    "bn": "building1/floor1/hallway/",
-    "n": "temperature",
-    "u": "Cel",
-    "v": 23.5
-  },
-  {
-    "n": "status",
-    "vs": "OK"
-  }
+  { "bn": "building1/", "n": "temperature", "u": "Cel", "v": 23.5 },
+  { "n": "status", "vs": "OK" }
 ]
 ```
 
-#### SenML Message Constraints
+#### Constraints:
 
-Each message must be a **JSON array of SenML records**. Each object inside the array must follow these rules:
-
-| Field                 | Rule                                                                               |
-| --------------------- | ---------------------------------------------------------------------------------- |
-| `n`                   | **Exactly one per record.** Represents the measurement name. Do **not** repeat it. |
-| `v`, `vs`, `vb`, `vd` | **Only one of these fields per record.** Multiple value fields are invalid.        |
-| `bn`                  | Optional base name prepended to all `n` values.                                    |
-| `u`                   | Optional measurement unit (e.g., `"Cel"`, `"V"`, `"A"`).                           |
-| `t`                   | Optional relative timestamp.                                                       |
+- Each entry must have a unique `n`
+- Only one value field (`v`, `vs`, `vb`, `vd`) per entry
+- `bn`, `u`, and `t` are optional
 
 ##### Invalid Example (duplicate `n` and multiple values)
 
@@ -218,6 +257,123 @@ Avoid using special characters in the `n` (name) field, such as:
 
 These may break internal parsing or rule pattern matching.
 
+### Output Handling
+
+The **outputs** field allows a rule to define **multiple destinations** or **actions** for its result. Supported output types include:
+
+1. **channels**: Publishes the result to a specific channel/topic.
+2. **save_senml**: Stores messages in Magistrala’s internal database.
+3. **save_remote_pg**: Forwards the result to an external PostgreSQL database.
+4. **alarms**: Triggers an alarm with a structured severity report.
+5. **email**: Sends a notification email.
+
+#### channels
+
+```go
+type ChannelPublisher struct {
+  Type    string  `json:"type"`
+  Channel string  `json:"channel"`
+  Topic   string  `json:"topic"`
+}
+```
+
+#### save_senml
+
+```go
+type SenML struct {
+  Type    string  `json:"type"`
+}
+```
+
+#### save_remote_pg
+
+```go
+type Postgres struct {
+  Type    string  `json:"type"`
+  Host     string `json:"host"`
+  Port     int    `json:"port"`
+  User     string `json:"user"`
+  Password string `json:"password"`
+  Database string `json:"database"`
+  Table    string `json:"table"`
+  Mapping  string `json:"mapping"`
+}
+```
+
+#### alarms
+
+```go
+type Alarms struct {
+  Type    string  `json:"type"`
+  RuleID  string  `json:"rule_id"`
+}
+```
+
+#### email
+
+```go
+type Email struct {
+  Type    string    `json:"type"`
+  To      []string  `json:"to"`
+  Subject string    `json:"subject"`
+  Content string    `json:"content"`
+}
+```
+
+Each output type expects a different data structure depending on its destination.
+For example, if your output is save_senml, it expects the result of the logic to be a valid SenML message.
+e.g.
+
+```lua
+function logicFunction()
+  return {
+    n = message.payload.sensor,
+    v = message.payload.temperature,
+    u = message.payload.unit
+  }
+end
+return logicFunction()
+```
+
+If the output is an alarm, it expects the result of the logic to be a valid alarm object.
+e.g.
+
+```lua
+function logicFunction()
+    local results = {}
+    local threshold = 20000
+
+    for _, msg in ipairs(message.payload) do
+        local value = msg.v
+        local severity
+        local cause
+
+        if value >= threshold * 1.5 then
+            severity = 5
+            cause = "Critical level exceeded"
+        elseif value >= threshold * 1.2 then
+            severity = 4
+            cause = "High level detected"
+        elseif value >= threshold then
+            severity = 3
+            cause = "Threshold reached"
+        end
+
+        table.insert(results, {
+            measurement = msg.n,
+            value = tostring(value),
+            threshold = tostring(threshold),
+            cause = cause,
+            unit = msg.unit,
+            severity = severity
+        })
+    end
+
+    return results
+end
+return logicFunction()
+```
+
 #### Topic Rewriting and `.` Operator
 
 MQTT topics received by Magistrala are rewritten into dot-separated strings for Rules Engine processing. For example:
@@ -240,27 +396,6 @@ This means:
 - Rules matching `input_topic` or using `message.subtopic` must use **dot-separated format**
 - Every empty segment (e.g. double slashes `//`) is removed
 
-#### Message Processing
-
-When a message arrives on a rule's input channel, the Rules Engine:
-
-1. Creates a Lua environment
-2. Injects the message as a global variable with the following structure:
-
-   ```lua
-   message = {
-     channel = "channel_name",
-     subtopic = "subtopic_name",
-     publisher = "publisher_id",
-     protocol = "protocol_name",
-     created = timestamp,
-     payload = [byte_array]
-   }
-   ```
-
-3. Executes the rule's Lua script
-4. If the script returns a non-nil value and an output channel is configured, publishes the result
-
 ### Rule Status
 
 Rules can have one of the following statuses:
@@ -278,201 +413,157 @@ The Rules Engine API exposes several endpoints for managing rules. All requests 
 
 The Rules Engine service provides the following operations:
 
-- `AddRule` - Create a new rule
-- `ViewRule` - Retrieve a specific rule
-- `UpdateRule` - Modify an existing rule
-- `ListRules` - Query rules with filtering options
-- `RemoveRule` - Delete a rule
-- `EnableRule` - Activate a rule
-- `DisableRule` - Deactivate a rule
+- `create_rule` - Create a new rule
+- `list_rules` - Query rules with filtering options
+- `view_rule` - Retrieve a specific rule
+- `update_rule` - Modify an existing rule
+- `update_rule_tags`- Modify tags
+- `update_rule_scheduler` - Update rule schedule
+- `delete_rule` - Delete a rule
+- `enable_rule` - Activate a rule
+- `disable_rule` - Deactivate a rule
 
 ### Create Rule
 
-To create a new rule for processing messages use the following request body:
-
-- `name`: Rule name  
-- `domain`: Domain ID this rule belongs to  
-- `input_channel`: Input channel for receiving messages  
-- `input_topic`: Input topic for receiving messages  
-- `logic`: Rule processing logic script  
-- `output_channel`: Output channel for processed messages (optional)  
-- `output_topic`: Output topic for processed messages (optional)  
-- `schedule`: Rule execution schedule (optional)  
-- `status`: Rule status (`enabled` or `disabled`)
+Endpoint: `POST /{domain_id}/rules`
 
 **Example command:**
 
 ```bash
-curl --location 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules' \
+curl --location 'http://localhost:9008/<your_domain_id>/rules' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer <access_token>' \
+--header 'Authorization: Bearer <your_access_token>' \
 --data '{
   "name": "High Temperature Alert",
-  "input_channel": "sensors",
+  "input_channel": "<your_channel_id>",
   "input_topic": "temperature",
   "logic": {
     "type": 0,
-    "value": "if message.payload > 30 then return '\''Temperature too high!'\'' end"
+    "value": "function logicFunction() return message.payload end return logicFunction()"
   },
-  "output_channel": "alerts",
-  "output_topic": "temperature",
+  "outputs": [
+    {
+      "type": "save_senml"
+    }
+  ],
   "schedule": {
-    "start_datetime": "2024-01-01T00:00",
-    "time": "2024-01-01T09:00",
+    "start_datetime": "2025-07-29T09:00:00Z", // must be greater than the current date-time
+    "time": "2025-07-29T11:00:00Z",
     "recurring": "daily",
     "recurring_period": 1
   }
 }'
 ```
 
-This request:
-
-- Creates a temperature monitoring rule
-- Processes messages from the "sensors" channel
-- Checks for temperatures above 30 degrees
-- Publishes alerts to the "alerts" channel
-- Runs daily at 9 AM
-
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules`
-
-These are the required headers:
-
-- `Content-Type: application/json` - Specifies the request body format
-- `Authorization: Bearer <access_token>` - Your authentication token
-
-#### Example Rule Structure
-
-Here's a breakdown of the rule structure:
-
-```json
+```json title="Response"
 {
+  "id": "d4b5c393-70fc-4399-829c-070df5205698",
   "name": "High Temperature Alert",
-  "input_channel": "sensors",
+  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "input_channel": "3214f360-cebd-449b-bc3c-9020a3be403a",
   "input_topic": "temperature",
   "logic": {
     "type": 0,
-    "value": "if message.payload > 30 then return 'Temperature too high!' end"
+    "value": "function logicFunction() return message.payload end return logicFunction()"
   },
-  "output_channel": "alerts",
-  "output_topic": "temperature",
+  "outputs": [{ "type": "save_senml" }],
   "schedule": {
-    "start_datetime": "2024-01-01T00:00",
-    "time": "2024-01-01T09:00",
+    "start_datetime": "2025-07-29T04:52:21Z",
+    "time": "2025-07-29T04:52:21Z",
     "recurring": "daily",
     "recurring_period": 1
-  }
+  },
+  "status": "enabled",
+  "created_at": "2025-07-29T04:52:21.358252Z",
+  "created_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a",
+  "updated_at": "0001-01-01T00:00:00Z",
+  "updated_by": ""
 }
 ```
 
-This rule:
-
-1. Listens on the "sensors" channel, "temperature" topic
-2. Checks if temperature exceeds 30 degrees
-3. If true, publishes an alert message
-4. Runs daily at 9 AM
-
 ### View Rule
 
-This retrieves the details of a specific rule by rule ID.
-
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}`
+Enpoint: `Get /{domain_id}/rules/{rule_id}`
 
 **Example command:**
 
 ```bash
-curl --location 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules/rule123' \
---header 'Authorization: Bearer <access_token>'
+curl --location 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>' \
+--header 'Authorization: Bearer <your_access_token>'
 ```
 
-**Expected Response:**
-
-```json
+```json title="Response"
 {
-  "id": "string",
-  "name": "string",
-  "domain": "string",
-  "metadata": {
-    "additionalProp1": "string",
-    "additionalProp2": "string",
-    "additionalProp3": "string"
-  },
-  "input_channel": "string",
-  "input_topic": "string",
+  "id": "d4b5c393-70fc-4399-829c-070df5205698",
+  "name": "High Temperature Alert",
+  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "input_channel": "3214f360-cebd-449b-bc3c-9020a3be403a",
+  "input_topic": "temperature",
   "logic": {
-    "script": "string"
+    "type": 0,
+    "value": "function logicFunction() return message.payload end return logicFunction()"
   },
-  "output_channel": "string",
-  "output_topic": "string",
+  "outputs": [{ "type": "save_senml" }],
   "schedule": {
-    "start_datetime": "2025-02-14T08:55:15.144Z",
-    "time": "2025-02-14T08:55:15.144Z",
-    "recurring": "None",
+    "start_datetime": "2025-07-29T04:52:21Z",
+    "time": "2025-07-30T04:52:21Z",
+    "recurring": "daily",
     "recurring_period": 1
   },
   "status": "enabled",
-  "created_at": "2025-02-14T08:55:15.144Z",
-  "created_by": "string",
-  "updated_at": "2025-02-14T08:55:15.144Z",
-  "updated_by": "string"
+  "created_at": "2025-07-29T04:52:21.358252Z",
+  "created_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a",
+  "updated_at": "2025-07-29T04:52:45.844481Z",
+  "updated_by": ""
 }
 ```
 
 ### List Rules
 
-This lists all rules with optional filters.
-
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules`
+Endpoint: `GET /{domain_id}/rules`
 
 **Query Parameters:**
 
-- `offset`: Pagination offset  
-- `limit`: Maximum number of results  
-- `input_channel`: Filter by input channel  
-- `output_channel`: Filter by output channel  
+- `offset`: Pagination offset
+- `limit`: Maximum number of results
+- `input_channel`: Filter by input channel
 - `status`: Filter by rule status
 
 **Example command:**
 
 ```bash
-curl --location 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules?input_channel=sensors&status=enabled' \
---header 'Authorization: Bearer <access_token>'
+curl --location 'http://localhost:9008/<your_domain_id>/rules?input_channel=<your_channel_id>&status=enabled' \
+--header 'Authorization: Bearer <your_access_token>'
 ```
 
-**Expected Response:**
-
-```json
+```json title="Response"
 {
-  "total": 0,
   "offset": 0,
   "limit": 10,
+  "total": 1,
   "rules": [
     {
-      "id": "string",
-      "name": "string",
-      "domain": "string",
-      "metadata": {
-        "additionalProp1": "string",
-        "additionalProp2": "string",
-        "additionalProp3": "string"
-      },
-      "input_channel": "string",
-      "input_topic": "string",
+      "id": "d4b5c393-70fc-4399-829c-070df5205698",
+      "name": "High Temperature Alert",
+      "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+      "input_channel": "3214f360-cebd-449b-bc3c-9020a3be403a",
+      "input_topic": "temperature",
       "logic": {
-        "script": "string"
+        "type": 0,
+        "value": "function logicFunction() return message.payload end return logicFunction()"
       },
-      "output_channel": "string",
-      "output_topic": "string",
+      "outputs": [{ "type": "save_senml" }],
       "schedule": {
-        "start_datetime": "2025-02-14T08:57:14.717Z",
-        "time": "2025-02-14T08:57:14.717Z",
-        "recurring": "None",
+        "start_datetime": "2025-07-29T04:52:21Z",
+        "time": "2025-07-30T04:52:21Z",
+        "recurring": "daily",
         "recurring_period": 1
       },
       "status": "enabled",
-      "created_at": "2025-02-14T08:57:14.717Z",
-      "created_by": "string",
-      "updated_at": "2025-02-14T08:57:14.717Z",
-      "updated_by": "string"
+      "created_at": "2025-07-29T04:52:21.358252Z",
+      "created_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a",
+      "updated_at": "2025-07-29T04:52:45.844481Z",
+      "updated_by": ""
     }
   ]
 }
@@ -480,159 +571,172 @@ curl --location 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rule
 
 ### Update Rule
 
-This is to update an existing rule.
-
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}`
+Endpoint: `PATCH /{domain_id}/rules/{rule_id}`
 
 **Example command:**
 
 ```bash
-curl --location --request PUT 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules/rule123' \
+curl --location --request PATCH 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer <access_token>' \
+--header 'Authorization: Bearer <your_access_token>' \
 --data '{
-  "name": "High Temp Alert",
-  "input_channel": "sensors",
-  "input_topic": "temperature",
-  "logic": {
-    "type": 0,
-    "value": "if message.payload > 35 then return '\''Critical Temp!'\'' end"
-  },
-  "output_channel": "alerts",
-  "output_topic": "temperature_critical",
-  "status": "enabled"
+  "name": "High Temp Alert Updated"
 }'
 ```
 
-**Expected Response:**
-
-```bash
+```json title="Response"
 {
-  "id": "rule123",
-  "name": "High Temp Alert",
-  "input_channel": "sensors",
-  "input_topic": "temperature",
+  "id": "d4b5c393-70fc-4399-829c-070df5205698",
+  "name": "High Temp Alert Updated",
+  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "input_channel": "",
+  "input_topic": "",
   "logic": {
     "type": 0,
-    "value": "if message.payload > 35 then return 'Critical Temp!' end"
+    "value": "function logicFunction() return message.payload end return logicFunction()"
   },
-  "output_channel": "alerts",
-  "output_topic": "temperature_critical",
+  "outputs": [{ "type": "save_senml" }],
+  "schedule": {
+    "start_datetime": "2025-07-29T04:52:21Z",
+    "time": "2025-07-30T04:52:21Z",
+    "recurring": "daily",
+    "recurring_period": 1
+  },
   "status": "enabled",
-  "created_at": "2024-02-14T10:00:00Z",
-  "created_by": "user123",
-  "updated_at": "2024-02-16T09:00:00Z",
-  "updated_by": "user789"
+  "created_at": "2025-07-29T04:52:21.358252Z",
+  "created_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a",
+  "updated_at": "2025-07-29T05:07:49.681315Z",
+  "updated_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a"
+}
+```
+
+### Update Rule Tags
+
+Endpoint: `PATCH /{domain_id}/rules/{rule_id}/tags`
+
+**Example command:**
+
+```bash
+curl --location --request PATCH 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>/tags' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <your_access_token>' \
+--data '{
+  "tags": ["tag1","tag2"]
+}'
+```
+
+```json title="Response"
+{
+  "id": "d4b5c393-70fc-4399-829c-070df5205698",
+  "name": "High Temp Alert Updated",
+  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "tags": ["tag1", "tag2"],
+  "input_channel": "",
+  "input_topic": "",
+  "logic": {
+    "type": 0,
+    "value": "function logicFunction() return message.payload end return logicFunction()"
+  },
+  "outputs": [{ "type": "save_senml" }],
+  "schedule": {
+    "start_datetime": "2025-07-29T04:52:21Z",
+    "time": "2025-07-30T04:52:21Z",
+    "recurring": "daily",
+    "recurring_period": 1
+  },
+  "status": "enabled",
+  "created_at": "2025-07-29T04:52:21.358252Z",
+  "created_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a",
+  "updated_at": "2025-07-29T05:10:54.991749Z",
+  "updated_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a"
 }
 ```
 
 ### Update Rule Scheduler
 
-This is to update an existing rule schedule.
-
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}/schedule`
+Endpoint: `PATCH /{domain_id}/rules/{rule_id}/schedule`
 
 **Example command:**
 
 ```bash
-curl --location --request PATCH 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules/rule123/schedule' \
+curl --location --request PATCH 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>/schedule' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer <access_token>' \
+--header 'Authorization: Bearer <your_access_token>' \
 --data '{
     "schedule": {
-        "recurring": "daily",
-        "recurring_period": 1,
-        "start_datetime": "2025-04-30T17:22:00.000Z",
-        "time": "0001-01-01T18:00:00.000Z"
-    }
+    "start_datetime": "2025-07-29T10:52:21Z",
+    "time": "2025-07-30T04:52:21Z",
+    "recurring": "weekly",
+    "recurring_period": 2
+  }
 }'
 ```
 
-**Expected Response:**
-
-```bash
+```json title="Response"
 {
-  "id": "rule123",
-  "name": "High Temp Alert",
-  "input_channel": "sensors",
-  "input_topic": "temperature",
+  "id": "d4b5c393-70fc-4399-829c-070df5205698",
+  "name": "High Temp Alert Updated",
+  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "tags": ["tag1", "tag2"],
+  "input_channel": "",
+  "input_topic": "",
   "logic": {
     "type": 0,
-    "value": "if message.payload > 35 then return 'Critical Temp!' end"
+    "value": "function logicFunction() return message.payload end return logicFunction()"
   },
+  "outputs": [{ "type": "save_senml" }],
   "schedule": {
-    "recurring": "daily",
-    "recurring_period": 1,
-    "start_datetime": "2025-04-30T17:22:00.000Z",
-    "time": "0001-01-01T18:00:00.000Z"
+    "start_datetime": "2025-07-29T10:52:21Z",
+    "time": "2025-07-30T04:52:21Z",
+    "recurring": "weekly",
+    "recurring_period": 2
   },
-  "output_channel": "alerts",
-  "output_topic": "temperature_critical",
   "status": "enabled",
-  "created_at": "2024-02-14T10:00:00Z",
-  "created_by": "user123",
-  "updated_at": "2024-02-16T09:00:00Z",
-  "updated_by": "user789"
+  "created_at": "2025-07-29T04:52:21.358252Z",
+  "created_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a",
+  "updated_at": "2025-07-29T05:13:05.877133Z",
+  "updated_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a"
 }
 ```
-
-### Delete Rule
-  
-This function deletes an existing rule.
-
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}`
-
-**Example Command:**
-
-```bash
-curl --location --request DELETE 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules/rule123' \
---header 'Authorization: Bearer <access_token>'
-```
-
-**Responses:**
-
-| Status Code | Description            |
-| ----------- | ---------------------- |
-| `204`       | Rule deleted.          |
-| `400`       | Invalid rule ID.       |
-| `401`       | Unauthorized access.   |
-| `404`       | Rule not found.        |
-| `500`       | Internal server error. |
-
-### Enable Rule
-
-This function enables a rule for processing.
-
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}/enable`
-
-```bash
-curl --location --request PUT 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules/rule123/enable' \
---header 'Authorization: Bearer <access_token>'
-```
-
-**Responses:**
-
-| Status Code | Description                |
-| ----------- | -------------------------- |
-| `200`       | Rule enabled successfully. |
-| `400`       | Invalid rule ID.           |
-| `401`       | Unauthorized access.       |
-| `404`       | Rule not found.            |
-| `500`       | Internal server error.     |
 
 ---
 
 ### Disable Rule
 
-This function disables a rule, preventing it from processing messages.  
-
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}/enable`
+Endpoint: `POST /{domain_id}/rules/{rule_id}/disable`
 
 **Example Command:**
 
 ```bash
-curl --location --request PUT 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af3712f117e/rules/rule123/disable' \
---header 'Authorization: Bearer <access_token>'
+curl --location --request POST 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>/disable' \
+--header 'Authorization: Bearer <your_access_token>' \
+```
+
+```json title="Response"
+{
+  "id": "d4b5c393-70fc-4399-829c-070df5205698",
+  "name": "High Temp Alert Updated",
+  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "tags": ["tag1", "tag2"],
+  "input_channel": "",
+  "input_topic": "",
+  "logic": {
+    "type": 0,
+    "value": "function logicFunction() return message.payload end return logicFunction()"
+  },
+  "outputs": [{ "type": "save_senml" }],
+  "schedule": {
+    "start_datetime": "2025-07-29T10:52:21Z",
+    "time": "2025-07-30T04:52:21Z",
+    "recurring": "weekly",
+    "recurring_period": 2
+  },
+  "status": "disabled",
+  "created_at": "2025-07-29T04:52:21.358252Z",
+  "created_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a",
+  "updated_at": "2025-07-29T05:16:36.254008Z",
+  "updated_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a"
+}
 ```
 
 **Responses:**
@@ -647,10 +751,79 @@ curl --location --request PUT 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af
 
 ---
 
-## Error Codes
+### Enable Rule
 
-**Endpoint:** `PUT /{domainID}/rules/{ruleID}/enable`  
-**Description:** Enables a previously disabled rule.
+Endpoint: `POST /{domain_id}/rules/{rule_id}/enable`
+
+The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}/enable`
+
+```bash
+curl --location --request POST 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>/enable' \
+--header 'Authorization: Bearer <your_access_token>' \
+```
+
+```json title="Response"
+{
+  "id": "d4b5c393-70fc-4399-829c-070df5205698",
+  "name": "High Temp Alert Updated",
+  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "tags": ["tag1", "tag2"],
+  "input_channel": "",
+  "input_topic": "",
+  "logic": {
+    "type": 0,
+    "value": "function logicFunction() return message.payload end return logicFunction()"
+  },
+  "outputs": [{ "type": "save_senml" }],
+  "schedule": {
+    "start_datetime": "2025-07-29T10:52:21Z",
+    "time": "2025-07-30T04:52:21Z",
+    "recurring": "weekly",
+    "recurring_period": 2
+  },
+  "status": "enabled",
+  "created_at": "2025-07-29T04:52:21.358252Z",
+  "created_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a",
+  "updated_at": "2025-07-29T05:17:12.534919Z",
+  "updated_by": "ae03cf7d-f2e8-49ac-ab28-17481635322a"
+}
+```
+
+**Responses:**
+
+| Status Code | Description                |
+| ----------- | -------------------------- |
+| `200`       | Rule enabled successfully. |
+| `400`       | Invalid rule ID.           |
+| `401`       | Unauthorized access.       |
+| `404`       | Rule not found.            |
+| `500`       | Internal server error.     |
+
+---
+
+### Delete Rule
+
+Endpoint: `DELETE /{domain_id}/rules/{rule_id}`
+**Example Command:**
+
+```bash
+curl --location --request DELETE 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>' \
+--header 'Authorization: Bearer <your_access_token>' \
+```
+
+**Responses:**
+
+| Status Code | Description            |
+| ----------- | ---------------------- |
+| `204`       | Rule deleted.          |
+| `400`       | Invalid rule ID.       |
+| `401`       | Unauthorized access.   |
+| `404`       | Rule not found.        |
+| `500`       | Internal server error. |
+
+---
+
+## Error Codes
 
 | HTTP Code | Description                          |
 | --------- | ------------------------------------ |
@@ -663,8 +836,9 @@ curl --location --request PUT 'http://localhost:9008/8353542f-d8f1-4dce-b787-4af
 
 ## 🌟 Best Practices
 
-1. **Use Descriptive Names:** Make rule names clear and meaningful.
-2. **Optimize Lua Scripts:** Keep scripts simple and efficient.
-3. **Regularly Monitor Rules:** Periodically review rule execution logs.
-4. **Schedule Wisely:** Avoid overlapping schedules for performance efficiency.
-5. **Test New Rules:** Test rules in a controlled environment before deployment.
+1. **Use Descriptive Names** – Choose names that clearly convey the rule's purpose.
+2. **Validate Your Scripts** – Whether Lua or Go, ensure the script returns the correct output format.
+3. **Regularly Monitor Rules** – Periodically review rule execution logs.
+4. **Schedule Thoughtfully** – Avoid overlapping rule executions unless necessary.
+5. **Keep Output Aligned** – Match your logic output format to the selected output type (e.g., alarm, database, publish).
+6. **Test New Rules** – Test rules in a controlled environment before deployment.
