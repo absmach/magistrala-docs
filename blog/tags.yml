@@ -78,6 +78,36 @@ SuperMQ:
   permalink: /supermq
   description: Posts related to SuperMQ, a scalable and secure IoT platform.
 
+IoT:
+  label: IoT
+  permalink: /iot
+  description: Posts related to the Internet of Things (IoT), covering devices, protocols, and platforms.
+
+PostgreSQL:
+  label: PostgreSQL
+  permalink: /postgresql
+  description: Content about using PostgreSQL, the powerful open-source object-relational database system.
+
+TimescaleDB:
+  label: TimescaleDB
+  permalink: /timescaledb
+  description: Articles discussing TimescaleDB, the open-source time-series database built on PostgreSQL.
+
+SpiceDB:
+  label: SpiceDB
+  permalink: /spicedb
+  description: Posts about SpiceDB, the open-source, Zanzibar-inspired permissions database for authorization.
+
+'Polyglot Persistence':
+  label: Polyglot Persistence
+  permalink: /polyglot-persistence
+  description: Insights into using multiple database technologies to handle different data storage needs within a single application.
+
+'Storage Architecture':
+  label: Storage Architecture
+  permalink: /storage-architecture
+  description: Articles that explore the design and implementation of data storage solutions for scalable systems.
+
 update:
   label: Update
   permalink: /update
