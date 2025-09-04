@@ -46,32 +46,40 @@ Here are some practical examples of how you can use the Rules Engine:
 
 ## Create a Rule
 
-Navigate to the **Rules** section and click on the `+ Create` button. Provide a **name** for your rule and click **Create**.
+To create a new rule, navigate to the **Rules** section and click the `+ Create` button.  
 
 ![Create a new Rule](../img/rules/rules.png)
 
+You will be redirected to the rule configuration page. A valid rule must include at least **three nodes**:  
+
+- **Input Node** – defines the data source.  
+- **Logic Node** – applies conditions or transformations.  
+- **Output Node** – specifies the resulting action.  
+
+The rule cannot be saved unless these required nodes are present.
+
+![Created Rule](../img/rules/rule.png)
+
+Click **Save Rule** to open a popup dialog where you can enter the rule name and assign tags.
+
 ![Create a Rule Dialog](../img/rules/create-rule-dialog.png)
 
-### After creation, the rule appears in a list with the following details
+Once created, the rule is added to the rules list with the following details:  
 
-1. Rule Name
-2. Status (Enabled/Disabled)
-3. Creation Date
+1. **Rule Name**  
+2. **Status** – Enabled or Disabled  
+3. **Creation Date**  
 
-#### Each rule entry also has quick actions for
+Each rule entry also provides quick actions for:  
 
-- Viewing the rule
-- Copying the rule ID
-- Enabling/Disabling the rule
-- Deleting the rule
+- Viewing rule details  
+- Copying the rule ID  
+- Enabling/Disabling the rule  
+- Deleting the rule  
 
-![quick links](../img/rules/quick-links.png)
+![Quick Links](../img/rules/quick-links.png)
 
-## View a Rule
-
-Click the rule name in the rules table to open the rule’s page.
-
-![View a rule](../img/rules/view-rule.png)
+## Rule Configuration
 
 On the rule page, you can configure the following:
 
@@ -81,7 +89,7 @@ On the rule page, you can configure the following:
 
 ![select input](../img/rules/input-node2.png)
 
-- Select **MQTT Subscriber** as the input type.
+- Select **Channel Subscriber** as the input type.
 - Choose the **channel** and **topic** to subscribe to.
 
   ![input variables](../img/rules/input-variables.png)
@@ -130,7 +138,7 @@ The script editor allows you to toggle between Lua and Go modes using the select
 
 ##### Lua Script Editor
 
-Write custom logic in Lua. Wrap code in `logicFunction()` and return a primitive or table:
+Craft your own logic in Lua by implementing a `logicFunction()` that returns either a primitive value or a table.
 
 ![lua editor node](../img/rules/lua-editor-node.png)
 
@@ -287,13 +295,6 @@ Current temperature is {{.Result.CelValue}}°C  or ({{.Result.FarValue}}°F).
 
 ```
 
-## Connecting Nodes and Save
-
-Once you've added the input, logic, and output nodes, connect them visually in the layout.
-Click Save to finalize the rule.
-
-![view final rule](../img/rules/rule.png)
-
 ## Enable or Disable Rules
 
 To enable or disable a rule:
@@ -390,7 +391,8 @@ return {
 > This returns a valid SenML message the internal DB will accept.
 
 <br/>
-Then set your output node to store this result using the Magistrala internal DB option.
+
+Then set your output node to store this result using the Magistrala Internal DB option.
 
 ![Storage with json input](../img/rules/json-input.png)
 
