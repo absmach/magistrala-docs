@@ -25,6 +25,7 @@ Magistrala offers a variety of widgets, including charts, data cards, gauges, ma
 - **Maps**:
   - Route Map
   - Marker Map
+  - Polygon Map
 
 Each of these widgets can be customized and configured to display data in the most meaningful way for the intended use case.
 
@@ -115,6 +116,16 @@ This opens a panel with editable settings. By default, the title uses the chartâ
 
 ![Edit Panel](../../img/dashboards/edit-settings.png)
 
+Users can now create **custom units** in addition to the predefined list. To add one, click **Add Custom Unit**.
+
+![Custom Units](../../img/dashboards/custom-units.png)
+
+Then provide a **Unit Name** (e.g., Kilowatt-hours) and a **Unit Symbol** (e.g., kWh).
+
+![Custom Units](../../img/dashboards/add-new-unit.png)
+
+This flexibility makes it possible to represent domain-specific or less common metrics directly in charts.
+
 ##### Time Series Charts
 
 For **time-series** charts, appearance settings are mostly consistent across chart types except for pie charts, which use multiple data sources and do not have axes.
@@ -132,7 +143,7 @@ Users can only modify the **title**, **data points** and **axis labels**.
 **Gauge charts** offer additional configuration options:
 
 - Set **minimum** and **maximum** - (default: 0 to 100) to control the scale.
-- Choose a unit from a predefined list, including:
+- Choose a unit from the selector, which now supports both predefined units and custom units:
 
   - Length: Kilometer (km), Meter (m), Millimeter (mm), Inch (in)
 
