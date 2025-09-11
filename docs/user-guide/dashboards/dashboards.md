@@ -97,7 +97,7 @@ The uploaded dashboard will then appear in the list with the uploaded data.
 
 ![Upload Dashboard](../../img/dashboards/dash-upload.png)
 
-Sample templates to support real-life use cases can be found [here](https://github.com/absmach/magistrala-ui/tree/main/samples/dashboard-templates).
+Sample templates to support real-life use cases can be foundin our [GitHub repository](https://github.com/absmach/magistrala-ui/tree/main/samples/dashboard-templates).
 
 ### Access a Dashboard
 
