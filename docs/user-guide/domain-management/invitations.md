@@ -25,7 +25,7 @@ The user has the option to **accept** or **decline** the invitation directly fro
 
 ![Invitations PopUp](../../img/invitations/invitation-popup.png)
 
-If there are more than five pending invitations, the user can click `View All` to navigate to the **Invitations Table**, where all outstanding invitations are listed.  
+If there are more than five pending invitations, the user can click `View All` to navigate to the **Invitations Table**, where all pending invitations are listed.  
 
 ![Invitations Table](../../img/invitations/invitation-viewall.png)
 
