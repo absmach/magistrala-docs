@@ -5,7 +5,9 @@ title: Dashboard Guide
 ### Create a New Dashboard
 
 After logging into a **Domain**, navigate to **Dashboards** tab and click on the `+ Create` button. A dialog box will prompt you to enter a dashboard name and optionally add a description, tags, a thumbnail, and a sharing option. Sharing options can be none, domain members, selected users or public.
+
 > To learn more about the available share options, see the [**Update Dashboard Share State**](#update-dashboard-share-state) section below.
+
 <br/>
 
 ![Dashboard Creation](../../img/dashboards/create-dash.png)
@@ -97,7 +99,7 @@ The uploaded dashboard will then appear in the list with the uploaded data.
 
 ![Upload Dashboard](../../img/dashboards/dash-upload.png)
 
-Sample templates to support real-life use cases can be found [here](https://github.com/absmach/magistrala-ui/tree/main/samples/dashboard-templates).
+Sample templates to support real-life use cases can be found in our [GitHub repository](https://github.com/absmach/magistrala-ui/tree/main/samples/dashboard-templates).
 
 ### Access a Dashboard
 
