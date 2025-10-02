@@ -4,66 +4,86 @@ title: Billing
 
 > Please note that this service is only available to **Magistrala Cloud** users.
 
-This service allows users to view and subscribe to billing plans, manage payment methods and billing information, and download generated invoices and receipts.  
-Magistrala employs the use of 3rd-party payment processor to handle the user's private information.
-This means that Magistrala will not have the user's card payment credentials at any point in time.
+The **Billing** service allows users to view and subscribe to billing plans, billing information and download generated invoices.
+Magistrala uses a trusted **third-party payment processor** to handle sensitive payment information.  
+This ensures that Magistrala never stores or has access to your card credentials.
 
-Navigate to the Billing tab on the sidenav bar. This tab will only be visible to admin members of a domain.
+Navigate to the **Billing** tab in the side navigation bar.  
+This tab is only visible to **admin members** of a domain.
 
 ## Overview
 
-The billing page has multiple sections present each important to the billing process.
+The Billing page is divided into several sections, each handling a key part of the billing process.
 
 ![Billing Page](../../img/billing/billing-page.png)
 
-In a newly created domain without any data on billing, all the sections will be empty.
+In a newly created domain without any data on billing, all the sections will be empty. The domain will also automatically be subscribed to the **Free** plan.
 
 ## Add Billing Information
 
-This section includes the user's contact details such as addresses, emails, and the name of the user to whom the subscription will be charged.
+This section includes the user’s contact details, such as name, address, and email, as well as company information, including company name, company number, and tax ID, of the user to whom the subscription will be charged.
+
 ![Billing](../../img/billing/billing-information.png)
 
 To fill this section, click on `Add` to trigger a dialogbox.
-On the form, you are required to fill in the Name, Email, Phone, Country and City of the billed customer.
-State and Province or Addresses are optional but help in the creation of invoices.
+On the form, you are required to fill in the Name, Email, Country, City, Region and Postal code of the billed customer.
+You may also provide optional company details, including Company Name, Company Number, and Tax ID.
 After filling in the required data, click `Add` and the information will be fed into the system.
 
 ![Billing Information](../../img/billing/add-bill-info.png)
 
 ## Subscribe to a Billing Plan
 
-The subscription section handles the domain's subscription plan and shows the status of the subscription.
+The **Subscription** section allows you to manage your domain’s billing plan and view its current status.
 
-To add a billing plan to the domain, click `Choose`, which will display a list of available subscription plans.
+To upgrade from the default `Free` plan (or switch from any existing plan), click **Update**. This will open a list of available subscription options.
 
 ![Billing-plan-addition](../../img/billing/choose.png)
 
-The subscription status can be either **completed**, where the user has already been charged, or **incomplete**, where the process is not yet finished and the subscription is inactive.
+> **Note:** The **Update** button is only active if there are paid plans available in addition to the Free plan.
 
-The **plan details** generally show the user the limits of their subscribed plan. This ensures they are aware of their restrictions at all times. These limits define what can be accessed in terms of domains, users, groups, and devices.
+![Billing-plans](../../img/billing/sub-plans.png)
 
-## Add a Payment Method
+Once you select a plan and confirm, you’ll be redirected to the payment page where you can enter your card details. After completing payment, you’ll be automatically redirected back to Magistrala with your updated subscription.
 
-Click on the `Add` button to gain access to the page where you will fill in your card information.
-A succesful update will lead you back to the Magistrala billing page with an active payment method.
+![Payment](../../img/billing/payment-page.png)
 
-![Adding the Card](../../img/billing/add-card.png)
+### Subscription Status
 
-You can add as many payment cards as needed.
-Each card will be verified to prevent any fraudulent cards from being accepted. Ensure that the card has sufficient funds to cover the subscription cost.
-You can also edit payment methods, set a default card and delete any payment method.  
+- **Active** – Your subscription is active and payments are up to date.  
+- **Waiting for Payment** – The plan has been selected but the payment process is not yet completed.  
+- **Canceled** – The subscription has been terminated.
 
-![Add multiple cards](../../img/billing/pm-table.png)
+![Billing-plan-completed](../../img/billing/complete-payment.png)
 
-To set a payment method as default simply select `Set as default` in the dropdown. Once payment method has been set as default, a badge showing default appears. To delete a payment method simply select `Delete` on the dropdown and the payment method will be deleted.
+The **plan details** generally show the user the limits of their subscribed plan. This ensures they are aware of their restrictions at all times. These limits define what can be accessed in terms of domains, users, groups and clients.
+
+![Billing-plan-details](../../img/billing/sub-limits.png)
 
 ## Generate an Invoice
 
-Once the plan is selected, an invoice will be generated that can be downloaded by clicking the invoice icon downloads a pdf with all the required data.
+Once the plan is selected, the **Latest Invoice** section automatically displays the most recent invoice generated by the payment processor.  
+The table includes **Date**, **Amount**, **Currency**, **Status** and the associated **Transaction ID**.
+Invoices can be **viewed** online or **downloaded** as a PDF.
+
 ![Invoice section](../../img/billing/invoice.png)  
 
-## Generate a Receipt
+## Transactions and Subscription History
 
-Once payment is received, there will be an receipt generated that a user can download by clicking on the receipt icon.
+The **Billing** page now provides a clear overview of subscription activity and financial records through three key sections:
 
-![Invoice section](../../img/billing/receipt.png)  
+### Transactions
+
+This section lists all payment transactions related to your domain.  
+Each entry includes the **Transaction ID**, **Status** (e.g: billed, completed, paid), **Amount**, **Currency** and **Created At** timestamp.  
+Transactions help track all billing events, including successful charges and pending payments.
+
+![Transactions](../../img/billing/transactions.png)
+
+### Subscription Status History
+
+This section displays a log of subscription state changes for the domain.  
+It shows the **Date**, **Status** (active, cancelled, etc.), the **Plan ID** and when the change occurred.  
+This history helps admins track subscription lifecycle events over time.
+
+![Subscription Status History](../../img/billing/subscription-history.png)
