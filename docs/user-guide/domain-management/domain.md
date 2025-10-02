@@ -6,7 +6,7 @@ title: Domain
 
 Navigate to the **Domain** section in the side navigation under **Domain Management** to find out more about the domain.
 
-Here, a user can edit the Domain **Name**, **Tags**, **Metadata** and **Logo** as well as copy the Domain ID and **Route**.
+Here, a user can edit the Domain **Name**, **Tags**, **Metadata**, **Status** and **Logo** as well as copy the Domain ID and **Route**.
 
 - **Name** – A descriptive label for the domain.  
 - **Route** – A user-friendly identifier for the domain, used instead of the full UUID when referencing or subscribing.  
