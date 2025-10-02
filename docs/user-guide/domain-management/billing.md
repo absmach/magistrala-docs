@@ -34,17 +34,27 @@ After filling in the required data, click `Add` and the information will be fed 
 
 ## Subscribe to a Billing Plan
 
-The subscription section handles the domain's subscription plan and shows the status of the subscription.
+The **Subscription** section allows you to manage your domain’s billing plan and view its current status.
 
-To update a billing plan from the current `Free` plan or any other, click `Update`, which will display a list of available subscription plans.
+To upgrade from the default `Free` plan (or switch from any existing plan), click **Update**. This will open a list of available subscription options.
 
 ![Billing-plan-addition](../../img/billing/choose.png)
 
+> **Note:** The **Update** button is only active if there are paid plans available in addition to the Free plan.
+
 ![Billing-plans](../../img/billing/sub-plans.png)
 
-The subscription status can be **active**, meaning the user has an active subscription, **waiting for payment**, meaning the payment process has not yet been completed, or **canceled**, meaning the subscription has been terminated.
+Once you select a plan and confirm, you’ll be redirected to the payment page where you can enter your card details. After completing payment, you’ll be automatically redirected back to Magistrala with your updated subscription.
 
-![Billing-plan-completed](../../img/billing/completed-sub.png)
+![Payment](../../img/billing/payment-page.png)
+
+### Subscription Status
+
+- **Active** – Your subscription is active and payments are up to date.  
+- **Waiting for Payment** – The plan has been selected but the payment process is not yet completed.  
+- **Canceled** – The subscription has been terminated.
+
+![Billing-plan-completed](../../img/billing/complete-payment.png)
 
 The **plan details** generally show the user the limits of their subscribed plan. This ensures they are aware of their restrictions at all times. These limits define what can be accessed in terms of domains, users, groups, and devices.
 
