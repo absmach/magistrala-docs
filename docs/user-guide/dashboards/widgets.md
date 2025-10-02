@@ -195,7 +195,7 @@ These default to **latitude** and **longitude**, respectively.
 
 #### 3. Icons
 
-Icons help visually enhance value cards by adding context to the displayed data.
+Icons help visually enhance map charts and value cards by adding context to the displayed data.
 To add an icon, start typing its name in the icon field, a list of matching options will appear for selection.
 
 ![Icons select](../../img/dashboards/icons-select.png)

@@ -4,11 +4,13 @@ title: Maps
 
 ## Overview
 
-**Maps** are powerful visual tools used to display the real-time or historical geographic locations of entities such as devices, channels, or groups. There are two types of map widgets:
+**Maps** are powerful visual tools used to display the real-time or historical geographic locations of entities such as devices, channels, or groups. There are three types of map widgets:
 
 - **Marker Map** – Displays static locations using metadata.
 
 - **Route Map** – Displays the movement of entities over time using location messages.
+
+- **Polygon Map** - Displays clusters of entities over a polygon using metadata.
 
 ## Marker Map
 
@@ -45,8 +47,9 @@ These coordinates are used to place markers for each entity on the map.
 2. **Channel**: Choose the specific entity with metadata location.
 3. **Label**: Provide a label for the marker (shown on hover or click)
 4. **Color**: Pick a color to identify the marker.
-5. **Add Source**: Use this to add multiple entities.  
-6. **Delete Source**:  Remove a data source using the `trash` icon.
+5. **Icon**: Pick an icon to identify the marker. We will stick to the default marker however.
+6. **Add Source**: Use this to add multiple entities.  
+7. **Delete Source**:  Remove a data source using the `trash` icon.
 
    ![Create Channel Marker Map](../../img/dashboards/datasosurce-markermap.png)
 
@@ -117,8 +120,9 @@ This will open the **Create Route Map** dialog, where users can configure the da
 3. **Client**: Choose the connected device (client) associated with the selected channel.
 4. **Label**: Provide a label for the route, which will help identify it on the map.
 5. **Color**: Choose a color to represent the route line on the map.
-6. **Add Source**: You can add multiple data sources (clients or channels) by clicking **Add Source**.
-7. **Remove Source**: To remove a data source, click the `Trash Icon` next to the specific entry.
+6. **Icon**: Choose an icon to represent the entity marker if you wish.
+7. **Add Source**: You can add multiple data sources (clients or channels) by clicking **Add Source**.
+8. **Remove Source**: To remove a data source, click the `Trash Icon` next to the specific entry.
 
   ![Route Map Data Source](../../img/dashboards/routemap-datasources.png)
 
@@ -236,8 +240,9 @@ A sample metadata entry for an entity within the polygon:
 1. **Group**: Select the group that contains the entities whose location data will be used.  
 2. **Entity Type**: Choose whether to visualize **Clients** or **Channels** within the group.  
 3. **Entities**: Select specific **Group-Clients** or **Group-Channels** that contain valid location metadata.  
-4. **Add Source**: Add multiple groups and entity combinations.  
-5. **Delete Source**: Remove a data source using the `trash` icon.  
+4. **Icon**: Select an icon for the markers.
+5. **Add Source**: Add multiple groups and entity combinations.  
+6. **Delete Source**: Remove a data source using the `trash` icon.  
 
 ![Polygon Map Settings](../../img/dashboards/polygon-datasource.png)
 
@@ -263,7 +268,7 @@ Once changes are made, click `Update` to apply them. The updated polygon and mar
 
 ![Edit Polygon Map](../../img/dashboards/update-polygon.png)
 
-### Polygon Map Popups
+#### Polygon Map Popups
 
 Each marker plotted inside the polygon includes an interactive popup with details about the entity, such as:  
 
@@ -274,6 +279,6 @@ Each marker plotted inside the polygon includes an interactive popup with detail
 
 ![Polygon Map Popup](../../img/dashboards/polygon-popup.png)
 
-### Polygon Map Conclusion
+#### Polygon Map Conclusion
 
 Polygon Maps extend mapping functionality by allowing users to define and visualize boundaries while still plotting individual entity markers inside them. This combination provides powerful insights for monitoring and managing IoT deployments within specific geographic zones, ensuring users can track both the defined areas and the devices operating inside them.
