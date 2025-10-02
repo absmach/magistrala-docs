@@ -27,7 +27,6 @@ This section includes the user’s contact details, such as name, address, and e
 
 To fill this section, click on `Add` to trigger a dialogbox.
 On the form, you are required to fill in the Name, Email, Country, City, Region and Postal code of the billed customer.
-State and Province or Addresses are optional but help in the creation of invoices.
 You may also provide optional company details, including Company Name, Company Number, and Tax ID.
 After filling in the required data, click `Add` and the information will be fed into the system.
 
