@@ -24,6 +24,7 @@ In the Configuration section, the user is required to input general settings for
 |Report Format | The file format for the report(pdf or csv) | ✅ |
 |Start Time | The start time of the report| ✅ |
 |End Time | The end time for the report| Optional |
+|Timezone | The timezone for displaying timestamps (e.g., "America/New_York", "Europe/London"). Defaults to UTC if not specified | Optional |
 |Aggregation Method | The aggregation method e.g Maximum, Minimum e.t.c| Optional |
 |Aggregation Interval |  The interval used for aggregating messages | Optional |
 
@@ -42,6 +43,33 @@ In the Metrics section, users can define specific filters such as:
 Users can click the `Add Metric` button to add multiple metrics to a single report.
 
 ![Metrics Section](../img/reports/metric-section.png)
+
+## Timezone Configuration
+
+The Reports service supports timezone-aware timestamp display in generated reports. This allows users to view all timestamps in their preferred timezone rather than UTC.
+
+### How to Use Timezones
+
+When creating or scheduling a report, you can specify a timezone in the **Configuration** section:
+
+1. Enter a valid IANA timezone name in the **Timezone** field (e.g., "America/New_York", "Europe/Paris", "Asia/Tokyo")
+2. If left empty, the report will default to UTC
+3. The timezone applies to:
+   - Report generation timestamps (shown in headers and footers)
+   - All message timestamps in both PDF and CSV formats
+
+### Supported Timezone Formats
+
+The service accepts IANA timezone names, such as:
+- **Americas**: "America/New_York", "America/Los_Angeles", "America/Chicago"
+- **Europe**: "Europe/London", "Europe/Paris", "Europe/Berlin"
+- **Asia**: "Asia/Tokyo", "Asia/Shanghai", "Asia/Dubai"
+- **Australia**: "Australia/Sydney", "Australia/Melbourne"
+- **Africa**: "Africa/Cairo", "Africa/Johannesburg"
+
+**Note:** Invalid timezone names will fall back to UTC automatically, and a warning will be logged.
+
+![Timezone Configuration](../img/reports/timezone-section.png)
 
 ### Generate an instant report
 
