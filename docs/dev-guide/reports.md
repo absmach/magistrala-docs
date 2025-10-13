@@ -82,6 +82,7 @@ type MetricConfig struct {
     From        string      // Relative start time (e.g., "now()-24h")
     To          string      // Relative end time (e.g., "now")
     FileFormat  Format      // Optional field
+    Timezone    string      // Optional field (IANA timezone name, defaults to UTC)
     Aggregation AggConfig   // Data processing method
 }
 
@@ -90,6 +91,7 @@ type MetricConfig struct {
 | From          | string    | Start time (relative/absolute)           | ✅       |
 | To            | string    | End time (relative/absolute)             | ✅       |
 | FileFormat    | Format    | Output format (PDF/CSV)                  | Optional |
+| Timezone      | string    | IANA timezone name (e.g., "Europe/Paris", "America/New_York"). Defaults to UTC if not provided | Optional |
 | Aggregation   | AggConfig | Data processing configuration            | Optional |
 
 
@@ -120,6 +122,27 @@ Data Collection
     - Aggregation method
     - Metric filters
 3. Supports complex queries across multiple devices and channels
+
+### Timezone Support
+
+The Reports Service supports timezone-aware report generation using IANA timezone names. This feature allows timestamps in generated reports to be displayed in the user's preferred timezone rather than UTC.
+
+**Key Features:**
+- Supports all IANA timezone names (e.g., "Europe/Paris", "America/New_York", "Asia/Tokyo")
+- Defaults to UTC when no timezone is specified
+- Automatically applies the timezone to:
+  - Report generation timestamps (header and footer)
+  - All message timestamps in both PDF and CSV formats
+- Falls back to UTC gracefully if an invalid timezone is provided
+
+**Example Timezone Values:**
+- `"America/New_York"` - Eastern Time (US)
+- `"Europe/London"` - British Time
+- `"Asia/Tokyo"` - Japan Standard Time
+- `"Australia/Sydney"` - Australian Eastern Time
+- `""` or omitted - Defaults to UTC
+
+**Note:** The timezone field is optional and can be included in the `config` section of any report configuration or generation request.
 
 ## Output Formats
 
@@ -186,6 +209,7 @@ curl --location http://localhost:9008/domains/{domainID}/reports/configs \
     "config": {
         "from": "now()-5d",
         "to": "now()",
+        "timezone": "America/New_York",
         "aggregation": {
             "agg_type":"MAX",
             "interval":"1s"
@@ -229,6 +253,7 @@ Expected response:
     "config": {
         "from": "now()-5d",
         "to": "now()",
+        "timezone": "America/New_York",
         "aggregation": {
             "agg_type": "max",
             "interval": "1s"
@@ -268,6 +293,7 @@ curl -X POST http://localhost:9008/domains/{domainID}/reports \
     "config": {
         "from": "now()-5d",
         "to": "now()",
+        "timezone": "Europe/London",
         "aggregation": {
             "agg_type":"MAX",
             "interval":"1s"
@@ -336,7 +362,8 @@ curl --location 'http://localhost:9008/bd1bb2c5-ce78-4456-8725-bd1beab80250/repo
     "config": {
         "from": "now()-5d",
         "to": "now()",
-        "file_format": "pdf"
+        "file_format": "pdf",
+        "timezone": "Asia/Tokyo"
     },
     "metrics": [
         {
@@ -366,7 +393,8 @@ curl --location 'http://localhost:9008/bd1bb2c5-ce78-4456-8725-bd1beab80250/repo
     "config": {
         "from": "now()-5d",
         "to": "now()",
-        "file_format": "pdf"
+        "file_format": "pdf",
+        "timezone": "Australia/Sydney"
     },
     "metrics": [
         {
