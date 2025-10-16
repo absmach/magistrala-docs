@@ -21,12 +21,12 @@ The Magistrala Rules Engine is designed for **real-time** and **scheduled messag
 ### Data Flow Summary
 
 1. **Input**
-   The engine **subscribes to a channel** (and optionally a topic) to receive messages from devices, services, or pipelines in real time.
+  The engine **subscribes to a channel** (and optionally a topic) to receive messages from devices, services, or pipelines in real time.
 
    > If no schedule is defined, the rule executes **every time** a new message arrives on the configured channel/topic.
 
 2. **Schedule**
-   If a schedule is defined, the rule will **automatically execute** based on the configured:
+  If a schedule is defined, the rule will **automatically execute** based on the configured:
 
 - Start time
 - Execution time
@@ -34,7 +34,7 @@ The Magistrala Rules Engine is designed for **real-time** and **scheduled messag
 - Recurring Interval (e.g 1,2,3 etc) - For example if recurrence is daily and interval is 2, it will repeat every 2 days.
 
 3. **Logic**
-   The incoming message or scheduled execution is processed using a user-defined script, written in:
+  The incoming message or scheduled execution is processed using a user-defined script, written in:
 
 - Lua
 - Go
@@ -42,7 +42,7 @@ The Magistrala Rules Engine is designed for **real-time** and **scheduled messag
 > The logic must return a **non-nil value** for outputs to be invoked.
 
 4. **Output(s)**
-   If the script returns a value, the rules forwards the result to one or more outputs. Supported output types include:
+  If the script returns a value, the rules forwards the result to one or more outputs. Supported output types include:
 
 - _Channel_ - Forward the result to another channel and/or topic.
 - _Internal DB_ - Save processed data internally.

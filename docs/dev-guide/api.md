@@ -115,7 +115,6 @@ server: nginx/1.25.4
 date: Thu, 13 Feb 2025 21:30:06 GMT
 content-type: application/json
 content-length: 583
-access-control-expose-headers: Location
 Access-Control-Expose-Headers: Location
 
 {"access_token":"eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzk0ODU4MDYsImlhdCI6MTczOTQ4MjIwNiwiaXNzIjoic3VwZXJtcS5hdXRoIiwidHlwZSI6MCwidXNlciI6IjBkNDA5NDgyLTA3MzctNDVlYS04Mjg0LTViZDg4MDU5ZjYyNSJ9.nFeihdM7KQJKr_2WQaKUFqBGWVw1qfjh0N6Uc5C6UXc2ugtm4LCf0sjDawi9ok_szk0fQeWWX8bqOsnEvhobZA","refresh_token":"eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzk1Njg2MDYsImlhdCI6MTczOTQ4MjIwNiwiaXNzIjoic3VwZXJtcS5hdXRoIiwidHlwZSI6MSwidXNlciI6IjBkNDA5NDgyLTA3MzctNDVlYS04Mjg0LTViZDg4MDU5ZjYyNSJ9.DbaMpgVPtL7ER5wlsFmVtC3izKgjB66qsl1beT0qnlcWcfp7NQyvBtT0EW3OyibcqG56SnqO0ye1mzaJLgViqg"}
@@ -274,7 +273,7 @@ Access-Control-Expose-Headers: Location
 }
 ```
 
-If you want to paginate your results then use `offset`, `limit`, `metadata`, `last_name`,`first_name`, `email`, `tag`, `status` and `visbility` as query parameters.
+If you want to paginate your results then use `offset`, `limit`, `metadata`, `last_name`, `first_name`, `email`, `tags`, `status` and `visibility` as query parameters.
 
 ```bash
 curl -sSiX GET http://localhost/users?[offset=<offset>]&[limit=<limit>]&[identity=<identity>]&[name=<name>]&[tag=<tag>]&[status=<status>]&[visibility=<visibility>] -H "Authorization: Bearer <user_token>"
@@ -296,15 +295,15 @@ Access-Control-Expose-Headers: Location
 {
   "limit": 5,
   "total": 1,
-  "users":[
+  "users": [
     {
       "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
       "first_name": "Jane",
       "last_name": "Doe",
       "email": "janedoe@example.com",
       "credentials": {"username": "janedoe"},
-      "status": "enabled",
-    },
+      "status": "enabled"
+    }
   ]
 }
 ```
@@ -446,7 +445,7 @@ For example:
 ```bash
 curl -X PATCH http://localhost:9002/users/b7edb32-2eac-4aad-aebe-ed96fe073879/picture \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer your_access_token" \
+-H "Authorization: Bearer <access_token>" \
 -d @- <<EOF
 {
   "profile_picture": "https://example.com/newpic.jpg"
@@ -473,7 +472,6 @@ Access-Control-Expose-Headers: Location
   ],
   "profile_picture": "https://example.com/newpic.jpg",
   "metadata": {"location": "Lyon"},
-  "profile_picture": "https://example.com/janedoe.jpg",
   "status": "enabled",
   "updated_at": "2025-02-11T18:00:12Z"
 }
@@ -526,7 +524,6 @@ Access-Control-Expose-Headers: Location
   ],
   "profile_picture": "https://example.com/newpic.jpg",
   "metadata": {"location": "Lyon"},
-  "profile_picture": "https://example.com/janedoe.jpg",
   "status": "enabled",
   "updated_at": "2025-02-11T18:00:12Z"
 }
@@ -550,7 +547,7 @@ EOF
 For example:
 
 ```bash
-curl -sSiX PATCH http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/email \
+curl -sSiX PATCH http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/username \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <user_token>" \
 -d @- <<EOF
@@ -712,7 +709,7 @@ For example:
 
 ```bash
 curl -X DELETE http://localhost:9002/users/b7edb32-2eac-4aad-aebe-ed96fe073879 \
--H "Authorization: Bearer your_access_token"
+-H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -740,7 +737,7 @@ For example:
 
 ```bash
 curl -X GET "http://localhost:9002/users/search?username=janedoe2025&email=newemail@example.com" \
--H "Authorization: Bearer your_access_token"
+-H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -768,7 +765,7 @@ Access-Control-Expose-Headers: Location
 
 You can get all groups a user is assigned to by calling the get user memberships method.
 
-If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parentID`, `ownerID`, `tree` and `dir` as query parameters.
+If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parent_id`, `tree` and `dir` as query parameters.
 
 > The user identified by the `user_token` must be assigned to the same group as the user with id `user_id` with `c_list` action. Alternatively, the user identified by the `user_token` must be the owner of the user with id `user_id`.
 
@@ -843,7 +840,7 @@ For example:
 ```bash
 curl -X POST http://localhost:9006/123e4567-e89b-12d3-a456-426614174000/clients \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer your_access_token" \
+-H "Authorization: Bearer <access_token>" \
 -d @- <<EOF
 {
   "name": "Temperature Sensor",
@@ -1136,7 +1133,7 @@ For example:
 
 ```bash
 curl -X GET http://localhost:9006/123e4567-e89b-12d3-a456-426614174000/clients/a1b2c3d4-e5f6-7890-1234-56789abcdef0 \
--H "Authorization: Bearer your_access_token"
+-H "Authorization: Bearer <access_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1168,13 +1165,13 @@ Access-Control-Expose-Headers: Location
 You can get all clients in the database by querying `/clients` endpoint.
 
 ```bash
-curl -sSiX GET http://localhost/clients -H "Authorization: Bearer <user_token>"
+curl -sSiX GET http://localhost:9006/{domain_id}/clients -H "Authorization: Bearer <user_token>"
 ```
 
 For example:
 
 ```bash
-curl -sSiX GET http://localhost/clients -H "Authorization: Bearer <user_token>"
+curl -sSiX GET "http://localhost:9006/{domain_id}/clients" -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1322,7 +1319,7 @@ For example:
 ```bash
 curl -X PATCH http://localhost:9006/123e4567-e89b-12d3-a456-426614174000/clients/a1b2c3d4-e5f6-7890-1234-56789abcdef0 \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer your_access_token" \
+-H "Authorization: Bearer <access_token>" \
 -d @- <<EOF
 {
   "name": "New Sensor Name",
@@ -1367,7 +1364,7 @@ For example:
 ```bash
 curl -X PATCH http://localhost:9006/123e4567-e89b-12d3-a456-426614174000/clients/a1b2c3d4-e5f6-7890-1234-56789abcdef0/tags \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer your_access_token" \
+-H "Authorization: Bearer <access_token>" \
 -d @- <<EOF
 {
   "tags": ["sensor", "environment"]
@@ -1413,7 +1410,7 @@ For example:
 ```bash
 curl -X PATCH http://localhost:9006/123e4567-e89b-12d3-a456-426614174000/clients/a1b2c3d4-e5f6-7890-1234-56789abcdef0/secret \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer your_access_token" \
+-H "Authorization: Bearer <access_token>" \
 -d @- <<EOF
 {
   "secret": "new-secure-password"
@@ -1448,7 +1445,7 @@ For example:
 
 ```bash
 curl -X POST http://localhost:9006/123e4567-e89b-12d3-a456-426614174000/clients/a1b2c3d4-e5f6-7890-1234-56789abcdef0/enable \
--H "Authorization: Bearer your_access_token"
+-H "Authorization: Bearer <access_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1478,7 +1475,7 @@ For example:
 
 ```bash
 curl -X POST http://localhost:9006/123e4567-e89b-12d3-a456-426614174000/clients/a1b2c3d4-e5f6-7890-1234-56789abcdef0/disable \
--H "Authorization: Bearer your_access_token"
+-H "Authorization: Bearer <access_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1509,7 +1506,7 @@ For example:
 
 ```bash
 curl -X DELETE http://localhost:9006/123e4567-e89b-12d3-a456-426614174000/clients/a1b2c3d4-e5f6-7890-1234-56789abcdef0 \
--H "Authorization: Bearer your_access_token"
+-H "Authorization: Bearer <access_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -1554,7 +1551,7 @@ For example:
 ```bash
 curl -sSiX POST http://localhost:9005/123e4567-e89b-12d3-a456-426614174000/channels \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer your_access_token" \
+-H "Authorization: Bearer <access_token>" \
 -d @- <<EOF
 {
   "name": "Temperature Data",
@@ -1687,20 +1684,22 @@ Access-Control-Expose-Headers: Location
 {
   "channels": [
     {
-      "id": "cb81bbff-850d-471f-bd74-c15d6e1a6c4e",
-      "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
+      "id": "977bbd33-5b59-4b7a-a9c3-111111111111",
       "name": "Light Data",
-      "created_at": "2023-06-15T09:15:44.154283Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
+      "description": "Weather temperature data",
+      "domain_id": "abc123-domain",
+      "metadata": {"location": "server1"},
+      "status": "enabled",
+      "created_at": "2025-02-11T09:45:00Z"
     },
     {
-      "id": "fc9bf029-b1d3-4408-8d53-fc576247a4b3",
-      "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
+      "id": "977bbd33-5b59-4b7a-a9c3-111111111112",
       "name": "Pressure Data",
-      "created_at": "2023-06-15T09:15:44.15721Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
+      "description": "Weather temperature data",
+      "domain_id": "abc123-domain",
+      "metadata": {"location": "server1"},
+      "status": "enabled",
+      "created_at": "2025-02-11T09:45:00Z"
     }
   ]
 }
@@ -1785,7 +1784,7 @@ Access-Control-Expose-Headers: Location
 
   {
     "id": "977bbd33-5b59-4b7a-a9c3-111111111111",
-    "name":"Light Data"
+    "name":"Light Data",
     "description": "Weather temperature data",
     "domain_id": "abc123-domain",
     "metadata": { "location": "server1" },
@@ -1798,7 +1797,7 @@ Access-Control-Expose-Headers: Location
 
 You can get all channels for a logged-in user.
 
-If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parentID`, `ownerID`, `tree` and `dir` as query parameters.
+If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parent_id`, `owner_id`, `tree` and `dir` as query parameters.
 
 ```bash
 curl -sSiX GET http://localhost:9005/{domain_id}/channels \
@@ -1808,7 +1807,7 @@ curl -sSiX GET http://localhost:9005/{domain_id}/channels \
 For example:
 
 ```bash
-curl -sSiX GET http://localhost/channels -H "Authorization: Bearer <user_token>"
+curl -sSiX GET http://localhost:9005/{domain_id}/channels -H "Authorization: Bearer <user_token>"
 
 HTTP/1.1 200 OK
 Server: nginx/1.23.3
@@ -2361,7 +2360,7 @@ Access-Control-Expose-Headers: Location
 
 You can get all groups for a logged-in user.
 
-If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parentID`, `ownerID`, `tree` and `dir` as query parameters.
+If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parent_id`, `owner_id`, `tree` and `dir` as query parameters.
 
 ```bash
 curl -sSiX GET http://localhost/{domain_id}/groups -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
@@ -2420,7 +2419,7 @@ Access-Control-Expose-Headers: Location
 
 You can get all groups that are children of a group for a logged-in user.
 
-If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parentID`, `tree` and `dir` as query parameters.
+If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parent_id`, `tree` and `dir` as query parameters.
 
 ```bash
 curl -sSiX GET "http://localhost/{domain_id}/groups/{group_id}/children" -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
@@ -2651,12 +2650,13 @@ Assign user to a group
 curl -sSiX POST http://localhost/users/policies \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <user_token>" \
--d @- << EOF
+-d @- <<EOF
 {
-  "subject": "{user_id}",
-  "object": "{group_id}",
+  "subject": "<user_id>",
+  "object": "<group_id>",
   "actions": ["<member_action>"]
 }
+EOF
 ```
 
 For example:

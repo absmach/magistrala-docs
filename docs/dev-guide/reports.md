@@ -106,7 +106,7 @@ type AggConfig struct {
 | AggType   | Aggregation | Processing type (MAX/MIN/SUM/AVG/COUNT)  | If aggregation needed |
 | Interval  | string      | Time window (e.g., "1h", "5m")           | If AggType specified  |
 
-### Example configurations:
+### Example configurations
 
 - Daily sales report at 8 AM: **DAILY** + **08:00**
 - Weekly energy summary every Monday: **WEEKLY** + **00:00**
@@ -128,6 +128,7 @@ Data Collection
 The Reports Service supports timezone-aware report generation using IANA timezone names. This feature allows timestamps in generated reports to be displayed in the user's preferred timezone rather than UTC.
 
 **Key Features:**
+
 - Supports all IANA timezone names (e.g., "Europe/Paris", "America/New_York", "Asia/Tokyo")
 - Defaults to UTC when no timezone is specified
 - Automatically applies the timezone to:
@@ -136,6 +137,7 @@ The Reports Service supports timezone-aware report generation using IANA timezon
 - Falls back to UTC gracefully if an invalid timezone is provided
 
 **Example Timezone Values:**
+
 - `"America/New_York"` - Eastern Time (US)
 - `"Europe/London"` - British Time
 - `"Asia/Tokyo"` - Japan Standard Time
@@ -148,7 +150,7 @@ The Reports Service supports timezone-aware report generation using IANA timezon
 
 Both PDF and CSV formats contain identical data - they differ only in presentation style and file structure:
 
-| Feature           |   PDF Format                      |	CSV Format                       |
+| Feature           |   PDF Format                      |  CSV Format                       |
 |-------------------|-----------------------------------|------------------------------------|
 | Structure	        | Multi-page document with tables   | Single-file comma-separated values |
 | Headers           | Styled section headers            | Simple text row headers            |
