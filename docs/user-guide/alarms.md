@@ -1,5 +1,13 @@
 ---
 title: Alarms
+description: Create alarms and monitor from threshold rules
+keywords:
+  - Magistrala Alarms
+  - IoT Alerts
+  - Rules Engine
+  - Threshold Detection
+  - Event Monitoring
+image: /img/mg-preview.png
 ---
 
 ## Overview

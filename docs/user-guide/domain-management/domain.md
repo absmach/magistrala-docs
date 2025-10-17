@@ -1,5 +1,14 @@
 ---
 title: Domain
+description: Manage a Magistrala Domain through editing metadata, roles and assigning users with roles.
+keywords:
+  - Magistrala Domain
+  - Domain Management
+  - Access Control
+  - Role-Based Permissions
+  - IoT User Management
+  - Assigning Users
+image: /img/mg-preview.png
 ---
 
 ## Domain Information

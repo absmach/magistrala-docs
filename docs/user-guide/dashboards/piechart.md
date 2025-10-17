@@ -1,5 +1,14 @@
 ---
 title: Pie Chart
+description: Slice up your sensor data to see who’s taking the biggest piece.
+keywords:
+  - Pie Chart
+  - Data Distribution
+  - IoT Metrics
+  - Magistrala Widget
+  - Dashboard Visualization
+  - Aggregated Pie Charts
+image: /img/mg-preview.png
 ---
 
 

@@ -1,5 +1,17 @@
 ---
 title: Channels
+description: Manage messaging channels and connections
+keywords:
+  - Magistrala Channels
+  - IoT Messaging
+  - Channel Roles
+  - Publish Subscribe
+  - Audit Logs
+  - Clients
+  - Metadata
+  - Route
+  - Members
+image: /img/mg-preview.png
 ---
 
 **Channels** act as message conduits. They are responsible for the messages exchange between clients and act as message topics that can be **published** or **subscribed** to by multiple Clients.

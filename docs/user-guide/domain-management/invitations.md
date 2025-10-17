@@ -1,5 +1,14 @@
 ---
 title: Invitations
+description: Learn how to invite users to your Magistrala domain and manage invitation responses including acceptance and decline.
+keywords:
+  - Magistrala Invitations
+  - Invite Users
+  - Domain Access
+  - Role Assignment
+  - IoT User Onboarding
+  - Permissions
+image: /img/mg-preview.png
 ---
 
 ## Overview

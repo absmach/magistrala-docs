@@ -1,5 +1,13 @@
 ---
 title: Architecture
+description: Discover the architecture behind Magistrala – an open-source, scalable IoT platform. Learn about its core components, domain model, messaging, and edge capabilities.
+keywords:
+  - Magistrala Architecture
+  - IoT Middleware
+  - Open Source IoT
+  - Edge Computing
+  - Messaging Backbone
+image: /img/mg-preview.png
 ---
 
 ## Components

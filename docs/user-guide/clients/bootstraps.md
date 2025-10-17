@@ -1,5 +1,14 @@
 ---
 title: Bootstraps Service
+description: Configure devices to auto-connect securely
+keywords:
+  - Magistrala Bootstraps
+  - Device Configuration
+  - IoT Onboarding
+  - Auto-Provisioning
+  - Secure Credentials
+  - Documentation
+image: /img/mg-preview.png
 ---
 
 **Bootstrapping** is the process of automatically configuring a device to connect with the Magistrala platform without external input.

@@ -1,5 +1,14 @@
 ---
 title: Gauges
+description: Keep an eye on live metrics with dynamic gauges
+keywords:
+  - Gauges
+  - Real-time Monitoring
+  - Magistrala Dashboards
+  - Sensor Metrics
+  - Realtime Gauge Data
+  - Temperature Gauge
+  - Speed Gauge
 ---
 
 

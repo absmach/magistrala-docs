@@ -1,5 +1,13 @@
 ---
 title: Reports
+description: Generate and schedule IoT data reports
+keywords:
+  - Magistrala Reports
+  - IoT Analytics
+  - Data Reporting
+  - Scheduled Reports
+  - PDF CSV Exports
+image: /img/mg-preview.png
 ---
 
 ## Overview
@@ -61,6 +69,7 @@ When creating or scheduling a report, you can specify a timezone in the **Config
 ### Supported Timezone Formats
 
 The service accepts IANA timezone names, such as:
+
 - **Americas**: "America/New_York", "America/Los_Angeles", "America/Chicago"
 - **Europe**: "Europe/London", "Europe/Paris", "Europe/Berlin"
 - **Asia**: "Asia/Tokyo", "Asia/Shanghai", "Asia/Dubai"

@@ -1,5 +1,13 @@
 ---
 title: Introduction
+description: Learn how to manage Domains in Magistrala — from creating roles and assigning users to Domains, to handling invitations, billing and subscription plans.
+keywords:
+  - Domain Management
+  - Magistrala Billing
+  - User Roles
+  - IoT Subscriptions
+  - Invitations
+image: /img/mg-preview.png
 ---
 
 This section will detail management of a domain, creation of roles, assigning of users to the domain,  invitation of users to the domains and management of billing and subscriptions of the domain.

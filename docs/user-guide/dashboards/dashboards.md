@@ -1,5 +1,17 @@
 ---
 title: Dashboard Guide
+description: Build, edit, and share dashboards with widgets
+keywords:
+  - Magistrala Dashboards
+  - Dashboard Widgets
+  - IoT Charts
+  - Data Visualization
+  - Fullscreen Dashboards
+  - JSON Dashboard Upload
+  - Share Dashboards
+  - Widgets
+  - Messages
+image: /img/mg-preview.png
 ---
 
 ### Create a New Dashboard

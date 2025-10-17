@@ -1,5 +1,15 @@
 ---
 title: Area Chart
+description: Visualize cumulative trends and patterns in IoT data using Area Charts on Magistrala dashboards.
+keywords:
+  - Magistrala Area Chart
+  - IoT Data Visualization
+  - Time Series Area Graphs
+  - Realtime Data Charts
+  - Sensor Data Trends
+  - Aggregated Area Charts
+  - Real-time IoT Dashboards
+image: /img/mg-preview.png
 ---
 
 Area Charts provide a visually rich way to track data trends over time by shading the area beneath the line. Like other timeseries widgets, they support multiple data sources, time window configuration, and data aggregation to help users extract meaningful insights.

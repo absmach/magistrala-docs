@@ -1,5 +1,13 @@
 ---
 title: Billing
+description: Manage your Magistrala Cloud Billing.
+keywords:
+  - Magistrala Billing
+  - Subscription Management
+  - IoT Billing
+  - Payment Plans
+  - Invoices and Transactions
+image: /img/mg-preview.png
 ---
 
 > Please note that this service is only available to **Magistrala Cloud** users.

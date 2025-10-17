@@ -2,6 +2,14 @@
 title: Overview
 slug: /
 id: index
+description: Magistrala is an open-source IoT platform with multi-protocol support, device management, and scalable middleware for secure cloud and edge deployments.
+keywords:
+  - IoT
+  - Cloud Middleware
+  - Open Source
+  - Device Management
+  - Magistrala
+image: /img/mg-preview.png
 ---
 
 

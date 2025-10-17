@@ -1,5 +1,16 @@
 ---
 title: Clients
+description: Manage clients and connections
+keywords:
+  - Magistrala Clients
+  - IoT Devices
+  - Client Roles
+  - Connect to Channels
+  - Audit Logs
+  - Channels
+  - Tags
+  - Members
+image: /img/mg-preview.png
 ---
 
 A **Client** in Magistrala can be either a **device** or an **application** that publishes or subscribes to messages.

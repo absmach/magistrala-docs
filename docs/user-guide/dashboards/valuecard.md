@@ -1,5 +1,13 @@
 ---
 title: Value Card
+description: Instantly display the latest value from your devices — simple, sharp and always current.
+keywords:
+  - Real-time metrics
+  - Value display widget
+  - IoT data snapshot
+  - Dashboard monitoring
+  - Live sensor values
+image: /img/mg-preview.png
 ---
 
 A **Value Card** provides a snapshot of real-time data by displaying the latest value from a message received via a connected channel.

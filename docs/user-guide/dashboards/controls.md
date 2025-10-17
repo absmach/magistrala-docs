@@ -1,5 +1,14 @@
 ---
 title: Controls
+description: Switch devices on or off, or fine-tune values in real-time—right from your dashboard.
+keywords:
+  - Control Widgets
+  - Switch
+  - Slider
+  - IoT Device Control
+  - Dashboard Commands
+  - Magistrala Dashboards
+image: /img/mg-preview.png
 ---
 
 Control Cards are interactive widgets that allow a user to send commands directly to connected devices through a selected channel. These cards provide an intuitive interface for real-time device control within the dashboard.

@@ -1,5 +1,13 @@
 ---
 title: Table Card
+description: Display lists of entities in a clean, paginated table.
+keywords:
+  - Entity list
+  - Device overview
+  - IoT dashboard table
+  - Domain management
+  - Pagination widget
+image: /img/mg-preview.png
 ---
 
 **Table Cards** are powerful widgets for displaying lists of entities—such as clients (devices), members, groups, or channels—within a domain. They present key information like entity names, statuses, and creation dates, and include built-in pagination for easy navigation through large datasets.
