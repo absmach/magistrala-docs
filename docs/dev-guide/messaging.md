@@ -39,7 +39,7 @@ to every command.
 
 ## CoAP
 
-CoAP adapter implements CoAP protocol using underlying UDP and according to [RFC 7252][rfc7252]. To send and receive messages over CoAP, you can use [CoAP CLI][coap-cli]. To set the add-on, please follow the installation instructions provided [here][coap-cli].
+CoAP adapter implements CoAP protocol using underlying UDP and according to [RFC 7252][rfc7252]. To send and receive messages over CoAP, you can use [CoAP CLI][coap-cli]. To set the add-on, please follow the installation instructions provided at [CoAP CLI][coap-cli].
 
 Examples:
 

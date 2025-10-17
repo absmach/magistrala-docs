@@ -68,7 +68,7 @@ In most of the cases, HTTPS, WSS, MQTTS or secure CoAP are secure enough. Howeve
 AUTH=x509 docker-compose -f docker/docker-compose.yml up -d
 ```
 
-Mutual authentication includes client-side certificates. Certificates can be generated using the simple script provided [here][ssl-makefile]. In order to create a valid certificate, you need to create Magistrala client using the process described in the [provisioning section][provision]. After that, you need to fetch created client secret. Client secret will be used to create x.509 certificate for the corresponding client. To create a certificate, execute the following commands:
+Mutual authentication includes client-side certificates. Certificates can be generated using the simple script provided in the [SSL Makefile][ssl-makefile]. In order to create a valid certificate, you need to create Magistrala client using the process described in the [provisioning section][provision]. After that, you need to fetch created client secret. Client secret will be used to create x.509 certificate for the corresponding client. To create a certificate, execute the following commands:
 
 ```bash
 cd docker/ssl
@@ -136,7 +136,36 @@ As you can see, `Authorization` header does not have to be present in the HTTP r
 ### HTTPS
 
 ```bash
-curl -s -S -i --cacert docker/ssl/certs/ca.crt --cert docker/ssl/certs/<client_cert_name>.crt --key docker/ssl/certs/<client_cert_key>.key -X POST -H "Content-Type: application/senml+json" https://localhost/http/m/<domain_id>/c/<channel_id> -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+curl -sS -i \
+  --cacert docker/ssl/certs/ca.crt \
+  --cert docker/ssl/certs/<client_cert_name>.crt \
+  --key docker/ssl/certs/<client_cert_key>.key \
+  -X POST \
+  -H "Content-Type: application/senml+json" \
+  https://localhost/http/m/{domain_id}/c/{channel_id} \
+  -d @- <<EOF
+[
+  {
+    "bn": "some-base-name:",
+    "bt": 1.276020076001e+09,
+    "bu": "A",
+    "bver": 5,
+    "n": "voltage",
+    "u": "V",
+    "v": 120.1
+  },
+  {
+    "n": "current",
+    "t": -5,
+    "v": 1.2
+  },
+  {
+    "n": "current",
+    "t": -4,
+    "v": 1.3
+  }
+]
+EOF
 ```
 
 ### MQTTS

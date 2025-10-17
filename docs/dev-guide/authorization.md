@@ -81,7 +81,7 @@ Clients can publish or subscribe to the channel.
 Multiple clients can be connected to a channel using the following API request.
 
 ```bash
-curl -sSiX POST http://localhost/<domain_id>/channels/<channel_id>/connect -H "Content-Type: application/json" -H "Authorization: Bearer <domain_user_access_token>" -d @- << EOF
+curl -sSiX POST http://localhost/{domain_id}/channels/{channel_id}/connect -H "Content-Type: application/json" -H "Authorization: Bearer <domain_user_access_token>" -d @- << EOF
 {
     "client_ids": ["client_id"],
     "types": ["publish"]
@@ -119,9 +119,12 @@ A group serves as a parent entity that can contain both groups and channels as c
 Assigning a group as the parent of a channel can be achieved through the following request.
 
 ```bash
-curl -sSiX POST 'http://localhost/<domain_id>/channels/<channel_id>/groups/assign' -H "Content-Type: application/json" -H "Authorization: Bearer <domain_user_access_token>" -d @- << EOF
+curl -sSiX POST http://localhost/{domain_id}/channels/{channel_id}/groups/assign \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <domain_user_access_token>" \
+-d @- <<EOF
 {
-  "group_ids" : [ "<group_id_1>", "<group_id_2>" ]
+  "group_ids": ["<group_id_1>", "<group_id_2>"]
 }
 EOF
 ```
@@ -159,7 +162,7 @@ Groups can establish a parent-child relationship with other groups. The children
 Assigning a group as the parent to another group can be achieved through the following request.
 
 ```bash
-curl -sSiX POST 'http://localhost/groups/<parent_group_id>/groups/assign' -H "Content-Type: application/json" -H "Authorization: Bearer <domain_user_access_token>" -d @- << EOF
+curl -sSiX POST 'http://localhost/groups/{parent_group_id}/groups/assign' -H "Content-Type: application/json" -H "Authorization: Bearer <domain_user_access_token>" -d @- << EOF
 {
   "group_ids": ["<child_group_id_1>","<child_group_id_2>"]
 }
