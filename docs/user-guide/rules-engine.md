@@ -46,15 +46,15 @@ Here are some practical examples of how you can use the Rules Engine:
 
 ## Create a Rule
 
-To create a new rule, navigate to the **Rules** section and click the `+ Create` button.  
+To create a new rule, navigate to the **Rules** section and click the `+ Create` button.
 
 ![Create a new Rule](../img/rules/rules.png)
 
-You will be redirected to the rule configuration page. A valid rule must include at least **three nodes**:  
+You will be redirected to the rule configuration page. A valid rule must include at least **three nodes**:
 
-- **Input Node** – defines the data source.  
-- **Logic Node** – applies conditions or transformations.  
-- **Output Node** – specifies the resulting action.  
+- **Input Node** – defines the data source.
+- **Logic Node** – applies conditions or transformations.
+- **Output Node** – specifies the resulting action.
 
 The rule cannot be saved unless these required nodes are present.
 
@@ -64,18 +64,18 @@ Click **Save Rule** to open a popup dialog where you can enter the rule name and
 
 ![Create a Rule Dialog](../img/rules/create-rule-dialog.png)
 
-Once created, the rule is added to the rules list with the following details:  
+Once created, the rule is added to the rules list with the following details:
 
-1. **Rule Name**  
-2. **Status** – Enabled or Disabled  
-3. **Creation Date**  
+1. **Rule Name**
+2. **Status** – Enabled or Disabled
+3. **Creation Date**
 
-Each rule entry also provides quick actions for:  
+Each rule entry also provides quick actions for:
 
-- Viewing rule details  
-- Copying the rule ID  
-- Enabling/Disabling the rule  
-- Deleting the rule  
+- Viewing rule details
+- Copying the rule ID
+- Enabling/Disabling the rule
+- Deleting the rule
 
 ![Quick Links](../img/rules/quick-links.png)
 
@@ -192,6 +192,7 @@ You can add one or more output nodes. The following nodes are supported:
 3. PostgreSQL
 4. Alarm
 5. Magistrala DB
+6. Slack
 
 ![select output](../img/rules/output-node.png)
 
@@ -261,6 +262,38 @@ To be able to store messages in the internal Magistrala DB, you need to create a
 An alarm output will enable you to be able to generate alarms in the case where a threshold has been exceeded. More information about this node is provided in the [Alarms](/docs/user-guide/alarms.md) section.
 
 ![Alarm rule example](../img/rules/alarm-rule.png)
+
+#### Slack
+
+Slack output enables you to send notifications to a Slack channel when a rule is triggered.
+
+To configure a Slack output node, provide the following fields:
+
+![Slack variables](../img/rules/slack-variables.png)
+
+- **Token**: Your Slack App token (used for authentication).
+- **Channel ID**: The ID of the Slack channel where notifications will be sent.
+- **Message**: A valid Slack [message payload](https://docs.slack.dev/messaging/#payloads) in JSON format.
+
+  - You can use [**dynamic template fields**](#dynamic-variables-and-templates) in the message object.
+  - The payload must follow Slack's structure (e.g., `text`, `blocks`, `attachment`).
+
+  Example:
+
+```json title="Slack Message Payload"
+{
+  "text": "Temperature alert for {{.Message.sensor}}",
+  "attachments": [
+    {
+      "pretext": "Threshold exceeded",
+      "text": "Current temperature is {{.Result.v}} {{.Result.u}}"
+    }
+  ],
+  "icon_url": "http://lorempixel.com/48/48"
+}
+```
+
+![Slack node](../img/rules/slack-node.png)
 
 ## Dynamic Variables and Templates
 
