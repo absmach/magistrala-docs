@@ -21,12 +21,12 @@ The Magistrala Rules Engine is designed for **real-time** and **scheduled messag
 ### Data Flow Summary
 
 1. **Input**
-  The engine **subscribes to a channel** (and optionally a topic) to receive messages from devices, services, or pipelines in real time.
+   The engine **subscribes to a channel** (and optionally a topic) to receive messages from devices, services, or pipelines in real time.
 
    > If no schedule is defined, the rule executes **every time** a new message arrives on the configured channel/topic.
 
 2. **Schedule**
-  If a schedule is defined, the rule will **automatically execute** based on the configured:
+   If a schedule is defined, the rule will **automatically execute** based on the configured:
 
 - Start time
 - Execution time
@@ -34,7 +34,7 @@ The Magistrala Rules Engine is designed for **real-time** and **scheduled messag
 - Recurring Interval (e.g 1,2,3 etc) - For example if recurrence is daily and interval is 2, it will repeat every 2 days.
 
 3. **Logic**
-  The incoming message or scheduled execution is processed using a user-defined script, written in:
+   The incoming message or scheduled execution is processed using a user-defined script, written in:
 
 - Lua
 - Go
@@ -42,13 +42,14 @@ The Magistrala Rules Engine is designed for **real-time** and **scheduled messag
 > The logic must return a **non-nil value** for outputs to be invoked.
 
 4. **Output(s)**
-  If the script returns a value, the rules forwards the result to one or more outputs. Supported output types include:
+   If the script returns a value, the rules forwards the result to one or more outputs. Supported output types include:
 
 - _Channel_ - Forward the result to another channel and/or topic.
 - _Internal DB_ - Save processed data internally.
 - _Postgres DB_ - Store result in a connected Postgres database table.
 - _Alarm_ - Raise and alarm event with a severity level.
 - _Email_ - Send notifications to configured recipients.
+- _Slack_ - Send notifications to configured slack channel.
 
 ## Core Concepts
 
@@ -266,6 +267,7 @@ The **outputs** field allows a rule to define **multiple destinations** or **act
 3. **save_remote_pg**: Forwards the result to an external PostgreSQL database.
 4. **alarms**: Triggers an alarm with a structured severity report.
 5. **email**: Sends a notification email.
+6. **Slack**: Sends a slack notification.
 
 #### channels
 
@@ -317,6 +319,16 @@ type Email struct {
   To      []string  `json:"to"`
   Subject string    `json:"subject"`
   Content string    `json:"content"`
+}
+```
+
+#### slack
+
+```go
+type Slack struct {
+	Token     string `json:"token"`
+	ChannelID string `json:"channel_id"`
+	Message   string `json:"message"`
 }
 ```
 
