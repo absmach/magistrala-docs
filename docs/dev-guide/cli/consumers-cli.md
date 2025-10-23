@@ -1,5 +1,16 @@
 ---
 title: Consumers
+description: Manage subscriptions in Magistrala using the CLI — create, list, view and remove event consumers quickly.
+keywords:
+  - CLI
+  - Consumers
+  - Subscriptions
+  - Magistrala
+  - Events
+  - Messaging
+  - Create
+  - Remove
+image: /img/mg-preview.png
 ---
 
 

@@ -1,5 +1,16 @@
 ---
 title: Authentication
+description: Secure user and client access in Magistrala via JWTs, Google OIDC, API keys and mutual TLS (mTLS).
+keywords:
+  - Authentication
+  - JWT
+  - OIDC
+  - Google Identity
+  - API keys
+  - mTLS
+  - X.509
+  - Magistrala
+image: /img/mg-preview.png
 ---
 
 

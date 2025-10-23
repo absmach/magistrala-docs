@@ -1,5 +1,16 @@
 ---
 title: Edge
+description: Deploy lightweight Magistrala services at the edge — run Agent and Export with NATS/MQTT for remote control, heartbeat monitoring and data streaming.
+keywords:
+  - Edge
+  - Gateway
+  - Agent
+  - Export
+  - MQTT
+  - NATS
+  - Bootstrap
+  - Heartbeat
+image: /img/mg-preview.png
 ---
 
 

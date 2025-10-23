@@ -1,5 +1,16 @@
 ---
 title: Clients
+description: Manage clients in Magistrala using the CLI.
+keywords:
+  - CLI
+  - Clients
+  - Devices
+  - Management
+  - Magistrala
+  - Channels
+  - Connection
+  - Provisioning
+image: /img/mg-preview.png
 ---
 
 Magistrala CLI provides a simple and efficient way to manage clients or devices. Below are the key commands to create, connect, assign and manage clients within your system.

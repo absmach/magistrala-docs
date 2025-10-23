@@ -1,5 +1,16 @@
 ---
 title: Introduction to Developer's Guide
+description: Learn how to set up, build, test and deploy Magistrala.
+keywords:
+  - Developers Guide
+  - Magistrala
+  - Setup
+  - Microservices
+  - Bootstrap
+  - Consumers
+  - Provision
+  - Rules Engine
+image: /img/mg-preview.png
 ---
 
 This section will guide you through the essential processes required to effectively work with Magistrala.

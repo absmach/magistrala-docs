@@ -1,5 +1,17 @@
 ---
 title: Storage
+description: Configure Magistrala storage with writers and readers for Cassandra, MongoDB, InfluxDB, PostgreSQL and TimescaleDB via Docker add-ons.
+keywords:
+  - Storage
+  - Writers
+  - Readers
+  - InfluxDB
+  - TimescaleDB
+  - PostgreSQL
+  - MongoDB
+  - Cassandra
+  - Magistrala
+image: /img/mg-preview.png
 ---
 
 

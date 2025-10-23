@@ -1,5 +1,16 @@
 ---
 title: Certs
+description: Issue, retrieve and revoke client certificates in Magistrala.
+keywords:
+  - Certificates
+  - Certs
+  - PKI
+  - Vault
+  - mTLS
+  - Security
+  - X.509
+  - Magistrala
+image: /img/mg-preview.png
 ---
 
 

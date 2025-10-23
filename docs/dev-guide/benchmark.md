@@ -1,5 +1,16 @@
 ---
 title: Test Spec
+description: Load test Magistrala performance with MZBench—simulate MQTT, HTTP and large-scale traffic locally or on AWS EC2.
+keywords:
+  - Benchmarking
+  - MZBench
+  - MQTT
+  - HTTP
+  - Load testing
+  - Performance
+  - EC2
+  - Magistrala
+image: /img/mg-preview.png
 ---
 
 ## Tools

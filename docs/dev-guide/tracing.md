@@ -1,5 +1,16 @@
 ---
 title: Tracing
+description: Monitor and debug Magistrala services with Jaeger distributed tracing for real-time performance insights and message flow visualization.
+keywords:
+  - Tracing
+  - Jaeger
+  - Distributed Tracing
+  - Monitoring
+  - Debugging
+  - Performance
+  - Magistrala
+  - Observability
+image: /img/mg-preview.png
 ---
 
 

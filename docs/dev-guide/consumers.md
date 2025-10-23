@@ -1,5 +1,16 @@
 ---
 title: Consumers
+description: Process, store and notify messages in Magistrala.
+keywords:
+  - Consumers
+  - Writers
+  - Notifiers
+  - TimescaleDB
+  - PostgreSQL
+  - SMTP
+  - SMPP
+  - Subscriptions
+image: /img/mg-preview.png
 ---
 
 

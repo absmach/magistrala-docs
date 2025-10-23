@@ -1,5 +1,16 @@
 ---
 title: Getting Started
+description: Set up and run Magistrala—install, build and launch services using Docker or source for a full IoT messaging environment.
+keywords:
+  - Getting Started
+  - Installation
+  - Build
+  - Docker
+  - CLI
+  - Provisioning
+  - Magistrala
+  - Setup
+image: /img/mg-preview.png
 ---
 
 

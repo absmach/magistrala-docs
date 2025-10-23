@@ -1,5 +1,16 @@
 ---
 title: Readers
+description: Retrieve and query stored messages efficiently in Magistrala using TimescaleDB or PostgreSQL readers with filters, pagination and aggregation support.
+keywords:
+  - Readers
+  - Messages
+  - TimescaleDB
+  - PostgreSQL
+  - Query
+  - Aggregation
+  - Pagination
+  - Magistrala
+image: /img/mg-preview.png
 ---
 
 

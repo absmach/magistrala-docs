@@ -1,5 +1,16 @@
 ---
 title: Bootstrap
+description: Configure devices to auto-connect securely
+keywords:
+  - Bootstrap
+  - Device configuration
+  - External ID
+  - External key
+  - Encryption
+  - AES
+  - Secure bootstrap
+  - Magistrala
+image: /img/mg-preview.png
 ---
 
 

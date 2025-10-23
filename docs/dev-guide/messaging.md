@@ -1,5 +1,16 @@
 ---
 title: Messaging
+description: Learn how to publish and subscribe to messages in Magistrala using HTTP, MQTT, CoAP and WebSocket protocols with broker and subtopic support.
+keywords:
+  - Messaging
+  - MQTT
+  - HTTP
+  - CoAP
+  - WebSocket
+  - NATS
+  - RabbitMQ
+  - Kafka
+image: /img/mg-preview.png
 ---
 
 Once a channel is provisioned and client is connected to it, it can start to publish messages on the channel. The following sections will provide an example of message publishing for each of the supported protocols.

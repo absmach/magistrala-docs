@@ -1,5 +1,16 @@
 ---
 title: Overview
+description: Understand core Magistrala entities ie Users, Roles, Groups, Clients, Channels and Domains — and how they interact within the IoT platform.
+keywords:
+  - Entities
+  - Users
+  - Roles
+  - Groups
+  - Clients
+  - Channels
+  - Domains
+  - Magistrala
+image: /img/mg-preview.png
 ---
 
 
