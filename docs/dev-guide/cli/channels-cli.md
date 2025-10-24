@@ -1,5 +1,16 @@
 ---
 title: Channels
+description: Manage channels in Magistrala using the CLI.
+keywords:
+  - CLI
+  - Channels
+  - Management
+  - Magistrala
+  - Clients
+  - Connections
+  - Provisioning
+  - Automation
+image: /img/mg-preview.png
 ---
 
 Magistrala CLI provides a simple and efficient way to manage channels. Below are the key commands to create, connect, assign and manage channels within your system.

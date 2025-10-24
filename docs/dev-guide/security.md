@@ -1,5 +1,16 @@
 ---
 title: Security
+description: Configure secure connections for Magistrala services including gRPC, PostgreSQL and adapters using TLS certificates and SSL modes.
+keywords:
+  - Security
+  - TLS
+  - SSL
+  - Certificates
+  - gRPC
+  - PostgreSQL
+  - Encryption
+  - Magistrala
+image: /img/mg-preview.png
 ---
 
 

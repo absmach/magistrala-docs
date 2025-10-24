@@ -1,5 +1,16 @@
 ---
 title: Domains
+description: Manage domains in Magistrala using the CLI.
+keywords:
+  - CLI
+  - Domains
+  - Management
+  - Magistrala
+  - Namespace
+  - Users
+  - Enable
+  - Disable
+image: /img/mg-preview.png
 ---
 
 

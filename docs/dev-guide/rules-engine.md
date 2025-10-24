@@ -1,5 +1,17 @@
 ---
 title: Rules Engine
+description: Create, schedule and execute automation rules in Magistrala using Lua or Go scripts to process and forward real-time IoT data.
+keywords:
+  - Rules Engine
+  - Automation
+  - Lua
+  - Go
+  - Scheduling
+  - Outputs
+  - Alarms
+  - Magistrala
+  - Slack
+image: /img/mg-preview.png
 ---
 
 The **Rules Engine** in Magistrala provides powerful, flexible message processing via scriptable rules. Each rule can consume real-time input, run on a schedule, and forward results to multiple output targets including channels, alarms, emails, databases, and more.
@@ -125,7 +137,7 @@ type Schedule struct {
 - **Weekly:** Runs on the same day of the week.
 - **Monthly:** Runs on the same day each month.
 
-#### Scheduling Behavior:
+#### Scheduling Behavior
 
 - If schedule is present and input_channel is not set, the rule runs at scheduled intervals.
 - If both are present, the rule can execute based on incoming messages and on schedule.
@@ -217,7 +229,7 @@ Valid SenML Example:
 ]
 ```
 
-#### Constraints:
+#### Constraints
 
 - Each entry must have a unique `n`
 - Only one value field (`v`, `vs`, `vb`, `vd`) per entry

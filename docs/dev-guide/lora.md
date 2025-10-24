@@ -1,5 +1,16 @@
 ---
 title: LoRa
+description: Bridge LoRaWAN to Magistrala with the LoRa adapter—map Applications/Devices to Channels/Clients and forward JSON/SenML over MQTT.
+keywords:
+  - LoRaWAN
+  - LoRa adapter
+  - MQTT
+  - JSON
+  - SenML
+  - Applications
+  - Devices
+  - Route map
+image: /img/mg-preview.png
 ---
 
 Bridging with LoRaWAN Networks can be done over the [lora-adapter][lora-adapter]. This service sits between Magistrala and [LoRa Server][lora-server] and just forwards the messages from one system to another via MQTT protocol, using the adequate MQTT topics and in the good message format (JSON and SenML), i.e. respecting the APIs of both systems.

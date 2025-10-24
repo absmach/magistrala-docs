@@ -1,5 +1,16 @@
 ---
 title: Reports
+description: Generate, schedule and export IoT data reports in Magistrala as PDF or CSV with timezone and email support.
+keywords:
+  - Reports
+  - Scheduling
+  - CSV
+  - PDF
+  - Metrics
+  - Aggregation
+  - Timezone
+  - Magistrala
+image: /img/mg-preview.png
 ---
 
 The **Reports Service** in Magistrala provides a streamlined way to generate and schedule data reports from connected devices and sensors. It allows users to collect, aggregate, and export metrics in PDF and CSV formats, either via email or direct download.

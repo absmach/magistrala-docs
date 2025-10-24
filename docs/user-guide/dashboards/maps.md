@@ -1,5 +1,14 @@
 ---
 title: Maps
+description: Visualize device locations with Magistrala Maps.
+keywords:
+  - Maps
+  - Geo Visualization
+  - Marker Map
+  - Route Map
+  - Polygon Map
+  - IoT Geodata
+image: /img/mg-preview.png
 ---
 
 ## Overview

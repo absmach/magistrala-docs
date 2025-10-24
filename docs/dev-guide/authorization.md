@@ -1,5 +1,16 @@
 ---
 title: Authorization
+description: Manage user roles, entity hierarchies and permissions.
+keywords:
+  - Authorization
+  - SpiceDB
+  - RBAC
+  - Domains
+  - Groups
+  - Channels
+  - Clients
+  - Permissions
+image: /img/mg-preview.png
 ---
 
 

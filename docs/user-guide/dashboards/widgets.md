@@ -1,5 +1,17 @@
 ---
 title: Widget Guide
+description: Visualize IoT data with charts and controls
+keywords:
+  - Magistrala Widgets
+  - IoT Visualization
+  - Dashboard Widgets
+  - Real-time Monitoring
+  - Charts and Gauges
+  - Maps and Controls
+  - Data Filtering
+  - Data Aggregation
+  - Icons
+image: /img/mg-preview.png
 ---
 
 ### Introduction to Widgets

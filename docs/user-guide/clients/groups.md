@@ -1,5 +1,16 @@
 ---
 title: Groups
+description: Manage and Organize Groups
+keywords:
+  - Magistrala Groups
+  - Client Organization
+  - Channel Management
+  - Group Roles
+  - IoT Access Control
+  - Members
+  - Audit Logs
+  - Messaging
+image: /img/mg-preview.png
 ---
 
 **Groups** in Magistrala are collections that organize **clients** and **channels** together.  

@@ -1,5 +1,18 @@
 ---
 title: Rules Engine
+description: Automate IoT workflows with custom rules
+keywords:
+  - Magistrala Rules Engine
+  - IoT Automation
+  - Lua Scripts
+  - Go Scripts
+  - Message Processing
+  - Workflow Builder
+  - Channels
+  - Subtopic
+  - Send Email
+  - Scheduler
+image: /img/mg-preview.png
 ---
 
 ## Overview

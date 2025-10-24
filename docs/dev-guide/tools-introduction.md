@@ -1,5 +1,17 @@
 ---
 title: Introduction to Development Tools
+description: Overview of Magistrala’s core developer tools.
+keywords:
+  - Development Tools
+  - Authentication
+  - Authorization
+  - Messaging
+  - Security
+  - Events
+  - Tracing
+  - Storage
+  - Magistrala
+image: /img/mg-preview.png
 ---
 
 This section provides an overview of key development tools available within Magistrala to support secure, efficient, and scalable application development.

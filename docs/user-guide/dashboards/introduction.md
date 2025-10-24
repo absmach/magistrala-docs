@@ -1,5 +1,13 @@
 ---
 title: Introduction
+description: Create customizable IoT dashboards
+keywords:
+  - Magistrala Dashboards
+  - IoT Visualization
+  - Data Widgets
+  - Real-time Monitoring
+  - Custom Dashboards
+image: /img/mg-preview.png
 ---
 
 Dashboards are a powerful feature in Magistrala, and this section will cover how to create, customize and manage them effectively. Users can create and customize dashboards with various widgets, such as charts and control devices, adapting the interface to their specific needs. This flexibility makes it easier than ever to inspect IoT devices and data.

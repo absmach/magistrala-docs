@@ -1,5 +1,16 @@
 ---
 title: Provision
+description: Automate creation of Magistrala entities and edge configurations using the Provision service.
+keywords:
+  - Provision
+  - Bootstrap
+  - Clients
+  - Channels
+  - Entities
+  - Automation
+  - Configuration
+  - Magistrala
+image: /img/mg-preview.png
 ---
 
 

@@ -1,5 +1,16 @@
 ---
 title: API
+description: Complete Magistrala REST API reference for users, clients, channels, messages, and groups with sample curl commands.
+keywords:
+  - Magistrala API
+  - REST
+  - Users
+  - Clients
+  - Channels
+  - Groups
+  - Messages
+  - Tokens
+image: /img/mg-preview.png
 ---
 
 ## Reference

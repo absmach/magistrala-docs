@@ -1,5 +1,16 @@
 ---
 title: OPC-UA
+description: Learn how to bridge Magistrala with OPC-UA servers to exchange industrial IoT data using the opcua-adapter for browsing and subscribing to nodes.
+keywords:
+  - OPC-UA
+  - Industrial IoT
+  - Adapter
+  - Browse
+  - Subscribe
+  - Redis
+  - NATS
+  - Magistrala
+image: /img/mg-preview.png
 ---
 
 

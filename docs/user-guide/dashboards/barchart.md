@@ -1,5 +1,15 @@
 ---
 title: Bar Chart
+description: Visualize sensor data with bold bars and clear comparisons.
+keywords:
+  - Bar Chart
+  - Magistrala Dashboard
+  - IoT Data Graph
+  - Timeseries Bar
+  - Sensor Metrics
+  - Realtime Data Charts
+  - Aggregated Bar Charts
+image: /img/mg-preview.png
 ---
 
 

@@ -1,5 +1,17 @@
 ---
 title: Provision
+description: Use Magistrala CLI to bulk provision clients, channels and connections, or run quick test setups for development.
+keywords:
+  - CLI
+  - Provision
+  - Clients
+  - Channels
+  - Connections
+  - Magistrala
+  - Bulk
+  - Automation
+  - Setup
+image: /img/mg-preview.png
 ---
 
 

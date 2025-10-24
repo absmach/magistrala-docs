@@ -1,5 +1,16 @@
 ---
 title: Role-Based Access Control (RBAC) Schema
+description: Defines Magistrala’s role-based access control structure, including entities, relations and permissions for managing users, roles and entities across domains.
+keywords:
+  - RBAC
+  - Roles
+  - Permissions
+  - Users
+  - Domains
+  - Access Control
+  - Authorization
+  - Magistrala
+image: /img/mg-preview.png
 ---
 
 

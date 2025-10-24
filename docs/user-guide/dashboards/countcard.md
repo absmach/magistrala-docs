@@ -1,5 +1,13 @@
 ---
 title: Count Card
+description: Get a real-time headcount of your entities — all from one widget.
+keywords:
+  - Count Widget
+  - Dashboard Summary
+  - Entity Overview
+  - Client Count
+  - Channel Count
+image: /img/mg-preview.png
 ---
 
 

@@ -1,5 +1,16 @@
 ---
 title: Introduction
+description: Get started with Magistrala CLI to manage users, clients, channels and messages directly from your terminal or Docker.
+keywords:
+  - CLI
+  - Command Line
+  - Magistrala
+  - Users
+  - Clients
+  - Channels
+  - Messages
+  - Automation
+image: /img/mg-preview.png
 ---
 
 

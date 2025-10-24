@@ -1,5 +1,13 @@
 ---
 title: Personal Access Tokens
+description: Manage access tokens and scopes securely
+keywords:
+  - Magistrala PATs
+  - Access Tokens
+  - API Security
+  - Token Scopes
+  - User Authentication
+image: /img/mg-preview.png 
 ---
 
 ## Overview

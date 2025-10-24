@@ -1,5 +1,16 @@
 ---
 title: Messaging
+description: Send and read messages using Magistrala CLI over HTTP with SenML-formatted payloads for efficient data exchange.
+keywords:
+  - CLI
+  - Messaging
+  - HTTP
+  - Send
+  - Read
+  - SenML
+  - Magistrala
+  - Channels
+image: /img/mg-preview.png
 ---
 
 Magistrala CLI enables seamless messaging over HTTP, allowing clients to **send** and **read** messages through channels. This guide covers the key commands for managing messages effectively.

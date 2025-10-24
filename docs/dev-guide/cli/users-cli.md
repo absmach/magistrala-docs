@@ -1,5 +1,16 @@
 ---
 title: Users
+description: Manage users in Magistrala using the CLI.
+keywords:
+  - CLI
+  - Users
+  - Authentication
+  - Management
+  - Magistrala
+  - Accounts
+  - Tokens
+image: /img/mg-preview.png
+
 ---
 
 

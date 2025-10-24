@@ -1,5 +1,16 @@
 ---
 title: Groups
+description: Manage groups in Magistrala using the CLI.
+keywords:
+  - CLI
+  - Groups
+  - Management
+  - Magistrala
+  - Entities
+  - Members
+  - Enable
+  - Disable
+image: /img/mg-preview.png
 ---
 
 

@@ -1,5 +1,13 @@
 ---
 title: Quick Start Guide
+description: Get up and running with Magistrala — the open-source IoT platform. Learn how to create users, manage clients and channels, and explore key services.
+keywords:
+  - Magistrala Quick Start
+  - IoT Setup Guide
+  - SuperMQ
+  - Open Source IoT
+  - Magistrala Tutorial
+image: /img/mg-preview.png
 ---
 
 Magistrala leverages **SuperMQ** as the backbone for its **Services**, handling the creation, deletion, updating, and retrieval of user accounts, clients and channels.

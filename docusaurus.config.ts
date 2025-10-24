@@ -7,14 +7,13 @@ const config: Config = {
   title: "Magistrala",
   favicon: "img/Magistrala_logo_square_white.svg",
 
-  url: "https://docs.magistrala.abstractmachines.fr",
+  url: "https://docs.magistrala.absmach.eu",
   baseUrl: "/",
 
   organizationName: "absmach",
   projectName: "magistrala",
 
   onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "warn",
   onBrokenAnchors: "ignore",
 
   i18n: {
@@ -66,10 +65,46 @@ const config: Config = {
 
   markdown: {
     mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: "warn",
+    },
   },
   themes: ["@docusaurus/theme-mermaid"],
 
   themeConfig: {
+    metadata: [
+      // SEO
+      { name: 'title', content: 'Magistrala | Open Source IoT Platform' },
+      { name: 'keywords', content: 'IoT, Cloud, Middleware, Open Source, Magistrala' },
+      { name: 'author', content: 'Abstract Machines' },
+      { name: 'description', content: 'Magistrala is an open-source, multi-protocol IoT platform designed for scalable and secure device communication and management.' },
+      { name: 'robots', content: 'index, follow' },
+
+      // Open Graph
+      { property: 'og:title', content: 'Magistrala | Open Source IoT Platform' },
+      { property: 'og:description', content: 'Secure, scalable, and multi-protocol middleware for building IoT solutions.' },
+      { property: 'og:type', content: 'website' },
+      { property: 'og:url', content: 'https://docs.magistrala.absmach.eu/' },
+      { property: 'og:image', content: 'https://docs.magistrala.absmach.eu/img/mg-preview.png' },
+      { property: 'og:image:width', content: '1200' },
+      { property: 'og:image:height', content: '630' },
+      { property: 'og:image:alt', content: 'Magistrala Logo' },
+
+      // Twitter Card
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:site', content: '@absmach' },
+      { name: 'twitter:title', content: 'Magistrala | Open Source IoT Platform' },
+      { name: 'twitter:description', content: 'Secure, scalable, and multi-protocol middleware for building IoT solutions.' },
+      { name: 'twitter:image', content: 'https://docs.magistrala.absmach.eu/img/mg-preview.png' },
+      { name: 'twitter:image:alt', content: 'Magistrala Logo' },
+    ],
+    sitemap: {
+    changefreq: 'weekly',
+    priority: 0.5,
+    filename: 'sitemap.xml',
+    ignorePatterns: ['/tags/**'],
+    createRobotsTxt: false,
+  },
     navbar: {
       logo: {
         alt: "Magistrala Logo",
@@ -121,8 +156,8 @@ const config: Config = {
               href: "https://app.gitter.im/#/room/#absmach_magistrala:gitter.im?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge",
             },
             {
-              label: "Google Group",
-              href: "https://groups.google.com/forum/#!forum/mainflux",
+              label: "LinkedIn",
+              href: 'https://www.linkedin.com/company/abstract-machines',
             },
             {
               label: "Twitter",
@@ -137,6 +172,10 @@ const config: Config = {
               label: "Blog",
               to: "/blog",
             },
+            {
+              label: "Medium",
+              href: "https://medium.com/abstract-machines-blog",
+            }
           ],
         },
       ],
@@ -150,6 +189,35 @@ const config: Config = {
       fontFamily: "Inter, sans-serif",
     },
   } satisfies Preset.ThemeConfig,
+
+  headTags: [
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'preconnect',
+        href: 'https://docs.magistrala.absmach.eu',
+      },
+    },
+    {
+      tagName: 'script',
+      attributes: {
+        type: 'application/ld+json',
+      },
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'Abstract Machines',
+        url: 'https://www.absmach.eu',
+        logo: 'https://docs.magistrala.absmach.eu/img/Magistrala_logo_square_white.svg',
+        sameAs: [
+          'https://twitter.com/absmach',
+          'https://github.com/absmach/magistrala',
+          'https://www.linkedin.com/company/abstract-machines'
+        ],
+      }),
+    },
+
+  ],
 };
 
 export default config;

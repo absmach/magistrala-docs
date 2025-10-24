@@ -1,5 +1,15 @@
 ---
 title: Line Chart
+description: Visualize IoT trends with customizable line charts
+keywords:
+  - Magistrala Line Chart
+  - IoT Time Series Visualization
+  - Line Chart Aggregation
+  - Realtime Data Charts
+  - Dashboard Widgets
+  - Sensor Data Graphs
+  - Aggregated Line Charts
+image: /img/mg-preview.png
 ---
 
 ### Create a Line Chart

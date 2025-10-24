@@ -1,5 +1,17 @@
 ---
 title: Profile Management
+description: Manage your personal user profile
+keywords:
+  - Magistrala Profile
+  - User Settings
+  - Change Password
+  - Change Avatar
+  - Themes
+  - Language Settings
+  - Password Reset
+  - Theme Preferences
+  - IoT User Management
+image: /img/mg-preview.png
 ---
 
 ## User Profile

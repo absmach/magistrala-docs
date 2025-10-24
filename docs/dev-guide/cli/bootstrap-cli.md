@@ -1,7 +1,18 @@
 ---
 title: Bootstrap
+description: Manage and configure device bootstrapping in Magistrala CLI — create, update, whitelist and retrieve configurations securely.
+keywords:
+  - CLI
+  - Bootstrap
+  - Configuration
+  - Devices
+  - Magistrala
+  - Secure Onboarding
+  - Certificates
+  - Whitelist
+  - Provisioning
+image: /img/mg-preview.png
 ---
-
 
 
 ### Add configuration
