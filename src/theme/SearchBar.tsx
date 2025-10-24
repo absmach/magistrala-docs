@@ -7,8 +7,8 @@ type Props = WrapperProps<typeof SearchBarType>;
 
 export default function SearchBarWrapper(props: Props): ReactNode {
   return (
-    <>
+    <div className="flex justify-center items-center ">
       <SearchBar {...props} />
-    </>
+    </div>
   );
 }

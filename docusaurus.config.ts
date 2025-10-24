@@ -14,7 +14,6 @@ const config: Config = {
   projectName: "magistrala",
 
   onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "warn",
   onBrokenAnchors: "ignore",
 
   i18n: {
@@ -66,6 +65,9 @@ const config: Config = {
 
   markdown: {
     mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: "warn",
+    },
   },
   themes: ["@docusaurus/theme-mermaid"],
 
@@ -96,6 +98,13 @@ const config: Config = {
       { name: 'twitter:image', content: 'https://docs.magistrala.absmach.eu/img/mg-preview.png' },
       { name: 'twitter:image:alt', content: 'Magistrala Logo' },
     ],
+    sitemap: {
+    changefreq: 'weekly',
+    priority: 0.5,
+    filename: 'sitemap.xml',
+    ignorePatterns: ['/tags/**'],
+    createRobotsTxt: false,
+  },
     navbar: {
       logo: {
         alt: "Magistrala Logo",
