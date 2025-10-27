@@ -308,7 +308,7 @@ You can connect over plain MQTT (port `1883`) without any encryption or certific
 mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost -p 1883 -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
-To connect securely over TLS using the same port `8883` and valisate the server certificate with a CA file:
+To connect securely over TLS using the same port `8883` and validate the server certificate with a CA file:
 
 ```bash
 mosquitto_pub --cafile docker/ssl/certs/ca.crt -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost -p 1883 -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
@@ -342,7 +342,7 @@ mosquitto_sub \
 
 ### WebSocket with TLS
 
-A user can also send messages with just the TLS support (server authentication only) and just a CA certificate using the command:
+A user can send messages via WebSOcket with just the TLS support (server authentication only) and just a CA certificate using the command:
 
 ```bash
 wscat -c "wss://localhost/ws/m/<domain_id>/c/<channel_id>?authorization=<client_secret>&content-type=application/senml+json" -x '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]' --ca docker/ssl/certs/ca.crt
@@ -350,11 +350,13 @@ wscat -c "wss://localhost/ws/m/<domain_id>/c/<channel_id>?authorization=<client_
 
 ### WebSocket with mTLS
 
-Provide the client certificate and key along with the CA certificate to enable mutual authentication:
+To enambe mTLS foe WebSocket connections, provide the client certificate and key along with the CA certificate to enable mutual authentication:
 
 ```bash
 wscat -c "wss://localhost/ws/m/<domain_id>/c/<channel_id>?authorization=<client_secret>&content-type=application/senml+json" -x '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]' --ca docker/ssl/certs/ca.crt --cert docker/ssl/certs/client.crt --key docker/ssl/certs/client.key
 ```
+
+This is the most secure mode — both client and server verify each other.
 
 ## Subtopics
 
