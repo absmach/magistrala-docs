@@ -261,6 +261,101 @@ client = new Paho.MQTT.Client(loc.hostname, Number(loc.port), "clientId");
 client.connect({ onSuccess: onConnect });
 ```
 
+## mTLS Messaging
+
+Magistrala supports mutual TLS (mTLS) to enhance security by requiring both clients and servers to authenticate each other using certificates.
+This ensures that only authorized clients can connect and communicate with the server.
+It is designed to handle high-throughput environments.
+Core components are modular, making it easy to plug in custom modules or replace existing ones. Extendable to add new IoT protocols, middleware, and features as needed.
+
+### Certificate Setup
+
+To enable mTLS, you'll need the following certificates:
+
+- **CA Certificate (`ca.crt`)**: The Certificate Authority's certificate used to sign both server and client certificates.
+- **Server Certificate (`server.crt`) and Private Key (`server.key`)**: Used by the server to authenticate itself to clients. These will be used by SuperMQ.
+- **Client Certificate (`client.crt`) and Private Key (`client.key`)**: Used by the client to authenticate itself to the server.
+
+Certificates can be generated using the Magistrala Certs service as described in [certs service docs][certs]
+
+### HTTP with mTLS
+
+By default, HTTP messages can be sent without any encryption or certificate verification:
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/senml+json" -H "Authorization: Client <client_secret>" https://localhost/http/m/<domain_id>/c/<channel_id> -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+```
+
+But with mTLS, clients must present their certificate during the TLS handshake. This ensures both server and client are authenticated using trusted certificates.
+
+```bash
+curl -s -S -i --cacert docker/ssl/certs/ca.crt --cert docker/ssl/certs/client.crt --key docker/ssl/certs/client.key -X POST -H "Content-Type: application/senml+json" -H "Authorization: Client <client_secret>" https://localhost/http/m/<domain_id>/c/<channel_id> -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+```
+
+### HTTP with TLS
+
+A user can also send messages with just the TLS support (server authentication only) and just a CA certificate using the command:
+
+```bash
+curl -s -S -i --cacert docker/ssl/certs/ca.crt  -X POST -H "Content-Type: application/senml+json" -H "Authorization: Client <client_secret>" https://localhost/http/m/<domain_id>/c/<channel_id> -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+```
+
+### MQTT with TLS
+
+You can connect over plain MQTT (port `1883`) without any encryption or certificate validation:
+
+```bash
+mosquitto_pub -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost -p 1883 -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+```
+
+To connect securely over TLS using the same port `8883` and valisate the server certificate with a CA file:
+
+```bash
+mosquitto_pub --cafile docker/ssl/certs/ca.crt -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost -p 1883 -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+```
+
+This ensures encrypted communication and server identity verification.
+
+### MQTT with mTLS
+
+Provide the client certificate and key along with the CA certificate to enable mutual authentication:
+
+```bash
+mosquitto_pub --cafile docker/ssl/certs/ca.crt --cert docker/ssl/certs/client.crt --key docker/ssl/certs/client.key -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost -p 8883 -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+```
+
+This is the most secure mode — both client and server verify each other.
+
+### MQTT Subscription with mTLS
+
+To subscribe to the same channel using mTLS:
+
+```bash
+mosquitto_sub \
+  --cafile docker/ssl/certs/ca.crt \
+  --cert docker/ssl/certs/client.crt \
+  --key docker/ssl/certs/client.key \
+  -h localhost -p 8883 \
+  -u <client_id> -P <client_secret> \
+  -t m/<domain_id>/c/<channel_id
+```
+
+### WebSocket with TLS
+
+A user can also send messages with just the TLS support (server authentication only) and just a CA certificate using the command:
+
+```bash
+wscat -c "wss://localhost/ws/m/<domain_id>/c/<channel_id>?authorization=<client_secret>&content-type=application/senml+json" -x '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]' --ca docker/ssl/certs/ca.crt
+```
+
+### WebSocket with mTLS
+
+Provide the client certificate and key along with the CA certificate to enable mutual authentication:
+
+```bash
+wscat -c "wss://localhost/ws/m/<domain_id>/c/<channel_id>?authorization=<client_secret>&content-type=application/senml+json" -x '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]' --ca docker/ssl/certs/ca.crt --cert docker/ssl/certs/client.crt --key docker/ssl/certs/client.key
+```
+
 ## Subtopics
 
 In order to use subtopics and give more meaning to your pub/sub channel, you can simply add any suffix to base `/m/<domain_id>/c/<channel_id>` topic.
@@ -438,3 +533,4 @@ For more information and examples checkout [official nats.io documentation][nats
 [kafka]: https://kafka.apache.org/documentation/
 [nats-mqtt]: https://docs.nats.io/running-a-nats-service/configuration/mqtt
 [mqtt-v3.1.1]: https://docs.oasis-open.org/mqtt/mqtt/v3.1.1/os/mqtt-v3.1.1-os.html
+[certs]: ./certs.md
