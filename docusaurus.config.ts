@@ -36,12 +36,20 @@ const config: Config = {
 
   presets: [
     [
-      "classic",
+      '@docusaurus/preset-classic',
       {
         docs: {
           routeBasePath: "/",
           sidebarPath: "sidebars.ts",
           editUrl: "https://github.com/absmach/magistrala-docs/blob/main",
+          includeCurrentVersion: true,
+          lastVersion: 'current',
+          versions: {
+            current: {
+              label: "v1.0.0",
+              path: "",
+            },
+          },
         },
         blog: {
           showReadingTime: true,
@@ -99,12 +107,12 @@ const config: Config = {
       { name: 'twitter:image:alt', content: 'Magistrala Logo' },
     ],
     sitemap: {
-    changefreq: 'weekly',
-    priority: 0.5,
-    filename: 'sitemap.xml',
-    ignorePatterns: ['/tags/**'],
-    createRobotsTxt: false,
-  },
+      changefreq: 'weekly',
+      priority: 0.5,
+      filename: 'sitemap.xml',
+      ignorePatterns: ['/tags/**'],
+      createRobotsTxt: false,
+    },
     navbar: {
       logo: {
         alt: "Magistrala Logo",
@@ -130,6 +138,11 @@ const config: Config = {
           label: "GitHub",
           position: "right",
         },
+        {
+          type: "docsVersionDropdown",
+          position: "right",
+          dropdownActiveClassDisabled: true,
+        }
       ],
     },
     footer: {
