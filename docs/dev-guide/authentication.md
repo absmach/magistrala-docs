@@ -18,8 +18,8 @@ image: /img/mg-preview.png
 
 For user authentication Magistrala uses **Authentication** keys. There are two types of authentication keys:
 
-- `User key` - Access Token or keys issued to the user upon login request
-- `Recovery key` - Refresh Token or password recovery key
+- `User key` - **Access Token** or keys issued to the user upon login request
+- `Recovery key` - "**Refresh Token**" or "**Password Recovery Key**"
 
 Authentication keys are represented and distributed by the corresponding [JWT][jwt]. User keys are issued when user logs in. Each user request (other than registration and login) contains user key that is used to authenticate the user.
 
@@ -41,9 +41,9 @@ The following actions are supported:
 
 ## Federated authentication
 
-Federated authentication allows users to sign in to Magistrala using external identity providers such as **Google** through the **OpenID Connect (OIDC)** protocol.
+Federated authentication allows users to sign in to Magistrala using external identity providers such as **Google** through the **[OpenID Connect (OIDC)][oidc]** protocol.
 
-Magistrala acts as an **OIDC resource provider**, while **Google Identity Platform** is used as the identity provider (IdP).  
+Magistrala acts as an **OIDC resource provider**, while the **[Google Identity Platform][google-identity-platform]** is used as the identity provider (IdP).  
 This integration enables seamless, secure sign-in without requiring users to manually create or manage passwords.
 
 ### Prerequisites
@@ -53,7 +53,7 @@ Before configuring Magistrala for Google Sign-In:
 1. Go to [Google Cloud Console](https://console.cloud.google.com/).
 2. Create a **new project** (or use an existing one).
 3. Enable the **Google Identity Platform API**.
-4. Configure the **OAuth consent screen** and **create OAuth 2.0 credentials**.
+4. Configure the **OAuth consent screen** and **create OAuth 2.0 credentials** by following Google’s [documentation][google-identity-platform-docs].
 5. Add your authorized redirect URIs (see below).
 
 ### Authorized Redirect URIs
@@ -88,6 +88,8 @@ MG_UI_TYPE=mg
 MG_NEXTAUTH_BASE_PATH=/api/auth
 MG_HOST_URL=http://localhost:3000
 ```
+
+>> These credentials must be identical in both the backend and UI configurations to ensure proper OIDC flow.
 
 ### Variable Descriptions
 
