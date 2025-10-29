@@ -350,13 +350,21 @@ wscat -c "wss://localhost/ws/m/<domain_id>/c/<channel_id>?authorization=<client_
 
 ### WebSocket with mTLS
 
-To enambe mTLS foe WebSocket connections, provide the client certificate and key along with the CA certificate to enable mutual authentication:
+To enable mTLS for WebSocket connections, provide the client certificate and key along with the CA certificate to enable mutual authentication:
 
 ```bash
 wscat -c "wss://localhost/ws/m/<domain_id>/c/<channel_id>?authorization=<client_secret>&content-type=application/senml+json" -x '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]' --ca docker/ssl/certs/ca.crt --cert docker/ssl/certs/client.crt --key docker/ssl/certs/client.key
 ```
 
 This is the most secure mode — both client and server verify each other.
+
+### CoAP with DTLS
+
+Magistrala currently supports CoAP over UDP. TLS is not supported over UDP but instead we use DTLS. To send a message over CoAP with dtls just add a CA certificate with the command:
+
+```bash
+coap-cli post m/<domain_id>/c/<channel_id/subtopic --auth <client_secret> -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]' -p 5684 -v -s -A docker/ssl/certs/ca.crt
+```
 
 ## Subtopics
 
