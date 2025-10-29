@@ -27,8 +27,8 @@ const sidebars: SidebarsConfig = {
       collapsible: true,
       items: [
         { type: "doc", id: "user-guide/domain-management/domain", label: "Domain" },
-        { type: "doc", id: "user-guide/domain-management/billing", label: "Billing" },
         { type: "doc", id: "user-guide/domain-management/invitations", label: "Invitations" },
+        { type: "doc", id: "user-guide/domain-management/billing", label: "Billing" },
       ],
     },
     {
@@ -41,8 +41,8 @@ const sidebars: SidebarsConfig = {
       },
       items: [
         { type: "doc", id: "user-guide/clients/groups", label: "Groups" },
-        { type: "doc", id: "user-guide/clients/clients", label: "Clients" },
         { type: "doc", id: "user-guide/clients/channels", label: "Channels" },
+        { type: "doc", id: "user-guide/clients/clients", label: "Clients" },
         { type: "doc", id: "user-guide/clients/bootstraps", label: "Bootstraps" },
       ],
     },
@@ -81,6 +81,11 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: "doc",
+      id: "user-guide/reports",
+      label: "Reports",
+    },
+    {
+      type: "doc",
       id: "user-guide/profile-management/users",
       label: "Profile Management",
     },
@@ -88,11 +93,6 @@ const sidebars: SidebarsConfig = {
       type: "doc",
       id: "user-guide/pats",
       label: "Personal Access Tokens",
-    },
-    {
-      type: "doc",
-      id: "user-guide/reports",
-      label: "Reports",
     },
   ],
   devSidebar: [
