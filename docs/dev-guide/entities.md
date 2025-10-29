@@ -73,6 +73,47 @@ Users can bear multiple permissions that allow them various actions over other s
 The API endpoint for interacting with users are described in the [Users API](https://github.com/absmach/supermq-docs/blob/main/docs/api.md#users).
 The CLI for interacting with users are described in the [Users CLI](./cli/users-cli.md).
 
+## Domain
+
+A **Domain** is a logical grouping that separates different tenants and governs access control.
+
+```go
+type Domain struct {
+ ID        string    `json:"id"`
+ Name      string    `json:"name"`
+ Metadata  Metadata  `json:"metadata,omitempty"`
+ Tags      []string  `json:"tags,omitempty"`
+ Alias     string    `json:"alias,omitempty"`
+ Status    Status    `json:"status"`
+ RoleID    string    `json:"role_id,omitempty"`
+ RoleName  string    `json:"role_name,omitempty"`
+ Actions   []string  `json:"actions,omitempty"`
+ CreatedBy string    `json:"created_by,omitempty"`
+ CreatedAt time.Time `json:"created_at"`
+ UpdatedBy string    `json:"updated_by,omitempty"`
+ UpdatedAt time.Time `json:"updated_at,omitempty"`
+}
+```
+
+### Domain Attributes
+
+- `ID` is a unique identifier for each domain. It is a string value.
+- `Name` is a required field representing the name of the domain. It is a string value.
+- `Metadata` is an optional field that provides additional structured data about the domain.
+- `Tags` is an optional field that represents tags related to the domain. It is a slice of string values.
+- `Alias` is an optional field that represents an alternate identifier for the domain. It is a string value.
+- `Status` is a field that represents whether the domain is enabled or disabled.
+- `RoleID` is an optional field representing the role ID assigned to the domain. It is a string value.
+- `RoleName` is an optional field representing the role name assigned to the domain. It is a string value.
+- `Actions` is an optional list of allowed operations within the domain.
+- `CreatedBy` is an optional field representing the user who created the domain. It is a string value.
+- `CreatedAt` is a field that represents the time when the domain was created. It is a `time.Time` value.
+- `UpdatedBy` is an optional field representing the user who last updated the domain. It is a string value.
+- `UpdatedAt` is a field that represents the time when the domain was last updated. It is a `time.Time` value.
+
+The API endpoint for interacting with Domains are described in the [domains API][domains-api].
+The CLI for interacting with Domains are described in the [channels CLI][domains-cli].
+
 ## Role
 
 A **Role** defines a set of permissions that a user can have within the system. Roles allow for fine-grained access control by associating users with actions they are allowed to perform.
@@ -286,47 +327,6 @@ type Channel struct {
 
 The API endpoint for interacting with channels are described in the [channels API][channels-api].
 The CLI for interacting with channels are described in the [channels CLI][channels-cli].
-
-## Domain
-
-A **Domain** is a logical grouping that separates different tenants and governs access control.
-
-```go
-type Domain struct {
- ID        string    `json:"id"`
- Name      string    `json:"name"`
- Metadata  Metadata  `json:"metadata,omitempty"`
- Tags      []string  `json:"tags,omitempty"`
- Alias     string    `json:"alias,omitempty"`
- Status    Status    `json:"status"`
- RoleID    string    `json:"role_id,omitempty"`
- RoleName  string    `json:"role_name,omitempty"`
- Actions   []string  `json:"actions,omitempty"`
- CreatedBy string    `json:"created_by,omitempty"`
- CreatedAt time.Time `json:"created_at"`
- UpdatedBy string    `json:"updated_by,omitempty"`
- UpdatedAt time.Time `json:"updated_at,omitempty"`
-}
-```
-
-### Domain Attributes
-
-- `ID` is a unique identifier for each domain. It is a string value.
-- `Name` is a required field representing the name of the domain. It is a string value.
-- `Metadata` is an optional field that provides additional structured data about the domain.
-- `Tags` is an optional field that represents tags related to the domain. It is a slice of string values.
-- `Alias` is an optional field that represents an alternate identifier for the domain. It is a string value.
-- `Status` is a field that represents whether the domain is enabled or disabled.
-- `RoleID` is an optional field representing the role ID assigned to the domain. It is a string value.
-- `RoleName` is an optional field representing the role name assigned to the domain. It is a string value.
-- `Actions` is an optional list of allowed operations within the domain.
-- `CreatedBy` is an optional field representing the user who created the domain. It is a string value.
-- `CreatedAt` is a field that represents the time when the domain was created. It is a `time.Time` value.
-- `UpdatedBy` is an optional field representing the user who last updated the domain. It is a string value.
-- `UpdatedAt` is a field that represents the time when the domain was last updated. It is a `time.Time` value.
-
-The API endpoint for interacting with Domains are described in the [domains API][domains-api].
-The CLI for interacting with Domains are described in the [channels CLI][domains-cli].
 
 [clients-api]: https://github.com/absmach/supermq-docs/blob/main/docs/api.md#clients
 [channels-api]: https://github.com/absmach/supermq-docs/blob/main/docs/api.md#channels

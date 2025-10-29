@@ -50,7 +50,7 @@ At the top of the page, a series of summary cards displays the current state of 
 
 - **Members** – Shows the total number of users assigned to the domain, along with their enabled or disabled status.  
   The domain creator is automatically assigned the **Admin** role and appears as the first active member.  
-- **Clients** – Displays the number of registered clients within the domain and their operational status.  
+- **Clients** – Displays the number of clients within the domain and their operational status.  
 - **Channels** – Lists the channels available for message publishing and subscription.  
 - **Groups** – Indicates the total number of groups configured in the domain.  
 
@@ -58,9 +58,11 @@ Each card also includes a quick-access **View All** button for navigating direct
 
 ### Dashboards
 
-The **Dashboards** section allows visualization of domain data through charts cards and maps.  
-Dashboards provide a consolidated view of client activity, channel usage and other system metrics, enabling real-time data monitoring.  
-New dashboards can be created using the **Create** button to start visualizing data.
+The **Dashboards** section on the **Home** page provides a quick summary of your existing dashboards within the current domain.  
+It lists the **Name** and **Created At** columns, along with buttons to **View All** dashboards or **Create** a new one.  
+If no dashboards exist yet, a message appears prompting you to *“Get started by creating a new one.”*  
+
+This section helps you quickly access or create dashboards without navigating away from the Home page.
 
 ### Alarms Overview
 
@@ -100,16 +102,24 @@ The Domain status can be disabled by clicking the `Disable` button or enabled by
 
 ## Domain Members
 
-A domain admin or a member with the right permissions can assign users to a domain.
-Members must be assigned specific roles.
-Domain members have permissions over different entities depending on the role assigned to them. For example, members without read permissions aren't able to view specific entities within the domain.
+A **Domain Admin** (or any member with the appropriate permission) can add users to a domain and assign them a **role**.  
+Every member must have a role; roles determine what they can do across **Clients**, **Channels**, **Groups**, **Dashboards**, and other resources.
+
+> **Important:** The **read** permission is the most basic permission required for domain access.  
+> Without **read**, a user **cannot view the domain at all** after signing in — **not just** specific entities.  
+> Assign **read** to any user who needs to log in and see the domain.
+
+Members’ effective permissions over entities depend on the role they’re assigned.  
+Users with additional permissions (e.g., **Write**, **Manage**) can perform actions as allowed by that role.
 
 ![Domain Members](../../img/domain/domain-members.png)
 
 ### Assign Users
 
-To assign a user to a domain, click the `Assign User` button, and then select a user along with their respective roles.
-Alternatively, the user can be added while creating the domain role.
+To assign a user to a domain, click the **`Assign User`** button.  
+Search for the user by their **username**, then select their name and choose one or more **roles** to assign.  
+
+Alternatively, a user can also be added while creating the domain role.
 
 ![Assign User Form](../../img/domain/assign-user-form.png)
 
