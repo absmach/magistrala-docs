@@ -93,18 +93,18 @@ MG_GOOGLE_STATE=pGXVNhEeKfycuBzk5InlSfMlEU9UrhlkTUOSqhsgDzXP2Y4RsN
 
 ### Variable Descriptions
 
-| Variable | Description |
-|-----------|-------------|
-| **`SMQ_GOOGLE_CLIENT_ID`** | Google OAuth 2.0 client ID obtained from Google Cloud Console. |
-| **`SMQ_GOOGLE_CLIENT_SECRET`** | Google OAuth 2.0 client secret associated with the client ID. |
-| **`SMQ_GOOGLE_REDIRECT_URL`** | OAuth 2.0 callback endpoint for the SuperMQ backend. Must match the authorized redirect URI in your Google project. |
-| **`SMQ_GOOGLE_STATE`** | Random unique string to protect against CSRF attacks during OAuth flow. |
-| **`SMQ_OAUTH_UI_REDIRECT_URL`** | URL where the UI receives tokens after successful authentication (e.g., NextAuth `/api/auth/token`). |
-| **`SMQ_OAUTH_UI_ERROR_URL`** | Fallback URL for failed authentications (e.g., login page). |
-| **`MG_GOOGLE_CLIENT_ID`** | Google OAuth 2.0 client ID used by the Magistrala UI for initialization. |
-| **`MG_GOOGLE_CLIENT_SECRET`** | Google OAuth 2.0 client secret used by the Magistrala UI for initialization. |
-| **`MG_GOOGLE_REDIRECT_URL`** | Redirect URL used by the UI to align with backend callback. |
-| **`MG_GOOGLE_STATE`** | Must match backend’s Google OAuth state value. |
+| Variable                        | Description                                                                                                         |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **`SMQ_GOOGLE_CLIENT_ID`**      | Google OAuth 2.0 client ID obtained from Google Cloud Console.                                                      |
+| **`SMQ_GOOGLE_CLIENT_SECRET`**  | Google OAuth 2.0 client secret associated with the client ID.                                                       |
+| **`SMQ_GOOGLE_REDIRECT_URL`**   | OAuth 2.0 callback endpoint for the SuperMQ backend. Must match the authorized redirect URI in your Google project. |
+| **`SMQ_GOOGLE_STATE`**          | Random unique string to protect against CSRF attacks during OAuth flow.                                             |
+| **`SMQ_OAUTH_UI_REDIRECT_URL`** | URL where the UI receives tokens after successful authentication (e.g., NextAuth `/api/auth/token`).                |
+| **`SMQ_OAUTH_UI_ERROR_URL`**    | Fallback URL for failed authentications (e.g., login page).                                                         |
+| **`MG_GOOGLE_CLIENT_ID`**       | Google OAuth 2.0 client ID used by the Magistrala UI for initialization.                                            |
+| **`MG_GOOGLE_CLIENT_SECRET`**   | Google OAuth 2.0 client secret used by the Magistrala UI for initialization.                                        |
+| **`MG_GOOGLE_REDIRECT_URL`**    | Redirect URL used by the UI to align with backend callback.                                                         |
+| **`MG_GOOGLE_STATE`**           | Must match backend’s Google OAuth state value.                                                                      |
 
 #### Flow Overview
 
