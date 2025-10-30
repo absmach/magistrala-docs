@@ -60,13 +60,12 @@ Before configuring Magistrala for Google Sign-In:
 
 Add the following redirect URIs to your Google Cloud project:
 
-| Environment | Redirect URI |
-|--------------|--------------|
-| **Local Development** | `http://localhost:3000/oauth/callback/google` |
-| **Docker Compose (Backend)** | `http://localhost:9002/oauth/callback/google` |
-| **Production** | `https://<your-domain>/oauth/callback/google` |
+| Environment          | Redirect URI                                      |
+|-----------------------|--------------------------------------------------|
+| **Local Development** | `http://localhost:9002/oauth/callback/google`    |
+| **Production**        | `https://<your-domain>/oauth/callback/google`    |
 
-> These URLs must match the value of `MG_GOOGLE_REDIRECT_URL` in your `.env` or Docker Compose configuration.
+> These URLs must match the value of `SMQ_GOOGLE_REDIRECT_URL` in your `.env` or Docker Compose configuration.
 
 #### Environment Variables
 
@@ -74,19 +73,20 @@ Both the **Magistrala backend** and **Magistrala UI** require the following envi
 
 ```bash
 # Google OAuth credentials
+SMQ_GOOGLE_CLIENT_ID=<your-google-client-id>
+SMQ_GOOGLE_CLIENT_SECRET=<your-google-client-secret>
+SMQ_GOOGLE_REDIRECT_URL=http://localhost:9002/oauth/callback/google
+SMQ_GOOGLE_STATE=pGXVNhEeKfycuBzk5InlSfMlEU9UrhlkTUOSqhsgDzXP2Y4RsN
+
+# UI OAuth redirect handling
+SMQ_OAUTH_UI_REDIRECT_URL=http://localhost:3000/api/auth/token
+SMQ_OAUTH_UI_ERROR_URL=http://localhost:3000/login
+
+# Magistrala UI configuration
 MG_GOOGLE_CLIENT_ID=<your-google-client-id>
 MG_GOOGLE_CLIENT_SECRET=<your-google-client-secret>
-MG_GOOGLE_REDIRECT_URL=http://localhost:3000/oauth/callback/google
-MG_GOOGLE_STATE=<your-google-state-key>
-
-# UI redirect (where users land after successful login)
-MG_USERS_UI_REDIRECT_URL=http://localhost:3000
-
-# UI configuration
-MG_UI_BASE_PATH=/
-MG_UI_TYPE=mg
-MG_NEXTAUTH_BASE_PATH=/api/auth
-MG_HOST_URL=http://localhost:3000
+MG_GOOGLE_REDIRECT_URL=http://localhost:9002/oauth/callback/google
+MG_GOOGLE_STATE=pGXVNhEeKfycuBzk5InlSfMlEU9UrhlkTUOSqhsgDzXP2Y4RsN
 ```
 
 >> These credentials must be identical in both the backend and UI configurations to ensure proper OIDC flow.
@@ -95,30 +95,31 @@ MG_HOST_URL=http://localhost:3000
 
 | Variable | Description |
 |-----------|-------------|
-| **`MG_GOOGLE_CLIENT_ID`** | Google OAuth 2.0 client ID obtained from the Google Cloud Console. |
-| **`MG_GOOGLE_CLIENT_SECRET`** | Google OAuth 2.0 client secret associated with the client ID. |
-| **`MG_GOOGLE_REDIRECT_URL`** | Callback endpoint for OAuth 2.0 after successful Google authentication. Must match the authorized URI in your Google project. |
-| **`MG_GOOGLE_STATE`** | A random, unique string to protect against Cross-Site Request Forgery (CSRF) attacks. |
-| **`MG_USERS_UI_REDIRECT_URL`** | The URL of the Magistrala UI where users should be redirected after login. |
-| **`MG_UI_BASE_PATH`** | Base path of the Magistrala UI (default `/`). |
-| **`MG_NEXTAUTH_BASE_PATH`** | NextAuth route path for the authentication API. |
-| **`MG_UI_TYPE`** | Type of Magistrala UI instance (e.g., `mg`, `mg-cloud`). |
-| **`MG_HOST_URL`** | Host URL for the UI, typically your frontend base URL. |
+| **`SMQ_GOOGLE_CLIENT_ID`** | Google OAuth 2.0 client ID obtained from Google Cloud Console. |
+| **`SMQ_GOOGLE_CLIENT_SECRET`** | Google OAuth 2.0 client secret associated with the client ID. |
+| **`SMQ_GOOGLE_REDIRECT_URL`** | OAuth 2.0 callback endpoint for the SuperMQ backend. Must match the authorized redirect URI in your Google project. |
+| **`SMQ_GOOGLE_STATE`** | Random unique string to protect against CSRF attacks during OAuth flow. |
+| **`SMQ_OAUTH_UI_REDIRECT_URL`** | URL where the UI receives tokens after successful authentication (e.g., NextAuth `/api/auth/token`). |
+| **`SMQ_OAUTH_UI_ERROR_URL`** | Fallback URL for failed authentications (e.g., login page). |
+| **`MG_GOOGLE_CLIENT_ID`** | Google OAuth 2.0 client ID used by the Magistrala UI for initialization. |
+| **`MG_GOOGLE_CLIENT_SECRET`** | Google OAuth 2.0 client secret used by the Magistrala UI for initialization. |
+| **`MG_GOOGLE_REDIRECT_URL`** | Redirect URL used by the UI to align with backend callback. |
+| **`MG_GOOGLE_STATE`** | Must match backend’s Google OAuth state value. |
 
 #### Flow Overview
 
 1. The user clicks **Sign in with Google** on the Magistrala UI.  
 2. The UI redirects the user to **Google’s OAuth consent screen**.  
 3. After successful authentication, Google redirects to  
-   **`MG_GOOGLE_REDIRECT_URL`** (for example, `http://localhost:3000/oauth/callback/google`).  
+   **`MG_GOOGLE_REDIRECT_URL`** (for example, `http://localhost:9002/oauth/callback/google`).  
 4. The backend exchanges the **authorization code** for a Google **access token**.  
 5. Using the token, Magistrala retrieves basic user info (ID, name, email, profile picture).  
 6. The user is created in Magistrala’s database (if new) and authenticated.  
 7. Magistrala issues its own **access token** and **refresh token**, stored securely as **HTTP-only cookies**.  
-8. The user is redirected to **`MG_USERS_UI_REDIRECT_URL`** (typically the dashboard).  
+8. The user is redirected to **`SMQ_OAUTH_UI_REDIRECT_URL`**.
 
 - The **`access_token`** from Google is **never stored** in the Magistrala database.  
-- The **`id_token`** is not reused to avoid refresh limitations — Magistrala issues its own session tokens instead.  
+- The **`id_token`** is not reused to avoid refresh limitations — Magistrala issues its own tokens instead.  
 - Always use **HTTPS** for production redirect URLs.  
 - Ensure **`MG_GOOGLE_STATE`** is sufficiently random and unique across environments.
 
@@ -127,11 +128,22 @@ MG_HOST_URL=http://localhost:3000
 For a local Docker-based environment, add the following lines to your .env or docker-compose.env:
 
 ```bash
+## In the SMQ
+
+SMQ_GOOGLE_CLIENT_ID=985229335584-m2mft8lqbgfn5gfw9ftrm3r2sgu4tsrw.apps.googleusercontent.com
+SMQ_GOOGLE_CLIENT_SECRET=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WYUIpw
+SMQ_GOOGLE_REDIRECT_URL=http://localhost:9002/oauth/callback/google
+SMQ_GOOGLE_STATE=pGXVNhEeKfycuBzk5InlSfMlEU9UrhlkTUOSqhsgDzXP2Y4RsN
+SMQ_OAUTH_UI_REDIRECT_URL=http://localhost:3000/api/auth/token
+SMQ_OAUTH_UI_ERROR_URL=http://localhost:3000/login
+
+# In the UI
+
 MG_GOOGLE_CLIENT_ID=985229335584-m2mft8lqbgfn5gfw9ftrm3r2sgu4tsrw.apps.googleusercontent.com
 MG_GOOGLE_CLIENT_SECRET=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WYUIpw
-MG_GOOGLE_REDIRECT_URL=http://localhost:3000/oauth/callback/google
-MG_GOOGLE_STATE=pGXVNhEeKfycuBzk5InlSfMlEU9UrhlkTUOSqhsgDzXP2twrWC
-MG_USERS_UI_REDIRECT_URL=http://localhost:3000
+MG_GOOGLE_REDIRECT_URL=http://localhost:9002/oauth/callback/google
+MG_GOOGLE_STATE=pGXVNhEeKfycuBzk5InlSfMlEU9UrhlkTUOSqhsgDzXP2Y4RsN
+
 ```
 
 Finally restart your containers after editing the `.env` file
