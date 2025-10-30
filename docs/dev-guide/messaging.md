@@ -360,7 +360,9 @@ This is the most secure mode — both client and server verify each other.
 
 ### CoAP with DTLS
 
-Magistrala currently supports CoAP over UDP. TLS is not supported over UDP but instead we use DTLS. To send a message over CoAP with dtls just add a CA certificate with the command:
+Magistrala currently supports CoAP over UDP. Similar to how TLS secures TCP connections, DTLS provides an additional layer of security for UDP. To send a message over CoAP with DTLS just add a CA certificate with the command:
+
+With the [coap-cli][coap-cli]
 
 ```bash
 coap-cli post m/<domain_id>/c/<channel_id/subtopic --auth <client_secret> -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]' -p 5684 -v -s -A docker/ssl/certs/ca.crt
