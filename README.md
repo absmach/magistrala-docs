@@ -93,4 +93,4 @@ Thank you for your interest in Magistrala and the desire to contribute!
 [license]: https://img.shields.io/badge/license-Apache%20v2.0-blue.svg
 [blog]: https://medium.com/abstract-machines-blog
 [twitter]: https://twitter.com/absmach
-[docs]: https://docs.magistrala.abstractmachines.fr
+[docs]: https://docs.magistrala.absmach.eu
