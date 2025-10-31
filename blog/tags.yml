@@ -82,3 +82,53 @@ update:
   label: Update
   permalink: /update
   description: Blog posts about updates and changes to Magistrala.
+
+iot:
+  label: IoT
+  permalink: /iot
+  description: Posts about Internet of Things (IoT) solutions and technologies.
+
+data-reporting:
+  label: Data Reporting
+  permalink: /data-reporting
+  description: Content about data analysis, reporting, and visualization in IoT systems.
+
+golang:
+  label: Go (Golang)
+  permalink: /golang
+  description: Posts featuring Go programming language implementations and examples.
+
+postgresql:
+  label: PostgreSQL
+  permalink: /postgresql
+  description: Content about PostgreSQL database usage and TimescaleDB for time-series data.
+
+pdf-generation:
+  label: PDF Generation
+  permalink: /pdf-generation
+  description: Posts about automated PDF report generation and document creation.
+
+csv-export:
+  label: CSV Export
+  permalink: /csv-export
+  description: Content about data export functionality and CSV file generation.
+
+email-automation:
+  label: Email Automation
+  permalink: /email-automation
+  description: Posts about automated email delivery and notification systems.
+
+time-series:
+  label: Time Series
+  permalink: /time-series
+  description: Content about time-series data handling, storage, and analysis.
+
+scheduling:
+  label: Scheduling
+  permalink: /scheduling
+  description: Posts about automated task scheduling and periodic operations.
+
+templates:
+  label: Templates
+  permalink: /templates
+  description: Content about template systems and customizable report formats.
