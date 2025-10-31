@@ -98,7 +98,7 @@ Event sourcing is a way to store data as events instead of the current state of 
 
 ### Added telemetry
 
-Magistrala is committed to continuously improving its services and ensuring a seamless experience for its users. To achieve this, we collect certain data from your deployments. Rest assured, this data is collected solely to enhance Magistrala and is not used with any malicious intent. The deployment summary can be found on [our website](https://deployments.magistrala.absmach.eu).
+Magistrala is committed to continuously improving its services and ensuring a seamless experience for its users. To achieve this, we collect certain data from your deployments. Rest assured, this data is collected solely to enhance Magistrala and is not used with any malicious intent. The deployment summary can be found on [our website](https://deployments.absmach.eu).
 
 The collected data includes:
 
