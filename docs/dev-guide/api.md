@@ -816,6 +816,270 @@ Access-Control-Expose-Headers: Location
 }
 ```
 
+## Domains
+
+Domains represent organizational workspaces in Magistrala.  
+Each domain acts as an isolated environment that contains entities such as **Clients**, **Channels**, **Groups**, **Roles** and **Invitations**.  
+Every user can create one or more domains, each identified by a unique route.
+
+Base URL:
+
+- [`http://localhost:9003`](http://localhost:9003)
+
+### Create Domain
+
+Registers a new domain.  
+This endpoint requires a valid **user token**.
+
+```bash
+curl -sSiX POST http://localhost:9003/domains \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "name": "<domain_name>",
+  "route": "<domain_route>",
+  "tags": ["<tag1>", "<tag2>"],
+  "metadata": {
+    "key": "value"
+  }
+}
+EOF
+```
+
+For example:
+
+```bash
+curl -sSiX POST http://localhost:9003/domains \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+-d @- <<EOF
+{
+  "name": "Magistrala",
+  "route": "magistrala",
+  "tags": ["absmach", "IoT"],
+  "metadata": {
+    "region": "EU"
+  }
+}
+EOF
+```
+
+The expected response would be:
+
+```bash
+{
+  "id": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b",
+  "name": "Magistrala",
+  "route": "magistrala",
+  "tags": ["absmach", "IoT"],
+  "metadata": {
+    "region": "EU"
+  },
+  "status": "enabled",
+  "created_by": "c8c3e4f1-56b2-4a22-8e5f-8a77b1f9b2f4",
+  "created_at": "2025-10-29T14:12:01Z",
+  "updated_at": "2025-10-29T14:12:01Z"
+}
+```
+
+> **Notes**:
+>
+> - `name` and `route` are required fields.
+> - `route` must be unique and cannot be changed after creation.
+> - `metadata` must be a valid JSON object.
+> - The `id` is automatically generated if not provided.
+
+### Get Domain
+
+Retrieves details of a specific domain by its ID.
+
+```bash
+curl -sSiX GET http://localhost:9003/domains/{domain_id} \
+-H "Authorization: Bearer <user_token>"
+```
+
+For example:
+
+```bash
+curl -sSiX GET http://localhost:9003/domains/d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b \
+-H "Authorization: Bearer <user_token>"
+```
+
+Expected Response:
+
+```bash
+{
+  "id": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b",
+  "name": "Magistrala",
+  "route": "magistrala",
+  "tags": ["absmach", "IoT"],
+  "metadata": {
+    "region": "EU"
+  },
+  "status": "enabled",
+  "created_by": "c8c3e4f1-56b2-4a22-8e5f-8a77b1f9b2f4",
+  "created_at": "2025-10-29T14:12:01Z",
+  "updated_at": "2025-10-29T14:12:01Z"
+}
+```
+
+### Get All Domains
+
+Retrieves a paginated list of domains accessible to the authenticated user.
+
+```bash
+curl -sSiX GET "http://localhost:9003/domains?limit=<limit>&offset=<offset>&status=<status>&name=<domain_name>" \
+-H "Authorization: Bearer <user_token>"
+```
+
+For Example
+
+```bash
+curl -sSiX GET "http://localhost:9003/domains?limit=5&offset=0&status=enabled" \
+-H "Authorization: Bearer <user_token>"
+```
+
+Expected Response:
+
+```bash
+{
+  "total": 2,
+  "offset": 0,
+  "limit": 5,
+  "domains": [
+    {
+      "id": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b",
+      "name": "Magistrala",
+      "route": "magistrala",
+      "status": "enabled"
+    },
+    {
+      "id": "e1a3b4d9-73c1-4e22-9345-912abcf4fa76",
+      "name": "SuperMQ",
+      "route": "supermq",
+      "status": "disabled"
+    }
+  ]
+}
+```
+
+> Query parameters such as `limit`, `offset`, `status`, `name`, `role_id`, and `metadata` can be used for filtering and pagination.
+
+### Update Domain
+
+Updates the name, tags, or metadata of a domain.
+
+```bash
+curl -sSiX PATCH http://localhost:9003/domains/{domain_id} \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "name": "<new_domain_name>",
+  "tags": ["<new_tag>"],
+  "metadata": {
+    "key": "updated_value"
+  }
+}
+EOF
+```
+
+For Example
+
+```bash
+curl -sSiX PATCH http://localhost:9003/domains/d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "name": "Magistrala Cloud",
+  "tags": ["absmach", "Cloud"],
+  "metadata": {
+    "region": "EU",
+    "tier": "premium"
+  }
+}
+EOF
+```
+
+Expected Response:
+
+```bash
+{
+  "id": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b",
+  "name": "Magistrala Cloud",
+  "route": "magistrala",
+  "tags": ["absmach", "Cloud"],
+  "metadata": {
+    "region": "EU",
+    "tier": "premium"
+  },
+  "status": "enabled",
+  "updated_at": "2025-10-29T14:22:33Z"
+}
+```
+
+### Enable Domain
+
+Re-enables a previously disabled domain.
+
+```bash
+curl -sSiX POST http://localhost:9003/domains/{domain_id}/enable \
+-H "Authorization: Bearer <user_token>"
+
+```
+
+Expected Response:
+
+```bash
+{
+  "message": "Domain enabled successfully"
+}
+
+```
+
+### Disable a Domain
+
+Disables a domain, temporarily restricting access to its resources.
+
+```bash
+curl -sSiX POST http://localhost:9003/domains/{domain_id}/disable \
+-H "Authorization: Bearer <user_token>"
+
+```
+
+Expected Response:
+
+```bash
+{
+  "message": "Domain disabled successfully"
+}
+
+```
+
+### Freeze Domain
+
+Freezes a domain, locking all entity operations while keeping data accessible.
+
+```bash
+curl -sSiX POST http://localhost:9003/domains/{domain_id}/freeze \
+-H "Authorization: Bearer <user_token>"
+
+```
+
+Expected Response:
+
+```bash
+{
+  "message": "Domain frozen successfully"
+}
+
+```
+
+> **Tip**:
+> Upon creation, the domain creator automatically receives the Admin role within that domain, granting full access to manage roles, users, clients, channels, and other entities.
+
 ## Clients
 
 All requests should include an Authorization: Bearer `<user_token>` header unless otherwise specified.
@@ -2522,7 +2786,7 @@ curl -sSiX GET "http://localhost/{domain_id}/groups/{group_id}/hierarchy?level=2
 -H "Authorization: Bearer <user_token>"
 ```
 
->> **Tips**
+> **Tips**
 >>
 >> - Use **`direction=+1`** to walk **up** the tree (ancestors), **`-1`** to walk **down** (descendants).
 >> - Use **`tree=false`** for paging and simple lists; use **`tree=true`** when you need a nested hierarchy in one payload.  
