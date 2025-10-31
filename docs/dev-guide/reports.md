@@ -102,7 +102,7 @@ type MetricConfig struct {
 | From          | string    | Start time (relative/absolute)           | ✅       |
 | To            | string    | End time (relative/absolute)             | ✅       |
 | FileFormat    | Format    | Output format (PDF/CSV)                  | Optional |
-| Timezone      | string    | IANA timezone name (e.g., "Europe/Paris", "America/New_York"). Defaults to UTC if not provided | Optional |
+| Timezone      | string    | IANA timezone name ("Europe/Paris")      | Optional |
 | Aggregation   | AggConfig | Data processing configuration            | Optional |
 
 

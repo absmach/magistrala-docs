@@ -25,7 +25,7 @@ Magistrala IoT platform is comprised of the following services:
 | [rules-engine][rules-engine]     | Create rules using LUA script that process incoming messages                            |
 | [readers][readers]               | Implement message readers ie Postgres and Timescale                                     |
 
-![arch](../img/architecture.jpg)
+![arch](../img/architecture.svg)
 
 ## Domain Model
 
