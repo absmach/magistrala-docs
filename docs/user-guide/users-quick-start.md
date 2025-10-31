@@ -27,7 +27,47 @@ To get started, create an account by providing the following details in the Sign
 
 > **NB:** Please review and accept our Terms of Service and Privacy Policy to proceed with registration.
 
-Once registered, the user will be redirected to the **Domains Homepage**, where they can create and manage multiple domains.
+### Sign Up with Google
+
+Alternatively, you can create a new Magistrala account using **Google Sign-Up**.  
+On the **Sign Up** page, check the boxes for:
+
+- *I agree to the Terms of Service*  
+- *I agree to the Privacy Policy*
+
+Then click **Sign up with Google**.
+
+Select your Google account to complete registration. You’ll be redirected to the **Domains Homepage**, where you can create or join existing domains.
+
+![Google Sign Up](../img/users-guide/google-signup-page.png)
+
+## Verify Your Email
+
+After signing up, you’ll be redirected to your **Profile Page**, where you’ll need to verify your email before proceeding.
+
+![Email Verification Page](../img/users-guide/email-verification-page.png)
+
+A confirmation email will be sent to the address you registered with.  
+Open the email titled **“Welcome to Magistrala!”** and click on the **Verify Email Address** button.
+
+![Email Verification Message](../img/users-guide/email-verification-mail.png)
+
+If the button doesn’t work, you can also copy the verification link provided in the email and paste it directly into your browser.
+
+> **Important:**  
+> The verification link is valid for **24 hours** for security reasons.  
+> If it expires or you didn’t receive the email, click **Resend Email Verification** on your profile page.
+
+Once verified, your profile status will update to **Verified**, and you’ll gain full access to the platform, including the ability to log in to domains.
+
+### After Verification
+
+After your email has been verified:
+
+- You’ll be redirected to the **Domains Homepage**.  
+- From there, you can create a new domain or access any existing ones you belong to.
+
+> **Tip:** If you’ve already verified your email and are still on the verification page, click **Go to Domains Page** to continue.
 
 ![Domain Homepage](../img/users-guide/janedoe-domainshome.png)
 
@@ -36,6 +76,18 @@ Once registered, the user will be redirected to the **Domains Homepage**, where 
 In case you already have an account, you can log in with your email/username and password.
 
 ![Login](../img/users-guide/main-login.png)
+
+Magistrala also supports authentication using **Google Sign-In** for faster and more secure access.
+On the **Sign In** page, click **Sign in with Google**.
+
+You’ll be redirected to a secure Google authentication page like the one below.
+
+![Google Sign In](../img/users-guide/google-signup-page.png)
+
+Choose your preferred Google account to continue. Once authenticated, you’ll be redirected back to Magistrala and automatically logged in.
+
+> **Note:**  
+> If this is your first time signing in with Google, Magistrala will automatically create a new user profile associated with your Google email.
 
 ## Log into a Domain
 
@@ -56,7 +108,7 @@ We will delve deeper into Domains in [another section](./domain-management/domai
 
 Once logged in, you will be directed to the **Homepage** where you can view all the available entities in the domain.
 
-On the sidebar navigation, click on **Groups** under the _Clients Management_ section to be redirected to the groups page.
+On the sidebar navigation, click on **Groups** under the *Clients Management* section to be redirected to the groups page.
 
 ![Groups Page](../img/users-guide/jdoe-groups-page.png)
 
@@ -82,7 +134,7 @@ Adding tags can help you quickly locate and manage clients in larger setups.
 
 ![Create Client](../img/users-guide/group-client-create.png)
 
-A user can also create bulk clients by clicking on the `Upload` button. This will lead to a dialog box that takes in a _.CSV_  file with the client's details filled in correctly as seen in these [samples](https://github.com/absmach/magistrala-ui/tree/main/samples).
+A user can also create bulk clients by clicking on the `Upload` button. This will lead to a dialog box that takes in a *.CSV*  file with the client's details filled in correctly as seen in these [samples](https://github.com/absmach/magistrala-ui/tree/main/samples).
 
 The file should have the following fields in order:
 

@@ -18,8 +18,8 @@ image: /img/mg-preview.png
 
 For user authentication Magistrala uses **Authentication** keys. There are two types of authentication keys:
 
-- `User key` - Access Token or keys issued to the user upon login request
-- `Recovery key` - Refresh Token or password recovery key
+- `User key` - **Access Token** or keys issued to the user upon login request
+- `Recovery key` - "**Refresh Token**" or "**Password Recovery Key**"
 
 Authentication keys are represented and distributed by the corresponding [JWT][jwt]. User keys are issued when user logs in. Each user request (other than registration and login) contains user key that is used to authenticate the user.
 
@@ -41,27 +41,138 @@ The following actions are supported:
 
 ## Federated authentication
 
-Federated authentication is a process of authenticating users using external identity providers. Magistrala supports federated authentication using [OpenID Connect][oidc] protocol. Magistrala is a resource provider and it uses [Google Identity Platform][google-identity-platform] as an identity provider. To use federated authentication, you need to create a project in Google Cloud Platform and enable Google Identity Platform API. After that, you need to create OAuth 2.0 credentials and configure the consent screen. This can be done by following Google's [documentation][google-identity-platform-docs]. Once you have created OAuth 2.0 credentials, you need to set the following environment variables:
+Federated authentication allows users to sign in to Magistrala using external identity providers such as **Google** through the **[OpenID Connect (OIDC)][oidc]** protocol.
+
+Magistrala acts as an **OIDC resource provider**, while the **[Google Identity Platform][google-identity-platform]** is used as the identity provider (IdP).  
+This integration enables seamless, secure sign-in without requiring users to manually create or manage passwords.
+
+### Prerequisites
+
+Before configuring Magistrala for Google Sign-In:
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/).
+2. Create a **new project** (or use an existing one).
+3. Enable the **Google Identity Platform API**.
+4. Configure the **OAuth consent screen** and **create OAuth 2.0 credentials** by following Google’s [documentation][google-identity-platform-docs].
+5. Add your authorized redirect URIs (see below).
+
+### Authorized Redirect URIs
+
+Add the following redirect URIs to your Google Cloud project:
+
+| Environment          | Redirect URI                                      |
+|-----------------------|--------------------------------------------------|
+| **Local Development** | `http://localhost:9002/oauth/callback/google`    |
+| **Production**        | `https://<your-domain>/oauth/callback/google`    |
+
+> These URLs must match the value of `SMQ_GOOGLE_REDIRECT_URL` in your `.env` or Docker Compose configuration.
+
+#### Environment Variables
+
+Both the **Magistrala backend** and **Magistrala UI** require the following environment variables to be set:
 
 ```bash
-MG_GOOGLE_CLIENT_ID=985229335584-m2mft8lqbgfn5gfw9ftrm3r2sgu4tsrw.apps.googleusercontent.com
-MG_GOOGLE_CLIENT_SECRET=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YUIpw
-MG_GOOGLE_REDIRECT_URL=http://localhost:3000/oauth/callback/google
+# Google OAuth credentials
+SMQ_GOOGLE_CLIENT_ID=<your-google-client-id>
+SMQ_GOOGLE_CLIENT_SECRET=<your-google-client-secret>
+SMQ_GOOGLE_REDIRECT_URL=http://localhost:9002/oauth/callback/google
+SMQ_GOOGLE_STATE=pGXVNhEeKfycuBzk5InlSfMlEU9UrhlkTUOSqhsgDzXP2Y4RsN
+
+# UI OAuth redirect handling
+SMQ_OAUTH_UI_REDIRECT_URL=http://localhost:3000/api/auth/token
+SMQ_OAUTH_UI_ERROR_URL=http://localhost:3000/login
+
+# Magistrala UI configuration
+MG_GOOGLE_CLIENT_ID=<your-google-client-id>
+MG_GOOGLE_CLIENT_SECRET=<your-google-client-secret>
+MG_GOOGLE_REDIRECT_URL=http://localhost:9002/oauth/callback/google
 MG_GOOGLE_STATE=pGXVNhEeKfycuBzk5InlSfMlEU9UrhlkTUOSqhsgDzXP2Y4RsN
-MG_USERS_UI_REDIRECT_URL=http://localhost:9090
 ```
 
-1. `MG_GOOGLE_CLIENT_ID` - Google OAuth 2.0 client ID
-2. `MG_GOOGLE_CLIENT_SECRET` - Google OAuth 2.0 client secret
-3. `MG_GOOGLE_REDIRECT_URL` - Google OAuth 2.0 redirect URL to handle callback after successful authentication. This URL must be registered in the Google Cloud Platform.
-4. `MG_GOOGLE_STATE` - Random string used to protect against cross-site request forgery attacks.
-5. `MG_USERS_UI_REDIRECT_URL` - URL to redirect user after successful authentication. This can be your Magistrala UI URL.
+>> These credentials must be identical in both the backend and UI configurations to ensure proper OIDC flow.
 
-Magistrala handles the authentication callback at `<MG_BASE_URL>/google-callback` endpoint, where `<MG_BASE_URL>` is the base URL of your Magistrala instance. This endpoint needs to be registered in the Google Cloud Platform and it must match the value of `MG_GOOGLE_REDIRECT_URL` environment variable. If an error occurs, the error message is sent from the backend using a query paramters with the key `error`. The UI will read the error message from the query parameter and display it to the user. When a user signs up, Magistrala creates a local copy of the user with an ID provided by Google, the name and email address provided by Google and the password is left empty as the user is authenticated using Google, i.e. external user. The user can be created only once, so if the user already exists, the error will be sent to the UI via the error cookie. Finally, the user is redirected to the URL provided in `MG_USERS_UI_REDIRECT_URL` environment variable upon successful authentication. This should be the base URL of your UI.
+### Variable Descriptions
 
-The `MG_GOOGLE_CLIENT_ID`, `MG_GOOGLE_CLIENT_SECRET`, `MG_GOOGLE_REDIRECT_URL` and `MG_GOOGLE_STATE` environment variables should be the same for the UI and users service. The `MG_USERS_UI_REDIRECT_URL` environment variable should be the URL of your UI which is used to redirect the user after successful authentication.
+| Variable                        | Description                                                                                                         |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **`SMQ_GOOGLE_CLIENT_ID`**      | Google OAuth 2.0 client ID obtained from Google Cloud Console.                                                      |
+| **`SMQ_GOOGLE_CLIENT_SECRET`**  | Google OAuth 2.0 client secret associated with the client ID.                                                       |
+| **`SMQ_GOOGLE_REDIRECT_URL`**   | OAuth 2.0 callback endpoint for the SuperMQ backend. Must match the authorized redirect URI in your Google project. |
+| **`SMQ_GOOGLE_STATE`**          | Random unique string to protect against CSRF attacks during OAuth flow.                                             |
+| **`SMQ_OAUTH_UI_REDIRECT_URL`** | URL where the UI receives tokens after successful authentication (e.g., NextAuth `/api/auth/token`).                |
+| **`SMQ_OAUTH_UI_ERROR_URL`**    | Fallback URL for failed authentications (e.g., login page).                                                         |
+| **`MG_GOOGLE_CLIENT_ID`**       | Google OAuth 2.0 client ID used by the Magistrala UI for initialization.                                            |
+| **`MG_GOOGLE_CLIENT_SECRET`**   | Google OAuth 2.0 client secret used by the Magistrala UI for initialization.                                        |
+| **`MG_GOOGLE_REDIRECT_URL`**    | Redirect URL used by the UI to align with backend callback.                                                         |
+| **`MG_GOOGLE_STATE`**           | Must match backend’s Google OAuth state value.                                                                      |
 
-Magistrala uses the `access_token` provided by Google only to fetch user information which includes user id, name, given name, family name, picture and locale. The `access_token` is not stored in the database and it's not used for any other purpose. The `id_token` is not used as it presents challenges on refreshing it, thus Magistrala issues its own `access_token` and `refresh_token` stored in the HTTP-only cookie and it's used to authenticate the user in the subsequent requests.
+#### Flow Overview
+
+1. The user clicks **Sign in with Google** on the Magistrala UI.  
+2. The UI redirects the user to **Google’s OAuth consent screen**.  
+3. After successful authentication, Google redirects to  
+   **`MG_GOOGLE_REDIRECT_URL`** (for example, `http://localhost:9002/oauth/callback/google`).  
+4. The backend exchanges the **authorization code** for a Google **access token**.  
+5. Using the token, Magistrala retrieves basic user info (ID, name, email, profile picture).  
+6. The user is created in Magistrala’s database (if new) and authenticated.  
+7. Magistrala issues its own **access token** and **refresh token**, stored securely as **HTTP-only cookies**.  
+8. The user is redirected to **`SMQ_OAUTH_UI_REDIRECT_URL`**.
+
+- The **`access_token`** from Google is **never stored** in the Magistrala database.  
+- The **`id_token`** is not reused to avoid refresh limitations — Magistrala issues its own tokens instead.  
+- Always use **HTTPS** for production redirect URLs.  
+- Ensure **`MG_GOOGLE_STATE`** is sufficiently random and unique across environments.
+
+#### Example Local Setup
+
+For a local Docker-based environment, add the following lines to your .env or docker-compose.env:
+
+```bash
+## In the SMQ
+
+SMQ_GOOGLE_CLIENT_ID=985229335584-m2mft8lqbgfn5gfw9ftrm3r2sgu4tsrw.apps.googleusercontent.com
+SMQ_GOOGLE_CLIENT_SECRET=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WYUIpw
+SMQ_GOOGLE_REDIRECT_URL=http://localhost:9002/oauth/callback/google
+SMQ_GOOGLE_STATE=pGXVNhEeKfycuBzk5InlSfMlEU9UrhlkTUOSqhsgDzXP2Y4RsN
+SMQ_OAUTH_UI_REDIRECT_URL=http://localhost:3000/api/auth/token
+SMQ_OAUTH_UI_ERROR_URL=http://localhost:3000/login
+
+# In the UI
+
+MG_GOOGLE_CLIENT_ID=985229335584-m2mft8lqbgfn5gfw9ftrm3r2sgu4tsrw.apps.googleusercontent.com
+MG_GOOGLE_CLIENT_SECRET=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WYUIpw
+MG_GOOGLE_REDIRECT_URL=http://localhost:9002/oauth/callback/google
+MG_GOOGLE_STATE=pGXVNhEeKfycuBzk5InlSfMlEU9UrhlkTUOSqhsgDzXP2Y4RsN
+
+```
+
+Finally restart your containers after editing the `.env` file
+
+### Backend Integration
+
+Magistrala handles authentication callbacks at:
+
+```bash
+<MG_BASE_URL>/google-callback
+```
+
+Where `<MG_BASE_URL>` is your backend users service URL (for example, `http://localhost:9002`).
+This endpoint must be registered in your Google Cloud Console and match the value of `MG_GOOGLE_REDIRECT_URL`.
+
+In case of an authentication error, the backend appends a query parameter `?error=<message>` to the redirect URL.
+The UI reads this parameter and displays a corresponding toast or alert.
+
+### Token Management
+
+After Google authentication:
+
+- Magistrala fetches the user’s Google profile (id, email, name, picture, locale).
+- A new Magistrala user entry is created if none exists.
+- Magistrala issues its own secure session tokens:
+  - access_token — short-lived token for API access.
+  - refresh_token — longer-lived token stored in an HTTP-only cookie.
+
+These tokens are used for subsequent API calls across the platform.
 
 ## Authentication with Magistrala keys
 
