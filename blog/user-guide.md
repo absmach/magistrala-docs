@@ -3,7 +3,8 @@ slug: magistrala-user-guide
 title: Revolutionizing Industrial IoT with an Open Source Platform
 authors: osodo
 description: Learn how Magistrala simplifies Industrial IoT with robust features like multi-protocol support, scalable architecture, and enhanced security.
-tags: ['Magistrala', 'IIoT', 'User Guide', 'Industrial Automation', 'Open Source']
+tags:
+  ["Magistrala", "IIoT", "User Guide", "Industrial Automation", "Open Source"]
 ---
 
 ## Magistrala: Revolutionizing Industrial IoT with an Open Source Platform
@@ -68,7 +69,7 @@ Magistrala offers multiple interaction options, including a CLI, SDK, HTTP API, 
 
 ### Using the CLI
 
-Magistrala's Command Line Interface (CLI) provides a powerful way to interact with the platform. There are many commands available through the CLI. For more information, refer to the [Magistrala CLI Documentation](https://docs.magistrala.abstractmachines.fr/cli/). To explore available commands and get usage details, run:
+Magistrala's Command Line Interface (CLI) provides a powerful way to interact with the platform. There are many commands available through the CLI. For more information, refer to the [Magistrala CLI Documentation](https://docs.magistrala.absmach.eu/cli/). To explore available commands and get usage details, run:
 
 ```bash
 magistrala-cli --help
@@ -185,7 +186,7 @@ While logged into your domain, you can perform a variety of operations. Some of 
 - Channel Management: Configure and manage channels for data communication within the domain.
 - Domain Management: Handle domain-specific settings and configurations.
 
-For more detailed information on these operations, refer to the [Magistrala CLI Documentation](https://docs.magistrala.abstractmachines.fr/cli/). Let us go through some of the operations.
+For more detailed information on these operations, refer to the [Magistrala CLI Documentation](https://docs.magistrala.absmach.eu/cli/). Let us go through some of the operations.
 
 - Create a thing (device):
 
@@ -639,15 +640,15 @@ We value your feedback and are committed to continually improving Magistrala to 
 
 IIoT, Open Source, IoT Platform, Industrial Automation, Remote Monitoring, MQTT, CoAP, WebSocket, Device Management, Scalability, Security, Docker, Go, Multi-Tenancy, Data Processing, Real-Time Analytics, Edge Computing, Sensor Networks, Industrial IoT, Connected Devices, IoT Middleware, Protocol Bridging, Cloud Platform, IoT Security, IoT Data Management, Customer Support, Community Engagement, Open Source Community, IIoT Support, Developer Resources
 
-[architecture]: https://docs.magistrala.abstractmachines.fr/architecture/
-[authorization]: https://docs.magistrala.abstractmachines.fr/authorization/#domain-viewer-with-channel-thing
-[storage]: https://docs.magistrala.abstractmachines.fr/storage/#readers
+[architecture]: https://docs.magistrala.absmach.eu/user-guide/architecture/
+[authorization]: https://docs.magistrala.absmach.eu/dev-guide/authorization
+[storage]: https://docs.magistrala.absmach.eu/storage/#readers
 [magistrala-repo]: https://github.com/absmach/magistrala
 [mosquitto-site]: https://mosquitto.org/download/
-[swagger-docs]: https://docs.api.magistrala.abstractmachines.fr/
+[swagger-docs]: https://docs.api.magistrala.absmach.eu/
 [coap-repo]: https://github.com/absmach/coap-cli/releases/tag/v0.3.3
 [websocat-repo]: https://github.com/vi/websocat?tab=readme-ov-file#installation
 [drasko]: https://github.com/drasko
-[docs]: https://docs.magistrala.abstractmachines.fr
+[docs]: https://docs.magistrala.absmach.eu
 [Twitter-handle]: https://x.com/absmach
 [LinkedIn-page]: https://www.linkedin.com/company/abstract-machines/

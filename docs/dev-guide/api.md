@@ -15,7 +15,7 @@ image: /img/mg-preview.png
 
 ## Reference
 
-The API reference is available at the [Magistrala API documentation site](https://docs.api.magistrala.abstractmachines.fr/)
+The API reference is available at the [Magistrala API documentation site](https://docs.api.magistrala.absmach.eu/)
 
 ## Users
 
