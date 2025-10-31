@@ -3,7 +3,8 @@ slug: magistrala-user-guide
 title: Revolutionizing Industrial IoT with an Open Source Platform
 authors: osodo
 description: Learn how Magistrala simplifies Industrial IoT with robust features like multi-protocol support, scalable architecture, and enhanced security.
-tags: ['Magistrala', 'IIoT', 'User Guide', 'Industrial Automation', 'Open Source']
+tags:
+  ["Magistrala", "IIoT", "User Guide", "Industrial Automation", "Open Source"]
 ---
 
 ## Magistrala: Revolutionizing Industrial IoT with an Open Source Platform
@@ -639,8 +640,8 @@ We value your feedback and are committed to continually improving Magistrala to 
 
 IIoT, Open Source, IoT Platform, Industrial Automation, Remote Monitoring, MQTT, CoAP, WebSocket, Device Management, Scalability, Security, Docker, Go, Multi-Tenancy, Data Processing, Real-Time Analytics, Edge Computing, Sensor Networks, Industrial IoT, Connected Devices, IoT Middleware, Protocol Bridging, Cloud Platform, IoT Security, IoT Data Management, Customer Support, Community Engagement, Open Source Community, IIoT Support, Developer Resources
 
-[architecture]: https://docs.magistrala.absmach.eu/architecture/
-[authorization]: https://docs.magistrala.absmach.eu/authorization/#domain-viewer-with-channel-thing
+[architecture]: https://docs.magistrala.absmach.eu/user-guide/architecture/
+[authorization]: https://docs.magistrala.absmach.eu/dev-guide/authorization
 [storage]: https://docs.magistrala.absmach.eu/storage/#readers
 [magistrala-repo]: https://github.com/absmach/magistrala
 [mosquitto-site]: https://mosquitto.org/download/
