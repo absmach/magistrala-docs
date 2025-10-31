@@ -259,4 +259,4 @@ For more information about the Bootstrap service API, please check out the [API 
 
 > This feature is currently under development :hammer:
 
-[api-docs]: https://docs.api.magistrala.absmach.eu/?urls.primaryName=users.yml
+[api-docs]: https://docs.api.magistrala.absmach.eu
