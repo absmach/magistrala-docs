@@ -32,6 +32,8 @@ To start sending messages:
 
    ![View Channels Page](../img/messaging/view-channel-page.png)
 
+   > **NOTE** To be able to view messages on this page that are sent to the channel, please ensure you create a rule to store messages to the internal database. A step by step instruction is provided in the [rules section of the user docs][rules].
+
 2. Click on the **channel** you would like to send messages to
 
    ![View Channel](../img/messaging/select-channel-page.png)
@@ -251,3 +253,4 @@ it's subtopics.
 [curl]: https://curl.se/
 [mosquitto-tools]: https://mosquitto.org/download/
 [wscat]: https://github.com/websockets/wscat
+[rules]: ./rules-engine.md
