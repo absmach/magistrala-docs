@@ -55,12 +55,30 @@ Magistrala currently supports **English**, **German**, and **Serbian** languages
 
 ## Password Recovery
 
-Users who forget their password can click the `Forgot Password` link on the login page.
+Users who forget their password can initiate a password reset through the **Forgot Password** feature on the login page.
 
 ![Forgot Password Link](../../img/profile-management/forgot-pass.png)
 
-They’ll be prompted to enter their email address to receive a reset link.
+Clicking the **Forgot Password?** link redirects the user to a dedicated **Forgot Password** page, where they must enter their registered email address.
 
 ![Forgot Password](../../img/profile-management/forgot-password2.png)
 
-The link includes a unique token and redirects the user to a **Reset Password** page, where they can create and confirm a new password. Once updated, they can log in with their new credentials.
+After submitting the request, Magistrala displays a success notification confirming that the reset link has been sent.
+
+> **Password reset link sent successfully. Check your email.**
+
+![Reset Link Toast](../../img/profile-management/password-link-sent.png)
+
+A password reset email is then delivered to the user’s inbox.  
+The email includes a personalized greeting and a button that directs the user to the password reset page.
+
+![Password Reset Email](../../img/profile-management/pass-reset-email.png)
+
+By clicking **Create a New Password**, the user is redirected to the **Reset Password** page, where they can create and confirm a new password.  
+If the button does not work, the email also contains a fallback link that can be copied and pasted into a web browser.
+
+![Password Reset Page](../../img/profile-management/reset-password.png)
+
+> **Important:** The password reset link is valid for **24 hours** from the time of issue.
+
+Once the password has been successfully updated, the user can return to the **Sign In** page and log in with the new credentials.
