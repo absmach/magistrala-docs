@@ -172,7 +172,7 @@ Each channel has a **route**, which is a user-friendly alias for the channel’s
 The route makes it easier to reference or subscribe to the channel without needing the full UUID.  
 It is defined **only during creation** and cannot be changed later, so choose something short, clear, and descriptive.
 
-To create a channel, navigate to the fourth tab under the groups and click on `+ Create`. This will open a dialog box which will take in a unique Channel name. Much like the Clients, clicking on `Upload` will allow a user to upload a _.CSV_ file with multiple channels.
+To create a channel, navigate to the fourth tab under the groups and click on `+ Create`. This will open a dialog box which will take in a unique Channel name. Much like the Clients, clicking on `Upload` will allow a user to upload a *.CSV* file with multiple channels.
 
 ![Create Group Channel](../img/users-guide/group-channel-create.png)
 
@@ -245,7 +245,7 @@ Once a Channel and Client are connected as well as Rule created, a user is able 
 
 ![View Messages Page](../img/users-guide/group-messages-view.png)
 
-This will open a dialog box where all the required fields bear an asterisk. Messages are sent via _HTTP_ protocol in the UI.
+This will open a dialog box where all the required fields bear an asterisk. Messages are sent via *HTTP* protocol in the UI.
 
 ![Send Message](../img/users-guide/group-send-message.png)
 

@@ -20,11 +20,11 @@ The **Invitations** tab displays a list of all invitations sent by the user, inc
 
 The **Status** column shows the current state of each invitation:
 
-| Status | Description |
-| ------- | ------------ |
-| **Pending** | Invitation sent, awaiting recipient's response. |
+| Status       | Description                                           |
+| ------------ | ----------------------------------------------------- |
+| **Pending**  | Invitation sent, awaiting recipient's response.       |
 | **Accepted** | Invitation accepted — the user has joined the domain. |
-| **Rejected** | Invitation declined by the recipient. |
+| **Rejected** | Invitation declined by the recipient.                 |
 
 ## Send Invitation
 
@@ -56,9 +56,9 @@ The **Invitations Table** also includes management options depending on the invi
 
 ![Invitations Table](../../img/invitations/invitations-table.png)
 
-| **Action** | **Availability**                        | **Description**                                                                    |
-|------------|-----------------------------------------|------------------------------------------------------------------------------------|
-| **Resend** | Available for **Rejected** invitations | Allows the administrator to resend an invitation to users who previously declined. |
+| **Action** | **Availability**                           | **Description**                                                                    |  
+| ---------- | ------------------------------------------ | ---------------------------------------------------------------------------------- |  
+| **Resend** | Available for **Rejected** invitations     | Allows the administrator to resend an invitation to users who previously declined. |  
 | **Delete** | Available only for **Pending** invitations | Removes a pending invitation that has not yet been accepted or rejected.           |
 
 ![Resend and Delete](../../img/invitations/invitation-actions.png)
