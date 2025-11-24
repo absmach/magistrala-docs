@@ -82,3 +82,44 @@ update:
   label: Update
   permalink: /update
   description: Blog posts about updates and changes to Magistrala.
+
+iot:
+  label: IoT
+  permalink: /iot
+  description: Articles exploring Internet of Things (IoT) technologies and applications using Magistrala.
+
+low-code:
+  label: Low-Code
+  permalink: /low-code
+  description: Posts about building IoT solutions with minimal code using Magistrala's low-code capabilities.
+
+real-time-processing:
+  label: Real-Time Processing
+  permalink: /real-time-processing
+  description: Content focused on processing IoT data in real time using Magistrala.
+
+rules-engine:
+  label: Rules Engine
+  permalink: /rules-engine
+  description: Deep dives into Magistrala's rule-based automation and event processing engine.
+
+dashboards:
+  label: Dashboards
+  permalink: /dashboards
+  description: Guides and features related to creating and managing dashboards in Magistrala.
+
+alarm-management:
+  label: Alarm Management
+  permalink: /alarm-management
+  description: Posts about configuring and managing alarms triggered by IoT data in Magistrala.
+
+observability:
+  label: Observability
+  permalink: /observability
+  description: Insights into monitoring, logging, and tracing with Magistrala for better system visibility.
+
+ui-ux:
+  label: UI/UX
+  permalink: /ui-ux
+  description: Discussions and design patterns around user interface and user experience in Magistrala applications.
+
