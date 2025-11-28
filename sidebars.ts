@@ -118,8 +118,6 @@ const sidebars: SidebarsConfig = {
         { type: "doc", id: "dev-guide/cli/channels-cli", label: "Channels Management" },
         { type: "doc", id: "dev-guide/cli/clients-cli", label: "Clients Management" },
         { type: "doc", id: "dev-guide/cli/provision-cli", label: "Provisioning Management" },
-        { type: "doc", id: "dev-guide/cli/bootstrap-cli", label: "Bootstrap Management" },
-        { type: "doc", id: "dev-guide/cli/consumers-cli", label: "Consumers Management" },
       ],
     },
     {
