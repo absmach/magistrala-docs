@@ -13,30 +13,31 @@ keywords:
 image: /img/mg-preview.png
 ---
 
-Magistrala CLI provides a simple and efficient way to manage channels. Below are the key commands to create, connect, assign and manage channels within your system.
+[Magistrala CLI](./introduction-to-cli.md) provides a simple and efficient way to manage channels. Below are the key commands to create, connect, assign and manage channels within your system.
 
 ### Create Channel
 
 To create a new channel:
 
 ```bash
-magistrala-cli channels create '{"name":"myChannel"}' <domain_id> <user_token>
+magistrala-cli channels <JSON_channel> create  <domain_id> <user_auth_token>
 ```
 
 Example usage:
 
 ```bash
-magistrala-cli channels create '{"name":"myChannel"}' 9879f314-8b0a-4a11-b157-8523491ffa81 token
+magistrala-cli channels '{"name":"myChannel"}' create 9879f314-8b0a-4a11-b157-8523491ffa81 token
 ```
 
 Expected result:
 
 ```json
 {
-  "created_at": "2025-02-12T17:25:02.063072Z",
-  "domain_id": "9879f314-8b0a-4a11-b157-8523491ffa81",
-  "id": "41a64d0c-5ac6-42d7-bff6-0d4d2828416e",
+  "created_at": "2025-11-28T15:24:51.974779Z",
+  "domain_id": "e45f002b-8e55-4264-be27-deaf2643b055",
+  "id": "d6f10b04-5b34-4ce5-b509-3899076be6cb",
   "name": "myChannel",
+  "status": "enabled",
   "updated_at": "0001-01-01T00:00:00Z"
 }
 ```
@@ -94,13 +95,13 @@ With JSON you can be able to specify more fields of the channels you want to cre
 Using the update flag can update the channel.
 
 ```bash
-magistrala-cli update <channel_id> '{"id":"<channel_id>","name":"myNewName"}' <domain_id> <user_auth_token>
+magistrala-cli <channel_id> update '{"id":"<channel_id>","name":"myNewName"}' <domain_id> <user_auth_token>
 ```
 
 Example usage:
 
 ```bash
-magistrala-cli channels update 41a64d0c-5ac6-42d7-bff6-0d4d2828416e '{"name":"Lights"}' 9879f314-8b0a-4a11-b157-8523491ffa81 <user_token>
+magistrala-cli channels 41a64d0c-5ac6-42d7-bff6-0d4d2828416e update '{"name":"Lights"}' 9879f314-8b0a-4a11-b157-8523491ffa81 <user_token>
 ```
 
 Expected result:
@@ -114,7 +115,6 @@ Expected result:
   "updated_at": "2025-02-12T18:01:51.27765Z",
   "updated_by": "6ccaf13c-ef88-4cf2-8e3a-c7c04c5eaf9b"
 }
-
 ```
 
 ### Enable Channel
@@ -122,13 +122,13 @@ Expected result:
 To enabke a channel:
 
 ```bash
-magistrala-cli channels enable <channel_id> <domain_id> <user_token>
+magistrala-cli channels <channel_id> enable <domain_id> <user_token>
 ```
 
 Example usage:
 
 ```bash
-magistrala-cli channels enable 41a64d0c-5ac6-42d7-bff6-0d4d2828416e 9879f314-8b0a-4a11-b157-8523491ffa81 token
+magistrala-cli channels  41a64d0c-5ac6-42d7-bff6-0d4d2828416e enable 9879f314-8b0a-4a11-b157-8523491ffa81 token
 ```
 
 Expected result:
@@ -149,13 +149,13 @@ Expected result:
 To change a channel's status from enabled to disabled:
 
 ```bash
-magistrala-cli channels disable <channel_id> <domain_id> <user_token>
+magistrala-cli channels <channel_id> disable <domain_id> <user_token>
 ```
 
 Example usage:
 
 ```bash
-magistrala-cli channels disable 41a64d0c-5ac6-42d7-bff6-0d4d2828416e 9879f314-8b0a-4a11-b157-8523491ffa81 token
+magistrala-cli channels  41a64d0c-5ac6-42d7-bff6-0d4d2828416e disable 9879f314-8b0a-4a11-b157-8523491ffa81 token
 ```
 
 Expected result:
@@ -177,13 +177,13 @@ Expected result:
 To view a specific channel:
 
 ```bash
-magistrala-cli channels get <channel_id> <domain_id> <user_token>
+magistrala-cli channels  <channel_id> get <domain_id> <user_token>
 ```
 
 Example usage:
 
 ```bash
-magistrala-cli channels get 41a64d0c-5ac6-42d7-bff6-0d4d2828416e 9879f314-8b0a-4a11-b157-8523491ffa81 token
+magistrala-cli channels  41a64d0c-5ac6-42d7-bff6-0d4d2828416e get 9879f314-8b0a-4a11-b157-8523491ffa81 token
 ```
 
 Expected result:
@@ -204,7 +204,7 @@ Expected result:
 To list all the channels in the system:
 
 ```bash
-magistrala-cli channels get all  <domain_id> <user_token>
+magistrala-cli channels all get <domain_id> <user_token>
 ```
 
 ### Get a subset list of provisioned Channels
@@ -212,7 +212,7 @@ magistrala-cli channels get all  <domain_id> <user_token>
 To list clients based on a set of parameters:
 
 ```bash
-magistrala-cli channels get all --offset=1 --limit=5  <domain_id> <user_token>
+magistrala-cli channels all get --offset=1 --limit=5  <domain_id> <user_token>
 ```
 
 ### Connect Client to Channel
@@ -220,7 +220,7 @@ magistrala-cli channels get all --offset=1 --limit=5  <domain_id> <user_token>
 To connect a client to a channel:
 
 ```bash
-magistrala-cli clients connect <client_id> <channel_id> <conn_types_json_list> <domain_id> <user_auth_token>
+magistrala-cli <client_id> connect <channel_id> <conn_types_json_list> <domain_id> <user_auth_token>
 ```
 
 ### Bulk Connect Clients to Channels
@@ -257,5 +257,5 @@ A comparable JSON file would be
 To disconnect a client from a channel:
 
 ```bash
-magistrala-cli clients disconnect <client_id> <channel_id> <domain_id> <user_token>
+magistrala-cli clients  <client_id> disconnect <channel_id> <domain_id> <user_token>
 ```
