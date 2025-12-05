@@ -5,7 +5,7 @@ import tailwindPlugin from "./plugins/tailwind-config.cjs";
 
 const config: Config = {
   title: "Magistrala",
-  favicon: "img/Magistrala_logo_square_white.svg",
+  favicon: "img/favicon.ico",
 
   url: "https://docs.magistrala.absmach.eu",
   baseUrl: "/",
@@ -36,14 +36,14 @@ const config: Config = {
 
   presets: [
     [
-      '@docusaurus/preset-classic',
+      "@docusaurus/preset-classic",
       {
         docs: {
           routeBasePath: "/",
           sidebarPath: "sidebars.ts",
           editUrl: "https://github.com/absmach/magistrala-docs/blob/main",
           includeCurrentVersion: true,
-          lastVersion: 'current',
+          lastVersion: "current",
           versions: {
             current: {
               label: "v1.0.0",
@@ -82,35 +82,63 @@ const config: Config = {
   themeConfig: {
     metadata: [
       // SEO
-      { name: 'title', content: 'Magistrala | Open Source IoT Platform' },
-      { name: 'keywords', content: 'IoT, Cloud, Middleware, Open Source, Magistrala' },
-      { name: 'author', content: 'Abstract Machines' },
-      { name: 'description', content: 'Magistrala is an open-source, multi-protocol IoT platform designed for scalable and secure device communication and management.' },
-      { name: 'robots', content: 'index, follow' },
+      { name: "title", content: "Magistrala | Open Source IoT Platform" },
+      {
+        name: "keywords",
+        content:
+          "Magistrala, IoT platform, cloud IoT, industrial IoT, IIoT, edge computing, MQTT, CoAP, HTTP, device management, IoT core, open-source IoT, scalable IoT, secure IoT, microservices, Kubernetes, IoT security, IoT gateway, real-time IoT, enterprise IoT, consumer IoT, smart devices, IoT infrastructure, mainflux, iot messaging platform",
+      },
+      { name: "author", content: "Abstract Machines" },
+      {
+        name: "description",
+        content:
+          "Magistrala is a complete open-source IoT platform for cloud and edge. Scalable, secure device management with MQTT, CoAP, HTTP support. Build industrial IoT, enterprise IoT, and consumer IoT solutions with our cloud-native microservices platform.",
+      },
+      { name: "robots", content: "index, follow" },
 
       // Open Graph
-      { property: 'og:title', content: 'Magistrala | Open Source IoT Platform' },
-      { property: 'og:description', content: 'Secure, scalable, and multi-protocol middleware for building IoT solutions.' },
-      { property: 'og:type', content: 'website' },
-      { property: 'og:url', content: 'https://docs.magistrala.absmach.eu/' },
-      { property: 'og:image', content: 'https://docs.magistrala.absmach.eu/img/mg-preview.png' },
-      { property: 'og:image:width', content: '1200' },
-      { property: 'og:image:height', content: '630' },
-      { property: 'og:image:alt', content: 'Magistrala Logo' },
+      {
+        property: "og:title",
+        content: "Magistrala | Open Source IoT Platform",
+      },
+      {
+        property: "og:description",
+        content:
+          "Secure, scalable, and multi-protocol middleware for building IoT solutions.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://docs.magistrala.absmach.eu/" },
+      {
+        property: "og:image",
+        content: "https://docs.magistrala.absmach.eu/img/mg-preview.png",
+      },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Magistrala Logo" },
 
       // Twitter Card
-      { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:site', content: '@absmach' },
-      { name: 'twitter:title', content: 'Magistrala | Open Source IoT Platform' },
-      { name: 'twitter:description', content: 'Secure, scalable, and multi-protocol middleware for building IoT solutions.' },
-      { name: 'twitter:image', content: 'https://docs.magistrala.absmach.eu/img/mg-preview.png' },
-      { name: 'twitter:image:alt', content: 'Magistrala Logo' },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:site", content: "@absmach" },
+      {
+        name: "twitter:title",
+        content: "Magistrala | Open Source IoT Platform",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Secure, scalable, and multi-protocol middleware for building IoT solutions.",
+      },
+      {
+        name: "twitter:image",
+        content: "https://docs.magistrala.absmach.eu/img/mg-preview.png",
+      },
+      { name: "twitter:image:alt", content: "Magistrala Logo" },
     ],
     sitemap: {
-      changefreq: 'weekly',
+      changefreq: "weekly",
       priority: 0.5,
-      filename: 'sitemap.xml',
-      ignorePatterns: ['/tags/**'],
+      filename: "sitemap.xml",
+      ignorePatterns: ["/tags/**"],
       createRobotsTxt: false,
     },
     navbar: {
@@ -142,7 +170,7 @@ const config: Config = {
           type: "docsVersionDropdown",
           position: "right",
           dropdownActiveClassDisabled: true,
-        }
+        },
       ],
     },
     footer: {
@@ -170,7 +198,7 @@ const config: Config = {
             },
             {
               label: "LinkedIn",
-              href: 'https://www.linkedin.com/company/abstract-machines',
+              href: "https://www.linkedin.com/company/abstract-machines",
             },
             {
               label: "Twitter",
@@ -188,7 +216,7 @@ const config: Config = {
             {
               label: "Medium",
               href: "https://medium.com/abstract-machines-blog",
-            }
+            },
           ],
         },
       ],
@@ -205,31 +233,105 @@ const config: Config = {
 
   headTags: [
     {
-      tagName: 'link',
+      tagName: "link",
       attributes: {
-        rel: 'preconnect',
-        href: 'https://docs.magistrala.absmach.eu',
+        rel: "preconnect",
+        href: "https://docs.magistrala.absmach.eu",
       },
     },
     {
-      tagName: 'script',
+      tagName: "script",
       attributes: {
-        type: 'application/ld+json',
+        type: "application/ld+json",
       },
       innerHTML: JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'Organization',
-        name: 'Abstract Machines',
-        url: 'https://www.absmach.eu',
-        logo: 'https://docs.magistrala.absmach.eu/img/Magistrala_logo_square_white.svg',
-        sameAs: [
-          'https://twitter.com/absmach',
-          'https://github.com/absmach/magistrala',
-          'https://www.linkedin.com/company/abstract-machines'
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://www.absmach.eu/company/",
+            name: "Abstract Machines",
+            url: "https://www.absmach.eu",
+            logo: "https://docs.magistrala.absmach.eu/img/Magistrala_logo_square_white.svg",
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: "141 Quai de Valmy",
+              addressLocality: "Paris",
+              postalCode: "75010",
+              addressCountry: "FR",
+            },
+            contactPoint: {
+              "@type": "ContactPoint",
+              email: "info@absmach.eu",
+              contactType: "Customer Service",
+            },
+            sameAs: [
+              "https://twitter.com/absmach",
+              "https://github.com/absmach",
+              "https://www.linkedin.com/company/abstract-machines",
+            ],
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://magistrala.absmach.eu/",
+            name: "Magistrala IoT Platform",
+            description:
+              "Open-source IoT platform for cloud and edge computing with multi-protocol support including MQTT, CoAP, and HTTP",
+            applicationCategory: "IoT Platform",
+            operatingSystem: "Linux, Docker, Kubernetes",
+            programmingLanguage: "Go",
+            codeRepository: "https://github.com/absmach/magistrala",
+            downloadUrl: "https://github.com/absmach/magistrala/releases",
+            license: "https://github.com/absmach/magistrala/blob/main/LICENSE",
+            author: {
+              "@id": "https://www.absmach.eu/",
+            },
+            featureList: [
+              "MQTT Protocol Support",
+              "CoAP Protocol Support",
+              "HTTP Protocol Support",
+              "Device Management",
+              "Edge Computing",
+              "Microservices Architecture",
+              "Kubernetes Support",
+              "IoT Security",
+            ],
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://docs.magistrala.absmach.eu/#website",
+            url: "https://docs.magistrala.absmach.eu",
+            name: "Magistrala Documentation",
+            description:
+              "Official documentation for Magistrala open-source IoT platform",
+            publisher: {
+              "@id": "https://www.absmach.eu/",
+            },
+          },
+          {
+            "@type": "TechArticle",
+            "@id": "https://docs.magistrala.absmach.eu/",
+            headline: "Magistrala IoT Platform Documentation",
+            description:
+              "Comprehensive documentation for building IoT solutions with Magistrala platform",
+            author: {
+              "@id": "https://www.absmach.eu/",
+            },
+            publisher: {
+              "@id": "https://www.absmach.eu/",
+            },
+            about: {
+              "@id": "https://magistrala.absmach.eu/",
+            },
+            mainEntityOfPage: {
+              "@id": "https://magistrala.absmach.eu/",
+            },
+            keywords:
+              "IoT platform, MQTT, CoAP, HTTP, device management, edge computing, microservices, open source",
+          },
         ],
       }),
     },
-
   ],
 };
 
