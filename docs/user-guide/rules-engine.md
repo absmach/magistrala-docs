@@ -426,10 +426,11 @@ import (
 )
 
 func logicFunction() any {
-return {
-    n: m.message.payload.sensor,
-    v: m.message.payload.temperature,
-    u: m.message.payload.unit
+  payload := m.message.Payload.(map[string]any)
+  return map[string]any{
+    "n": payload["sensor"],
+    "v": payload["temperature"],
+    "u": payload["unit"],
   }
 }
 ```
