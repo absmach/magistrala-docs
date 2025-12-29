@@ -18,11 +18,7 @@ Distributed tracing is a method of profiling and monitoring applications. It can
 
 ## Launch
 
-The Jaeger service will launch with the rest of the Magistrala services. All services can be launched using:
-
-```bash
-make run
-```
+The Jaeger service will launch with the rest of the Magistrala services. See [getting-started][getting-started] for more information.
 
 The Jaeger UI can then be accessed at `http://localhost:16686` from a browser. Details about the UI can be found in [Jaeger's official documentation][jaeger-ui].
 

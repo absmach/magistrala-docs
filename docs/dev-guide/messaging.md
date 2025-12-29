@@ -418,13 +418,13 @@ Each broker has a unique profile for configuration. The available profiles are:
 The following command will run VerneMQ as an MQTT broker and Nats as a message broker:
 
 ```bash
-MG_MQTT_BROKER_TYPE=vernemq MG_BROKER_TYPE=nats make run
+MG_MQTT_BROKER_TYPE=vernemq MG_BROKER_TYPE=nats make run_latest
 ```
 
 The following command will run NATS as an MQTT broker and RabbitMQ as a message broker:
 
 ```bash
-MG_MQTT_BROKER_TYPE=nats MG_BROKER_TYPE=rabbitmq make run
+MG_MQTT_BROKER_TYPE=nats MG_BROKER_TYPE=rabbitmq make run_latest
 ```
 
 By default, NATS is used as an MQTT broker and RabbitMQ as a message broker.

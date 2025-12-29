@@ -24,7 +24,7 @@ To spin up Magistrala, run the following commands:
 git clone https://github.com/absmach/magistrala.git
 cd magistrala
 export MG_UI_DOCKER_ACCEPT_EULA=yes
-make run args=-d
+make run_stable args=-d
 ```
 
 Once the services are running, open [http://localhost:3000](http://localhost:3000) in your browser to view the UI. This is the Magistrala web-based platform, where you can manage clients, channels, messages, and view system activity in real time.
@@ -176,13 +176,13 @@ export MG_UI_DOCKER_ACCEPT_EULA=yes
 Once everything is installed and built, execute the following command from the project root:
 
 ```bash
-make run
+make run_latest
 ```
 
 Or, to prevent Docker logs from flooding the terminal:
 
 ```bash
-make run args=-d
+make run_latest args=-d
 ```
 
 ### Quick summary
@@ -212,7 +212,7 @@ As you develop and test changes, only the services related to your changes will 
 ```bash
 make <microservice_name>
 make docker_dev_<microservice_name>
-make run
+make run_latest
 ```
 
 ### Overriding the default docker-compose configuration

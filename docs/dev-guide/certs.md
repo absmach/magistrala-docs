@@ -47,7 +47,7 @@ Make sure you have an already running instance of `Magistrala` , `Vault` and `Ce
 To start Magistrala run:
 
 ```bash
-make run up args="-d"
+make run_latest args="-d"
 ```
 
 To start vault run:
