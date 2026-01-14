@@ -396,7 +396,7 @@ MAGISTRALA_USER_PASSWORD='12345678'
 
 ### Edge deployment
 
-The following are steps that are an example usage of Magistrala components to connect edge with cloud. We will start Magistrala in the cloud with additional services [Bootstrap][bootstrap] and [Provision][provision]. Using [Bootstrap](bootstrap) and [Provision](provision) we will create a configuration for use in gateway deployment. On the gateway we will start services [Agent][agent] and [Export][export] using previously created configuration.
+The following are steps that are an example usage of Magistrala components to connect edge with cloud. We will start Magistrala in the cloud with additional services [Bootstrap][bootstrap] and [Provision][provision]. Using [Bootstrap][bootstrap] and [Provision][provision] we will create a configuration for use in gateway deployment. On the gateway we will start services [Agent][agent] and [Export][export] using previously created configuration.
 
 ## Services in the cloud
 
