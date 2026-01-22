@@ -211,6 +211,67 @@ To view existing alarms, navigate to the **Alarms** page via the sidebar. This p
 
 ![View alarms](../img/alarms/view-alarms.png)
 
+## Filter Alarms
+
+Use filters to narrow down the alarm list based on specific criteria:
+
+1. Click the **Filter** button on the alarms page
+2. Select from available filter options:
+   - **Channel**: Filter by communication channel
+   - **Subtopic**: Filter by message subtopic
+   - **Severity**: Filter by alarm severity level
+   - **Assignee**: Filter by assigned team member
+   - **Updated By**: Filter by who last modified the alarm
+   - **Assigned By**: Filter by who assigned the alarm
+   - **Acknowledged By**: Filter by who acknowledged the alarm
+   - **Resolved By**: Filter by who resolved the alarm
+   - **Created From**: Filter by alarm creation start date
+   - **Created To**: Filter by alarm creation end date (must be after "Created From")
+3. Apply filters to update the alarm list
+
+![Filter alarms](../img/alarms/filter-alarms.png)
+
+## Download Alarms CSV
+
+Export alarm data to CSV format for analysis or reporting:
+
+1. Click the **Download CSV** button on the alarms page
+2. Configure export settings:
+
+![Download CSV](../img/alarms/csv-download-button.png)
+
+### Field Selection
+
+Choose which fields to include in the CSV:  
+ID, Severity, Cause, Value, Threshold, Client ID, Assignee, Assigned At, Acknowledged At, Resolved At, Updated At, Rule, Status, Measurement, Unit, Channel ID, Subtopic, Assigned By, Acknowledged By, Resolved By, Updated By, Created At
+
+![Field selection](../img/alarms/csv-fields.png)
+
+### Basic Settings
+
+- **Offset**: Starting record number
+- **Limit**: Maximum number of records
+- **Channel**: Filter by specific channel
+- **Subtopic**: Filter by subtopic
+- **Severity**: Filter by severity level
+- **Assignee**: Filter by assigned user
+- **File Name**: Custom name for the CSV file
+
+![Basic settings](../img/alarms/csv-configuration.png)
+
+### Advanced Filters
+
+- **Updated By**: Filter by who modified the alarm
+- **Assigned By**: Filter by who assigned the alarm
+- **Acknowledged By**: Filter by who acknowledged the alarm
+- **Resolved By**: Filter by who resolved the alarm
+- **Created From**: Start date for alarm creation
+- **Created To**: End date for alarm creation
+
+![Advanced filters](../img/alarms/csv-advanced-filters.png)
+
+3. Click **Download** to generate and save the CSV file
+
 ## Acknowledge Alarm
 
 To acknowledge an alarm:
