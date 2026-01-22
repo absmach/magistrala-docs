@@ -117,7 +117,7 @@ curl --location 'http://localhost:9008/<domain_id>/rules' \
       "type": "alarms"
     }
   ]
-}
+}'
 ```
 
 The above command creates a rule that monitors water volume messages and generates alarms when certain thresholds are exceeded.
