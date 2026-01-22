@@ -18,17 +18,29 @@ const sidebars: SidebarsConfig = {
       label: "Getting Started",
     },
     {
-      type: 'category',
-      label: 'Domain Management',
+      type: "category",
+      label: "Domain Management",
       link: {
         type: "doc",
         id: "user-guide/domain-management/introduction",
       },
       collapsible: true,
       items: [
-        { type: "doc", id: "user-guide/domain-management/domain", label: "Domain" },
-        { type: "doc", id: "user-guide/domain-management/invitations", label: "Invitations" },
-        { type: "doc", id: "user-guide/domain-management/billing", label: "Billing" },
+        {
+          type: "doc",
+          id: "user-guide/domain-management/domain",
+          label: "Domain",
+        },
+        {
+          type: "doc",
+          id: "user-guide/domain-management/invitations",
+          label: "Invitations",
+        },
+        {
+          type: "doc",
+          id: "user-guide/domain-management/billing",
+          label: "Billing",
+        },
       ],
     },
     {
@@ -43,7 +55,11 @@ const sidebars: SidebarsConfig = {
         { type: "doc", id: "user-guide/clients/groups", label: "Groups" },
         { type: "doc", id: "user-guide/clients/channels", label: "Channels" },
         { type: "doc", id: "user-guide/clients/clients", label: "Clients" },
-        { type: "doc", id: "user-guide/clients/bootstraps", label: "Bootstraps" },
+        {
+          type: "doc",
+          id: "user-guide/clients/bootstraps",
+          label: "Bootstraps",
+        },
       ],
     },
     {
@@ -55,18 +71,64 @@ const sidebars: SidebarsConfig = {
       },
       collapsible: true,
       items: [
-        { type: "doc", id: "user-guide/dashboards/dashboards", label: "Dashboard" },
+        {
+          type: "doc",
+          id: "user-guide/dashboards/dashboards",
+          label: "Dashboard",
+        },
         { type: "doc", id: "user-guide/dashboards/widgets", label: "Widgets" },
-        { type: "doc", id: "user-guide/dashboards/linechart", label: "Line Chart" },
-        { type: "doc", id: "user-guide/dashboards/areachart", label: "Area Chart" },
-        { type: "doc", id: "user-guide/dashboards/barchart", label: "Bar Chart" },
+        {
+          type: "doc",
+          id: "user-guide/dashboards/linechart",
+          label: "Line Chart",
+        },
+        {
+          type: "doc",
+          id: "user-guide/dashboards/areachart",
+          label: "Area Chart",
+        },
+        {
+          type: "doc",
+          id: "user-guide/dashboards/barchart",
+          label: "Bar Chart",
+        },
         { type: "doc", id: "user-guide/dashboards/gauges", label: "Gauges" },
-        { type: "doc", id: "user-guide/dashboards/piechart", label: "Pie Chart" },
-        { type: "doc", id: "user-guide/dashboards/countcard", label: "Count Card" },
-        { type: "doc", id: "user-guide/dashboards/tablecard", label: "Table Card" },
-        { type: "doc", id: "user-guide/dashboards/valuecard", label: "Value Card" },
+        {
+          type: "doc",
+          id: "user-guide/dashboards/piechart",
+          label: "Pie Chart",
+        },
+        {
+          type: "doc",
+          id: "user-guide/dashboards/countcard",
+          label: "Count Card",
+        },
+        {
+          type: "doc",
+          id: "user-guide/dashboards/tablecard",
+          label: "Table Card",
+        },
+        {
+          type: "doc",
+          id: "user-guide/dashboards/valuecard",
+          label: "Value Card",
+        },
         { type: "doc", id: "user-guide/dashboards/maps", label: "Maps" },
-        { type: "doc", id: "user-guide/dashboards/controls", label: "Controls" },
+        {
+          type: "doc",
+          id: "user-guide/dashboards/controls",
+          label: "Controls",
+        },
+        {
+          type: "doc",
+          id: "user-guide/dashboards/alarmcount",
+          label: "Alarm Count",
+        },
+        {
+          type: "doc",
+          id: "user-guide/dashboards/alarmtable",
+          label: "Alarm Table",
+        },
       ],
     },
     {
@@ -94,15 +156,15 @@ const sidebars: SidebarsConfig = {
       id: "user-guide/profile-management/users",
       label: "Profile Management",
     },
-     {
+    {
       type: "doc",
       id: "user-guide/pats",
       label: "Personal Access Tokens",
     },
   ],
   devSidebar: [
-    { type: 'doc', id: 'dev-guide/getting-started', label: 'Developer Guide' },
-    { type: 'doc', id: 'dev-guide/entities', label: 'Entities' },
+    { type: "doc", id: "dev-guide/getting-started", label: "Developer Guide" },
+    { type: "doc", id: "dev-guide/entities", label: "Entities" },
     {
       type: "category",
       label: "CLI",
@@ -112,14 +174,46 @@ const sidebars: SidebarsConfig = {
       },
       collapsible: true,
       items: [
-        { type: "doc", id: "dev-guide/cli/users-cli", label: "Users Management" },
-        { type: "doc", id: "dev-guide/cli/domains-cli", label: "Domains Management" },
-        { type: "doc", id: "dev-guide/cli/groups-cli", label: "Groups Management" },
-        { type: "doc", id: "dev-guide/cli/channels-cli", label: "Channels Management" },
-        { type: "doc", id: "dev-guide/cli/clients-cli", label: "Clients Management" },
-        { type: "doc", id: "dev-guide/cli/provision-cli", label: "Provisioning Management" },
-        { type: "doc", id: "dev-guide/cli/bootstrap-cli", label: "Bootstrap Management" },
-        { type: "doc", id: "dev-guide/cli/consumers-cli", label: "Consumers Management" },
+        {
+          type: "doc",
+          id: "dev-guide/cli/users-cli",
+          label: "Users Management",
+        },
+        {
+          type: "doc",
+          id: "dev-guide/cli/domains-cli",
+          label: "Domains Management",
+        },
+        {
+          type: "doc",
+          id: "dev-guide/cli/groups-cli",
+          label: "Groups Management",
+        },
+        {
+          type: "doc",
+          id: "dev-guide/cli/channels-cli",
+          label: "Channels Management",
+        },
+        {
+          type: "doc",
+          id: "dev-guide/cli/clients-cli",
+          label: "Clients Management",
+        },
+        {
+          type: "doc",
+          id: "dev-guide/cli/provision-cli",
+          label: "Provisioning Management",
+        },
+        {
+          type: "doc",
+          id: "dev-guide/cli/bootstrap-cli",
+          label: "Bootstrap Management",
+        },
+        {
+          type: "doc",
+          id: "dev-guide/cli/consumers-cli",
+          label: "Consumers Management",
+        },
       ],
     },
     {
@@ -140,8 +234,8 @@ const sidebars: SidebarsConfig = {
         { type: "doc", id: "dev-guide/reports", label: "Reports"},
       ],
     },
-    { type: 'doc', id: 'dev-guide/api', label: 'API' },
-    { type: 'doc', id: 'dev-guide/roles-schema', label: 'Roles' },
+    { type: "doc", id: "dev-guide/api", label: "API" },
+    { type: "doc", id: "dev-guide/roles-schema", label: "Roles" },
     {
       type: "category",
       label: "Development Tools",
@@ -150,10 +244,14 @@ const sidebars: SidebarsConfig = {
         id: "dev-guide/tools-introduction",
       },
       items: [
-        { type: 'doc', id: 'dev-guide/authentication', label: 'Authentication' },
-        { type: 'doc', id: 'dev-guide/authorization', label: 'Authorization' },
-        { type: 'doc', id: 'dev-guide/messaging', label: 'Messaging' },
-        { type: 'doc', id: 'dev-guide/security', label: 'Security' },
+        {
+          type: "doc",
+          id: "dev-guide/authentication",
+          label: "Authentication",
+        },
+        { type: "doc", id: "dev-guide/authorization", label: "Authorization" },
+        { type: "doc", id: "dev-guide/messaging", label: "Messaging" },
+        { type: "doc", id: "dev-guide/security", label: "Security" },
         { type: "doc", id: "dev-guide/events", label: "Events" },
         { type: "doc", id: "dev-guide/tracing", label: "Tracing" },
         { type: "doc", id: "dev-guide/storage", label: "Storage" },
