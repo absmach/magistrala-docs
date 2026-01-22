@@ -185,6 +185,22 @@ Clicking on the **Assign Member** button will open a dialog box that allows the 
 
 ![Assign Members](../../img/clients/client-members.png)
 
+## Client Alarms
+
+The **Alarms** section displays all alarms triggered by this specific client. This provides a focused view of alerts related to the client's activity and helps with targeted troubleshooting.
+
+From this page, you can perform all standard alarm management actions:
+
+- View alarm details
+- Assign alarms to team members
+- Acknowledge alarms
+- Clear/resolve alarms
+- Delete alarms
+
+For detailed instructions on managing alarms, see the [Alarms documentation](../alarms.md#view-alarms).
+
+![Client Alarms](../../img/clients/client-alarms.png)
+
 ## Audit Logs
 
 Audit logs track all **client-related events**, including **creation**, **updates**, **disabling**, **connectivity** and **role changes**
