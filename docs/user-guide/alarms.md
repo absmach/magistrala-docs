@@ -12,9 +12,9 @@ image: /img/mg-preview.png
 
 ## Overview
 
-The Alarms service allows users to create alarms triggered by threshold conditions defined in the Rules Engine. When a rule is triggered, the system generates an alarm with relevant information.
+The Alarms service enables users to create alarms triggered by threshold conditions defined in the Rules Engine. When a rule is triggered, the system generates an alarm with relevant information for monitoring and response.
 
-The returned alarm object includes the following fields:
+The alarm object includes the following fields:
 
 | Option            | Description                                               | Required             |
 | ----------------- | --------------------------------------------------------- | -------------------- |
@@ -45,28 +45,28 @@ The returned alarm object includes the following fields:
 
 ## Use Cases
 
-Here are some example scenarios where alarms are useful in IoT systems:
+Common scenarios where alarms provide value in IoT systems:
 
-- **Temperature Monitoring**: Raise an alarm when a temperature sensor reports values above or below safe thresholds in environments like server rooms, greenhouses, or refrigerators.
-- **Power Consumption Alerts**: Trigger alarms if energy usage exceeds defined limits, helping to prevent overload or equipment damage.
-- **Air Quality Monitoring**: Detect hazardous gas levels (e.g., CO₂, smoke) in smart buildings and alert relevant personnel.
-- **Water Leak Detection**: Set alarms when water sensors detect unexpected moisture levels in industrial facilities or homes.
-- **Machine Failure Prediction**: Generate alarms based on vibration or noise thresholds from industrial machines, allowing preventive maintenance.
-- **Security Events**: Detect unauthorized access attempts or motion in restricted areas using motion sensors or door sensors.
+- **Temperature Monitoring**: Alert when sensors report values outside safe thresholds in server rooms, greenhouses, or refrigerators
+- **Power Consumption**: Trigger alerts when energy usage exceeds limits to prevent overload or equipment damage
+- **Air Quality**: Detect hazardous gas levels (CO₂, smoke) in smart buildings
+- **Water Leak Detection**: Alert when sensors detect unexpected moisture in facilities or homes
+- **Machine Monitoring**: Generate alerts based on vibration or noise thresholds for preventive maintenance
+- **Security Events**: Detect unauthorized access or motion in restricted areas
 
 ## Create Alarm
 
-To create an alarm, first define an alarm rule in the Rules Engine.
+To create an alarm, define an alarm rule in the Rules Engine:
 
-1. Go to the **Rules** page and create a new rule.
+1. Navigate to the **Rules** page and create a new rule
 
    ![View Rules Page](../img/alarms/view-rules.png)
 
-2. Click the `+ Create Rule` button in the table to open a new rule page.
+2. Click **+ Create Rule** to open the rule editor
 
    ![View alarm rule](../img/alarms/view-rule.png)
 
-3. Add an **Input** node, providing the channel and topic.
+3. Add an **Input** node with channel and topic configuration
 
    ![Input options](../img/alarms/input-options.png)
 
@@ -74,21 +74,21 @@ To create an alarm, first define an alarm rule in the Rules Engine.
 
    ![Input node](../img/alarms/input-node.png)
 
-4. Add an **Editor** block as the logic node.
+4. Add an **Editor** block for rule logic
 
    ![Logic options](../img/alarms/logic-options.png)
 
    ![Logic node](../img/alarms/logic-node.png)
 
-5. Add the **Alarm** node as the output node.
+5. Add the **Alarm** node as output
 
    ![Output options](../img/alarms/output-options.png)
 
-6. Save the rule by clicking on `Save Rule` which will open a popover for the Alarm Rule name.
+6. Save the rule by clicking **Save Rule** and provide a name
 
    ![Create alarm rule](../img/alarms/create-rule.png)
 
-7. You can then view the Rule.
+7. View the completed rule
 
    ![Alarm rule](../img/alarms/alarm-rule.png)
 
@@ -97,7 +97,7 @@ Below are examples of Lua and Go scripts for checking water level thresholds:
 ```Lua title="Lua script"
 function logicFunction()
     local results = {}
-    local threshold = 20000
+    local threshold = 2000
 
     for _, msg in ipairs(message.payload) do
         local value = msg.v
@@ -151,7 +151,7 @@ type alarm struct {
 
 func logicFunction() any {
   results := []alarm{}
-  threshold := 20000.0
+  threshold := 2000.0
   pld, ok := m.message.Payload.([]any)
   if !ok {
   panic("invalid payload")
@@ -207,7 +207,7 @@ Severity values range from 1 to 5, with 1 being the lowest and 5 the highest.
 
 ## View Alarms
 
-To view existing alarms, go to the Alarms page via the sidebar. This page lists all generated alarms.
+To view existing alarms, navigate to the **Alarms** page via the sidebar. This page displays all generated alarms with their current status and details.
 
 ![View alarms](../img/alarms/view-alarms.png)
 
@@ -215,9 +215,9 @@ To view existing alarms, go to the Alarms page via the sidebar. This page lists 
 
 To acknowledge an alarm:
 
-1. Click the quick links button next to the alarm.
-
-2. Select **Acknowledge** from the dropdown menu.
+1. Click the quick links button next to the alarm
+2. Select **Acknowledge** from the dropdown menu
+3. Confirm the acknowledgment
 
 ![Acknowledge option](../img/alarms/acknowledge-option.png)
 
@@ -229,9 +229,9 @@ To acknowledge an alarm:
 
 To clear an alarm:
 
-1. Click the quick links button next to the alarm.
-
-2. Select **Clear** from the dropdown menu.
+1. Click the quick links button next to the alarm
+2. Select **Clear** from the dropdown menu
+3. Confirm the action
 
 ![Clear option](../img/alarms/clear-option.png)
 
@@ -239,13 +239,84 @@ To clear an alarm:
 
 ![Cleared alarm](../img/alarms/cleared-alarm.png)
 
+## Assign Alarm
+
+To assign an alarm to a domain member:
+
+1. Click the quick links button next to the alarm
+2. Select **Assign** from the dropdown menu
+3. Choose the member from the available users
+4. Click **Assign** to confirm
+
+![Assign option](../img/alarms/assign-option.png)
+
+![Assign dialog](../img/alarms/assign-dialog.png)
+
+![Assigned alarm](../img/alarms/assigned-alarm.png)
+
+To reassign an alarm to a different person, follow the same process and select the new assignee.
+
+## View Details
+
+To view comprehensive alarm information:
+
+1. Click the quick links button next to the alarm
+2. Select **View Details** from the dropdown menu
+
+![Details option](../img/alarms/details-option.png)
+
+The alarm details dialog contains three sections:
+
+### General Details
+
+Displays core alarm information:
+
+- Alarm status
+- Rule that triggered the alarm
+- Publisher (device/client)
+- Channel where the message was published
+- Current assignee (if assigned)
+
+![General details](../img/alarms/details-general.png)
+
+### Timeline
+
+Shows chronological alarm actions:
+
+- Alarm creation
+- Acknowledgment events
+- Resolution events
+- Assignment changes
+
+![Timeline](../img/alarms/details-timeline.png)
+
+### Activity Log
+
+Allows team collaboration:
+
+- Add comments about the alarm
+- View previous comments
+- Track communication history
+
+![Activity log](../img/alarms/details-activity.png)
+
+### Quick Actions
+
+From the details dialog, you can:
+
+- Assign the alarm to a team member
+- Acknowledge the alarm
+- Clear/resolve the alarm
+
+![Quick actions](../img/alarms/details-quick-actions.png)
+
 ## Delete Alarm
 
 To delete an alarm:
 
-1. Click the quick links button next to the alarm.
-
-2. Select **Delete** from the dropdown menu.
+1. Click the quick links button next to the alarm
+2. Select **Delete** from the dropdown menu
+3. Confirm the deletion
 
 ![Delete option](../img/alarms/delete-option.png)
 
