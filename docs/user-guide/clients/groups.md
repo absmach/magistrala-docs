@@ -49,7 +49,34 @@ This creates a hierarchy where role actions assigned in the parent group are aut
 
 After creation, the group will appear in the **Groups sidebar**.
 
-![View Group](../../img/clients/group-view.png)
+The group page has two tabs: **Settings** and **Metadata**.
+
+### Settings Tab
+
+The **Settings** tab displays key details about a group and allows you to edit core properties:
+
+**Editable Fields:**
+- **Name** – Group identifier
+- **Description** – Optional description of the group
+- **Status** – Enable or disable the group using the toggle switch
+
+**View-Only Fields:**
+- **ID** – Unique group identifier
+- **Metadata** – View existing metadata in JSON format (managed in the Metadata tab)
+
+To update a field, click the **pencil** icon next to it. Once you have updated the value, click the **check** icon to save changes or the **cross** icon to cancel.
+
+To permanently delete a group, click the **Delete Group** button. You will be asked to re-enter the group's name to confirm before deletion is finalized.
+
+![Group Settings](../../img/clients/group-settings.png)
+
+### Metadata Tab
+
+The **Metadata** tab allows you to add, view, and manage additional information for the group. Metadata supports various value types including text, numbers, booleans, JSON objects, locations, and perimeters.
+
+For detailed instructions on managing metadata, including working with interactive maps for location and perimeter data, see the [Metadata Management Guide](../metadata.md).
+
+![Group Metadata](../../img/clients/group-metadata.png)
 
 ## Update a Group
 
@@ -66,6 +93,8 @@ To permanently delete a group, click the **Delete Group** button.
 You will be asked to re-enter the group’s name to confirm before deletion is finalized.
 
 ![Delete Group](../../img/clients/group-delete.png)
+
+
 
 ## Share a Group
 
