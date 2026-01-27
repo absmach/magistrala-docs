@@ -10,11 +10,9 @@ keywords:
   - Accounts
   - Tokens
 image: /img/mg-preview.png
-
 ---
 
-
-Magistrala CLI provides a simple and efficient way to manage users. Below are the key commands to create, authenticate, and manage users within your system.
+[Magistrala CLI](./introduction-to-cli.md) provides a simple and efficient way to manage users. Below are the key commands to create, authenticate, and manage users within your system.
 
 ### Create User
 
@@ -31,7 +29,7 @@ This command registers a new user with the provided details.
 Example usage:
 
 ```bash
- magistrala-cli users create jane doe janicedoe@example.com janicedoe 12345678 
+ magistrala-cli users create jane doe janicedoe@example.com janicedoe 12345678
 ```
 
 Expected response:
@@ -65,11 +63,8 @@ magistrala-cli users token [<user_email>|<username>] <user_password>
 Since v0.14.0, Magistrala supports domains. **Domains** are used to separate different tenants, and almost all the activities in Magistrala happen under a particular domain.
 Only three major types of actions do not happen within a domain: login where you get to list domains and log in to them, and invitations management to accept domain membership sent by other users as well the creation of new users.
 An access token with a domain is required for all the other actions on Clients, Channels, and Groups.
-To authenticate within a specific domain, use:
 
-```bash
-magistrala-cli users token <user_email> <user_password> <domain_id>
-```
+For you to create a domain and obtain a domain id please check [here](./domains-cli.md#create-domain)
 
 Example usage:
 
@@ -114,13 +109,13 @@ Expected response:
 To get details of a specific user:
 
 ```bash
-magistrala-cli users get <user_id> <user_token>
+magistrala-cli users <user_id> get <user_auth_token>
 ```
 
 Example usage:
 
 ```bash
-26ae3198-6060-4308-824c-c846953b9898 token
+ users 8406eafa-eb9b-430a-8ec-869b2e3bc69e get eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9eyJleHAiOjE3NjQzMTg5ODUsImlhdCI6MTc2NDMxNTM4NSwiaXNzIjoic3VwZXJtcS5hdXRoIiwicm9sZSI6MSwic3ViIjoiODQwNmVhZmEtZWI5Yi00MzBhL
 ```
 
 Expected response:
@@ -146,13 +141,13 @@ Expected response:
 To list all users:
 
 ```bash
-magistrala-cli users get all <user_token>
+magistrala-cli users all get <user_token>
 ```
 
 Example usage:
 
 ```bash
-magistrala-cli users get all token
+magistrala-cli users all get token
 ```
 
 Expected response:
@@ -205,13 +200,13 @@ Using the update flag can update the user's names, tags, metadata, email as well
 To update a user's names:
 
 ```bash
-magistrala-cli users update <user_id> '{"first_name":"new first_name", "last_name":"new last_name"}' <user_token>
+magistrala-cli users <user_id> update '{"first_name":"new first_name", "last_name":"new last_name"}' <user_token>
 ```
 
 Example usage:
 
 ```bash
-magistrala-cli users update 26ae3198-6060-4308-824c-c846953b9898 '{"first_name":"Janice", "last_name":"Doe"}' token
+magistrala-cli users 26ae3198-6060-4308-824c-c846953b9898 update '{"first_name":"Janice", "last_name":"Doe"}' token
 ```
 
 Expected response:
@@ -237,13 +232,13 @@ Expected response:
 To update a user's metadata:
 
 ```bash
-magistrala-cli users update <user_id> '{"metadata":{"value2": "value3"}}' <user_token>
+magistrala-cli users <user_id> update '{"metadata":{"value2": "value3"}}' <user_token>
 ```
 
 Example usage:
 
 ```bash
-magistrala-cli users update 26ae3198-6060-4308-824c-c846953b9898 '{"metadata":{"aoty": "1"}}'  token
+magistrala-cli users 26ae3198-6060-4308-824c-c846953b9898  update '{"metadata":{"aoty": "1"}}'  token
 ```
 
 Expected response:
@@ -272,13 +267,13 @@ Expected response:
 To update a user's tags:
 
 ```bash
-magistrala-cli users update tags <user_id> '["tag1", "tag2"]' <user_token>
+magistrala-cli users <user_id> update tags '["tag1", "tag2"]' <user_token>
 ```
 
 Example usage:
 
 ```bash
-magistrala-cli users update tags 26ae3198-6060-4308-824c-c846953b9898 '["light 1", "light 2"]' token
+magistrala-cli users  26ae3198-6060-4308-824c-c846953b9898 update tags '["light 1", "light 2"]' token
 ```
 
 Expected response:
@@ -298,10 +293,7 @@ Expected response:
   },
   "role": "user",
   "status": "enabled",
-  "tags": [
-    "light 1",
-    "light 2"
-  ],
+  "tags": ["light 1", "light 2"],
   "updated_at": "2025-02-11T16:44:11.670547Z"
 }
 ```
@@ -311,13 +303,13 @@ Expected response:
 To update a user's email:
 
 ```bash
-magistrala-cli users update email <user_id> <user_email> <user_token>
+magistrala-cli users <user_id> update email <user_email> <user_token>
 ```
 
 Example usage:
 
 ```bash
-magistrala-cli users update email 26ae3198-6060-4308-824c-c846953b9898 Janice@example.com  token
+magistrala-cli users 26ae3198-6060-4308-824c-c846953b9898 update email Janice@example.com  token
 ```
 
 Expected response:
@@ -337,10 +329,7 @@ Expected response:
   },
   "role": "user",
   "status": "enabled",
-  "tags": [
-    "lemonade",
-    "renaissance"
-  ],
+  "tags": ["lemonade", "renaissance"],
   "updated_at": "2025-02-11T16:45:36.288667Z"
 }
 ```
@@ -350,13 +339,13 @@ Expected response:
 To update a user's username:
 
 ```bash
-magistrala-cli users update username <user_id> <new_username> <user_token>
+magistrala-cli users <user_id> update username <new_username> <user_token>
 ```
 
 Example usage:
 
 ```bash
-magistrala-cli users update username 26ae3198-6060-4308-824c-c846953b9898 Janice  token
+magistrala-cli users  26ae3198-6060-4308-824c-c846953b9898 update username Janice  token
 ```
 
 Expected response:
@@ -376,10 +365,7 @@ Expected response:
   },
   "role": "user",
   "status": "enabled",
-  "tags": [
-    "lemonade",
-    "renaissance"
-  ],
+  "tags": ["lemonade", "renaissance"],
   "updated_at": "2025-02-11T16:46:55.951208Z"
 }
 ```
@@ -415,10 +401,7 @@ Expected response:
   },
   "role": "user",
   "status": "enabled",
-  "tags": [
-    "lemonade",
-    "renaissance"
-  ],
+  "tags": ["lemonade", "renaissance"],
   "updated_at": "2025-02-11T17:12:50.101988Z"
 }
 ```
@@ -444,13 +427,13 @@ magistrala-cli users resetpassword <password> <confpass> <password_request_token
 To enable a user's status:
 
 ```bash
-magistrala-cli users enable <user_id> <user_token>
+magistrala-cli users <user_id> enable <user_auth_token>
 ```
 
 Example usage:
 
 ```bash
-magistrala-cli users enable 26ae3198-6060-4308-824c-c846953b9898 token
+magistrala-cli users 26ae3198-6060-4308-824c-c846953b9898 enable token
 ```
 
 Expected response:
@@ -470,10 +453,7 @@ Expected response:
   },
   "role": "user",
   "status": "enabled",
-  "tags": [
-    "lemonade",
-    "renaissance"
-  ],
+  "tags": ["lemonade", "renaissance"],
   "updated_at": "2025-02-11T17:16:50.323734Z"
 }
 ```
@@ -483,13 +463,13 @@ Expected response:
 To disable a user:
 
 ```bash
-magistrala-cli users disable <user_id> <user_token>
+magistrala-cli users <user_id> disable <user_auth_token>
 ```
 
 Example usage:
 
 ```bash
-magistrala-cli users disable 26ae3198-6060-4308-824c-c846953b9898 token
+magistrala-cli users 26ae3198-6060-4308-824c-c846953b9898 disable token
 ```
 
 Expected response:
@@ -509,10 +489,7 @@ Expected response:
   },
   "role": "user",
   "status": "disabled",
-  "tags": [
-    "lemonade",
-    "renaissance"
-  ],
+  "tags": ["lemonade", "renaissance"],
   "updated_at": "2025-02-11T17:15:17.096604Z"
 }
 ```
@@ -522,13 +499,13 @@ Expected response:
 To delete a user:
 
 ```bash
-magistrala-cli users delete <user_id> <user_token>
+magistrala-cli users <user_id> delete <user_auth_token>
 ```
 
 Example usage:
 
 ```bash
-magistrala-cli users delete 28a8be12-f3eb-4917-851b-30bf04ea04a0 token
+magistrala-cli users 28a8be12-f3eb-4917-851b-30bf04ea04a0 delete token
 ```
 
 This will return an `OK` response.
@@ -564,10 +541,7 @@ Expected response:
   },
   "role": "user",
   "status": "enabled",
-  "tags": [
-    "lemonade",
-    "renaissance"
-  ],
+  "tags": ["lemonade", "renaissance"],
   "updated_at": "2025-02-11T17:16:50.323734Z"
 }
 ```
