@@ -35,9 +35,9 @@ The **client key** is used to authorize the device when sending messages.
 
 Clients can be created in bulk using a `.csv` file with the following fields (in order):
 
-1. **Name** (Required)  
-2. **Secret**  
-3. **Tags**  
+1. **Name** (Required)
+2. **Secret**
+3. **Tags**
 4. **Metadata**
 
 A [sample clients CSV file](https://github.com/absmach/magistrala-ui/blob/main/samples/clients.csv) is available.
@@ -53,27 +53,35 @@ Click a row (or the **View** button in the row actions) to open the client’s c
 
 ## Configurations
 
-The **Configuration page** displays key details about a client, including tags and metadata that help with classification and search.
+The client configuration page has two tabs: **Configuration** and **Metadata**.
 
-![View client configurations](../../img/clients/client-view-config.png)
+### Configuration Tab
 
-### Edit Client Configuration
+The **Configuration** tab displays key details about a client and allows you to edit core properties:
 
-You can update the following fields:
+**Editable Fields:**
 
-1. **Name**  
-2. **Client Key**  
-3. **Tags** (press `Enter` after each tag to confirm)  
-4. **Metadata** (must be valid JSON)  
-5. **Status**
+- **Name** – Client identifier
+- **Client Key** – Authorization key for message sending
+- **Tags** – Keywords for organization (press `Enter` after each tag to confirm)
+- **Status** – Enable or disable the client using the toggle switch
 
-To edit, click the **pencil** icon next to a field.  
-Confirm changes with **check** or cancel with **cross**.  
-Toggle the **Status** switch to enable or disable a client.
+**View-Only Fields:**
 
-> Metadata MUST be a valid JSON object to be considered valid. Tags require the user to click `Enter` after each tag to have the entry recognised as valid Tag.
+- **ID** – Unique client identifier
+- **Metadata** – View existing metadata in JSON format (managed in the Metadata tab)
 
-![Edit client](../../img/clients/client-edit-config.png)
+To update a field, click the **pencil** icon next to it. Once you have updated the value, click the **check** icon to save changes or the **cross** icon to cancel.
+
+![Client Configuration](../../img/clients/client-configuration.png)
+
+### Metadata Tab
+
+The **Metadata** tab allows you to add, view, and manage additional information for the client. Metadata supports various value types including text, numbers, booleans, JSON objects, locations, and perimeters.
+
+For detailed instructions on managing metadata, including working with interactive maps for location and perimeter data, see the [Metadata Management Guide](../metadata.md).
+
+![Client Metadata](../../img/clients/client-metadata.png)
 
 <!-- ### Bootstrap Configuration
 
@@ -217,17 +225,17 @@ Clicking on the `Details` button at the end of each row opens a modal displaying
 
 These details may include:
 
-- `created_at`: Timestamp of creation  
-- `updated_at`: Timestamp of the last update  
-- `id`: Unique client ID  
-- `name`: Full client name, e.g., `"Apartment A1 Floor 1 135 W 135th St Water Meter"`  
-- `status`: Whether the client is `"enabled"` or `"disabled"`  
-- `super_admin`: Indicates if the client was flagged as a super admin  
-- `domain`: Associated domain UUID  
-- `user_id`: UUID of the user who performed the action  
-- `updated_by`: Same as `user_id` for updates  
-- `request_id`: Unique request UUID for tracing  
-- `tags`: A list of contextual tags like `"Harlem Block A"`, `"New York"`, `"Water Meter"`  
+- `created_at`: Timestamp of creation
+- `updated_at`: Timestamp of the last update
+- `id`: Unique client ID
+- `name`: Full client name, e.g., `"Apartment A1 Floor 1 135 W 135th St Water Meter"`
+- `status`: Whether the client is `"enabled"` or `"disabled"`
+- `super_admin`: Indicates if the client was flagged as a super admin
+- `domain`: Associated domain UUID
+- `user_id`: UUID of the user who performed the action
+- `updated_by`: Same as `user_id` for updates
+- `request_id`: Unique request UUID for tracing
+- `tags`: A list of contextual tags like `"Harlem Block A"`, `"New York"`, `"Water Meter"`
 - `token_type`: The type of token used for the action (e.g., `"access token"`)
 
 This enables users to **trace changes**, **audit security**, and **diagnose issues** efficiently.
