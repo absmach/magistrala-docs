@@ -60,18 +60,18 @@ The client configuration page has two tabs: **Configuration** and **Metadata**.
 The **Configuration** tab displays key details about a client and allows you to edit core properties:
 
 **Editable Fields:**
+
 - **Name** – Client identifier
 - **Client Key** – Authorization key for message sending
 - **Tags** – Keywords for organization (press `Enter` after each tag to confirm)
 - **Status** – Enable or disable the client using the toggle switch
 
 **View-Only Fields:**
+
 - **ID** – Unique client identifier
 - **Metadata** – View existing metadata in JSON format (managed in the Metadata tab)
 
-To edit a field, click the **pencil** icon next to it. Confirm changes with the **check** icon or cancel with the **cross** icon.
-
-> Tags require pressing `Enter` after each entry to be recognized as valid.
+To update a field, click the **pencil** icon next to it. Once you have updated the value, click the **check** icon to save changes or the **cross** icon to cancel.
 
 ![Client Configuration](../../img/clients/client-configuration.png)
 
