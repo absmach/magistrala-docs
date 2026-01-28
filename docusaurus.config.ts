@@ -53,7 +53,7 @@ const config: Config = {
           },
         },
         theme: {
-          customCss: "src/css/custom.css",
+          customCss: "static/css/custom.css",
         },
       } satisfies Preset.Options,
     ],
