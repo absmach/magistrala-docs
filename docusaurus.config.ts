@@ -52,19 +52,6 @@ const config: Config = {
             },
           },
         },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ["rss", "atom"],
-            xslt: true,
-          },
-          editUrl: "https://github.com/absmach/magistrala-docs/blob/main",
-          onInlineTags: "warn",
-          onInlineAuthors: "warn",
-          onUntruncatedBlogPosts: "warn",
-          blogSidebarTitle: "All Blog Posts",
-          blogSidebarCount: "ALL",
-        },
         theme: {
           customCss: "src/css/custom.css",
         },
@@ -161,7 +148,6 @@ const config: Config = {
           position: "left",
           label: "Developer Docs",
         },
-        { to: "/blog", label: "Blog", position: "right" },
         {
           href: "https://github.com/absmach/magistrala",
           label: "GitHub",
@@ -194,16 +180,21 @@ const config: Config = {
               href: "https://github.com/absmach/magistrala",
             },
             {
-              label: "Gitter",
-              href: "https://app.gitter.im/#/room/#absmach_magistrala:gitter.im?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge",
-            },
-            {
               label: "LinkedIn",
               href: "https://www.linkedin.com/company/abstract-machines",
             },
             {
               label: "Twitter",
               href: "https://twitter.com/absmach",
+            },
+            {
+              label: "Matrix",
+              href: "https://matrix.to/#/#supermq:matrix.org",
+            },
+
+            {
+              label: "YouTube",
+              href: "https://www.youtube.com/@absmach",
             },
           ],
         },
@@ -212,11 +203,11 @@ const config: Config = {
           items: [
             {
               label: "Blog",
-              to: "/blog",
+              href: "https://absmach.eu/blog",
             },
             {
-              label: "Medium",
-              href: "https://medium.com/abstract-machines-blog",
+              label: "Website",
+              href: "https://magistrala.absmach.eu",
             },
           ],
         },
