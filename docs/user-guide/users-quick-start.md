@@ -32,8 +32,8 @@ To get started, create an account by providing the following details in the Sign
 Alternatively, you can create a new Magistrala account using **Google Sign-Up**.  
 On the **Sign Up** page, check the boxes for:
 
-- *I agree to the Terms of Service*  
-- *I agree to the Privacy Policy*
+- _I agree to the Terms of Service_
+- _I agree to the Privacy Policy_
 
 Then click **Sign up with Google**.
 
@@ -64,7 +64,7 @@ Once verified, your profile status will update to **Verified**, and you’ll gai
 
 After your email has been verified:
 
-- You’ll be redirected to the **Domains Homepage**.  
+- You’ll be redirected to the **Domains Homepage**.
 - From there, you can create a new domain or access any existing ones you belong to.
 
 > **Tip:** If you’ve already verified your email and are still on the verification page, click **Go to Domains Page** to continue.
@@ -93,10 +93,11 @@ Choose your preferred Google account to continue. Once authenticated, you’ll b
 
 Upon logging in, users are redirected to the **Domain Selection Page**.
 
-A **Domain** is a workspace that allows you to manage **Clients**, **Channels**, **Groups**, **Dashboards**, **Members**,  **Rules**  and **Bootstrap** services. A user can create as many domains as they please.
+A **Domain** is a workspace that allows you to manage **Clients**, **Channels**, **Groups**, **Dashboards**, **Members**, **Rules** and **Bootstrap** services.
 
-Click the `+ Create` button in the top-right corner to start. In addition to the domain name, you’ll need to set a **route**, a unique, user-friendly alias for the domain’s ID. This route makes it easier to reference or subscribe to the domain without using its full UUID.  
-**The route is defined only at creation and cannot be changed later, so choose something short, clear, and descriptive.**  
+Click the `+ Create` button in the top-right corner to start. In addition to the domain name, you’ll need to set a **route**, a unique, user-friendly alias for the domain’s ID. This route makes it easier to reference or subscribe to the domain without using its full UUID.
+
+> **The route is defined only at creation and cannot be changed later, so choose something short, clear, and descriptive.**
 
 ![Domain Create](../img/users-guide/jdoe-create-domain.png)
 
@@ -108,7 +109,7 @@ We will delve deeper into Domains in [another section](./domain-management/domai
 
 Once logged in, you will be directed to the **Homepage** where you can view all the available entities in the domain.
 
-On the sidebar navigation, click on **Groups** under the *Clients Management* section to be redirected to the groups page.
+On the sidebar navigation, click on **Groups** under the _Clients Management_ section to be redirected to the groups page.
 
 ![Groups Page](../img/users-guide/jdoe-groups-page.png)
 
@@ -126,15 +127,15 @@ When you create a client within a specific group, it is automatically assigned t
 To create a new client, go to the **Clients** page of the desired group and click the `+ Create` button.  
 A dialog will appear asking for details such as:
 
-- **Name** (required)  
-- **Key** (optional) - The client key is used to authorize the device to send messages. If left blank, a key is auto-generated during client creation. Users may also provide their own key, and it can be edited later.  
-- **Tags** (optional, for organization and filtering)  
+- **Name** (required)
+- **Key** (optional) - The client key is used to authorize the device to send messages. If left blank, a key is auto-generated during client creation. Users may also provide their own key, and it can be edited later.
+- **Tags** (optional, for organization and filtering)
 
 Adding tags can help you quickly locate and manage clients in larger setups.
 
 ![Create Client](../img/users-guide/group-client-create.png)
 
-A user can also create bulk clients by clicking on the `Upload` button. This will lead to a dialog box that takes in a *.CSV*  file with the client's details filled in correctly as seen in these [samples](https://github.com/absmach/magistrala-ui/tree/main/samples).
+A user can also create bulk clients by clicking on the `Upload` button. This will lead to a dialog box that takes in a _.CSV_ file with the client's details filled in correctly as seen in these [samples](https://github.com/absmach/magistrala-ui/tree/main/samples).
 
 The file should have the following fields in order:
 
@@ -151,8 +152,8 @@ To open this page, click on the desired client in the **Clients** table.
 
 From the Client Details page, you can:
 
-- Update the client’s information  
-- Copy its **ID** and **secret**  
+- Update the client’s information
+- Copy its **ID** and **secret**
 - Manage its connections
 - Manage the Client's **Roles** as well as **Members**
 - View the Client's audit logs
@@ -172,7 +173,7 @@ Each channel has a **route**, which is a user-friendly alias for the channel’s
 The route makes it easier to reference or subscribe to the channel without needing the full UUID.  
 It is defined **only during creation** and cannot be changed later, so choose something short, clear, and descriptive.
 
-To create a channel, navigate to the fourth tab under the groups and click on `+ Create`. This will open a dialog box which will take in a unique Channel name. Much like the Clients, clicking on `Upload` will allow a user to upload a *.CSV* file with multiple channels.
+To create a channel, navigate to the fourth tab under the groups and click on `+ Create`. This will open a dialog box which will take in a unique Channel name. Much like the Clients, clicking on `Upload` will allow a user to upload a _.CSV_ file with multiple channels.
 
 ![Create Group Channel](../img/users-guide/group-channel-create.png)
 
@@ -191,7 +192,7 @@ Clients can be connected to channels in groups. This is done in the **Connection
 
 ## Create a Rule
 
-To store any messages in the Magistrala database, you must first create and save a **Rule** using **Rules Engine**.  
+To store any messages in the Magistrala database, you must first create and save a **Rule** using **Rules Engine**.
 
 Navigate to the **Rules Engine** section on the navigation bar and click on `+ Create`.
 You will be taken directly to the **Rule Creation** page, where you can start building your rule by adding the required nodes.
@@ -202,30 +203,30 @@ You will be taken directly to the **Rule Creation** page, where you can start bu
 
 ### Building the Rule
 
-1. **Add Input Node**  
-   - Click **Add Input** and choose **Channel Subscriber**.  
-   - Select the channel you want to subscribe to from the list.  
-   - (Optional) Add a **topic** for more specific filtering.  
+1. **Add Input Node**
+   - Click **Add Input** and choose **Channel Subscriber**.
+   - Select the channel you want to subscribe to from the list.
+   - (Optional) Add a **topic** for more specific filtering.
    - The input node will now appear on the canvas.
 
-2. **Add Logic Node**  
-   - Click **Add Logic** and choose **Lua Script Editor**.  
-   - There is a default **logicFunction** that can return the SenML payload of incoming messages or you can enter your own rule logic, for example:  
+2. **Add Logic Node**
+   - Click **Add Logic** and choose **Lua Script Editor**.
+   - There is a default **logicFunction** that can return the SenML payload of incoming messages or you can enter your own rule logic, for example:
 
->```lua
->function logicFunction()
+> ```lua
+> function logicFunction()
 >  return message.payload
->end
->```
+> end
+> ```
 
 3. **Add Output Node**
-    - Click **Add Output** and choose **Internal DB** to store messages in the Magistrala Postgres database.
+   - Click **Add Output** and choose **Internal DB** to store messages in the Magistrala Postgres database.
 
 4. **(Optional) Add Schedule**
-    - Click **Add Schedule** to open the scheduler dialog.
-    - Set the **Start Time**, **Recurring Interval**, and **Recurring Period** as needed.
+   - Click **Add Schedule** to open the scheduler dialog.
+   - Set the **Start Time**, **Recurring Interval**, and **Recurring Period** as needed.
 
-  ![Add Schedule](../img/users-guide/create-rule-schedule.png)
+![Add Schedule](../img/users-guide/create-rule-schedule.png)
 
 ### Save a Rule
 
@@ -245,7 +246,7 @@ Once a Channel and Client are connected as well as Rule created, a user is able 
 
 ![View Messages Page](../img/users-guide/group-messages-view.png)
 
-This will open a dialog box where all the required fields bear an asterisk. Messages are sent via *HTTP* protocol in the UI.
+This will open a dialog box where all the required fields bear an asterisk. Messages are sent via _HTTP_ protocol in the UI.
 
 ![Send Message](../img/users-guide/group-send-message.png)
 
@@ -262,7 +263,7 @@ curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: applica
 
 ```bash
 mosquitto_pub -I <client_name> -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
-```  
+```
 
 :::info
 
@@ -280,7 +281,7 @@ The time filter allows the user to select a date and define a specific time wind
 The user can also find aggregate values of messages provided they add an interval as well as a `From` and `To` time.
 With these values you can get the `Maximum`, `Minimum`, `Average` and `Count` value of messages within a certain time period.
 
-The user can also download a list of messages based on selected filters and view them in a `.csv` file by clicking the `Download Messages` button at the top right of the messages table.  
+The user can also download a list of messages based on selected filters and view them in a `.csv` file by clicking the `Download Messages` button at the top right of the messages table.
 
 ![Download Form](../img/users-guide/group-download-messages.png)
 

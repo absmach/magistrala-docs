@@ -38,6 +38,9 @@ Magistrala offers a variety of widgets, including charts, data cards, gauges, ma
   - Route Map
   - Marker Map
   - Polygon Map
+- **Alarms**:
+  - Alarm Table
+  - Alarm Count
 
 Each of these widgets can be customized and configured to display data in the most meaningful way for the intended use case.
 
@@ -58,19 +61,19 @@ Widgets rely on messages sent from devices in the following **SeNML** format:
 
 ### Add a new widget
 
-> ⚠️Before adding widgets, devices must be connected and sending data. Refer to the [Quick Start Guide][[users-quick-start]] for setup instructions.
+> ⚠️Before adding widgets, devices must be connected and sending data. Refer to the [Quick Start Guide][users-quick-start]] for setup instructions.
 
 Adding a new widget begins by opening the desired dashboard and switching it into **Edit Mode**.
 
 ![Edit Dashboard](../../img/dashboards/editmode-checked.png)
 
-Once in edit mode, click on `Add Widget` to open the widget selection dialog box.  From there, the user chooses the widget type that best suits the needs, whether it's a **chart**, **card**, **gauge**, **map**, or **control**.
+Once in edit mode, click on `Add Widget` to open the widget selection dialog box. From there, the user chooses the widget type that best suits the needs, whether it's a **chart**, **card**, **gauge**, **map**, or **control**.
 
 ![Add Widget](../../img/dashboards/add-widget.png)
 
 After choosing a widget type, it's possible to configure its data source, customize its appearance, and adjust relevant display settings as will be explained in following sections. Once configuration is complete, selecting `Save` will add the widget to the dashboard.
 
-Each widget type serves a distinct purpose. **Charts** are are well-suited for visualizing time-series data and comparisons. **Cards** are used to highlight key metrics prominently. **Gauges** display performance in relation to thresholds, while **maps** add geographic context. **Controls** enhance interactivity by enabling filters and data manipulation directly within the dashboard. For step-by-step instructions on configuring a specific chart, select the appropriate chart from the sidebar.
+Each widget type serves a distinct purpose. **Charts** are are well-suited for visualizing time-series data and comparisons. **Cards** are used to highlight key metrics prominently. **Gauges** display performance in relation to thresholds, while **maps** add geographic context. **Controls** enhance interactivity by enabling filters and data manipulation directly within the dashboard. **Alarms** provide critical system monitoring by displaying alert information and alarm counts for proactive issue management. For step-by-step instructions on configuring a specific chart, select the appropriate chart from the sidebar.
 
 Dashboards consist of these modular **widgets**, which are designed to display data or interact with connected devices. For time-series charts and similar data-driven components to function correctly, connected channels and clients must be transmitting data consistently.
 
@@ -156,7 +159,6 @@ Users can only modify the **title**, **data points** and **axis labels**.
 
 - Set **minimum** and **maximum** - (default: 0 to 100) to control the scale.
 - Choose a unit from the selector, which now supports both predefined units and custom units:
-
   - Length: Kilometer (km), Meter (m), Millimeter (mm), Inch (in)
 
   - Temperature: Degrees Celsius (°C), Kelvin (K), Fahrenheit (°F)
@@ -169,7 +171,7 @@ Users can only modify the **title**, **data points** and **axis labels**.
 
   - Others: Percent (%), Liter (L), RPM (rpm), pH, Newton (N), Joule (J), Horsepower (hp), etc.
 
-Here is an example of a gauge chart with the unit set to *kWh* :
+Here is an example of a gauge chart with the unit set to _kWh_ :
 
 ![Gauge-chart example](../../img/dashboards/gauge-chartexample.png)
 
@@ -240,14 +242,14 @@ The status of an entity also acts as a key filter, particularly in table and cou
 
 ![Status check](../../img/dashboards/status-filter-charts.png)
 
-- Filter by tag  
+- Filter by tag
 
 Tag filtering applies to all entities except **groups**. To filter by tag, enter the tag value, and only entities matching that value will be shown.
 
 ![Tag Filter](../../img/dashboards/tag-filter-charts.png)
 
 > Filter by status and tag only apply to the cards (table and count cards).
-<br/>
+> <br/>
 
 Here is an example of a count card displaying enabled entities with the tag `Floor 1`
 
@@ -290,6 +292,7 @@ By using data aggregation, users gain deeper insights into their data, making it
 ### Edit the Widgets
 
 Once a widget has been created, it can be easily modify it to suit changing requirements. While in **Edit Mode**, the `pencil` icon at the top right corner of the widget can be clicked to open a settings panel from the right side of the screen.
+
 <!-- ![Chart showing edit icon](../../img/dashboards/pencil-icon.png) -->
 
 Within this panel, all previously configured settings and data sources are accessible. Users can:
