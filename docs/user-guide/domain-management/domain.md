@@ -24,10 +24,10 @@ The dialog presents fields for entering domain details.
 The primary fields are **Name** and **Route**, which are required.  
 Additional optional fields include **Metadata**, **ID**, **Tags**, and **Logo**.
 
-- The **Route** field acts as a short, human-readable identifier and **cannot be changed later**.  
-- **Metadata** must be provided as a valid JSON object (for example: `{ "region": "EU" }`, not a string).  
-- The **ID** value is automatically generated if omitted.  
-- **Tags** can be used to categorize domains for improved organization and searchability.  
+- The **Route** field acts as a short, human-readable identifier and **cannot be changed later**.
+- **Metadata** must be provided as a valid JSON object (for example: `{ "region": "EU" }`, not a string).
+- The **ID** value is automatically generated if omitted.
+- **Tags** can be used to categorize domains for improved organization and searchability.
 - **Logo** supports image uploads up to **5 MB** in size.
 
 ![Domains Empty State](../../img/domain/domain-dialog.png)
@@ -49,10 +49,10 @@ This page provides an overview of all activities, entities, and limits within th
 At the top of the page, a series of summary cards displays the current state of the domain’s entities:
 
 - **Members** – Shows the total number of users assigned to the domain, along with their enabled or disabled status.  
-  The domain creator is automatically assigned the **Admin** role and appears as the first active member.  
-- **Clients** – Displays the number of clients within the domain and their operational status.  
-- **Channels** – Lists the channels available for message publishing and subscription.  
-- **Groups** – Indicates the total number of groups configured in the domain.  
+  The domain creator is automatically assigned the **Admin** role and appears as the first active member.
+- **Clients** – Displays the number of clients within the domain and their operational status.
+- **Channels** – Lists the channels available for message publishing and subscription.
+- **Groups** – Indicates the total number of groups configured in the domain.
 
 Each card also includes a quick-access **View All** button for navigating directly to the detailed management page of that entity.
 
@@ -60,7 +60,7 @@ Each card also includes a quick-access **View All** button for navigating direct
 
 The **Dashboards** section on the **Home** page provides a quick summary of your existing dashboards within the current domain.  
 It lists the **Name** and **Created At** columns, along with buttons to **View All** dashboards or **Create** a new one.  
-If no dashboards exist yet, a message appears prompting you to *“Get started by creating a new one.”*  
+If no dashboards exist yet, a message appears prompting you to _“Get started by creating a new one.”_
 
 This section helps you quickly access or create dashboards without navigating away from the Home page.
 
@@ -84,21 +84,37 @@ The **Domain Homepage** thus serves as a central dashboard for domain-level moni
 
 ## Domain Information
 
-Navigate to the **Domain** section in the side navigation under **Domain Management** to find out more about the domain.
+Navigate to the **Domain** section in the side navigation under **Domain Management** to access domain details. The domain information page has two tabs: **Settings** and **Metadata**.
 
-Here, a user can edit the Domain **Name**, **Tags**, **Metadata**, **Status** and **Logo** as well as copy the Domain ID and **Route**.
+### Settings Tab
 
-- **Name** – A descriptive label for the domain.  
-- **Route** – A user-friendly identifier for the domain, used instead of the full UUID when referencing or subscribing.  
-  > **Note:** The Route is set only during creation and **cannot** be changed later. Choose something short, unique, and descriptive.  
-- **ID** – The globally unique identifier (UUID) for the domain.  
-- **Tags** – Optional keywords for better organization and searchability.  
-- **Logo** – An image (up to 5MB) that represents the domain.  
-- **Metadata** – A JSON object for storing additional structured information about the domain.  
+The **Settings** tab allows you to view and edit core domain properties:
+
+**Editable Fields:**
+
+- **Name** – A descriptive label for the domain
+- **Tags** – Optional keywords for better organization and searchability
+- **Status** – Enable or disable the domain using the toggle switch
+- **Logo** – An image (up to 5MB) that represents the domain
+
+**View-Only Fields:**
+
+- **ID** – The globally unique identifier (UUID) for the domain (copy button available)
+- **Route** – A user-friendly identifier for the domain (copy button available)
+  > **Note:** The Route is set only during creation and **cannot** be changed later
+- **Metadata** – View existing metadata in JSON format (managed in the Metadata tab)
 
 The Domain status can be disabled by clicking the `Disable` button or enabled by the `Enable` button. Disabling the domain will revoke access for users who aren't domain admins.
 
-![Domain Info](../../img/domain/domain-info.png)
+![Domain Settings](../../img/domain/domain-settings.png)
+
+### Metadata Tab
+
+The **Metadata** tab allows you to add, view, and manage additional information for the domain. Metadata supports various value types including text, numbers, booleans, JSON objects, locations, and perimeters.
+
+For detailed instructions on managing metadata, including working with interactive maps for location and perimeter data, see the [Metadata Management Guide](../metadata.md).
+
+![Domain Metadata](../../img/domain/domain-metadata.png)
 
 ## Domain Members
 
@@ -117,7 +133,7 @@ Users with additional permissions (e.g., **Write**, **Manage**) can perform acti
 ### Assign Users
 
 To assign a user to a domain, click the **`Assign User`** button.  
-Search for the user by their **username**, then select their name and choose one or more **roles** to assign.  
+Search for the user by their **username**, then select their name and choose one or more **roles** to assign.
 
 Alternatively, a user can also be added while creating the domain role.
 
@@ -131,7 +147,7 @@ To unassign a user, click on the **trash** icon present on their row and click *
 
 ## Domain Roles
 
-From the Roles section, you can create new roles with custom actions.  
+From the Roles section, you can create new roles with custom actions.
 
 By default, an **Admin** role with complete control over the domain is always present and granted to the Domain creator.
 
@@ -140,7 +156,6 @@ By default, an **Admin** role with complete control over the domain is always pr
 Here's a comprehensive list of domain role actions:
 
 - **Domain Management**
-
   - update
   - enable
   - disable
@@ -148,14 +163,12 @@ Here's a comprehensive list of domain role actions:
   - delete
 
 - **Role Management**
-
   - manage_role
   - add_role_users
   - remove_role_users
   - view_role_users
 
 - **Client Management**
-
   - client_create
   - client_update
   - client_read
@@ -168,7 +181,6 @@ Here's a comprehensive list of domain role actions:
   - client_view_role_users
 
 - **Channel Management**
-
   - channel_create
   - channel_update
   - channel_read
@@ -183,7 +195,6 @@ Here's a comprehensive list of domain role actions:
   - channel_view_role_users
 
 - **Group Management**
-
   - group_create
   - group_update
   - group_read

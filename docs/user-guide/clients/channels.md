@@ -48,24 +48,32 @@ After creating a channel, it will appear in the channels table. To view that cha
 
 ![View channel](../../img/clients/channel-view.png)
 
-This will lead you to the Channel Settings page, where you can view the channel's **Name**, **ID**, **Metadata**, **Tags** and **Status**.
+The channel page has two tabs: **Settings** and **Metadata**.
 
-![View channel settings](../../img/clients/channel-view-settings.png)
+### Settings Tab
 
-## Update a Channel
+The **Settings** tab displays key details about a channel and allows you to edit core properties:
 
-In the channel settings page, you will be able to update the following channel details as long as you have the required permissions:
+**Editable Fields:**
+- **Name** – Channel identifier
+- **Tags** – Keywords for organization and searchability
+- **Status** – Enable or disable the channel using the toggle switch
 
-1. Name
-2. Metadata
-3. Status
-4. Tags
+**View-Only Fields:**
+- **ID** – Unique channel identifier
+- **Metadata** – View existing metadata in JSON format (managed in the Metadata tab)
 
-To update a field, click on the **pencil** icon on the far end of the field to edit. Once you have updated the value, click on the **check** icon to update the changes or the `cross` icon to cancel the change. To update the channel status, toggle the switch on the far end of the status field.
+To update a field, click the **pencil** icon next to it. Once you have updated the value, click the **check** icon to save changes or the **cross** icon to cancel.
 
-This is an example of updating tags.
+![Channel Settings](../../img/clients/channel-settings.png)
 
-![Edit channel](../../img/clients/channel-update.png)
+### Metadata Tab
+
+The **Metadata** tab allows you to add, view, and manage additional information for the channel. Metadata supports various value types including text, numbers, booleans, JSON objects, locations, and perimeters.
+
+For detailed instructions on managing metadata, including working with interactive maps for location and perimeter data, see the [Metadata Management Guide](../metadata.md).
+
+![Channel Metadata](../../img/clients/channel-metadata.png)
 
 ## Connect to a Client
 

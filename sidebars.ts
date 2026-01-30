@@ -161,6 +161,11 @@ const sidebars: SidebarsConfig = {
       id: "user-guide/pats",
       label: "Personal Access Tokens",
     },
+    {
+      type: "doc",
+      id: "user-guide/metadata",
+      label: "Metadata Management",
+    },
   ],
   devSidebar: [
     { type: "doc", id: "dev-guide/getting-started", label: "Developer Guide" },
