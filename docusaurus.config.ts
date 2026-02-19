@@ -9,7 +9,7 @@ const config: Config = {
 
   url: "https://docs.magistrala.absmach.eu",
   baseUrl: "/",
-  trailingSlash: true,
+  trailingSlash: false,
 
   organizationName: "absmach",
   projectName: "magistrala",

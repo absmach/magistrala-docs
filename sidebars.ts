@@ -49,15 +49,15 @@ const sidebars: SidebarsConfig = {
       collapsible: true,
       link: {
         type: "doc",
-        id: "user-guide/clients/introduction",
+        id: "user-guide/clients-management/introduction",
       },
       items: [
-        { type: "doc", id: "user-guide/clients/groups", label: "Groups" },
-        { type: "doc", id: "user-guide/clients/channels", label: "Channels" },
-        { type: "doc", id: "user-guide/clients/clients", label: "Clients" },
+        { type: "doc", id: "user-guide/clients-management/groups", label: "Groups" },
+        { type: "doc", id: "user-guide/clients-management/channels", label: "Channels" },
+        { type: "doc", id: "user-guide/clients-management/clients", label: "Clients" },
         {
           type: "doc",
-          id: "user-guide/clients/bootstraps",
+          id: "user-guide/clients-management/bootstraps",
           label: "Bootstraps",
         },
       ],
