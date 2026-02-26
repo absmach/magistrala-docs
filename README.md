@@ -1,3 +1,6 @@
+# ⚠️ ARCHIVED / MOVED ⚠️
+All the content from this website has been moved to a new Magistrala website and can be found at https://magistrala.absmach.eu/docs.
+
 # Magistrala
 
 [![license][license]](LICENSE)
