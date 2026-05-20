@@ -1,5 +1,5 @@
-import { Rubik } from "next/font/google";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
+import { Rubik } from "next/font/google";
 import { Provider } from "@/components/provider";
 import { baseOptions } from "@/lib/layout.shared";
 import { source } from "@/lib/source";
