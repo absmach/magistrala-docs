@@ -1,99 +1,80 @@
-# ⚠️ ARCHIVED / MOVED ⚠️
-All the content from this website has been moved to a new Magistrala website and can be found at https://magistrala.absmach.eu/docs.
+# Magistrala Docs
 
-# Magistrala
+Documentation site for [Magistrala](https://github.com/absmach/magistrala), built with [Fumadocs](https://fumadocs.dev) and Next.js.
 
-[![license][license]](LICENSE)
+Visiting `/` redirects to `/docs`.
 
-This repo collects the collaborative work on Magistrala documentation.
-The official documentation is hosted at [Magistrala Docs page][docs].
-Documentation is auto-generated from Markdown files in this repo.
-
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
-
-> Additional practical information about Magistrala system, news and tutorials can be found on the [Magistrala blog][blog].
-
-## Prerequisites
-
-- [Docusaurus](https://docusaurus.io/docs/installation)
-- [Node.js](https://nodejs.org/) (version >= 18)
-- [pnpm](https://pnpm.io/installation)
-
-We use [`pnpm`](https://pnpm.io/) as our package manager for its speed and efficient dependency caching.
-
-Install `pnpm` globally:
+## Development
 
 ```bash
-npm install -g pnpm
+pnpm dev
 ```
 
-You can also use Corepack (recommended if you're on Node.js 16.13+):
+Open http://localhost:3000 with your browser to see the result.
 
-```bash
-corepack enable
-corepack prepare pnpm@latest --activate
+## Deployment
+
+This site uses:
+
+- **Next.js static export** — `next build` outputs static files to `out/`
+- **Cloudflare Worker assets binding** — serves `out/` via `MG_WEBSITE_ASSETS`
+- **`src/index.ts`** — the Worker entrypoint; all routes are served from the assets binding, with no-cache headers applied to `robots.txt` and `sitemap.xml`
+
+### Cloudflare build settings (Dashboard)
+
+| Setting          | Value                   |
+|------------------|-------------------------|
+| Build command    | `pnpm run build`        |
+| Deploy command   | `npx wrangler deploy`   |
+| Version command  | `npx wrangler versions upload` |
+| Root directory   | `/`                     |
+
+### Architecture
+
+```mermaid
+flowchart LR
+  subgraph Build_and_Deploy
+    A[Git push] --> B[Cloudflare build trigger]
+    B --> C[pnpm run build]
+    C --> D[next build — static export]
+    D --> E[out/ static assets]
+    B --> F[npx wrangler deploy]
+    E --> G[MG_WEBSITE_ASSETS binding]
+    F --> G
+  end
+
+  subgraph Runtime_Request_Flow
+    U[Browser request] --> H[Cloudflare Worker src/index.ts]
+    H --> J[Read from MG_WEBSITE_ASSETS]
+    J --> U
+  end
 ```
 
-## Installation
+## Environment Variables
 
-Doc repo can be fetched from GitHub:
+Only one runtime variable is needed:
 
-```bash
-git clone https://github.com/absmach/magistrala-docs.git
-cd magistrala-docs
+```env
+NEXT_PUBLIC_BASE_URL=https://magistrala.absmach.eu
 ```
 
-Install the required dependencies using:
+Set this as a Cloudflare build variable so it is embedded into the static output at build time.
 
-```bash
-pnpm install
-```
+## Project structure
 
-### Local Development
+| Path                        | Description                                             |
+|-----------------------------|---------------------------------------------------------|
+| `app/page.tsx`              | Root redirect to `/docs`                                |
+| `app/docs`                  | Documentation layout and pages                          |
+| `app/api/search/route.ts`   | Static search index route handler                       |
+| `app/og/[...slug]`          | OG image generation for docs pages                      |
+| `app/llms-full.txt`         | LLM-readable full docs text                             |
+| `content/docs`              | MDX source files                                        |
+| `lib/source.ts`             | Fumadocs source adapter                                 |
+| `lib/layout.shared.tsx`     | Shared layout options                                   |
+| `src/index.ts`              | Cloudflare Worker entrypoint                            |
 
-Start a local development server:
+## Learn More
 
-```bash
-pnpm start
-```
-
-This will open the docs in your browser and support live reloading on changes.
-
-## Build
-
-Build the documentation site using the following command:
-
-```bash
-pnpm build
-```
-
-To preview the built site locally:
-
-```bash
-pnpm serve
-```
-
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-## Contributing
-
-Thank you for your interest in Magistrala and the desire to contribute!
-
-1. Take a look at our [open issues](https://github.com/absmach/magistrala-docs/issues). The [good-first-issue](https://github.com/absmach/magistrala-docs/labels/good-first-issue) label is specifically for issues that are great for getting started.
-2. Check out the [contribution guide](CONTRIBUTING.md) to learn more about our style and conventions.
-3. Make your changes compatible with our workflow.
-
-## Community
-
-- [Matrix][matrix]
-- [Twitter][twitter]
-
-## License
-
-[Apache-2.0](LICENSE)
-
-[matrix]: https://matrix.to/#/#Mainflux_mainflux:gitter.im
-[license]: https://img.shields.io/badge/license-Apache%20v2.0-blue.svg
-[blog]: https://medium.com/abstract-machines-blog
-[twitter]: https://twitter.com/absmach
-[docs]: https://docs.magistrala.absmach.eu
+- [Fumadocs](https://fumadocs.dev)
+- [Next.js Documentation](https://nextjs.org/docs)

@@ -1,0 +1,20 @@
+{
+  "title": "Dev Guide",
+  "pages": [
+    "introduction",
+    "agent",
+    "architecture",
+    "getting-started",
+    "entities",
+    "cli",
+    "services",
+    "api",
+    "authorization",
+    "dev-tools",
+    "edge",
+    "certs",
+    "extensions",
+    "benchmark"
+  ],
+  "defaultOpen": true
+}

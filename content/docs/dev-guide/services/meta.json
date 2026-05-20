@@ -1,0 +1,18 @@
+{
+  "title": "Services",
+  "pages": [
+    "auth",
+    "users",
+    "clients",
+    "channels",
+    "consumers",
+    "readers",
+    "provision",
+    "bootstrap",
+    "alarms",
+    "reports",
+    "rules-engine",
+    "journal",
+    "notifications"
+  ]
+}

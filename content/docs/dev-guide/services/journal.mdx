@@ -1,0 +1,131 @@
+---
+title: Journal
+description: Audit log service for Magistrala — persists platform events to PostgreSQL and exposes HTTP endpoints for querying journals and viewing per-client telemetry.
+keywords:
+  - Journal
+  - Audit Log
+  - Events
+  - Telemetry
+  - Observability
+  - Magistrala
+image: /img/mg-preview.png
+---
+
+The **Journal service** consumes the platform event stream from NATS, persists each event to PostgreSQL, and exposes HTTP endpoints for querying the audit log and viewing per-client telemetry (first/last seen, message in/out counters, active subscriptions). It is the primary observability tool for tracking what happened and when across the platform.
+
+## Configuration
+
+| Variable                         | Description                                                             | Default                        |
+| -------------------------------- | ----------------------------------------------------------------------- | ------------------------------ |
+| `MG_JOURNAL_LOG_LEVEL`           | Log level (debug, info, warn, error)                                    | info                           |
+| `MG_JOURNAL_HTTP_HOST`           | HTTP host                                                               | localhost                      |
+| `MG_JOURNAL_HTTP_PORT`           | HTTP port                                                               | 9021                           |
+| `MG_JOURNAL_DB_HOST`             | Database host                                                           | localhost                      |
+| `MG_JOURNAL_DB_PORT`             | Database port                                                           | 5432                           |
+| `MG_JOURNAL_DB_USER`             | Database user                                                           | magistrala                     |
+| `MG_JOURNAL_DB_PASS`             | Database password                                                       | magistrala                     |
+| `MG_JOURNAL_DB_NAME`             | Database name                                                           | journal                        |
+| `MG_JOURNAL_DB_SSL_MODE`         | SSL mode (disable, require, verify-ca, verify-full)                     | disable                        |
+| `MG_ES_URL`                      | NATS event store URL consumed for journal entries                       | nats://localhost:4222          |
+| `MG_AUTH_GRPC_URL`               | Auth service gRPC URL                                                   | ""                             |
+| `MG_AUTH_GRPC_TIMEOUT`           | Auth gRPC timeout                                                       | 1s                             |
+| `MG_DOMAINS_GRPC_URL`            | Domains service gRPC URL                                                | ""                             |
+| `MG_DOMAINS_GRPC_TIMEOUT`        | Domains gRPC timeout                                                    | 1s                             |
+| `MG_JAEGER_URL`                  | Jaeger tracing endpoint                                                 | http://localhost:4318/v1/traces |
+| `MG_JAEGER_TRACE_RATIO`          | Trace sampling ratio                                                    | 1.0                            |
+| `MG_SEND_TELEMETRY`              | Send telemetry to Magistrala call-home server                           | true                           |
+| `MG_ALLOW_UNVERIFIED_USER`       | Allow unverified users to authenticate (useful in dev)                  | false                          |
+
+## Deployment
+
+Journal requires a running PostgreSQL instance, NATS, Auth gRPC, and Domains gRPC.
+
+```bash
+git clone https://github.com/absmach/magistrala
+cd magistrala
+
+make journal
+make install
+
+MG_JOURNAL_LOG_LEVEL=info \
+MG_JOURNAL_HTTP_HOST=localhost \
+MG_JOURNAL_HTTP_PORT=9021 \
+MG_JOURNAL_DB_HOST=localhost \
+MG_JOURNAL_DB_PORT=5432 \
+MG_JOURNAL_DB_USER=magistrala \
+MG_JOURNAL_DB_PASS=magistrala \
+MG_JOURNAL_DB_NAME=journal \
+MG_AUTH_GRPC_URL=localhost:7001 \
+MG_DOMAINS_GRPC_URL=localhost:7003 \
+MG_ES_URL=nats://localhost:4222 \
+$GOBIN/magistrala-journal
+```
+
+## HTTP API
+
+Base URL defaults to `http://localhost:9021`. Journal and telemetry endpoints require `Authorization: Bearer <token>`.
+
+| Operation             | Description                                                          |
+| --------------------- | -------------------------------------------------------------------- |
+| List user journals    | Page through events for a user across all domains                    |
+| List entity journals  | Page through events for a specific client, channel, group, or user in a domain |
+| View client telemetry | Aggregate counters: subscriptions, inbound/outbound messages, first/last seen |
+| Health check          | Liveness and build info (public endpoint)                            |
+
+### List user journals
+
+```bash
+curl "http://localhost:9021/journal/user/${USER_ID}?limit=10&with_attributes=true&dir=desc" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+Expected response:
+
+```json
+{
+  "total": 1,
+  "offset": 0,
+  "limit": 10,
+  "journals": [
+    {
+      "operation": "user.create",
+      "occurred_at": "2024-01-11T12:05:07.449053Z",
+      "attributes": { "id": "...", "name": "Ada Lovelace", "status": "enabled" }
+    }
+  ]
+}
+```
+
+### List entity journals in a domain
+
+```bash
+curl "http://localhost:9021/${DOMAIN_ID}/journal/client/${CLIENT_ID}?operation=client.create&dir=desc&limit=10" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### View client telemetry
+
+```bash
+curl "http://localhost:9021/${DOMAIN_ID}/journal/client/${CLIENT_ID}/telemetry" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+Expected response:
+
+```json
+{
+  "client_id": "bb7edb32-2eac-4aad-aebe-ed96fe073879",
+  "domain_id": "29d425c8-542b-4614-8a4d-a5951945d720",
+  "subscriptions": 5,
+  "inbound_messages": 1234567,
+  "outbound_messages": 987654,
+  "first_seen": "2024-01-11T10:00:00Z",
+  "last_seen": "2024-01-11T12:05:07Z"
+}
+```
+
+### Health check
+
+```bash
+curl http://localhost:9021/health
+```

@@ -1,0 +1,15 @@
+{
+  "title": "CLI",
+  "pages": [
+    "introduction-to-cli",
+    "users-cli",
+    "domains-cli",
+    "groups-cli",
+    "channels-cli",
+    "clients-cli",
+    "messages-cli",
+    "provision-cli",
+    "boostrap-cli",
+    "consumers-cli"
+  ]
+}

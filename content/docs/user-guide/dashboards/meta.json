@@ -1,0 +1,21 @@
+{
+  "title": "Dashboards",
+  "pages": [
+    "introduction",
+    "dashboards",
+    "templates",
+    "widgets",
+    "linechart",
+    "areachart",
+    "barchart",
+    "gauges",
+    "piechart",
+    "countcard",
+    "tablecard",
+    "valuecard",
+    "maps",
+    "controls",
+    "alarmcount",
+    "alarmtable"
+  ]
+}
