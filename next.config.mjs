@@ -4,7 +4,6 @@ const withMDX = createMDX();
 
 /** @type {import('next').NextConfig} */
 const config = {
-  basePath: "/docs/magistrala",
   output: "export",
   trailingSlash: true,
   reactStrictMode: true,
