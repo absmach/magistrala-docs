@@ -21,7 +21,7 @@ The **Rules Engine** in Magistrala provides powerful, flexible message processin
 1. **Scriptable logic** - Use Lua or Go to define message execution behavior.
 2. **Flexible execution** - Rules can be triggered from input messages, schedules or both.
 3. **Pluggable outputs** - Built-in support for alarms, channels, email, Postgres, and SenML writers.
-4. **Secure, scoped execution** - Using domain-level isolation and bearer token authorization. See the [Roles Schema](/docs/dev-guide/roles-schema) for details on available roles and permissions.
+4. **Secure, scoped execution** - Using domain-level isolation and bearer token authorization. See the [Roles Schema](/dev-guide/roles-schema) for details on available roles and permissions.
 5. **Disabled rules** - Rules can be disabled individually to prevent further executions. They can also be enabled to re-start their executions.
 
 ## Architecture
@@ -63,7 +63,7 @@ The Magistrala Rules Engine is designed for **real-time** and **scheduled messag
 - _Email_ - Send notifications to configured recipients.
 - _Slack_ - Send notifications to configured slack channel.
 
-> **Note:** Access to each operation is governed by domain-level roles. Refer to the [Roles Schema](/docs/dev-guide/roles-schema#rules) for details on which permissions are required.
+> **Note:** Access to each operation is governed by domain-level roles. Refer to the [Roles Schema](/dev-guide/roles-schema#rules) for details on which permissions are required.
 
 ## Core Concepts
 

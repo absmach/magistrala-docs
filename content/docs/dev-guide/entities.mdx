@@ -387,13 +387,13 @@ Supported types are: `string`, `integer`, `double`, `boolean`, `json`, `location
 
 Entities provisioned via the API or CLI with raw (unwrapped) values — e.g. `{"myKey": "my value"}` — are accepted and displayed in the UI, but will not have type tracking or an `updatedAt` timestamp. To ensure full UI compatibility, use the wrapped format above.
 
-For complete details on metadata value types and the location/perimeter formats used by dashboard map widgets, see the [Metadata Management](/docs/user-guide/metadata) user guide.
+For complete details on metadata value types and the location/perimeter formats used by dashboard map widgets, see the [Metadata Management](/user-guide/metadata) user guide.
 
 > **Note:** Older deployments may store UI-managed metadata under a nested `ui` key (i.e. `metadata.ui`) rather than at the top level. A database migration is provided to flatten this structure automatically — existing users only need to upgrade to the latest version of Magistrala.
 
 [clients-api]: ./api#clients
 [channels-api]: ./api#channels
 [domains-api]: ./api#domains
-[clients-cli]: /docs/dev-guide/cli/clients-cli
-[channels-cli]: /docs/dev-guide/cli/channels-cli
-[domains-cli]: /docs/dev-guide/cli/domains-cli
+[clients-cli]: /dev-guide/cli/clients-cli
+[channels-cli]: /dev-guide/cli/channels-cli
+[domains-cli]: /dev-guide/cli/domains-cli

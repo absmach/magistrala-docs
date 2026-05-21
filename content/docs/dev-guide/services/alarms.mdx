@@ -13,7 +13,7 @@ slug: dev-guide/alarms
 The **Alarms service** in Magistrala allows users to create alarms triggered by threshold conditions defined in the Rules Engine. When a rule is triggered, the system generates an alarm with relevant information.
 The documentation below highlights the basic structure of an alarm and how to interact with the alarms service API.
 
-> **Note:** Access to alarm operations is governed by domain-level and rule-level roles. Refer to the [Roles Schema](/docs/dev-guide/roles-schema#alarms) for details on available roles and permissions.
+> **Note:** Access to alarm operations is governed by domain-level and rule-level roles. Refer to the [Roles Schema](/dev-guide/roles-schema#alarms) for details on available roles and permissions.
 
 ## Core concepts
 
@@ -96,7 +96,7 @@ The Alarms service provides the following API endpoints for managing alarms:
 
 Alarm is creation is handled by the rules engine. This is done by creating a rule whose output is an alarm. When the threshold condition defined by the rule is met, an alarm is automatically generated.
 
-To create a rule that generates alarms, refer to the [Rules Engine documentation](/docs/dev-guide/services/rules-engine).
+To create a rule that generates alarms, refer to the [Rules Engine documentation](/dev-guide/services/rules-engine).
 
 Or simply:
 

@@ -61,4 +61,4 @@ export function createMetadata(
 }
 
 export const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://magistrala.absmach.eu";
+  process.env.NEXT_PUBLIC_BASE_URL || "https://absmach.eu/docs/magistrala";

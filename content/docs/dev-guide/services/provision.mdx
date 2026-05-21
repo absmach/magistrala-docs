@@ -410,7 +410,7 @@ Provision service provides a way of specifying this `provision layout` and creat
 
 The service is configured using the environment variables presented in the following [table][config]. Note that any unset variables will be replaced with their default values.
 
-By default, call to `/mapping` endpoint will create one client and two channels (`control` and `data`) and connect it as this is typical setup required by [Agent](/docs/dev-guide/edge#agent). If there is a requirement for different provision layout we can use [config][conftoml] file in addition to environment variables.
+By default, call to `/mapping` endpoint will create one client and two channels (`control` and `data`) and connect it as this is typical setup required by [Agent](/dev-guide/edge#agent). If there is a requirement for different provision layout we can use [config][conftoml] file in addition to environment variables.
 
 For the purposes of running provision as an add-on in docker composition environment variables seems more suitable. Environment variables are set in [.env][env].
 
@@ -658,12 +658,12 @@ Agent will retrieve connections parameters and connect to Magistrala cloud.
 For more information about the Provision service, please check out the [service source and implementation][provision-api].
 
 [magistrala]: https://github.com/absmach/magistrala
-[bootstrap]: /docs/dev-guide/services/bootstrap
+[bootstrap]: /dev-guide/services/bootstrap
 [agent]: https://github.com/absmach/agent
 [config]: https://github.com/absmach/magistrala/tree/main/provision#configuration
 [env]: https://github.com/absmach/magistrala/blob/main/docker/.env
 [conftoml]: https://github.com/absmach/magistrala/blob/main/docker/addons/provision/configs/config.toml
-[users]: /docs/dev-guide/services/users
-[cli]: /docs/dev-guide/cli/introduction-to-cli
-[auth]: /docs/dev-guide/dev-tools/authentication
+[users]: /dev-guide/services/users
+[cli]: /dev-guide/cli/introduction-to-cli
+[auth]: /dev-guide/dev-tools/authentication
 [provision-api]: https://github.com/absmach/magistrala/tree/main/provision
