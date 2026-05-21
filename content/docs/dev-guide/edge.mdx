@@ -38,7 +38,7 @@ Agent service has following features:
 
 - Remote execution of commands
 - Remote terminal, remote session to `bash` managed by `Agent`
-- Heartbeat - listening to Message Broker topic `heartbeat.>` it can remotely provide info on running services, if services are publishing heartbeat ( like [Export](/docs/dev-guide/edge#export))
+- Heartbeat - listening to Message Broker topic `heartbeat.>` it can remotely provide info on running services, if services are publishing heartbeat ( like [Export](/dev-guide/edge#export))
 - Proxying commands to other gateway services
 - Edgex SMA - remotely making requests to EdgeX endpoints and fetching results, if EdgeX is deployed.
 
@@ -570,18 +570,18 @@ In Magistrala `mqtt` service:
 magistrala-mqtt   | {"level":"info","message":"Publish - client ID export-88529fb2-6c1e-4b60-b9ab-73b5d89f7404 to the topic: m/6a45444c-4c89-46f9-a284-9e731674726a/c/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/export/test","ts":"2020-05-08T15:16:02.999684791Z"}
 ```
 
-[agent]: /docs/dev-guide/edge#agent
-[export]: /docs/dev-guide/edge#export
-[magistrala]: /docs/user-guide/architecture
-[bootstrap]: /docs/dev-guide/services/bootstrap
-[bootstraping]: /docs/dev-guide/services/bootstrap#bootstrapping
-[provision]: /docs/dev-guide/services/provision
+[agent]: /dev-guide/edge#agent
+[export]: /dev-guide/edge#export
+[magistrala]: /user-guide/architecture
+[bootstrap]: /dev-guide/services/bootstrap
+[bootstraping]: /dev-guide/services/bootstrap#bootstrapping
+[provision]: /dev-guide/services/provision
 [edgex-repo]: https://github.com/edgexfoundry/edgex-go
 [conftoml]: https://github.com/absmach/export/blob/master/configs/config.toml
 [docker-compose]: https://github.com/absmach/magistrala/blob/main/docker/docker-compose.yaml
 [env]: https://github.com/absmach/export#environmet-variables
-[mutual-tls]: /docs/dev-guide/dev-tools/authentication#mutual-tls-authentication-with-x509-certificates
-[certs-service]: /docs/dev-guide/certs#certs-service
+[mutual-tls]: /dev-guide/dev-tools/authentication#mutual-tls-authentication-with-x509-certificates
+[certs-service]: /dev-guide/certs#certs-service
 [protomsg]: https://github.com/absmach/magistrala/blob/main/pkg/messaging/message.proto
-[back-to-edge]: /docs/dev-guide/edge
+[back-to-edge]: /dev-guide/edge
 [nats]: https://nats.io/
