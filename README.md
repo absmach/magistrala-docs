@@ -55,7 +55,7 @@ flowchart LR
 Only one runtime variable is needed:
 
 ```env
-NEXT_PUBLIC_BASE_URL=https://magistrala.absmach.eu
+NEXT_PUBLIC_BASE_URL=https://absmach.eu/docs/magistrala
 ```
 
 Set this as a Cloudflare build variable so it is embedded into the static output at build time.
