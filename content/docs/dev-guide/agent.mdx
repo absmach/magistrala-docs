@@ -1,0 +1,369 @@
+---
+title: Agent
+description: Magistrala IoT Agent runs on edge devices, connects them to Magistrala over MQTT, exposes a local HTTP API, manages Node-RED flows, executes commands, tracks local services, and serves as the bridge between local workloads and the cloud.
+keywords:
+  - Agent
+  - Magistrala
+  - MQTT
+  - Node-RED
+  - Edge
+  - Terminal
+  - Configuration
+image: /img/mg-preview.png
+---
+
+The **Magistrala IoT Agent** runs in the project Docker environment and acts as a bridge between local services and the Magistrala platform. Inside the container stack it loads runtime configuration, connects to MQTT, subscribes to remote commands, 
+exposes a local HTTP API, manages Node-RED flows, executes shell commands, maintains terminal sessions, and tracks heartbeat messages from local services.
+
+## Configuration
+
+The agent can start from a local `config.toml` file or bootstrap itself from Magistrala using an external ID and key. Environment variables are merged with file-based configuration at startup.
+
+| Variable | Description | Default |
+| --- | --- | --- |
+| `MG_AGENT_CONFIG_FILE` | Path to the runtime config file | `config.toml` |
+| `MG_AGENT_LOG_LEVEL` | Log level | `info` |
+| `MG_AGENT_HTTP_PORT` | HTTP API port | `9999` |
+| `MG_AGENT_PORT` | Alias for the HTTP API port | |
+| `MG_AGENT_BROKER_URL` | FluxMQ / AMQP broker URL used for heartbeats | `amqp://guest:guest@localhost:5682/` |
+| `MG_AGENT_MQTT_URL` | MQTT broker URL | `localhost:1883` |
+| `MG_AGENT_MQTT_SKIP_TLS` | Skip MQTT TLS verification | `true` |
+| `MG_AGENT_MQTT_MTLS` | Enable MQTT mutual TLS | `false` |
+| `MG_AGENT_MQTT_CA` | CA certificate path | `ca.crt` |
+| `MG_AGENT_MQTT_CLIENT_CERT` | Client certificate path | `client.cert` |
+| `MG_AGENT_MQTT_CLIENT_KEY` | Client key path | `client.key` |
+| `MG_AGENT_MQTT_QOS` | MQTT QoS | `0` |
+| `MG_AGENT_MQTT_RETAIN` | MQTT retain flag | `false` |
+| `MG_AGENT_NODERED_URL` | Node-RED API base URL | `http://localhost:1880/` |
+| `MG_AGENT_HEARTBEAT_INTERVAL` | Expected heartbeat interval for local services | `10s` |
+| `MG_AGENT_TERMINAL_SESSION_TIMEOUT` | Idle timeout for terminal sessions | `60s` |
+| `MG_AGENT_BOOTSTRAP_URL` | Bootstrap endpoint | |
+| `MG_AGENT_BOOTSTRAP_ID` | Bootstrap external ID | |
+| `MG_AGENT_BOOTSTRAP_KEY` | Bootstrap external key | |
+| `MG_AGENT_BOOTSTRAP_RETRIES` | Bootstrap retry count | `5` |
+| `MG_AGENT_BOOTSTRAP_RETRY_DELAY_SECONDS` | Delay between bootstrap retries | `10` |
+| `MG_AGENT_BOOTSTRAP_SKIP_TLS` | Skip TLS verification for bootstrap fetch | `false` |
+
+## How Agent Works
+
+### Provisioning comes first
+
+Before the agent container is started, the project provisions the Magistrala resources the agent depends on. Running `make provision` or `make run_provision` executes `scripts/provision.sh`, which creates the required cloud-side resources and writes the resulting runtime values into `configs/config.toml`.
+
+The provisioning flow creates or configures:
+
+- a Magistrala client for the agent
+- a channel used for request and response messaging
+- a bootstrap configuration for the device
+- a Rule Engine rule used by the example setup
+
+By default the provisioning script creates the agent client with the name `agent-mock-device`, so the MQTT examples in this project use that same provisioned client name.
+
+The provisioning script supports both local and cloud targets:
+
+- Local Docker target: if `MG_API` is not set, provisioning uses the local service defaults such as `http://localhost:9006`, `http://localhost:9005`, `http://localhost:9008`, `http://localhost:9013`, and the MQTT default `ssl://host.docker.internal:8883`
+- Cloud target: if `MG_API=https://cloud.magistrala.absmach.eu/api` is set, the provisioning requests are sent to Magistrala Cloud and the default MQTT target becomes `ssl://messaging.magistrala.absmach.eu:8883`
+
+This is why provisioning is the first step in the Docker workflow: the agent container expects its channel, MQTT credentials, domain information, and bootstrap data to exist before it starts.
+
+### Startup flow
+
+At startup the agent:
+
+1. Starts inside the Docker Compose stack.
+2. Loads environment-based defaults.
+3. Reads `config.toml` when available.
+4. Optionally fetches bootstrap configuration from Magistrala.
+5. Merges the provisioned values into its runtime config.
+6. Validates required runtime values such as `domain_id`, `channels.id`, `mqtt.url`, `mqtt.username`, `mqtt.password`, and `server.broker_url`.
+7. Connects to FluxMQ for heartbeat subscriptions.
+8. Connects to MQTT for remote request and response messaging.
+9. Starts the local HTTP server.
+
+### Messaging flow
+
+The agent subscribes to:
+
+- `m/<domain-id>/c/<channel-id>/req` for incoming remote commands.
+- `heartbeat.<service-name>.<service-type>` through the local pub/sub broker for service heartbeat tracking.
+
+The agent publishes responses to:
+
+- `m/<domain-id>/c/<channel-id>/res` for command results and status messages.
+- terminal response topics while an interactive terminal session is active.
+
+All remote MQTT commands use SenML JSON array payloads. The `n` field selects the subsystem:
+
+| `n` | Purpose |
+| --- | --- |
+| `exec` | Execute a shell command on the device |
+| `config` | View or save runtime configuration |
+| `term` | Open, write to, and close terminal sessions |
+| `nodered` | Deploy, inspect, and manage Node-RED flows |
+| `control` | Internal response channel used by the agent |
+
+### Core responsibilities
+
+| Capability | How it works |
+| --- | --- |
+| Configuration management | Reads and writes TOML config and can update config remotely |
+| Remote command execution | Runs shell commands via `sh -c` in the current working directory |
+| Terminal sessions | Maintains interactive sessions with idle timeout control |
+| Node-RED integration | Talks to the local Node-RED HTTP API to deploy or inspect flows |
+| Service discovery | Tracks local services from heartbeat subjects and exposes them over HTTP |
+| HTTP API | Provides local endpoints for config, exec, services, and Node-RED management |
+| Web UI | Exposes a browser-based interface for local management of the running containerized agent |
+
+### Node-RED behavior
+
+The agent supports these Node-RED commands:
+
+| Command | Behavior |
+| --- | --- |
+| `nodered-deploy,<base64-flow>` | Replaces all currently running flows with the provided flow JSON |
+| `nodered-add-flow,<base64-flow>` | Adds a new flow tab alongside the existing running flows |
+| `nodered-flows` | Fetches the current flows from Node-RED |
+| `nodered-state` | Returns the current Node-RED runtime state |
+| `nodered-ping` | Checks whether Node-RED is reachable |
+
+When flows are sent through `nodered-deploy` or `nodered-add-flow`, the payload is base64-decoded, normalized, and then forwarded to Node-RED. For imported single-flow payloads, the agent rekeys Node-RED IDs to avoid duplicate ID conflicts. The agent also patches MQTT-related flow values so deployed flows use the runtime device/channel context.
+
+## Deployment
+
+The documented flow for this project is container-based.
+
+### 1. Provision Magistrala resources
+
+Set the required Magistrala values and run provisioning:
+
+```bash
+export MG_PAT=<personal-access-token>
+export MG_DOMAIN_ID=<domain-id>
+make provision
+```
+
+This step creates the required Magistrala client, channel, bootstrap config, and example rule, then updates `configs/config.toml` with the provisioned values used by the container setup.
+
+For a cloud deployment target, set the cloud API base before provisioning:
+
+```bash
+export MG_API=https://cloud.magistrala.absmach.eu/api
+export MG_PAT=<personal-access-token>
+export MG_DOMAIN_ID=<domain-id>
+make provision
+```
+
+When `MG_API` points to `https://cloud.magistrala.absmach.eu/api`, the provisioning flow targets Magistrala Cloud. In that mode,
+`MG_AGENT_MQTT_URL=ssl://messaging.magistrala.absmach.eu:8883` also points the agent at the cloud MQTT broker instead of the local Docker-accessible one.
+
+### 2. Build the Docker images
+
+```bash
+git clone https://github.com/absmach/agent
+cd agent
+
+make all && make dockers_dev
+```
+
+### 3. Start the Docker stack
+
+```bash
+make run
+```
+
+This starts the agent together with the supporting containers such as Node-RED, the Agent UI, and the local messaging components used by the development setup.
+
+### 4. Stop the stack
+
+```bash
+make stop
+make clean_volumes
+```
+
+## Agent UI
+
+The Docker stack also starts a web-based management UI at `http://localhost:3002`.
+
+The UI is used for local interaction with the running agent container and provides:
+
+- **Configuration** to view and save agent settings such as `server`, `channels`, `mqtt`, `nodered`, and `log`
+- **Node-RED** tools to ping Node-RED, inspect state, fetch flows, deploy flows, and add a single flow tab from a local JSON file
+- **Services** to view heartbeat-discovered local services
+- **Execute Command** to run shell commands and inspect terminal-style output
+
+The UI is built with Elm and served as part of the Docker environment, so it is part of the normal development workflow rather than a separate optional component.
+
+## HTTP API
+
+Base URL defaults to `http://localhost:9999`.
+
+| Endpoint | Description |
+| --- | --- |
+| `POST /exec` | Execute a shell command and return output |
+| `GET /config` | Read the current runtime configuration |
+| `POST /config` | Save updated runtime configuration |
+| `GET /services` | List services discovered from heartbeats |
+| `POST /nodered` | Run a Node-RED operation |
+| `POST /pub` | Publish an arbitrary topic/payload pair |
+| `GET /health` | Health check endpoint |
+| `GET /metrics` | Prometheus metrics |
+
+### Execute a shell command
+
+```bash
+curl -X POST http://localhost:9999/exec \
+  -H "Content-Type: application/json" \
+  -d '{
+    "bn": "req-1:",
+    "n": "exec",
+    "vs": "pwd"
+  }'
+```
+
+### View current config
+
+```bash
+curl http://localhost:9999/config
+```
+
+### Deploy Node-RED flows
+
+```bash
+FLOWS=$(base64 -w 0 examples/nodered/speed-flow.json)
+
+curl -X POST http://localhost:9999/nodered \
+  -H "Content-Type: application/json" \
+  -d "{\"command\":\"nodered-deploy\",\"flows\":\"$FLOWS\"}"
+```
+
+### Add a flow tab without replacing existing flows
+
+```bash
+FLOWS=$(base64 -w 0 examples/nodered/modbus-flow.json)
+
+curl -X POST http://localhost:9999/nodered \
+  -H "Content-Type: application/json" \
+  -d "{\"command\":\"nodered-add-flow\",\"flows\":\"$FLOWS\"}"
+```
+
+### Ping Node-RED
+
+```bash
+curl -X POST http://localhost:9999/nodered \
+  -H "Content-Type: application/json" \
+  -d '{"command":"nodered-ping"}'
+```
+
+### View Node-RED runtime state
+
+```bash
+curl -X POST http://localhost:9999/nodered \
+  -H "Content-Type: application/json" \
+  -d '{"command":"nodered-state"}'
+```
+
+### Fetch current flows
+
+```bash
+curl -X POST http://localhost:9999/nodered \
+  -H "Content-Type: application/json" \
+  -d '{"command":"nodered-flows"}'
+```
+
+### View registered services
+
+```bash
+curl http://localhost:9999/services
+```
+
+## MQTT Commands
+
+Remote control happens over MQTT using SenML payloads published to `m/<domain-id>/c/<channel-id>/req`.
+
+### Execute a command
+
+```bash
+mosquitto_pub \
+  -h <mqtt-host> -p 8883 --capath /etc/ssl/certs \
+  -u <client-id> -P <client-secret> \
+  -t "m/<domain-id>/c/<channel-id>/req" \
+  -m '[{"bn":"req-1:","n":"exec","vs":"ls,-la"}]'
+```
+
+### View config
+
+```bash
+mosquitto_pub \
+  -h <mqtt-host> -p 8883 --capath /etc/ssl/certs \
+  -u <client-id> -P <client-secret> \
+  -t "m/<domain-id>/c/<channel-id>/req" \
+  -m '[{"bn":"req-1:","n":"config","vs":"view"}]'
+```
+
+### Deploy Node-RED flows
+
+```bash
+FLOWS=$(base64 -w 0 examples/nodered/speed-flow.json)
+
+mosquitto_pub \
+  -h <mqtt-host> -p 8883 --capath /etc/ssl/certs \
+  -I "agent-mock-device" \
+  -u <client-id> -P <client-secret> \
+  -t "m/<domain-id>/c/<channel-id>/req" \
+  -m "[{\"bn\":\"req-1:\",\"n\":\"nodered\",\"vs\":\"nodered-deploy,$FLOWS\"}]"
+```
+
+### Add a flow tab without replacing existing flows
+
+```bash
+FLOWS=$(base64 -w 0 examples/nodered/modbus-flow.json)
+
+mosquitto_pub \
+  -h <mqtt-host> -p 8883 --capath /etc/ssl/certs \
+  -I "agent-mock-device" \
+  -u <client-id> -P <client-secret> \
+  -t "m/<domain-id>/c/<channel-id>/req" \
+  -m "[{\"bn\":\"req-1:\",\"n\":\"nodered\",\"vs\":\"nodered-add-flow,$FLOWS\"}]"
+```
+
+### Ping Node-RED
+
+```bash
+mosquitto_pub \
+  -h <mqtt-host> -p 8883 --capath /etc/ssl/certs \
+  -I "agent-mock-device" \
+  -u <client-id> -P <client-secret> \
+  -t "m/<domain-id>/c/<channel-id>/req" \
+  -m '[{"bn":"req-2:","n":"nodered","vs":"nodered-ping"}]'
+```
+
+### View Node-RED runtime state
+
+```bash
+mosquitto_pub \
+  -h <mqtt-host> -p 8883 --capath /etc/ssl/certs \
+  -I "agent-mock-device" \
+  -u <client-id> -P <client-secret> \
+  -t "m/<domain-id>/c/<channel-id>/req" \
+  -m '[{"bn":"req-3:","n":"nodered","vs":"nodered-state"}]'
+```
+
+### Fetch current flows
+
+```bash
+mosquitto_pub \
+  -h <mqtt-host> -p 8883 --capath /etc/ssl/certs \
+  -I "agent-mock-device" \
+  -u <client-id> -P <client-secret> \
+  -t "m/<domain-id>/c/<channel-id>/req" \
+  -m '[{"bn":"req-4:","n":"nodered","vs":"nodered-flows"}]'
+```
+
+## Best Practices
+
+- Run provisioning before starting the Docker stack so the agent container has valid client, channel, and bootstrap data.
+- Keep `channels.id`, `domain_id`, and MQTT credentials aligned, because the agent depends on them to subscribe and publish correctly.
+- Route all Node-RED flow deployment through the agent when flow payloads need runtime patching.
+- Use heartbeat publishing for local services that should appear in the agent UI and `/services` API.
+- Keep terminal session timeouts short on production devices.
+- Restrict shell command access to trusted operators only.

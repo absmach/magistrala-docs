@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://absmach.eu/docs/magistrala/sitemap.xml

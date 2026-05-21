@@ -1,0 +1,128 @@
+---
+title: Auth
+description: Authentication and authorization service for Magistrala — manages API keys, JWT tokens, domains, Personal Access Tokens and SpiceDB-backed fine-grained access control.
+keywords:
+  - Auth
+  - Authentication
+  - Authorization
+  - JWT
+  - API Keys
+  - PAT
+  - SpiceDB
+  - Domains
+  - Magistrala
+image: /img/mg-preview.png
+---
+
+The **Auth service** is the security backbone of Magistrala. It issues and verifies all authentication tokens, manages domains, and enforces fine-grained access control via [SpiceDB](https://authzed.com/spicedb). Every other service delegates authentication and authorization decisions to Auth over gRPC.
+
+## Key Types
+
+Auth issues five types of authentication keys, each represented as a signed JWT:
+
+| Key Type       | Description                                                                      |
+| -------------- | -------------------------------------------------------------------------------- |
+| Access key     | Short-lived token issued on login, used for all API requests                     |
+| Refresh key    | Used to obtain a new access key without re-authenticating                        |
+| Recovery key   | Short-lived token used during the password reset flow                            |
+| API key        | Long-lived, user-created token with configurable expiration; the only revocable type |
+| Invitation key | Token used to invite new users to a domain                                       |
+
+API keys are the only type that can be revoked mid-life. They require a database lookup for each validation because they are not tied to a login session.
+
+## Domains
+
+A domain is the top-level organizational unit in Magistrala. Auth manages domain lifecycle and maintains the association between users, their roles within a domain, and the entities (clients, channels, groups) that belong to it. Each domain has a unique `route` used in message routing.
+
+## Personal Access Tokens (PATs)
+
+PATs allow API access without primary credentials. They are scoped to specific entity types and operations (e.g., `create` on `clients` in a given domain), expire on a configurable schedule, and can be revoked at any time. Secrets are stored hashed. See [Authorization](../dev-tools/authorization#personal-access-tokens) for the full PAT API reference.
+
+## Configuration
+
+| Variable                         | Description                                                        | Default                        |
+| :------------------------------- | :----------------------------------------------------------------- | :----------------------------- |
+| `MG_AUTH_LOG_LEVEL`              | Log level (debug, info, warn, error)                               | info                           |
+| `MG_AUTH_DB_HOST`                | Database host                                                      | localhost                      |
+| `MG_AUTH_DB_PORT`                | Database port                                                      | 5432                           |
+| `MG_AUTH_DB_USER`                | Database user                                                      | magistrala                     |
+| `MG_AUTH_DB_PASSWORD`            | Database password                                                  | magistrala                     |
+| `MG_AUTH_DB_NAME`                | Database name                                                      | auth                           |
+| `MG_AUTH_DB_SSL_MODE`            | SSL mode (disable, require, verify-ca, verify-full)                | disable                        |
+| `MG_AUTH_HTTP_HOST`              | HTTP host                                                          | ""                             |
+| `MG_AUTH_HTTP_PORT`              | HTTP port                                                          | 8189                           |
+| `MG_AUTH_GRPC_HOST`              | gRPC host                                                          | ""                             |
+| `MG_AUTH_GRPC_PORT`              | gRPC port                                                          | 8181                           |
+| `MG_AUTH_SECRET_KEY`             | Secret for signing tokens                                          | secret                         |
+| `MG_AUTH_ACCESS_TOKEN_DURATION`  | Access token TTL                                                   | 1h                             |
+| `MG_AUTH_REFRESH_TOKEN_DURATION` | Refresh token TTL                                                  | 24h                            |
+| `MG_AUTH_INVITATION_DURATION`    | Invitation token TTL                                               | 168h                           |
+| `MG_AUTH_CACHE_URL`              | Redis URL for PAT scope cache                                      | redis://localhost:6379/0       |
+| `MG_AUTH_CACHE_KEY_DURATION`     | PAT scope cache TTL                                                | 10m                            |
+| `MG_SPICEDB_HOST`                | SpiceDB host                                                       | localhost                      |
+| `MG_SPICEDB_PORT`                | SpiceDB port                                                       | 50051                          |
+| `MG_SPICEDB_PRE_SHARED_KEY`      | SpiceDB pre-shared key                                             | 12345678                       |
+| `MG_SPICEDB_SCHEMA_FILE`         | Path to SpiceDB schema                                             | ./docker/spicedb/schema.zed    |
+| `MG_JAEGER_URL`                  | Jaeger tracing endpoint                                            | http://jaeger:4318/v1/traces   |
+| `MG_SEND_TELEMETRY`              | Send telemetry to Magistrala call-home server                      | true                           |
+| `MG_CALLOUT_URLS`                | Comma-separated callout URLs invoked on authorization checks       | ""                             |
+| `MG_CALLOUT_METHOD`              | HTTP method for callouts                                           | POST                           |
+| `MG_CALLOUT_TIMEOUT`             | Callout timeout                                                    | 10s                            |
+
+## Deployment
+
+Auth is distributed as a Docker container. It requires a running PostgreSQL instance, SpiceDB, and (optionally) Redis for PAT caching.
+
+```bash
+git clone https://github.com/absmach/magistrala
+cd magistrala
+
+make auth
+make install
+
+MG_AUTH_LOG_LEVEL=info \
+MG_AUTH_DB_HOST=localhost \
+MG_AUTH_DB_PORT=5432 \
+MG_AUTH_DB_USER=magistrala \
+MG_AUTH_DB_PASSWORD=magistrala \
+MG_AUTH_DB_NAME=auth \
+MG_AUTH_HTTP_HOST=localhost \
+MG_AUTH_HTTP_PORT=8189 \
+MG_AUTH_GRPC_HOST=localhost \
+MG_AUTH_GRPC_PORT=8181 \
+MG_AUTH_SECRET_KEY=secret \
+MG_SPICEDB_HOST=localhost \
+MG_SPICEDB_PORT=50051 \
+MG_SPICEDB_PRE_SHARED_KEY=12345678 \
+MG_SPICEDB_SCHEMA_FILE=./docker/spicedb/schema.zed \
+$GOBIN/magistrala-auth
+```
+
+Enable TLS by setting `MG_AUTH_HTTP_SERVER_CERT`/`MG_AUTH_HTTP_SERVER_KEY` for HTTP and `MG_AUTH_GRPC_SERVER_CERT`/`MG_AUTH_GRPC_SERVER_KEY` for gRPC.
+
+## HTTP API
+
+Base URL defaults to `http://localhost:8189`.
+
+### Issue a token (login)
+
+```bash
+curl -X POST http://localhost:9002/users/tokens/issue \
+  -H "Content-Type: application/json" \
+  -d '{ "identity": "user@example.com", "secret": "password" }'
+```
+
+### Refresh a token
+
+```bash
+curl -X POST http://localhost:9002/users/tokens/refresh \
+  -H "Authorization: Bearer $REFRESH_TOKEN"
+```
+
+### Health check
+
+```bash
+curl http://localhost:8189/health
+```
+
+For the full API reference, see the [API documentation](https://docs.api.magistrala.absmach.eu/?urls.primaryName=api%2Fauth.yaml).

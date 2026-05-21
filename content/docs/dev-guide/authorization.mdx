@@ -1,0 +1,553 @@
+---
+title: Authorization
+description: Magistrala's authorization model — RBAC schema, SpiceDB entities and permissions, role management API, and per-entity action specifications for Clients, Channels, Groups, Domains, and Platform.
+keywords:
+  - Authorization
+  - RBAC
+  - Roles
+  - Permissions
+  - SpiceDB
+  - Access Control
+  - Magistrala
+image: /img/mg-preview.png
+---
+
+Magistrala uses role-based access control (RBAC) backed by [SpiceDB](https://authzed.com/spicedb) to govern access to platform entities. The following entities participate in the authorization model:
+
+- **User** — a person or service account
+- **Client** — a device or application (IoT, streaming, etc.)
+- **Channel** — a pub/sub message topic
+- **Group** — a hierarchical container for clients and channels
+- **Domain** — top-level organizational namespace
+- **Platform** — the global Magistrala installation
+
+## Roles
+
+A role is a named collection of actions that define what its members are allowed to do on a specific entity. Roles are assigned per entity — a user may hold different roles on different domains, groups, or clients.
+
+- **Role Members** — users assigned to the role; they inherit all the role's permitted actions.
+- **Role Actions** — permissions granted by the role (e.g. `read`, `update`, `publish`). Available actions per entity type are listed in [Entity Authorization Specification](#entity-authorization-specification) below.
+
+### Role Specification
+
+1. A role has a short ID, name, description, list of permitted actions, and list of members. All fields except the ID are editable.
+2. Roles are identified by name in the API for human-friendliness.
+3. The action list of a role may only contain actions that are valid for the entity type.
+4. Valid actions per entity are derived automatically from the SpiceDB schema at service startup.
+5. A user may be a member of multiple roles across different entities, but for any single entity, a user may hold only one role. The user must also be a member of the domain that owns the entity.
+
+### Role Hierarchy and Inheritance
+
+Roles are hierarchical. Permissions granted at a higher level propagate to lower-level entities:
+
+- A user member of a `domain` role inherits any domain-level client, channel, or group actions defined in that role.
+- A user member of a `group` role inherits actions for all child groups, clients, and channels in that group's subtree.
+
+---
+
+## RBAC Schema
+
+This section describes the SpiceDB relations and permissions that back the authorization model.
+
+### User
+
+A `user` is an entity that can be assigned to roles within the system.
+
+### Role
+
+A `role` defines a set of permissions that can be assigned to users within **domains, groups, channels,** or **clients**.
+
+#### Relations
+
+- `entity`: Associates a role with a domain, group, channel, or client.
+- `member`: user
+- `built_in_role`: Represents system-defined roles (e.g. `admin`).
+
+#### Permissions
+
+- `delete`: Allows removing a role unless restricted by a built-in role.
+- `update`: Allows modifying a role unless restricted by a built-in role.
+- `read`: Allows viewing a role unless restricted by a built-in role.
+- `add_user`: Grants permission to assign users to a role.
+- `remove_user`: Grants permission to remove users from a role.
+- `view_user`: Grants permission to view users assigned to a role.
+
+### Clients
+
+A `client` represents a device or application that interacts with Magistrala.
+
+#### Relations
+
+- `domain`: Associates a client with a domain.
+- `parent_group`: Associates a client with a group.
+
+#### Permissions
+
+- `update_permission`: Allows updating a client.
+- `read_permission`: Allows reading client details.
+- `delete_permission`: Allows deleting a client.
+- `set_parent_group_permission`: Allows setting the parent group of a client.
+- `connect_to_channel_permission`: Allows the client to connect to a channel.
+- `manage_role_permission`: Grants permission to manage roles related to the client.
+- `add_role_users_permission`: Grants permission to assign users to roles related to the client.
+- `remove_role_users_permission`: Grants permission to remove users from client-related roles.
+- `view_role_users_permission`: Grants permission to view role users for the client.
+
+### Channels
+
+A `channel` represents a communication topic within a domain.
+
+#### Relations
+
+- `domain`: Associates a channel with a domain.
+- `parent_group`: Associates a channel with a group.
+
+#### Permissions
+
+- `update_permission`: Allows updating a channel.
+- `read_permission`: Allows reading channel details.
+- `delete_permission`: Allows deleting a channel.
+- `set_parent_group_permission`: Allows setting the parent group of a channel.
+- `connect_to_client_permission`: Allows connecting a client to a channel.
+- `publish_permission`: Grants permission to publish messages to a channel.
+- `subscribe_permission`: Grants permission to subscribe to a channel.
+- `manage_role_permission`: Grants permission to manage roles for the channel.
+- `add_role_users_permission`: Grants permission to assign users to channel roles.
+- `remove_role_users_permission`: Grants permission to remove users from channel roles.
+- `view_role_users_permission`: Grants permission to view role users for the channel.
+
+### Groups
+
+A `group` is a hierarchical structure that organizes clients and channels within a domain.
+
+#### Relations
+
+- `domain`: Associates a group with a domain.
+- `parent_group`: Associates a group with another group.
+
+#### Permissions
+
+- `subgroup_create_permission`: Allows creating a subgroup within a group.
+- `subgroup_update_permission`: Allows updating subgroup details.
+- `subgroup_read_permission`: Allows reading subgroup details.
+- `subgroup_delete_permission`: Allows deleting a subgroup.
+- `subgroup_set_parent_permission`: Allows setting a subgroup's parent group.
+- `subgroup_set_child_permission`: Allows adding a subgroup to a parent group.
+- `manage_role_permission`: Grants permission to manage group-related roles.
+- `add_role_users_permission`: Grants permission to assign users to group roles.
+- `remove_role_users_permission`: Grants permission to remove users from group roles.
+- `view_role_users_permission`: Grants permission to view users in group roles.
+
+### Domains
+
+A `domain` represents an independent namespace within the system.
+
+#### Relations
+
+- `organization`: Associates a domain with an organization.
+- `team`: Associates a domain with a team.
+
+#### Permissions
+
+- `update_permission`: Allows updating domain details.
+- `read_permission`: Allows reading domain details.
+- `enable_permission`: Allows enabling a domain.
+- `disable_permission`: Allows disabling a domain.
+- `delete_permission`: Allows deleting a domain.
+- `manage_role_permission`: Grants permission to manage domain roles.
+- `add_role_users_permission`: Grants permission to assign users to domain roles.
+- `remove_role_users_permission`: Grants permission to remove users from domain roles.
+- `view_role_users_permission`: Grants permission to view users in domain roles.
+
+### Platform
+
+A `platform` is the highest-level entity that manages multiple organizations.
+
+#### Relations
+
+- `administrator`: Represents a platform administrator.
+- `member`: Represents a user who is a part of the platform.
+
+#### Permissions
+
+- `admin`: Grants full administrative access.
+- `membership`: Allows managing platform membership.
+
+---
+
+## Magistrala Service Entities
+
+Each Magistrala service maps its API operations to SpiceDB permissions via `docker/permission.yaml`, loaded at startup. The **Scope** column indicates whether the check runs against the **domain** entity (broad, domain-wide access) or the **specific entity** (fine-grained, object-level access).
+
+### Rules
+
+A `rule` defines the conditions that trigger alarms. Rules support role management and can grant fine-grained alarm lifecycle permissions per rule.
+
+#### Relations
+
+- `domain`: Associates a rule with a domain.
+- `alarm_read`: Grants permission to read/list alarms triggered by this rule.
+- `alarm_assign`: Grants permission to assign alarms triggered by this rule.
+- `alarm_acknowledge`: Grants permission to acknowledge alarms triggered by this rule.
+- `alarm_resolve`: Grants permission to resolve alarms triggered by this rule.
+
+#### Permissions
+
+- `read_permission`: Allows viewing a rule.
+- `update_permission`: Allows updating a rule (including tags, schedule, enable, disable).
+- `delete_permission`: Allows deleting a rule.
+- `manage_role_permission`: Grants permission to manage roles for this rule.
+- `add_role_users_permission`: Grants permission to assign users to rule roles.
+- `remove_role_users_permission`: Grants permission to remove users from rule roles.
+- `view_role_users_permission`: Grants permission to view role members for this rule.
+- `alarm_read_permission`: Grants permission to read/list alarms produced by this rule.
+- `alarm_assign_permission`: Grants permission to assign alarms produced by this rule.
+- `alarm_acknowledge_permission`: Grants permission to acknowledge alarms produced by this rule.
+- `alarm_resolve_permission`: Grants permission to resolve alarms produced by this rule.
+- `rule_create_permission`: Grants permission to create rules in the domain.
+- `rule_read_permission`: Grants read access across all rules in the domain.
+- `rule_update_permission`: Grants update access across all rules in the domain.
+- `rule_delete_permission`: Grants delete access across all rules in the domain.
+- `rule_manage_role_permission`: Grants permission to manage roles for rules in the domain.
+- `rule_add_role_users_permission`: Grants permission to assign users to rule roles across the domain.
+- `rule_remove_role_users_permission`: Grants permission to remove users from rule roles across the domain.
+- `rule_view_role_users_permission`: Grants permission to view rule role members across the domain.
+
+#### Rule Operations and Required Permissions
+
+| Operation         | SpiceDB Permission             | Scope  |
+| ----------------- | ------------------------------ | ------ |
+| Add Rule          | `rule_create_permission`       | Domain |
+| List Rules        | `rule_read_permission`         | Domain |
+| View Rule         | `read_permission`              | Rule   |
+| Update Rule       | `update_permission`            | Rule   |
+| Update Rule Tags  | `update_permission`            | Rule   |
+| Update Schedule   | `update_permission`            | Rule   |
+| Enable Rule       | `update_permission`            | Rule   |
+| Disable Rule      | `update_permission`            | Rule   |
+| Delete Rule       | `delete_permission`            | Rule   |
+| Assign Alarm      | `alarm_assign_permission`      | Rule   |
+| Acknowledge Alarm | `alarm_acknowledge_permission` | Rule   |
+| Resolve Alarm     | `alarm_resolve_permission`     | Rule   |
+
+### Alarms
+
+An `alarm` represents a triggered condition detected by a rule. Alarms do not have their own SpiceDB entity — access control is fully covered by the **rule** entity relations (`alarm_read`, `alarm_assign`, `alarm_acknowledge`, `alarm_resolve`) and the corresponding domain-level permissions in [Rules](#rules) above.
+
+#### Alarm Operations and Required Permissions
+
+| Operation         | SpiceDB Permission             | Scope  |
+| ----------------- | ------------------------------ | ------ |
+| List Alarms       | `alarm_read_permission`        | Domain |
+| View Alarm        | `alarm_read_permission`        | Domain |
+| Delete Alarm      | `alarm_delete_permission`      | Domain |
+| Assign Alarm      | `alarm_assign_permission`      | Domain |
+| Acknowledge Alarm | `alarm_acknowledge_permission` | Domain |
+| Resolve Alarm     | `alarm_resolve_permission`     | Domain |
+
+> **Note:** The `UpdateAlarm` API endpoint internally dispatches to the `assign`, `acknowledge`, or `resolve` permission check depending on which field is set in the request body. There is no generic `update` permission for alarms.
+
+### Reports
+
+A `report` is a scheduled or on-demand document generated from time-series IoT data. Report configurations support role management for fine-grained access control.
+
+#### Relations
+
+- `domain`: Associates a report configuration with a domain.
+
+#### Permissions
+
+- `read_permission`: Allows viewing a report configuration.
+- `update_permission`: Allows updating a report configuration (including schedule, template, enable, disable).
+- `delete_permission`: Allows deleting a report configuration.
+- `manage_role_permission`: Grants permission to manage roles for this report configuration.
+- `add_role_users_permission`: Grants permission to assign users to report roles.
+- `remove_role_users_permission`: Grants permission to remove users from report roles.
+- `view_role_users_permission`: Grants permission to view role members for this report configuration.
+- `report_create_permission`: Grants permission to create report configurations in the domain.
+- `report_read_permission`: Grants read access across all report configurations in the domain.
+- `report_update_permission`: Grants update access across all report configurations in the domain.
+- `report_delete_permission`: Grants delete access across all report configurations in the domain.
+- `report_manage_role_permission`: Grants permission to manage roles for reports in the domain.
+- `report_add_role_users_permission`: Grants permission to assign users to report roles across the domain.
+- `report_remove_role_users_permission`: Grants permission to remove users from report roles across the domain.
+- `report_view_role_users_permission`: Grants permission to view report role members across the domain.
+
+#### Report Operations and Required Permissions
+
+| Operation             | SpiceDB Permission         | Scope  |
+| --------------------- | -------------------------- | ------ |
+| Add Report Config     | `report_create_permission` | Domain |
+| List Report Configs   | `report_read_permission`   | Domain |
+| Generate Report       | `report_read_permission`   | Domain |
+| View Report Config    | `read_permission`          | Report |
+| Update Report Config  | `update_permission`        | Report |
+| Update Schedule       | `update_permission`        | Report |
+| Enable Report Config  | `update_permission`        | Report |
+| Disable Report Config | `update_permission`        | Report |
+| Delete Report Config  | `delete_permission`        | Report |
+| Update Template       | `update_permission`        | Report |
+| View Template         | `read_permission`          | Report |
+| Delete Template       | `delete_permission`        | Report |
+
+---
+
+## Entity Authorization Specification
+
+This section describes the actions available on each entity type. Role actions must be drawn from the list valid for that entity.
+
+### Clients
+
+A client represents a software application, IoT device, or streaming application that communicates through channels.
+
+1. Each client has its own roles.
+2. A client can have only one parent group, which defines its position in the hierarchy.
+3. Parent group role actions can be inherited by the client.
+4. A client can connect to multiple channels with `publish`, `subscribe`, or both.
+
+#### Client Actions
+
+- `update`, `read`, `delete`: Update, read, or delete a client.
+- `connect_to_channel`: Connect the client to a channel.
+- `manage_role`: Manage roles on a client (edit, read, delete role and its actions).
+- `add_role_users`: Add users to a role.
+- `remove_role_users`: Remove users from a role.
+- `view_role_users`: View users in a role.
+
+### Channels
+
+A channel represents a message topic to which clients and users can publish or subscribe.
+
+1. Each channel has its own roles.
+2. A channel can have only one parent group.
+3. Parent group role actions can be inherited by the channel.
+4. Only authorized clients and users can publish or subscribe to a channel.
+5. The message topic format is `m/<domain_id>/c/<channel_id>` followed by an optional subtopic path.
+6. Both clients and users can use channels to exchange data.
+
+#### Channel Actions
+
+- `update`, `read`, `delete`: Update, read, or delete a channel.
+- `publish`, `subscribe`: Publish or subscribe to messages on the channel.
+- `connect_to_client`: Connect a client to the channel.
+- `manage_role`: Manage roles on a channel.
+- `add_role_users`, `remove_role_users`, `view_role_users`: Manage role membership.
+
+### Groups
+
+A group is a hierarchical entity that can contain child groups, clients, and channels. Each group can have only one parent.
+
+1. Each group has its own roles.
+2. A group can have only one parent group.
+3. A group can have multiple child groups, clients, and channels.
+
+#### Group Actions
+
+- `update`, `read`, `delete`: Update, read, or delete a group.
+- `manage_role`, `add_role_users`, `remove_role_users`, `view_role_users`: Manage group role membership.
+- `client_create`, `client_update`, `client_read`, `client_delete`: Create or manage direct child clients.
+- `client_connect_to_channel`: Connect all direct child clients to channels in the same domain.
+- `client_manage_role`, `client_add_role_users`, `client_remove_role_users`, `client_view_role_users`: Manage roles on all direct child clients.
+- `channel_create`, `channel_update`, `channel_read`, `channel_delete`: Create or manage direct child channels.
+- `channel_publish`, `channel_subscribe`: Publish/subscribe on all direct child channels.
+- `channel_connect_to_channel`, `channel_manage_role`, `channel_add_role_users`, `channel_remove_role_users`, `channel_view_role_users`: Manage direct child channel connections and roles.
+- `sub_group_create`, `sub_group_update`, `group_read`, `group_delete`: Create or manage all sub-groups recursively.
+- `sub_group_manage_role`, `sub_group_add_role_users`, `sub_group_remove_role_users`, `sub_group_view_role_users`: Manage roles on all sub-groups recursively.
+- `sub_group_client_*` and `sub_group_channel_*`: Same actions as above but scoped to clients and channels inside all sub-groups recursively.
+
+### Domains
+
+A domain is the top-level organizational unit that governs groups, channels, and clients.
+
+1. Each domain has its own roles.
+2. Any user can be added to any role in the domain.
+3. Domain actions include operations on the domain itself as well as all its children.
+
+#### Domain Actions
+
+- `update`, `read`, `delete`: Update, read, or delete the domain.
+- `manage_role`, `add_role_users`, `remove_role_users`, `view_role_users`: Manage domain role membership.
+- `client_create`, `client_update`, `client_read`, `client_delete`: Create or manage all clients in the domain.
+- `client_connect_to_channel`: Connect any client in the domain to a channel.
+- `client_manage_role`, `client_add_role_users`, `client_remove_role_users`, `client_view_role_users`: Manage roles on all clients in the domain.
+- `channel_create`, `channel_update`, `channel_read`, `channel_delete`: Create or manage all channels in the domain.
+- `channel_publish`, `channel_subscribe`: Publish/subscribe on all channels in the domain.
+- `channel_connect_to_channel`, `channel_manage_role`, `channel_add_role_users`, `channel_remove_role_users`, `channel_view_role_users`: Manage channel connections and roles domain-wide.
+- `group_create`, `group_update`, `group_read`, `group_delete`: Create or manage all groups in the domain (including sub-groups).
+- `group_manage_role`, `group_add_role_users`, `group_remove_role_users`, `group_view_role_users`: Manage roles on all groups in the domain.
+
+### Platform
+
+A platform manages multiple domains and defines the global access control policy.
+
+#### Platform Actions
+
+- `admin`: Full administrative access to the platform.
+- `membership`: Manage platform-level membership.
+
+---
+
+## Role Management API
+
+All role management endpoints follow the pattern:
+
+```
+http://localhost/<entity_type>/<entity_id>/roles[/<role_id>[/members|/actions]]
+```
+
+Replace `<entity_type>` with `clients`, `channels`, `groups`, or `domains`, and `<entity_id>` with the ID of the specific entity.
+
+### Create a Role
+
+**POST** `/<entity_type>/<entity_id>/roles`
+
+```json
+{
+  "role_name": "member",
+  "optional_actions": ["read"],
+  "optional_members": ["user_1"]
+}
+```
+
+Example — create a role on a channel:
+
+```bash
+curl -X POST http://localhost/channels/<channel_id>/roles \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"role_name": "member", "optional_actions": ["read"], "optional_members": ["user_1"]}'
+```
+
+Response:
+
+```json
+{
+  "role_id": "id_xxxxx",
+  "role_name": "member",
+  "actions": ["read"],
+  "members": ["user_1"]
+}
+```
+
+### List Roles
+
+**GET** `/<entity_type>/<entity_id>/roles`
+
+```bash
+curl http://localhost/clients/<client_id>/roles \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### Retrieve a Role
+
+**GET** `/<entity_type>/<entity_id>/roles/<role_id>`
+
+```bash
+curl http://localhost/groups/<group_id>/roles/<role_id> \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### Update a Role
+
+**PUT** `/<entity_type>/<entity_id>/roles/<role_id>`
+
+Updates the role's name or other properties.
+
+### Delete a Role
+
+**DELETE** `/<entity_type>/<entity_id>/roles/<role_id>`
+
+```bash
+curl -X DELETE http://localhost/domains/<domain_id>/roles/<role_id> \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### Add Role Members
+
+**POST** `/<entity_type>/<entity_id>/roles/<role_id>/members`
+
+```bash
+curl -X POST http://localhost/clients/<client_id>/roles/<role_id>/members \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"members": ["user_4"]}'
+```
+
+### List Role Members
+
+**GET** `/<entity_type>/<entity_id>/roles/<role_id>/members`
+
+```bash
+curl http://localhost/channels/<channel_id>/roles/<role_id>/members \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### Delete Specific Role Members
+
+**POST** `/<entity_type>/<entity_id>/roles/<role_id>/members/delete`
+
+> If the role being modified is the built-in `admin` role, the request will be rejected if it would remove all remaining members, ensuring every domain retains at least one administrator.
+
+```bash
+curl -X POST http://localhost/groups/<group_id>/roles/<role_id>/members/delete \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"members": ["user_4"]}'
+```
+
+### Delete All Role Members
+
+**POST** `/<entity_type>/<entity_id>/roles/<role_id>/members/delete-all`
+
+> Not permitted for the built-in `admin` role.
+
+```bash
+curl -X POST http://localhost/domains/<domain_id>/roles/<role_id>/members/delete-all \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### Add Role Actions
+
+**POST** `/<entity_type>/<entity_id>/roles/<role_id>/actions`
+
+```bash
+curl -X POST http://localhost/clients/<client_id>/roles/<role_id>/actions \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"actions": ["publish"]}'
+```
+
+### List Role Actions
+
+**GET** `/<entity_type>/<entity_id>/roles/<role_id>/actions`
+
+```bash
+curl http://localhost/channels/<channel_id>/roles/<role_id>/actions \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+Response:
+
+```json
+["read", "update", "publish"]
+```
+
+### Delete Specific Role Actions
+
+**POST** `/<entity_type>/<entity_id>/roles/<role_id>/actions/delete`
+
+```bash
+curl -X POST http://localhost/groups/<group_id>/roles/<role_id>/actions/delete \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"actions": ["publish"]}'
+```
+
+### Delete All Role Actions
+
+**POST** `/<entity_type>/<entity_id>/roles/<role_id>/actions/delete-all`
+
+```bash
+curl -X POST http://localhost/domains/<domain_id>/roles/<role_id>/actions/delete-all \
+  -H "Authorization: Bearer $TOKEN"
+```

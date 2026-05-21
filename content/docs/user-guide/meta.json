@@ -1,0 +1,19 @@
+{
+  "title": "User-guide",
+  "pages": [
+    "architecture",
+    "users-quick-start",
+    "solution-packs",
+    "domain-management",
+    "clients-management",
+    "dashboards",
+    "rules-engine",
+    "messaging",
+    "alarms",
+    "reports",
+    "profile-management",
+    "pats",
+    "metadata"
+  ],
+  "defaultOpen": true
+}
