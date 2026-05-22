@@ -1,1 +1,3 @@
-/ /user-guide/architecture/ 301
+/ /docs/magistrala/user-guide/architecture/ 301
+/docs/magistrala/_next/* /_next/:splat 200
+/docs/magistrala/* /:splat 200
