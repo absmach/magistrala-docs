@@ -7,7 +7,6 @@
     "enabled": true
   },
   "assets": {
-    "directory": "./out",
-    "binding": "MG_DOCS_ASSETS"
+    "directory": "./out"
   }
 }
