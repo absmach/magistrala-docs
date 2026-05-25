@@ -4,10 +4,10 @@
   "compatibility_date": "2026-05-25",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "observability": {
-    "enabled": true,
+    "enabled": true
   },
   "assets": {
     "directory": "./out",
-    "binding": "MG_DOCS_ASSETS",
-  },
+    "binding": "MG_DOCS_ASSETS"
+  }
 }
