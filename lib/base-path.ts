@@ -1,4 +1,5 @@
-export const BASE_PATH = "/docs/magistrala";
+export const BASE_PATH =
+  process.env.NEXT_PUBLIC_BASE_PATH || "/docs/magistrala";
 
 export function withBasePath(path = "") {
   if (!path || path === "/") return BASE_PATH;
