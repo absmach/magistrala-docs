@@ -7,6 +7,7 @@ import {
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { toSiteUrl } from "@/lib/base-path";
 import { baseUrl } from "@/lib/metadata";
 import { getPageImage, source } from "@/lib/source";
 import { getMDXComponents } from "@/mdx-components";
@@ -102,7 +103,7 @@ export async function generateMetadata(
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
-  const canonical = `${baseUrl}${page.url}`;
+  const canonical = toSiteUrl(page.url);
   return {
     title: page.data.title,
     description:
