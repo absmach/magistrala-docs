@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "magistrala-docs",
+  // Static output directory from `next build` with output: "export"
+  "pages_build_output_dir": "./out",
+  "compatibility_date": "2026-05-25",
+  "observability": {
+        "enabled": true
+    },
+}
