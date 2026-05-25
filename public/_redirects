@@ -1,3 +1,15 @@
 / /docs/magistrala/user-guide/architecture/ 301
+/docs/magistrala /docs/magistrala/user-guide/architecture/ 301
+/docs/magistrala/ /docs/magistrala/user-guide/architecture/ 301
+
 /docs/magistrala/_next/* /_next/:splat 200
-/docs/magistrala/* /:splat 200
+/docs/magistrala/api/search /api/search 200
+/docs/magistrala/og/* /og/:splat 200
+/docs/magistrala/:file.:ext /:file.:ext 200
+/docs/magistrala/* /:splat/ 200
+
+/api/search /api/search 200
+/og/* /og/:splat 200
+/_next/* /_next/:splat 200
+/:file.:ext /:file.:ext 200
+/* /:splat/ 200
