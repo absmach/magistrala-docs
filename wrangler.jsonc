@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "magistrala-docs",
-  "compatibility_date": "2026-05-25",
+  "compatibility_date": "2026-05-26",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "observability": {
     "enabled": true
