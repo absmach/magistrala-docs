@@ -63,7 +63,7 @@ Here are some practical examples of how you can use the Rules Engine:
 
 To create a new rule, navigate to the **Rules** section and click the `+ Create` button.
 
-![Create a new Rule](../img/rules/rules.png)
+![Create a new Rule](../../img/rules/rules.png)
 
 You will be redirected to the rule configuration page. A valid rule must include at least **three nodes**:
 
@@ -73,11 +73,11 @@ You will be redirected to the rule configuration page. A valid rule must include
 
 The rule cannot be saved unless these required nodes are present.
 
-![Created Rule](../img/rules/rule.png)
+![Created Rule](../../img/rules/rule.png)
 
 Click **Save Rule** to open a popup dialog where you can enter the rule name and assign tags.
 
-![Create a Rule Dialog](../img/rules/create-rule-dialog.png)
+![Create a Rule Dialog](../../img/rules/create-rule-dialog.png)
 
 Once created, the rule is added to the rules list with the following details:
 
@@ -93,7 +93,7 @@ Each rule entry also provides quick actions for:
 - Edit the rule name or tags
 - Deleting the rule
 
-![Quick Links](../img/rules/quick-links.png)
+![Quick Links](../../img/rules/quick-links.png)
 
 ## Rule Configuration
 
@@ -103,16 +103,16 @@ On the rule page, you can configure the following:
 
 - Currently, only one input node is supported per rule.
 
-![select input](../img/rules/input-node2.png)
+![select input](../../img/rules/input-node2.png)
 
 - Select **Channel Subscriber** as the input type.
 - Choose the **channel** and **topic** to subscribe to.
 
-  ![input variables](../img/rules/input-variables.png)
+  ![input variables](../../img/rules/input-variables.png)
 
 - The input node will appear in the layout.
 
-  ![input node](../img/rules/input-node3.png)
+  ![input node](../../img/rules/input-node3.png)
 
 ### 2. Logic Node
 
@@ -131,7 +131,7 @@ The Comparison Block lets you define conditions visually without writing a scrip
 Each condition evaluates a field from the incoming message against a value you supply.
 When all conditions pass, the connected output nodes are triggered.
 
-![comparison node](../img/rules/comparison-node.png)
+![comparison node](../../img/rules/comparison-node.png)
 
 ---
 
@@ -199,7 +199,7 @@ Each additional condition requires a logical join:
 | `and` | All conditions must be true |
 | `or` | At least one condition must be true |
 
-![Add multiple conditions](../img/rules/add-multiple-conditions.png)
+![Add multiple conditions](../../img/rules/add-multiple-conditions.png)
 
 **Example — trigger when flow is low AND pump is running:**
 
@@ -219,7 +219,7 @@ Each additional condition requires a logical join:
 
 The script editor allows you to toggle between Lua and Go modes using the selector at the top of the editor:
 
-![toggle script node](../img/rules/toggle-script-nodes.png)
+![toggle script node](../../img/rules/toggle-script-nodes.png)
 
 **Toggle between:**
 
@@ -230,7 +230,7 @@ The script editor allows you to toggle between Lua and Go modes using the select
 
 Craft your own logic in Lua by implementing a `logicFunction()` that returns either a primitive value or a table.
 
-![lua editor node](../img/rules/lua-editor-node.png)
+![lua editor node](../../img/rules/lua-editor-node.png)
 
 Example:
 
@@ -253,7 +253,7 @@ return logicFunction()
 
 Write Go-based logic for advanced use cases. Return a value or struct:
 
-![go editor node](../img/rules/go-editor-node.png)
+![go editor node](../../img/rules/go-editor-node.png)
 
 Example:
 
@@ -284,7 +284,7 @@ You can add one or more output nodes. The following nodes are supported:
 5. Magistrala DB
 6. Slack
 
-![select output](../img/rules/output-node.png)
+![select output](../../img/rules/output-node.png)
 
 #### Channel Publisher
 
@@ -292,15 +292,15 @@ Enables you to specify the output channel and topic. The result of the logic nod
 
 Select the Channel Publisher as the output node and enter the channel and topic.
 
-![publisher variables](../img/rules/publisher-variables.png)
+![publisher variables](../../img/rules/publisher-variables.png)
 
-![publisher node](../img/rules/publisher-node.png)
+![publisher node](../../img/rules/publisher-node.png)
 
 #### Email
 
 Send results via email with templated fields:
 
-![email variables](../img/rules/email-variables.png)
+![email variables](../../img/rules/email-variables.png)
 
 ```go title="Subject"
 Current Volume
@@ -315,13 +315,13 @@ Current Volume
  Current volume is {{(index .Result 0).v}} {{(index .Result 0).u}}.
 ```
 
-![email node](../img/rules/email-node.png)
+![email node](../../img/rules/email-node.png)
 
 #### PostgreSQL
 
 Store message processing results to your PostgreSQL database. Select the PostgreSQL output node option and enter the following information:
 
-![PostgreSQL variables](../img/rules/postgres-variables.png)
+![PostgreSQL variables](../../img/rules/postgres-variables.png)
 
 - Host
 - Port
@@ -339,19 +339,19 @@ Store message processing results to your PostgreSQL database. Select the Postgre
 }
 ```
 
-![PostgreSQL node](../img/rules/postgres-node.png)
+![PostgreSQL node](../../img/rules/postgres-node.png)
 
 #### Internal DB
 
 To be able to store messages in the internal Magistrala DB, you need to create a rule that processes the results. More information about this is in the [Store Messages](#store-messages) section.
 
-![Magistrala DB rule example](../img/rules/internal-db-rule.png)
+![Magistrala DB rule example](../../img/rules/internal-db-rule.png)
 
 #### Alarms
 
 An alarm output will enable you to be able to generate alarms in the case where a threshold has been exceeded. More information about this node is provided in the [Alarms](/user-guide/alarms) section.
 
-![Alarm rule example](../img/alarms/alarm-rule.png)
+![Alarm rule example](../../img/alarms/alarm-rule.png)
 
 #### Slack
 
@@ -359,7 +359,7 @@ Slack output enables you to send notifications to a Slack channel when a rule is
 
 To configure a Slack output node, provide the following fields:
 
-![Slack variables](../img/rules/slack-variables.png)
+![Slack variables](../../img/rules/slack-variables.png)
 
 - **Token**: Your Slack App token (used for authentication).
 - **Channel ID**: The ID of the Slack channel where notifications will be sent.
@@ -383,7 +383,7 @@ To configure a Slack output node, provide the following fields:
 }
 ```
 
-![Slack node](../img/rules/slack-node.png)
+![Slack node](../../img/rules/slack-node.png)
 
 ## Dynamic Variables and Templates
 
@@ -424,17 +424,17 @@ To enable or disable a rule:
 
 - Use the toggle at the top right of the rule page.
 
-  ![Disable rule in rule page](../img/rules/disable-rule-toggle.png)
+  ![Disable rule in rule page](../../img/rules/disable-rule-toggle.png)
 
 - You can also enable/disable directly from the rule list using the quick actions menu
 
-  ![Disable rule in quick links](../img/rules/disable-rule.png)
+  ![Disable rule in quick links](../../img/rules/disable-rule.png)
 
 ## Add a Scheduler
 
 You can configure a scheduler to define when a rule executes.
 
-![Scheduler](../img/rules/scheduler.png)
+![Scheduler](../../img/rules/scheduler.png)
 
 Fields:
 
@@ -518,7 +518,7 @@ func logicFunction() any {
 
 Then set your output node to store this result using the Magistrala Internal DB option.
 
-![Storage with json input](../img/rules/json-input.png)
+![Storage with json input](../../img/rules/json-input.png)
 
 ### Example: Input is SenML
 
@@ -542,7 +542,7 @@ return logicFunction()
   }
 ```
 
-![Storage with senml input](../img/rules/rule.png)
+![Storage with senml input](../../img/rules/rule.png)
 
 :::info
 
@@ -556,11 +556,11 @@ Roles define a set of actions that can be allocated to users for a specific rule
 
 To create a role, navigate to the **Roles** tab on the rule sidebar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
 
-![Create rule role](../img/rules/rule-roles.png)
+![Create rule role](../../img/rules/rule-roles.png)
 
 ### Role Information
 
-![Rule role information](../img/rules/rule-role-create.png) 
+![Rule role information](../../img/rules/rule-role-create.png) 
 
 The **Role name** is compulsory. You can optionally provide the role actions by selecting from the available actions. You can also optionally provide the members by searching for a user with their **username**.
 
@@ -580,29 +580,29 @@ Click a role in the **Roles table** to open its page. The page has two tables fo
 
 To update a **role name**, click on the **pencil** icon on the far right end of the field, update the value then click on the **check** icon to save or the **cross** icon to cancel.
 
- ![Update role name](../img/rules/rule-update-role.png)
+ ![Update role name](../../img/rules/rule-update-role.png)
 
 To update the **Role Actions**, click on the **pencil** icon. A dialog box will appear allowing you to select the actions you want to add.
 
- ![Update role actions](../img/rules/rule-update-role-actions.png) 
+ ![Update role actions](../../img/rules/rule-update-role-actions.png) 
 
 To update the **Role Members**, click the **Add Members** button. A popup dialog will appear with the list of Domain Members from which a user can select.
 
- ![Update role members](../img/rules/rule-update-role-members.png) 
+ ![Update role members](../../img/rules/rule-update-role-members.png) 
 
 #### Delete Rule Roles
 
 You can delete actions by clicking on the **trash** icon. It opens a dialog that allows you to select which actions to remove. There is also an option to delete all actions at once.
 
- ![Delete role actions](../img/rules/rule-role-delete-actions.png) 
+ ![Delete role actions](../../img/rules/rule-role-delete-actions.png) 
 
 For **Role Members**, you can clear the entire table with the `Delete All Members` button:
 
- ![Delete all role members](../img/rules/rule-delete-all-role-members.png) 
+ ![Delete all role members](../../img/rules/rule-delete-all-role-members.png) 
 
 To delete specific members from the Role Members table, click on the **trash** icon next to their entry.
 
- ![Delete role members](../img/rules/rule-delete-role-members.png) 
+ ![Delete role members](../../img/rules/rule-delete-role-members.png) 
 
 ## Rule Members
 
@@ -610,10 +610,10 @@ While members can be added through the **Roles** tab when creating a role, you c
 
 Clicking the **Assign Member** button opens a dialog where you can select from the Domain Members and choose the role to assign them to.
 
- ![Assign Members](../img/rules/rule-members.png) 
+ ![Assign Members](../../img/rules/rule-members.png) 
 
 ## Delete a rule
 
 To delete a rule, click the **Delete** quick action. A confirmation dialog appears asking you to type the rule's name before deletion is finalized. Use the **copy button** to copy the name, paste it into the input field, then click **Delete** to permanently remove the rule.
 
- ![Delete rule](../img/rules/rule-delete.png) 
+ ![Delete rule](../../img/rules/rule-delete.png) 

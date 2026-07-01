@@ -1,3 +1,4 @@
+import { remarkAdmonition } from "fumadocs-core/mdx-plugins";
 import { metaSchema, pageSchema } from "fumadocs-core/source/schema";
 import { defineConfig, defineDocs } from "fumadocs-mdx/config";
 
@@ -25,6 +26,6 @@ export default defineConfig({
       },
       langs: ["lua", "typescript", "bash", "javascript", "go"],
     },
-    // MDX options
+    remarkPlugins: [remarkAdmonition],
   },
 });
