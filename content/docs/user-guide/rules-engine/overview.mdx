@@ -32,13 +32,12 @@ Users can define rules by visually combining input, logic, and output nodes to d
 ### 2. Node Configuration
 
 - **Input Nodes**: Attach an MQTT subscriber input by selecting the channel and topic.
-- **Logic Nodes**: Define conditions using comparison blocks, Lua scripts, or Go scripts.
-- **Output Nodes**: Output processed data to MQTT publishers, Email recipients, or PostgreSQL databases.
+- **Logic Nodes**: Define conditions using a comparison block, or a Code Editor node that toggles between Lua and Go scripts.
+- **Output Nodes**: Output processed data via Channel Publisher, Email, PostgreSQL, Internal DB, Alarm, or Slack.
 
 ### 3. Scripting and Templating
 
-- **Lua Script Editor**: Use custom Lua scripts with a required `logicFunction()` for logic processing.
-- **Go Script Editor**: Write Go-based logic for more advanced use cases (requires Go syntax compliance).
+- **Code Editor**: A single logic node with a language selector — write Lua with a required `logicFunction()`, or switch to Go for more advanced use cases (requires Go syntax compliance).
 - **Go Text Templating**: Use dynamic value injection with:
   - `{{.Result}}`
   - `{{.Result.<key>}}`
@@ -61,7 +60,7 @@ Here are some practical examples of how you can use the Rules Engine:
 
 ## Create a Rule
 
-To create a new rule, navigate to the **Rules** section and click the `+ Create` button.
+To create a new rule, navigate to the **Rules** section and click the `Create Rule` button.
 
 ![Create a new Rule](../../img/rules/rules.png)
 
@@ -116,11 +115,10 @@ On the rule page, you can configure the following:
 
 ### 2. Logic Node
 
-After setting the input, define your rule’s logic using one of three options:
+After setting the input, define your rule’s logic using one of two options:
 
 1. Comparison Block
-2. Lua Script Editor
-3. Go Script Editor
+2. Code Editor (toggle between Lua and Go — see [Script Editors](#script-editors))
 
 The logic nodes support different message payloads as inputs.  
 To utilize the message payload, you can use `message.<key>` in the input. For example if your message is a single SenML message, you can do `message.payload.v` to get the value.
@@ -554,7 +552,7 @@ With the Rules Engine, users can easily automate data processing pipelines in a 
 
 Roles define a set of actions that can be allocated to users for a specific rule.
 
-To create a role, navigate to the **Roles** tab on the rule sidebar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
+To create a role, navigate to the **Roles** tab on the rule sidebar. Click on the `Create` button and provide a role name. The actions and members are optional fields. The **Roles table** lists each role's **Name**, **Created By**, **Created At**, **Updated By** and **Updated At**.
 
 ![Create rule role](../../img/rules/rule-roles.png)
 
@@ -564,25 +562,23 @@ To create a role, navigate to the **Roles** tab on the rule sidebar. Click on th
 
 The **Role name** is compulsory. You can optionally provide the role actions by selecting from the available actions. You can also optionally provide the members by searching for a user with their **username**.
 
-The following is the list of available actions for a rule:
-
-- `rule_read`
-- `rule_update`
-- `rule_delete`
-- `rule_manage_role`
-- `rule_add_role_users`
-- `rule_view_role_users`
-- `rule_remove_role_users`
+> As with clients, channels and groups (see [Domain Roles](/user-guide/domain-management/domain#domain-roles)), rule roles use the platform's generic action vocabulary rather than rule-specific action names:
+>
+> - read
+> - write
+> - delete
+> - role.manage
+> - policy.manage
 
 #### Update Rule Roles
 
-Click a role in the **Roles table** to open its page. The page has two tables for the **Role Actions** and the assigned **Role Members**.
+Click a role in the **Roles table** to open its page. The page shows the role's **Permissions** (its selected actions) and an **Assignments** table of the members holding the role.
 
 To update a **role name**, click on the **pencil** icon on the far right end of the field, update the value then click on the **check** icon to save or the **cross** icon to cancel.
 
  ![Update role name](../../img/rules/rule-update-role.png)
 
-To update the **Role Actions**, click on the **pencil** icon. A dialog box will appear allowing you to select the actions you want to add.
+To update the role's permissions, use the **Add actions** / **Remove actions** buttons. A dialog box will appear allowing you to select the actions you want to add.
 
  ![Update role actions](../../img/rules/rule-update-role-actions.png) 
 

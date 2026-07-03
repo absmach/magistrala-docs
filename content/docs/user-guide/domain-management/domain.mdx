@@ -49,7 +49,7 @@ This page provides an overview of all activities, entities, and limits within th
 At the top of the page, a series of summary cards displays the current state of the domain’s entities:
 
 - **Members** – Shows the total number of users assigned to the domain, along with their enabled or disabled status.  
-  The domain creator is automatically assigned the **Admin** role and appears as the first active member.
+  The domain creator is automatically assigned the **tenant-admin** role and appears as the first active member.
 - **Clients** – Displays the number of clients within the domain and their operational status.
 - **Channels** – Lists the channels available for message publishing and subscription.
 - **Groups** – Indicates the total number of groups configured in the domain.
@@ -75,6 +75,8 @@ Below the summary cards, a **bar graph** presents a visual comparison of domain 
 This graph mirrors the numeric information shown in the cards but offers a more immediate and visually intuitive representation of domain activity.
 
 ### Usage and Limits
+
+> This section is only shown on **Magistrala Cloud** domains — see [Billing](/user-guide/domain-management/billing) for details.
 
 The **Usage & Limits** section displays resource utilization across various entity types, including rules, users, groups, clients, and channels.  
 It provides insight into the current usage relative to the domain’s maximum allocation, ensuring that administrators can monitor and manage capacity efficiently.  
@@ -133,7 +135,7 @@ Users with additional permissions (e.g., **Write**, **Manage**) can perform acti
 ### Assign Users
 
 To assign a user to a domain, click the **`Assign User`** button.  
-Search for the user by their **username**, then select their name and choose one or more **roles** to assign.
+Search for the user by their **username**, then select their name and choose a **role** to assign.
 
 Alternatively, a user can also be added while creating the domain role.
 
@@ -147,75 +149,44 @@ To unassign a user, click on the **trash** icon present on their row and click *
 
 ## Domain Roles
 
-From the Roles section, you can create new roles with custom actions.
+From the Roles section, you can create new roles built out of one or more **permission blocks**.
 
-By default, an **Admin** role with complete control over the domain is always present and granted to the Domain creator.
+By default, a **tenant-admin** role with complete control over the domain is always present and granted to the Domain creator. The Roles table lists each role's **Name**, **Created By**, **Created At**, **Updated By** and **Updated At**.
 
 ![Domain Roles](../../img/domain/roles.png)
 
-Here's a comprehensive list of domain role actions:
+Roles are no longer built from a long list of per-entity action names (for example `client_create` or `channel_publish`). Instead, each role is made up of one or more **permission blocks**, and each block pairs a **scope** with a set of generic **actions**:
 
-- **Domain Management**
-  - update
-  - enable
-  - disable
-  - read
-  - delete
+**Scopes** — what the permission block applies to:
 
-- **Role Management**
-  - manage_role
-  - add_role_users
-  - remove_role_users
-  - view_role_users
+- Whole domain
+- All clients
+- All channels
+- All groups
+- All rules
+- All reports
+- All alarms
 
-- **Client Management**
-  - client_create
-  - client_update
-  - client_read
-  - client_delete
-  - client_set_parent_group
-  - client_connect_to_channel
-  - client_manage_role
-  - client_add_role_users
-  - client_remove_role_users
-  - client_view_role_users
+**Actions** — what's allowed for that scope:
 
-- **Channel Management**
-  - channel_create
-  - channel_update
-  - channel_read
-  - channel_delete
-  - channel_set_parent_group
-  - channel_connect_to_client
-  - channel_publish
-  - channel_subscribe
-  - channel_manage_role
-  - channel_add_role_users
-  - channel_remove_role_users
-  - channel_view_role_users
+- read
+- write
+- delete
+- publish
+- subscribe
+- manage
+- role.manage
+- policy.manage
+- execute
 
-- **Group Management**
-  - group_create
-  - group_update
-  - group_read
-  - group_delete
-  - group_membership
-  - group_set_child
-  - group_set_parent
-  - group_manage_role
-  - group_add_role_users
-  - group_remove_role_users
-  - group_view_role_users
-
-To create a new role, click on the `+ Create` button, provide a descriptive name for the role, and optionally add users and actions
+To create a new role, click the `+ Create` button, provide a descriptive **Role name**, then click **Add permission** to add a permission block — choose what it **Applies to** and select one or more **Actions**. You can add multiple permission blocks to a single role, and optionally assign users to the role at creation time.
 
 ![Create Domain Role](../../img/domain/create-role.png)
 
-Once created, domain roles can be edited in their respective pages.
-Users can edit the domain role name, role actions and role members.
+Once created, domain roles can be edited from their respective pages. A role's page shows its **Name** and **ID**, its **Permission scopes** (each scope card lists its actions and has buttons to **Add actions**, **Remove actions** or **Delete scope**, plus an **Add scope** button to add another permission block), and an **Assignments** table of the users currently holding the role, with **Add Members** and **Delete All Members** actions.
 
 ![Domain Role Page](../../img/domain/domain-role-id.png)
 
-These fields can be updated directly on the page or via the dropdown menu options.
+These same fields can also be updated from the roles list via the row's `···` menu — **View**, **Copy ID**, **Edit Name**, **Add permissions**, **Remove permissions**, **Assign users**, and **Delete**.
 
 ![Domain Action Buttons](../../img/domain/role-actions.png)

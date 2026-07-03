@@ -20,13 +20,13 @@ Clients are able to **publish** or **subscribe** to a channel depending on their
 
 ## Create a Channel
 
-To create a channel, click on the `+ Create` button present on the top-left corner of the page. You can also create multiple channels by clicking on the `+ Upload` button and uploading a `.csv` file.
+To create a channel, click on the `Create` button. You can also create multiple channels by clicking on the `Upload` button and uploading a `.csv` file.
 
 ![Create channel](../../img/clients/channel-create-buttons.png)
 
 ### Channel Information
 
-Add a channel **name** and optionally **tags** and **metadata**.
+Add a channel **name** and optionally a **Route**, **tags** and **metadata**. Like a domain's Route, the channel **Route** is a short, human-readable identifier for the channel.
 
 ![Channel information](../../img/clients/channel-create.png)
 
@@ -61,6 +61,7 @@ The **Settings** tab displays key details about a channel and allows you to edit
 
 **View-Only Fields:**
 - **ID** – Unique channel identifier
+- **Route** – A user-friendly identifier for the channel, set at creation time
 - **Metadata** – View existing metadata in JSON format (managed in the Metadata tab)
 
 To update a field, click the **pencil** icon next to it. Once you have updated the value, click the **check** icon to save changes or the **cross** icon to cancel.
@@ -103,9 +104,9 @@ This will open up a dialog that allows you to select which connection type you w
 
 Roles define a set of actions that can be allocated to users.
 
-Navigate to the **Roles** tab of the channel sidebar. This will lead you to a table of all the available roles in the channel.
+Navigate to the **Roles** tab of the channel sidebar. This will lead you to a table of all the available roles in the channel, listing each role's **Name**, **Created By**, **Created At**, **Updated By** and **Updated At**.
 
-To create a role, navigate to the roles section on the client navbar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
+To create a role, navigate to the roles section on the client navbar. Click on the `Create` button and provide a role name. The actions and members are optional fields.
 
 ![Create channel role](../../img/clients/channel-create-role.png)
 
@@ -119,21 +120,17 @@ You can also optionally provide the members by searching for a user with their *
 
 The following is the list of available actions for a channel:
 
-- update
 - read
+- write
 - delete
-- set_parent_group
-- connect_to_client
 - publish
 - subscribe
-- manage_role
-- add_role_users
-- remove_role_users
-- view_role_users
+- role.manage
+- policy.manage
 
 ### Update Channel Role Name
 
-Click a role in the **Roles table** to open its page. The page has two tables for the **Role Actions** and the assigned **Role Members**.
+Click a role in the **Roles table** to open its page. The page shows the role's **Permissions** (its selected actions) and an **Assignments** table of the members holding the role.
 
 To update a role name, click on the **pencil** icon on the far right end of the field, update the value then click on the **check** icon to update the changes or the `cross` icon to cancel the changes.
 
@@ -311,32 +308,21 @@ In the download dialog, you can configure:
 
 Click **Download** to generate and download the CSV file containing the matching messages.
 
-## Audit Logs
+## Journals
 
-Audit logs track all **channel-related events**, including **creation**, **updates**, **disabling**, **connectivity** and **role changes**.
+The **Journals** tab (formerly named **Audit Logs**) tracks all **channel-related events**, including **creation**, **updates**, **disabling**, **connectivity** and **role changes**.
 
-Each log entry displays the **operation type**, a **timestamp**, and optional **details** for deeper inspection.
+Each log entry displays the **operation**, an **Occured At** timestamp, and optional **details** for deeper inspection.
 
 You can search logs by operation type using the search input above the log table.
 
-The most recent operations—such as `channel.view`, `channel.create`, and `channel.connect`—are displayed at the top.
+The most recent operations—such as `entity.create` and `entity.update`—are displayed at the top.
 
 ![Channel Audit Logs](../../img/clients/channel-logs.png)
 
-Clicking on the `Details` button at the end of each row opens a modal displaying structured details about the selected operation.
+Clicking on the `···` button at the end of each row opens a modal displaying structured details about the selected operation.
 
-These details may include:
-
-- `created_at`: Timestamp of creation  
-- `id`: Unique channel ID  
-- `name`: Full channel name, e.g., `"15 Regent St"`  
-- `status`: Whether the channel is `"enabled"` or `"disabled"`  
-- `super_admin`: Indicates if the channel was flagged as a super admin  
-- `domain`: Associated domain UUID  
-- `request_id`: Unique request UUID for tracing  
-- `user_id`: UUID of the user who performed the action  
-- `tags`: A list of contextual tags like `"West End Block A"`, `"London"`, `"Floor 3"`  
-- `token_type`: The type of token used for the action (e.g., `"access token"`)
+For most operations, the details modal shows an `outcome` field (e.g., `"allow"`), which is the access-control decision for that action.
 
 This enables users to **trace changes**, **audit security**, and **diagnose issues** efficiently.
 

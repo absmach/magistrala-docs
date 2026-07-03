@@ -18,7 +18,7 @@ They make it easier to assign users with specific roles to a set of related chan
 
 ## Create a Group
 
-To create a group, click on the `+ Create` button present on the top of the **Groups** sidebar. You can also create multiple groups by uploading a _.csv_ file with group **names** and any other fields you would like to add.
+To create a group, click on the `Create` button present on the top of the **Groups** sidebar. You can also create multiple groups by clicking `Upload` and uploading a _.csv_ file with group **names** and any other fields you would like to add.
 
 ![Create group](../../img/clients/group-create-button.png)
 
@@ -36,7 +36,7 @@ A [sample groups CSV file](https://github.com/absmach/magistrala-ui/blob/main/sa
 
 ### Group Information
 
-When creating a group, you must provide a **name** and can optionally add a **description**, **metadata**, and a **parent group**.
+When creating a group, you must provide a **name** and can optionally add a **description**, **tags**, **metadata**, and a **parent group**.
 
 ![Group information](../../img/clients/group-information.png)
 
@@ -58,6 +58,7 @@ The **Settings** tab displays key details about a group and allows you to edit c
 **Editable Fields:**
 - **Name** – Group identifier
 - **Description** – Optional description of the group
+- **Tags** – Keywords for organization and searchability
 - **Status** – Enable or disable the group using the toggle switch
 
 **View-Only Fields:**
@@ -110,83 +111,33 @@ In the case of a group without a parent, the button will instead prompt you to s
 
 ### Create Group Roles
 
-**Roles** allow you to group a specific set of actions and allocate them to users.
-To create a role, navigate to the **Roles** section on the group navbar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
+**Roles** allow you to group specific **permission blocks** and allocate them to users. The **Roles table** lists each role's **Name**, **Created By**, **Created At** and **Updated At**.
+
+To create a role, navigate to the **Roles** section on the group navbar. Click on the `Create` button and provide a role name. The permissions and members are optional fields.
 
 ![Create Group Role](../../img/clients/group-role-create.png)
 
 #### Role Information
 
-When creating the Group Role, the role name is compulsory. You can optionally provide the role actions by selecting from the available actions. You can also optionally provide the members by searching for a user with their **username**. These Users must be members of the same domain however.
+When creating the Group Role, the role name is compulsory. For each permission block you choose what it **Applies to** and which **Actions** are allowed, then optionally provide members by searching for a user with their **username**. These users must be members of the same domain however.
 
-The following is the list of available actions for a group:
+Groups use the same generic-action model as domains, clients and channels, but with scopes that reflect the group hierarchy. The **Applies to** options are:
 
-- **Group Management**
+- **This group** – applies only to this group object
+- **Clients in this group** – excludes subgroup clients
+- **Channels in this group** – excludes subgroup channels
+- **Direct child groups** – applies to child groups under this group
+- **Clients in subgroups** – excludes clients directly in this group
+- **Channels in subgroups** – excludes channels directly in this group
+- **All subgroups** – applies to every nested subgroup
 
-  - read
-  - update
-  - membership
-  - delete
+For each scope, the available **actions** are:
 
-- **Hierarchy Management**
-
-  - set_child
-  - set_parent
-
-- **Role Management**
-
-  - manage_role
-  - add_role_users
-  - remove_role_users
-  - view_role_users
-
-- **Client Management**
-
-  - client_create
-  - client_update
-  - client_read
-  - client_delete
-  - client_set_parent_group
-  - client_connect_to_channel
-  - client_manage_role
-  - client_add_role_users
-  - client_remove_role_users
-  - client_view_role_users
-
-- **Channel Management**
-
-  - channel_create
-  - channel_update
-  - channel_read
-  - channel_delete
-  - channel_set_parent_group
-  - channel_connect_to_client
-  - channel_publish
-  - channel_subscribe
-  - channel_manage_role
-  - channel_add_role_users
-  - channel_remove_role_users
-  - channel_view_role_users
-
-- **Subgroup Management**
-  - subgroup_create
-  - subgroup_channel_create
-  - subgroup_client_create
-  - subgroup_client_update
-  - subgroup_client_read
-  - subgroup_client_delete
-  - subgroup_client_set_parent_group
-  - subgroup_client_connect_to_channel
-  - subgroup_read
-  - subgroup_membership
-  - subgroup_delete
-  - subgroup_update
-  - subgroup_set_child
-  - subgroup_set_parent
-  - subgroup_add_role_users
-  - subgroup_manage_role
-  - subgroup_remove_role_users
-  - subgroup_view_role_users
+- read
+- write
+- delete
+- role.manage
+- policy.manage
 
 ### Update Group Roles
 
@@ -194,7 +145,7 @@ To update a **role name**, click on the `pencil` icon on the far right end of th
 
 ![Update role name](../../img/clients/group-role-update.png)
 
-To update the **actions** click on the `pencil` iconA dialog will appear where you can select additional actions.
+To update a role's permissions, use the **Add actions** / **Remove actions** buttons on a permission scope card. A dialog will appear where you can select additional actions.
 
 ![Update role actions](../../img/clients/group-role-actions.png)
 
@@ -250,34 +201,21 @@ To assign channels to a group, click on the `Assign Channels` button. A dialog w
 
 ![Assign Group channels](../../img/clients/assign-group-channels.png)
 
-## Audit Logs
+## Journals
 
-Audit logs track all **group-related events**, including **creation**, **updates**, **disabling** and **role changes**.
+The **Journals** tab (formerly named **Audit Logs**) tracks all **group-related events**, including **creation**, **updates**, **disabling** and **role changes**.
 
-Each log entry displays the **operation type**, a **timestamp**, and optional **details** for deeper inspection.
+Each log entry displays the **operation**, an **Occured At** timestamp, and optional **details** for deeper inspection.
 
 You can search logs by operation type using the search input above the log table.
 
-The most recent operations—such as `group.view`, `group.create` and `group.assign`—are displayed at the top.
+The most recent operations—such as `entity.create` and `entity.update`—are displayed at the top.
 
 ![Group Audit Logs](../../img/clients/groups-audit-logs.png)
 
-Clicking on the `Details` button at the end of each row opens a modal displaying structured details about the selected operation.
+Clicking on the `···` button at the end of each row opens a modal displaying structured details about the selected operation.
 
-These details may include:
-
-- `created_at`: Timestamp of group creation  
-- `updated_at`: Timestamp of the last update  
-- `id`: Unique group ID  
-- `name`: Full group name, e.g., `"Harlem Block A"`  
-- `parent`: UUID of the parent group, if applicable  
-- `status`: Whether the group is `"enabled"` or `"disabled"`  
-- `super_admin`: Indicates if the group is flagged as a super admin  
-- `domain`: Associated domain UUID  
-- `request_id`: Unique request UUID for tracing  
-- `user_id`: UUID of the user who performed the action  
-- `updated_by`: UUID of the user who last updated the group  
-- `token_type`: The type of token used for the action (e.g., `"access token"`)
+For most operations, the details modal shows an `outcome` field (e.g., `"allow"`), which is the access-control decision for that action.
 
 This enables users to **trace changes**, **audit hierarchy**, and **verify authorization events** efficiently.
 
