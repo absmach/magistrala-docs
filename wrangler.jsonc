@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "magistrala-docs",
+  "name": "magistrala-docs-v0-30-0",
   "compatibility_date": "2026-05-26",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "observability": {
@@ -8,5 +8,11 @@
   },
   "assets": {
     "directory": "./out"
-  }
+  },
+  "routes": [
+    {
+      "pattern": "absmach.eu/docs/magistrala/v0-30-0/*",
+      "zone_name": "absmach.eu"
+    }
+  ]
 }

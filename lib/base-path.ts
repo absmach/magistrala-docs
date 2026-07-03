@@ -1,5 +1,5 @@
 export const BASE_PATH =
-  process.env.NEXT_PUBLIC_BASE_PATH || "/docs/magistrala";
+  process.env.NEXT_PUBLIC_BASE_PATH || "/docs/magistrala/v0-30-0";
 
 export function withBasePath(path = "") {
   if (!path || path === "/") return BASE_PATH;
@@ -24,7 +24,8 @@ export function withBasePathForInternalUrl(url: string) {
 
 export function toSiteUrl(path: string) {
   const base =
-    process.env.NEXT_PUBLIC_BASE_URL || "https://absmach.eu/docs/magistrala";
+    process.env.NEXT_PUBLIC_BASE_URL ||
+    "https://absmach.eu/docs/magistrala/v0-30-0";
   const normalizedBase = base.replace(/\/$/, "");
   if (path.startsWith(BASE_PATH)) {
     return new URL(path, new URL(base).origin).toString();

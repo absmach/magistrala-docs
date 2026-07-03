@@ -1,7 +1,7 @@
-/docs/magistrala/robots.txt
+/docs/magistrala/v0-30-0/robots.txt
   Cache-Control: no-store, no-cache, must-revalidate, max-age=0
   CDN-Cache-Control: no-store
 
-/docs/magistrala/sitemap.xml
+/docs/magistrala/v0-30-0/sitemap.xml
   Cache-Control: no-store, no-cache, must-revalidate, max-age=0
   CDN-Cache-Control: no-store
