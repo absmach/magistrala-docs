@@ -1,6 +1,7 @@
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { Rubik } from "next/font/google";
 import { Provider } from "@/components/provider";
+import { VersionSwitcher } from "@/components/version-switcher";
 import { baseOptions } from "@/lib/layout.shared";
 import { source } from "@/lib/source";
 import "./global.css";
@@ -30,6 +31,7 @@ export default function Layout({ children }: LayoutProps<"/">) {
             tree={source.getPageTree()}
             links={base.links?.filter((item) => item.type === "icon")}
             nav={{ ...base.nav }}
+            sidebar={{ banner: <VersionSwitcher /> }}
           >
             {children}
           </DocsLayout>
