@@ -60,9 +60,15 @@ The Profile page previously had three tabs: **Account**, **Password**, **Prefere
 
 Building a rule in the flow editor (Channel Subscriber input → Comparison Block logic → Alarm output) and clicking **Save Rule** → naming it → **Create** returns a `200` on the `POST .../rules/create` server action every time, and the dialog closes with no visible error toast — but the rule never appears in the Rules list afterward (`No rules found`, checked with the Status filter set to **All**). Reproduced 3 times in a row with slightly different node configurations (including a minimal one: single comparison condition, no schedule, output = Alarm only). Worth checking the rules-service response body server-side, since the frontend has no visibility into why it's failing.
 
-**Impact:** Could not verify the Alarms flow end-to-end (rule → triggered alarm → assignee) in this environment/session — blocked at rule creation.
+**Impact:** Could not verify the Alarms flow end-to-end (rule → triggered alarm → assignee) in this environment/session — blocked at rule creation. It also means a channel's Messages table can never show persisted messages (a Rule is required to save messages to the database, per the Messages docs) — `messages-table.png` in `channels.mdx` was recaptured showing the accurate current empty state ("No messages sent yet") rather than fabricated data, since populating it for real is blocked by this same bug.
+
+## 8. Group Journals never populate, unlike Client/Channel Journals
+
+A group's **Journals** tab always shows "No journals found," even right after performing operations that reliably produce journal entries for clients and channels (tags update, assigning a client to the group, creating a group role — all three succeeded via their success toasts, and none appeared in the group's Journals list afterward, checked with a fresh page reload each time). Client and Channel Journals correctly log the equivalent operations (`resource.update`, etc.) in the same session. Since the docs previously illustrated the group "click `···` for details" action using a substituted Client screenshot (mislabeled as a group), that screenshot has been removed rather than left misleading — see `content/docs/user-guide/clients-management/groups.mdx`.
+
+**Impact:** Groups cannot be audited via Journals in the current environment — worth checking whether the journal/activity service is wired up to receive events for the groups domain specifically.
 
 ## Notes on things that are NOT broken (in case useful context)
 
-- Reports, Custom Nodes, Metadata, Domain/Client/Channel/Group Roles, Journals (renamed from Audit Logs) all worked as expected during this pass. Rules Engine node-builder UI (inputs/logic/outputs, auto-connecting edges) works fine — only the final Save/Create step is broken (see #7).
+- Reports, Custom Nodes, Metadata, Domain/Client/Channel/Group Roles all worked as expected during this pass. Client and Channel Journals (renamed from Audit Logs) work correctly; Group Journals do not — see #8. Rules Engine node-builder UI (inputs/logic/outputs, auto-connecting edges) works fine — only the final Save/Create step is broken (see #7).
 - The new generic Atom-based permission model (read/write/delete/publish/subscribe/manage/role.manage/policy.manage/execute) is consistent across domains, clients, channels, groups, and (inferred, not directly tested) rules.
