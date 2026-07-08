@@ -1,4 +1,4 @@
 {
   "title": "Clients Management",
-  "pages": ["introduction", "groups", "channels", "clients", "bootstraps"]
+  "pages": ["introduction", "groups", "channels", "clients"]
 }

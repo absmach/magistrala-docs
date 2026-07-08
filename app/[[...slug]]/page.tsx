@@ -7,6 +7,7 @@ import {
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { NewBadge } from "@/components/mdx/new-badge";
 import { toSiteUrl } from "@/lib/base-path";
 import { baseUrl } from "@/lib/metadata";
 import { getPageImage, source } from "@/lib/source";
@@ -74,7 +75,10 @@ export default async function Page(props: PageProps<"/[[...slug]]">) {
         // biome-ignore lint/security/noDangerouslySetInnerHtml: controlled static JSON-LD
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
       />
-      <DocsTitle>{page.data.title}</DocsTitle>
+      <div className="flex items-start justify-between gap-4">
+        <DocsTitle>{page.data.title}</DocsTitle>
+        {page.data.new && <NewBadge className="mt-2" />}
+      </div>
       <DocsDescription>{page.data.description}</DocsDescription>
       <DocsBody>
         <MDX

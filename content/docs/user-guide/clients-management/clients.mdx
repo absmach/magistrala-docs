@@ -17,8 +17,8 @@ A **Client** in Magistrala can be either a **device** or an **application** that
 
 ## Create a Client
 
-To create a client, click on the `+ Create` button present at the top-left of the page.
-You can also create multiple clients at once by clicking on the `+ Create Clients` button and uploading a _.csv_ file with client **names** and any other fields you would like to add.
+To create a client, click on the `Create` button.
+You can also create multiple clients at once by clicking on the `Upload` button and uploading a _.csv_ file with client **names** and any other fields you would like to add.
 
 ![Create client](../../img/clients/client-create-buttons.png)
 
@@ -62,7 +62,7 @@ The **Configuration** tab displays key details about a client and allows you to 
 **Editable Fields:**
 
 - **Name** – Client identifier
-- **Client Key** – Authorization key for message sending
+- **Client Key** – Authorization key for message sending. The key is hidden by default; click the **eye** icon to reveal it.
 - **Tags** – Keywords for organization (press `Enter` after each tag to confirm)
 - **Status** – Enable or disable the client using the toggle switch
 
@@ -82,28 +82,6 @@ The **Metadata** tab allows you to add, view, and manage additional information 
 For detailed instructions on managing metadata, including working with interactive maps for location and perimeter data, see the [Metadata Management Guide](/user-guide/metadata).
 
 ![Client Metadata](../../img/clients/client-metadata.png)
-
-{/* ### Bootstrap Configuration
-
-Bootstrap configuration of a client allows bootstrapping of the device (self-starting process that proceeds without external input). Further details of bootstrapping are discussed in the [Bootstrap section](/user-guide/clients-management/bootstraps).
-
-To add a bootstrap configuration, click on the `Add Configuration` button.
-
-![Add bootstrap configuration](../../img/clients/client-bootstrap-button.png)
-
-A dialog box will appear allowing you to enter the following fields
-
-1. Name (required) - A unique name for the bootstrap configuration
-2. External ID (required)
-3. External Key (required)
-4. Channels (required) - The channels the client will connect to.
-5. Content (optional)
-6. Encryption Settings (optional)
-   - Client Cert
-   - Client Key
-   - CA Cert
-
-![Bootstrap configuration dialog](../../img/clients/client-bootstrap-dialog.png) */}
 
 ## Connect to a Channel
 
@@ -131,9 +109,9 @@ This will open up a dialog that allows you to select which connection type you w
 
 ## Client Roles
 
-Roles define a set of actions that can be allocated to users.
+Roles define a set of actions that can be allocated to users. The **Roles** table lists each role's **Name**, **Created By**, **Created At**, **Updated By** and **Updated At**.
 
-To create a role, navigate to the **Roles** tab on the client sidebar. Click on the `+ Create` button and provide a role name. The actions and members are optional fields.
+To create a role, navigate to the **Roles** tab on the client sidebar. Click on the `Create` button and provide a role name. The actions and members are optional fields.
 
 ![Create client role](../../img/clients/client-roles.png)
 
@@ -141,33 +119,29 @@ To create a role, navigate to the **Roles** tab on the client sidebar. Click on 
 
 ![Client role information](../../img/clients/client-role-create.png)
 
-The **Role name** is complusory. You can optionally provide the role actions by selecting from the available actions. You can also optionally provide the members by searching for a user with their **username**.
+The **Role name** is compulsory. You can optionally provide the role actions by selecting from the available actions. You can also optionally provide the members by searching for a user with their **username**.
 
 The following is the list of available actions for a client:
 
-- update
 - read
+- write
 - delete
-- set_parent_group
-- connect_to_channel
-- manage_role
-- add_role_users
-- view_role_users
-- remove_role_users
+- role.manage
+- policy.manage
 
 #### Update Client Roles
 
-Click a role in the **Roles table** to open its page. The page has two tables for the **Role Actions** and the assigned **Role Members**.
+Click a role in the **Roles table** to open its page. The page shows the role's **Name** and **ID**, its **Permissions** (the selected actions, with buttons to add or remove actions), and an **Assignments** table of the members currently holding the role.
 
 To update a **role name**, click on the **pencil** icon on the far right end of the field, update the value then click on the **check** icon to update the changes or the **cross** icon to cancel the changes.
 
 ![Update role name](../../img/clients/client-update-role.png)
 
-To update the **Role Actions** click on the **pencil** icon, it will pop up a dialog box allowing you to select the actions you want to add.
+To update the role's **Permissions**, use the **Add actions** / **Remove actions** buttons to open a dialog box allowing you to select the actions you want to add or remove.
 
 ![Update role actions](../../img/clients/client-update-role-actions.png)
 
-To update the **Role Members**, click the **Add Members** button. A popup dialog will appear with the list of Domain Members from which a user can select.
+To update the **Assignments**, click the **Add Members** button. A popup dialog will appear with the list of Domain Members from which a user can select.
 
 ![Update role members](../../img/clients/client-role-update-members.png)
 
@@ -177,11 +151,11 @@ You can also delete actions and members by clicking on the **trash** icon. It po
 
 ![Delete role actions](../../img/clients/client-role-delete-actions.png)
 
-When it comes to **Role Members**, you can clear the whole table with the `Delete All Members` which will lead to this alert dialog:
+When it comes to **Assignments**, you can clear the whole table with the `Delete All Members` which will lead to this alert dialog:
 
 ![Delete All Role Members](../../img/clients/clients-delete-all-role-members-dialog.png)
 
-To delete specific members from the Role Members Table, click on the **trash** icon.
+To delete specific members from the Assignments table, click on the **trash** icon.
 
 ![Delete role members](../../img/clients/client-delete-role-members.png)
 
@@ -209,34 +183,21 @@ For detailed instructions on managing alarms, see the [Alarms documentation](/us
 
 ![Client Alarms](../../img/clients/client-alarms.png)
 
-## Audit Logs
+## Journals
 
-Audit logs track all **client-related events**, including **creation**, **updates**, **disabling**, **connectivity** and **role changes**
+The **Journals** tab (formerly named **Audit Logs**) tracks all **client-related events**, including **creation**, **updates**, **disabling**, **connectivity** and **role changes**
 
-Each log entry displays the **operation type**, a **timestamp**, and optional **details** for deeper inspection.
+Each log entry displays the **operation**, an **Occured At** timestamp, and optional **details** for deeper inspection.
 
 You can search logs by operation type using the search input above the log table.
 
-The most recent operations—such as `client.view`, `client.create`, and `client.connect`—are displayed at the top.
+The most recent operations—such as `entity.create`, `credential.create`, and `entity.update`—are displayed at the top.
 
 ![Client Audit Logs](../../img/clients/client-audit-logs.png)
 
-Clicking on the `Details` button at the end of each row opens a modal displaying structured details about the selected operation.
+Clicking on the `···` button at the end of each row opens a modal displaying structured details about the selected operation.
 
-These details may include:
-
-- `created_at`: Timestamp of creation
-- `updated_at`: Timestamp of the last update
-- `id`: Unique client ID
-- `name`: Full client name, e.g., `"Apartment A1 Floor 1 135 W 135th St Water Meter"`
-- `status`: Whether the client is `"enabled"` or `"disabled"`
-- `super_admin`: Indicates if the client was flagged as a super admin
-- `domain`: Associated domain UUID
-- `user_id`: UUID of the user who performed the action
-- `updated_by`: Same as `user_id` for updates
-- `request_id`: Unique request UUID for tracing
-- `tags`: A list of contextual tags like `"Harlem Block A"`, `"New York"`, `"Water Meter"`
-- `token_type`: The type of token used for the action (e.g., `"access token"`)
+For most operations, the details modal shows an `outcome` field (e.g., `"allow"`), which is the access-control decision for that action.
 
 This enables users to **trace changes**, **audit security**, and **diagnose issues** efficiently.
 
