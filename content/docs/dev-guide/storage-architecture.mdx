@@ -40,17 +40,24 @@ The table below gives a high-level overview of this strategy, which the followin
 
 ## Core Metadata & Identity
 
-At the core of Magistrala are a set of foundational domain entities that define how messaging, identity, and access control are structured across the platform:
+Magistrala keeps its familiar product concepts — domains, users, clients, channels, groups, connections, rules, reports, and alarms — but it does **not** run its own identity, credential, role, or policy database. Instead it builds directly on **[Atom](https://github.com/absmach/atom)**, a lightweight identity-and-authorization service (a slimmer alternative to Keycloak) that persists everything in **PostgreSQL** and acts as the system of record for the control plane.
 
-- `Users` — humans, services, and workloads that authenticate and manage resources
-- `Clients` — represent devices or applications
-- `Channels` — define topics for message routing
-- `Groups` — organize entities hierarchically
-- `Domains` — tenant boundaries that scope everything above
+Magistrala's concepts map onto Atom's native primitives rather than onto bespoke tables:
 
-In current Magistrala, this identity and metadata layer is managed by **[Atom](https://github.com/absmach/atom)**, a lightweight identity and authorization service (a slimmer alternative to Keycloak). Atom persists all of this state in **PostgreSQL**, which acts as the system of record for the control plane. A Magistrala **domain** maps directly to an Atom **tenant**, so multi-tenancy is a first-class property of the store.
+| Magistrala concept                  | Atom primitive                    | Stored as                                       |
+| ----------------------------------- | --------------------------------- | ----------------------------------------------- |
+| Domain                              | Tenant                            | `tenants` row (tenant id = domain UUID)         |
+| User                                | Entity (`kind = human`)           | `entities` row, usually global (`tenant_id` null) |
+| Client (device/application)         | Entity (`kind = device`/`service`) | tenant-owned `entities` row                     |
+| Channel / Rule / Report / Alarm     | Resource                          | tenant-owned `resources` row                    |
+| Group boundary                      | Object Group                      | `object_groups`                                 |
+| Set of subjects                     | Principal Group                   | `principal_groups`                              |
+| Connection / access grant           | Role assignment or Direct Policy  | `role_assignments` / `direct_policies`          |
+| Credentials (password, API key, cert) | Credential                      | `credentials`                                   |
 
-The data defines not just what exists in the platform, but how it relates, who can access it, and how messages are routed. Unlike the high-frequency message payloads that flow through the system, this metadata changes relatively infrequently. But when it does, it must be updated atomically, consistently, and reliably, because it forms the foundation of the entire system.
+Application-specific fields that Atom doesn't model natively live in an `attributes.magistrala` JSONB blob on the object, so Magistrala never needs a second store. Because a Magistrala **domain** is an Atom **tenant**, multi-tenancy is a first-class property of the schema — every entity, resource, group, role, and credential is scoped to a tenant.
+
+This metadata changes relatively infrequently compared with the message firehose, but when it does it must update atomically, consistently, and reliably, because it is the foundation the whole platform rests on. That is why it lives in a relational database.
 
 ### Why PostgreSQL?
 
@@ -58,7 +65,7 @@ The data defines not just what exists in the platform, but how it relates, who c
   PostgreSQL guarantees atomicity, consistency, isolation, and durability. Multi-step operations — like creating a user, assigning clients, or updating channel access — either succeed entirely or not at all. This eliminates any chance of partial, invalid state.
 
 - **Enforced Relational Integrity**
-  The schema captures and enforces real-world constraints — such as "a client must belong to a valid domain" or "a channel cannot be deleted while it has active connections." These relationships are protected at the database level using foreign keys, cascading rules, and check constraints.
+  Atom's schema captures real-world constraints at the database level. An entity's `tenant_id` is a foreign key into `tenants` (`ON DELETE CASCADE`), so a client can never belong to a non-existent domain; a `credential` references its `entity_id` the same way, so credentials can't outlive their owner; a `CHECK` limits an entity's `kind` to `human`/`device`/`service`/`workload`/`application`; and a unique index on `(name, tenant_id)` keeps names unambiguous within a tenant. These rules hold regardless of application logic.
 
 - **Race Condition Protection**
   With transactional isolation and row-level locking, PostgreSQL prevents concurrent operations from corrupting critical state, which is especially important under multi-tenant workloads.
@@ -76,54 +83,31 @@ Together these guarantees keep Magistrala's control plane robust, auditable, and
 
 Let's make this concrete.
 
-### Client-to-Channel Connection
+### Modeling a client-to-channel connection
 
-Imagine a tenant issues an API call to connect a `client` to a `channel`. This operation touches multiple critical entities: the client, the channel, and the domain (tenant) context that governs them.
+Connecting a `client` to a `channel` shows both why the relational model matters and how Atom avoids bespoke join tables. There is **no `connections` table** — a connection is expressed with Atom's generic access primitives:
 
-In a relational store, this relationship is enforced through a normalized schema. For example:
+- **Preferred — a role assignment.** A role carries a permission block that applies to the channel resource with the `publish`/`subscribe` actions, and that role is assigned to the client entity (or to a Principal Group it belongs to).
+- **Strict runtime links — a Direct Policy.** A trusted Magistrala service can attach a Direct Policy (`subject = client entity`, `permission_block = publish/subscribe on the channel resource`). Direct Policies are created only by trusted flows and are audited.
 
-- A connection references both the client and the channel through foreign keys, ensuring each exists and belongs to the correct domain.
-- Constraints guarantee that a client can only be connected to a channel **within the same domain**, so cross-tenant linkage is impossible.
-- A uniqueness constraint prevents duplicate connections of the same type.
+Both the client (an `entities` row) and the channel (a `resources` row) carry a `tenant_id` foreign key, so a client can only ever be linked to a channel **within the same tenant** — cross-tenant linkage is structurally impossible, and there is no separate `connections` or `direct_grants` table to keep in sync.
 
-If any part of the linkage is invalid — a disabled client, a mismatched domain, or a malformed connection type — PostgreSQL **rejects the operation entirely**. The constraints are enforced at the database layer, regardless of application logic, guaranteeing internal consistency.
-
-In contrast, performing the same operation in a **NoSQL database** like MongoDB or DynamoDB involves:
-
-- A series of **best-effort writes** with no enforced schema.
-- Documents with an invalid `client_id`, a mismatched `domain_id`, or an undefined connection type can be stored without error.
-- No built-in constraint prevents cross-domain linking or ensures the client exists.
-
-These shortcomings may result in:
-
-- **Broken routing logic**
-- **Cross-tenant data leakage**
-- **Brittle access-control rules**
+Contrast this with a schemaless **NoSQL** store like MongoDB or DynamoDB, where the same operation relies on best-effort writes: nothing guarantees the referenced entity or resource exists, nothing prevents cross-tenant linking, and referential integrity has to be re-implemented in application code. The result is broken routing, cross-tenant data leakage, and brittle access rules.
 
 ### Querying
 
-Even querying becomes fragile. Suppose you need to retrieve all active connections for a given channel, where the client is enabled and tagged with `region = EU`.
-
-In PostgreSQL you can rely on foreign keys and relational joins to ensure any connected client is valid, and then use an efficient, indexed query:
+The relational model also makes listings fast and safe. Suppose you need every active device in a domain tagged `region:EU`. Because Atom indexes the `attributes` JSONB (a GIN index) alongside `tenant_id` and `kind`, this is a single indexed query:
 
 ```sql
-SELECT c.*
-FROM connections AS conn
-JOIN clients AS c ON conn.client_id = c.id AND conn.domain_id = c.domain_id
-WHERE conn.channel_id = $1
-  AND c.status = 0
-  AND c.tags @> '["region:EU", "status:active"]';
+SELECT id, name
+FROM entities
+WHERE tenant_id = $1
+  AND kind = 'device'
+  AND status = 'active'
+  AND attributes -> 'magistrala' -> 'tags' @> '["region:EU"]';
 ```
 
-This query is fast, accurate, and protected by the schema itself.
-
-In NoSQL:
-
-- There is **no guarantee** that `client_id` exists or is valid.
-- The `tags` field may be missing, inconsistently structured, or unindexed.
-- **Cross-collection joins are unsupported**, forcing application logic to manually enforce integrity.
-
-This results in higher complexity, latency, and risk of inconsistency.
+Crucially, Atom applies **authorization filtering in SQL**: a listing returns only the objects the caller is allowed to `read`, rather than fetching everything and running a permission check per row. A schemaless store would forfeit both the guaranteed validity of those references and the ability to express this filtering efficiently — pushing complexity, latency, and inconsistency back into the application.
 
 ---
 
@@ -247,17 +231,33 @@ In Atom, **every principal is a first-class entity** — humans, devices, servic
 
 ### Evaluating a permission
 
-Suppose an operator asks:
+Suppose a sensor tries to publish. At runtime Magistrala calls Atom's gRPC `Check` with the subject, the target resource, the action, and request context:
 
-**"Can `user1` publish to `channel1` in tenant `d1`?"**
-
-The calling service makes a single, low-latency check against Atom:
-
-```text
-authz.check(subject=user:user1, action=publish, object=channel:channel1, tenant=d1)
+```json
+{
+  "subject_id": "sensor-001-entity-id",
+  "resource_id": "temperature-resource-id",
+  "action": "publish",
+  "context": { "protocol": "mqtt", "topic": "factory-1.temperature" }
+}
 ```
 
-Atom evaluates the subject's role assignments and direct policies, resolves the matching permission blocks within the tenant scope, applies any ABAC conditions, and returns **allow** or **deny**. Because this is a purpose-built engine rather than a set of recursive SQL joins, authorization stays fast and predictable even as the number of entities, roles, and policies grows — which is critical for a real-time messaging system that authorizes on every publish and subscribe.
+Atom returns a decision and a reason:
+
+```json
+{ "allowed": true, "reason": "allowed" }
+```
+
+To reach that decision, Atom checks, in order:
+
+1. `publish` is a valid action for a channel (Action Applicability).
+2. The subject (`sensor-001`) is active.
+3. The subject is directly assigned a role — or belongs to a Principal Group that is — with a matching permission block.
+4. That permission block applies to the target resource (`temperature`).
+5. **Deny overrides allow.**
+6. **Default deny** if no allow matches.
+
+Because this is a purpose-built engine rather than a set of recursive SQL joins, authorization stays fast and predictable even as the number of entities, roles, and policies grows — which is critical for a real-time messaging system that authorizes on every publish and subscribe. Magistrala treats Atom as authoritative: if Atom denies, the operation is rejected.
 
 ### Enforcing it on the message path
 
