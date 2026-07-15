@@ -122,14 +122,14 @@ In Magistrala, every piece of client data, event log, or telemetry update is rec
 But the requirements extend beyond these properties. The message store must also deliver on the following fronts:
 
 - **Query flexibility**: users must be able to query messages by any attribute, including channel, publisher, name, or value.
-- **Operational simplicity**: the database should automate tasks like partitioning and retention, reducing the need for dedicated administration.
+- **Operational simplicity**: the database should automate low-level tasks like time-based partitioning, reducing the need for dedicated administration.
 - **Reliability**: the system must provide transactional guarantees for message persistence.
 
 Finding a single database that excels across all of these fronts is challenging, and after evaluation Magistrala chose **TimescaleDB** as the default message store. To understand that choice, it helps to see how other excellent databases fall short for this specific use case.
 
 ### The PostgreSQL Scaling Problem
 
-We love Postgres. It is the gold standard for relational databases, offering unmatched reliability and the full power of SQL. But out of the box, a standard PostgreSQL table would quickly buckle under this load. As a single `messages` table grows into the billions of rows, its B-tree indexes become enormous. Once the indexes no longer fit in memory, write throughput plummets. Benchmarks show this clearly: the ingestion rate of PostgreSQL can crash from over 100,000 rows/sec to just a few thousand once a table exceeds 50 million rows. One can argue that tables can be manually partitioned, but that is a complex, error-prone process you have to manage yourself forever.
+PostgreSQL is the gold standard for relational databases, offering strong reliability and the full power of SQL. But out of the box, a single ever-growing `messages` table struggles at this scale: as the table grows, its B-tree indexes grow with it, and once those indexes no longer fit in memory, write throughput drops sharply because every insert starts hitting disk. You can partition the table manually, but that is a complex, error-prone process you then have to manage yourself indefinitely.
 
 ![PostgreSQL write throughput degradation as table size grows](../img/storage/PostgreSQL-Performance-Degradation.png)
 
@@ -152,19 +152,14 @@ For example, with a chunk interval of 1 day, all rows for the 1st of August go t
 
 ![TimescaleDB hypertable partitioned into per-day chunks](../img/storage/hypertable.png)
 
-Behind the scenes, TimescaleDB's hybrid row-columnar storage engine automatically stores data in the format that makes the most sense for its lifecycle:
-
-- Recent data lives in the **rowstore** (fast inserts).
-- Older data is compressed into the **columnstore** (fast analytics).
-
-By default each chunk covers 7 days, and you can tune this to suit your workload. To keep performance high when scaling, choose a strategic chunk size and limit the number of hypertables per service. If chunks are too big, the benefit of partitioning diminishes because a partition holds more data than the PostgreSQL cache can manage; if there are too many chunks, you can overwhelm the query planner and add management overhead.
+Magistrala creates the `messages` hypertable with a **1-day chunk interval** (`create_hypertable('messages', by_range('time', 86400000000000))`), so each chunk holds a single day of data. Chunk size is a tuning knob: if chunks are too big, the benefit of partitioning diminishes because a partition holds more data than the PostgreSQL cache can manage; if there are too many, you can overwhelm the query planner and add management overhead. (TimescaleDB can additionally compress older chunks into a columnstore, but the message hypertable is not configured for compression out of the box.)
 
 ![TimescaleDB versus PostgreSQL hypertable comparison](../img/storage/hypertable_comparison.png)
 
 The architecture provides two key benefits:
 
-- **Sustained high-ingest performance**: new data is written only to the most recent chunk. Because that chunk is small, its indexes fit comfortably in memory. This avoids the disk-I/O bottleneck that cripples a large single-table setup, allowing Magistrala to maintain a consistently high ingest rate of over 100,000 rows/second even as the total dataset grows to billions of rows.
-- **Massively faster queries**: when a user queries for data within a specific time range, the planner uses **chunk pruning** — it instantly knows it only needs to scan the relevant chunks and ignores the vast majority of the data on disk. In some benchmarks this makes queries orders of magnitude faster than the equivalent on a standard PostgreSQL table.
+- **Sustained ingest performance**: new data is written only to the most recent chunk. Because that chunk is small, its indexes fit comfortably in memory, which avoids the disk-I/O bottleneck that cripples a large single-table setup as the dataset grows.
+- **Faster time-range queries**: when a user queries for data within a specific time range, the planner uses **chunk pruning** — it only scans the chunks that overlap the range and ignores the rest of the data on disk, so time-bounded queries stay fast as the table grows.
 
 ### The messages hypertable
 
