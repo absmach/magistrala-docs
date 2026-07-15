@@ -137,9 +137,7 @@ The chart above visualizes this exact performance cliff. On the left, write thro
 
 ### Time-Series Alternatives
 
-Purpose-built time-series databases such as InfluxDB are incredibly fast at ingestion and excellent for simple metrics like CPU usage or raw sensor values. However, their query languages and data models are optimized primarily for time-based lookups, not the rich, multi-attribute queries required in real-world IoT deployments — and high-cardinality workloads (millions of devices, each with a unique tag set) are a well-documented pain point for them.
-
-Magistrala routinely handles hundreds of thousands to millions of concurrently publishing devices — industrial chillers, smart meters, air-quality sensors — each pushing telemetry with unique tags, locations, and context. In benchmarks published by TigerData, TimescaleDB sustains roughly **3.5x better insert throughput** than InfluxDB at high cardinality, and answers real-world, multi-dimensional queries **several times to orders of magnitude faster**, while remaining 100% Postgres-compatible. That compatibility is decisive: Magistrala keeps the reliability, tooling, and full SQL of PostgreSQL while gaining time-series scale.
+Purpose-built time-series databases such as InfluxDB ingest simple metrics quickly, but their data models are tuned for time-based lookups rather than the rich, multi-attribute, high-cardinality queries typical of large IoT fleets. Magistrala chose **TimescaleDB** because it delivers time-series scale while remaining 100% Postgres-compatible — keeping the reliability, tooling, and full SQL the rest of the platform already relies on.
 
 ### TimescaleDB
 
