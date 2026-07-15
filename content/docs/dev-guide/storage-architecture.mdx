@@ -254,7 +254,7 @@ Because this is a purpose-built engine rather than a set of recursive SQL joins,
 
 ### Enforcing it on the message path
 
-Authorization isn't only an API-layer concern. Magistrala's message broker, **FluxMQ**, ships with an **auth bridge** (`fluxmq-auth`) that calls Atom to authorize every publish and subscribe. A device cannot publish to a channel it has no permission for, because the broker itself asks Atom `authz.check` before accepting the connection or message. Identity, authorization, and transport are wired together end to end.
+Authorization isn't only an API-layer concern. Magistrala's message broker, **FluxMQ**, ships with an **auth bridge** (`fluxmq-auth`) that authorizes every publish and subscribe. On each attempt the broker invokes its `auth_on_publish` / `auth_on_subscribe` hooks, which parse the topic into a domain and channel and call Atom's `Check` (with the `publish` or `subscribe` action) before the message is accepted. A device cannot publish to a channel it has no permission for, because that check happens in the broker itself — identity, authorization, and transport are wired together end to end.
 
 ---
 
@@ -267,10 +267,10 @@ The elegance of a polyglot architecture shows when the pieces work together. Let
 An HVAC sensor (a Magistrala client) in `Building-A` is configured to publish temperature readings to a channel. A facility manager later logs into a dashboard to view the temperature trends from the last 24 hours.
 
 1. **Connection & authentication (Atom):**
-   The HVAC sensor connects to a Magistrala protocol adapter and presents its credentials (for example a client ID and secret, or a certificate). The adapter validates those credentials against **Atom**, which confirms the client is a known, active entity and establishes its identity.
+   The HVAC sensor connects to a Magistrala protocol adapter and presents its credentials (an API key or a certificate). The adapter validates those credentials against **Atom**, which confirms the client is a known, active entity and establishes its identity.
 
 2. **Authorization to publish (Atom via FluxMQ):**
-   Before accepting any data, the broker's auth bridge asks Atom whether the sensor may publish to the target channel — an `authz.check` for the `publish` action on that channel within the client's domain. Atom evaluates the relevant roles and policies and returns **allow**.
+   Before accepting any data, the broker's auth bridge asks Atom whether the sensor may publish to the target channel — a `Check` for the `publish` action on that channel within the client's domain. Atom evaluates the relevant roles and policies and returns **allow**.
 
 3. **Message ingestion (FluxMQ):**
    With authentication and authorization complete, the adapter accepts the reading and publishes it as a standardized message onto the internal **FluxMQ** message bus (AMQP 0.9.1). FluxMQ runs as a clustered broker and also backs Magistrala's event stream.
@@ -294,7 +294,7 @@ An HVAC sensor (a Magistrala client) in `Building-A` is configured to publish te
 
 ## Object Storage
 
-Not every payload fits neatly into a relational row or a time-series point. For larger or binary assets, Magistrala uses **SeaweedFS**, an S3-compatible object store, exposed to services through the `MG_BACKEND_OBJECT_STORAGE_ENDPOINT` configuration. Keeping bulky objects out of PostgreSQL and TimescaleDB preserves the performance characteristics that make those stores good at their respective jobs, while still giving the platform durable, horizontally scalable storage for the data that belongs there.
+Not every payload fits neatly into a relational row or a time-series point. For larger or binary assets, Magistrala uses **SeaweedFS**, an S3-compatible object store. Services reach it through standard S3 configuration (`MG_BACKEND_OBJECT_STORAGE_ENDPOINT`, plus bucket, region, and access key); the UI backend, for example, stores objects there via the S3 API. Keeping bulky objects out of PostgreSQL and TimescaleDB preserves the performance characteristics that make those stores good at their respective jobs, while still giving the platform durable, horizontally scalable storage for the data that belongs there.
 
 ## Message storage backends
 
