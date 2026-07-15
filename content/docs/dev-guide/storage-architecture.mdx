@@ -15,8 +15,6 @@ keywords:
 image: /img/mg-preview.png
 ---
 
-## Introduction
-
 Building a modern IoT messaging platform is no small feat. And when that platform is engineered to be distributed, highly scalable, and secure, the complexity increases exponentially. Why? The goal quickly shifts from just handling a high volume of messages to managing an ecosystem that connects countless users and millions of devices interacting through a mix of communication protocols. So, how do you manage your most valuable asset — your data — at this scale?
 
 A common temptation is to throw a single, massive database at the problem. But that's a recipe for disaster — a classic "jack of all trades, master of none" that quickly buckles under pressure. It not only creates performance bottlenecks, but also limits scalability and opens the door to security risks. The truth is, the data flowing through a modern IoT messaging platform isn't all the same. It comes in many forms — structured, unstructured, relational, temporal, binary — and each type has its own specific needs.
@@ -30,13 +28,13 @@ That is where Magistrala takes a smarter path. Rather than forcing every kind of
 
 The table below gives a high-level overview of this strategy, which the following sections explore in detail.
 
-| Data Domain                        | Selected Technology                     |
-| ---------------------------------- | --------------------------------------- |
-| Identity & core entity metadata    | PostgreSQL (managed by **Atom**)        |
-| Time-series message data           | **TimescaleDB**                         |
-| Authorization decisions            | **Atom** (policy decision point)        |
-| Objects & binary assets            | **SeaweedFS** (S3-compatible)           |
-| Message transport / event bus      | **FluxMQ** (AMQP 0.9.1)                  |
+| Data Domain                     | Selected Technology              |
+| ------------------------------- | -------------------------------- |
+| Identity & core entity metadata | PostgreSQL (managed by **Atom**) |
+| Time-series message data        | **TimescaleDB**                  |
+| Authorization decisions         | **Atom** (policy decision point) |
+| Objects & binary assets         | **SeaweedFS** (S3-compatible)    |
+| Message transport / event bus   | **FluxMQ** (AMQP 0.9.1)          |
 
 ## Core Metadata & Identity
 
@@ -44,16 +42,16 @@ Magistrala keeps its familiar product concepts — domains, users, clients, chan
 
 Magistrala's concepts map onto Atom's native primitives rather than onto bespoke tables:
 
-| Magistrala concept                  | Atom primitive                    | Stored as                                       |
-| ----------------------------------- | --------------------------------- | ----------------------------------------------- |
-| Domain                              | Tenant                            | `tenants` row (tenant id = domain UUID)         |
-| User                                | Entity (`kind = human`)           | `entities` row, usually global (`tenant_id` null) |
-| Client (device/application)         | Entity (`kind = device`/`service`) | tenant-owned `entities` row                     |
-| Channel / Rule / Report / Alarm     | Resource                          | tenant-owned `resources` row                    |
-| Group boundary                      | Object Group                      | `object_groups`                                 |
-| Set of subjects                     | Principal Group                   | `principal_groups`                              |
-| Connection / access grant           | Role assignment or Direct Policy  | `role_assignments` / `direct_policies`          |
-| Credentials (password, API key, cert) | Credential                      | `credentials`                                   |
+| Magistrala concept                    | Atom primitive                     | Stored as                                         |
+| ------------------------------------- | ---------------------------------- | ------------------------------------------------- |
+| Domain                                | Tenant                             | `tenants` row (tenant id = domain UUID)           |
+| User                                  | Entity (`kind = human`)            | `entities` row, usually global (`tenant_id` null) |
+| Client (device/application)           | Entity (`kind = device`/`service`) | tenant-owned `entities` row                       |
+| Channel / Rule / Report / Alarm       | Resource                           | tenant-owned `resources` row                      |
+| Group boundary                        | Object Group                       | `object_groups`                                   |
+| Set of subjects                       | Principal Group                    | `principal_groups`                                |
+| Connection / access grant             | Role assignment or Direct Policy   | `role_assignments` / `direct_policies`            |
+| Credentials (password, API key, cert) | Credential                         | `credentials`                                     |
 
 Application-specific fields that Atom doesn't model natively live in an `attributes.magistrala` JSONB blob on the object, so Magistrala never needs a second store. Because a Magistrala **domain** is an Atom **tenant**, multi-tenancy is a first-class property of the schema — every entity, resource, group, role, and credential is scoped to a tenant.
 
@@ -83,7 +81,7 @@ Together these guarantees keep Magistrala's control plane robust, auditable, and
 
 Let's make this concrete.
 
-### Modeling a client-to-channel connection
+### Modeling a Client-to-Channel Connection
 
 Connecting a `client` to a `channel` shows both why the relational model matters and how Atom avoids bespoke join tables. There is **no `connections` table** — a connection is expressed with Atom's generic access primitives:
 
@@ -161,7 +159,7 @@ The architecture provides two key benefits:
 - **Sustained ingest performance**: new data is written only to the most recent chunk. Because that chunk is small, its indexes fit comfortably in memory, which avoids the disk-I/O bottleneck that cripples a large single-table setup as the dataset grows.
 - **Faster time-range queries**: when a user queries for data within a specific time range, the planner uses **chunk pruning** — it only scans the chunks that overlap the range and ignores the rest of the data on disk, so time-bounded queries stay fast as the table grows.
 
-### The messages hypertable
+### The Messages Hypertable
 
 The `timescale-writer` service consumes messages from the broker and persists them into a `messages` hypertable. Its schema captures the SenML message fields:
 
@@ -209,20 +207,20 @@ To address this, Magistrala externalizes identity and authorization to **Atom**,
 
 Atom's access model is built from a small set of primitives:
 
-| Atom concept         | Meaning                                                | Example                                        |
-| -------------------- | ------------------------------------------------------ | ---------------------------------------------- |
-| **Tenant**           | Top-level boundary                                     | Magistrala domain `d1`                         |
-| **Action**           | A single action                                        | `read`, `publish`, `role.manage`               |
-| **Permission Block** | Scope + actions + effect + conditions                  | "topic in Plant-A → read, publish"             |
-| **Role**             | A named collection of Permission Blocks                | `Plant Operator` bundles client + channel access |
-| **Role Assignment**  | Grants a role to an entity or Principal Group          | assign `Plant Operator` to `user1`             |
-| **Direct Policy**    | Grants one Permission Block directly to a subject      | `client1` can publish to `channel1`            |
-| **Principal Group**  | A collection of identities                             | `Operators` contains `user1`, `user2`          |
-| **Object Group**     | A boundary/container for objects                       | `Plant-A` contains clients, channels, groups   |
+| Atom concept         | Meaning                                           | Example                                          |
+| -------------------- | ------------------------------------------------- | ------------------------------------------------ |
+| **Tenant**           | Top-level boundary                                | Magistrala domain `d1`                           |
+| **Action**           | A single action                                   | `read`, `publish`, `role.manage`                 |
+| **Permission Block** | Scope + actions + effect + conditions             | "topic in Plant-A → read, publish"               |
+| **Role**             | A named collection of Permission Blocks           | `Plant Operator` bundles client + channel access |
+| **Role Assignment**  | Grants a role to an entity or Principal Group     | assign `Plant Operator` to `user1`               |
+| **Direct Policy**    | Grants one Permission Block directly to a subject | `client1` can publish to `channel1`              |
+| **Principal Group**  | A collection of identities                        | `Operators` contains `user1`, `user2`            |
+| **Object Group**     | A boundary/container for objects                  | `Plant-A` contains clients, channels, groups     |
 
 In Atom, **every principal is a first-class entity** — humans, devices, services, and workloads are all treated the same way, with no special "user" class. Access is granted by assigning roles (bundles of permission blocks) to identities or principal groups, or by attaching a direct policy for one-off grants, and can be further constrained with **ABAC guardrails** (attribute-based conditions). Everything is scoped to a tenant, so a grant in domain `d1` never leaks into domain `d2`.
 
-### Evaluating a permission
+### Evaluating a Permission
 
 Suppose a sensor tries to publish. At runtime Magistrala calls Atom's gRPC `Check` with the subject, the target resource, the action, and request context:
 
@@ -252,13 +250,13 @@ To reach that decision, Atom checks, in order:
 
 Because this is a purpose-built engine rather than a set of recursive SQL joins, authorization stays fast and predictable even as the number of entities, roles, and policies grows — which is critical for a real-time messaging system that authorizes on every publish and subscribe. Magistrala treats Atom as authoritative: if Atom denies, the operation is rejected.
 
-### Enforcing it on the message path
+### Enforcing It on the Message Path
 
 Authorization isn't only an API-layer concern. Magistrala's message broker, **FluxMQ**, ships with an **auth bridge** (`fluxmq-auth`) that authorizes every publish and subscribe. On each attempt the broker invokes its `auth_on_publish` / `auth_on_subscribe` hooks, which parse the topic into a domain and channel and call Atom's `Check` (with the `publish` or `subscribe` action) before the message is accepted. A device cannot publish to a channel it has no permission for, because that check happens in the broker itself — identity, authorization, and transport are wired together end to end.
 
 ---
 
-## An end-to-end message journey
+## An End-to-End Message Journey
 
 The elegance of a polyglot architecture shows when the pieces work together. Let's trace a single message through the stack to illustrate the interplay between **Atom** (PostgreSQL), **FluxMQ**, and **TimescaleDB**.
 
@@ -296,7 +294,7 @@ An HVAC sensor (a Magistrala client) in `Building-A` is configured to publish te
 
 Not every payload fits neatly into a relational row or a time-series point. For larger or binary assets, Magistrala uses **SeaweedFS**, an S3-compatible object store. Services reach it through standard S3 configuration (`MG_BACKEND_OBJECT_STORAGE_ENDPOINT`, plus bucket, region, and access key); the UI backend, for example, stores objects there via the S3 API. Keeping bulky objects out of PostgreSQL and TimescaleDB preserves the performance characteristics that make those stores good at their respective jobs, while still giving the platform durable, horizontally scalable storage for the data that belongs there.
 
-## Message storage backends
+## Message Storage Backends
 
 Message persistence follows a **writer/reader** pattern that keeps the transport and the storage engine decoupled:
 
@@ -305,10 +303,10 @@ Message persistence follows a **writer/reader** pattern that keeps the transport
 
 Magistrala ships writer and reader services for two backends:
 
-| Backend         | Writer service      | Reader service      |
-| --------------- | ------------------- | ------------------- |
-| **TimescaleDB** | `timescale-writer`  | `timescale-reader`  |
-| **PostgreSQL**  | `postgres-writer`   | `postgres-reader`   |
+| Backend         | Writer service     | Reader service     |
+| --------------- | ------------------ | ------------------ |
+| **TimescaleDB** | `timescale-writer` | `timescale-reader` |
+| **PostgreSQL**  | `postgres-writer`  | `postgres-reader`  |
 
 TimescaleDB is the default for production-scale time-series workloads; the plain-PostgreSQL backend is available for smaller or simpler deployments. Because both share the same message structure, switching between them requires no change to the core message format.
 
