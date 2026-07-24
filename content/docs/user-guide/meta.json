@@ -9,6 +9,7 @@
     "dashboards",
     "rules-engine",
     "messaging",
+    "message-views",
     "alarms",
     "reports",
     "profile-management",
