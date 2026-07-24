@@ -35,7 +35,8 @@ The examples read the URL, external ID, and external key from environment variab
 
 ## Protocol at a glance
 
-```mermaid
+<Mermaid
+  chart={`
 sequenceDiagram
   participant D as Device
   participant B as Bootstrap service
@@ -46,7 +47,8 @@ sequenceDiagram
   Note over B: Verify and consume challenge<br/>Render profile<br/>Encrypt response
   B-->>D: {version, key_version, challenge_id, nonce, ciphertext}
   Note over D: Derive separate response key<br/>Authenticate and decrypt AES-GCM<br/>Parse content using content_type
-```
+`}
+/>
 
 ### Step 1: request a challenge
 

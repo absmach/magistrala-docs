@@ -37,6 +37,30 @@ An administrator prepares:
 
 When the gateway starts, Magistrala renders the profile using its enrollment and bindings. The result can contain the gateway's client IDs, channel IDs, MQTT settings, certificate data, and any other values the firmware understands.
 
+## How a device receives its configuration
+
+Read this flow from top to bottom. A **challenge** is a random, one-time question from the service. A **proof** is an answer that only a device with the correct external key can create.
+
+<Mermaid
+  chart={`
+sequenceDiagram
+  autonumber
+  participant D as Device<br/>(has its ID and secret key)
+  participant B as Bootstrap service
+
+  D->>B: Ask for a fresh challenge
+  B-->>D: Send a one-time random challenge<br/>(valid for one minute)
+
+  Note over D: Combine the challenge with the secret key<br/>to create a proof.<br/>The secret key never leaves the device.
+  D->>B: Send the external ID and proof
+  Note over B: Check the proof, then build this device's<br/>configuration from its profile and bindings
+  B-->>D: Return the encrypted configuration
+  Note over D: Use the secret key to decrypt and save<br/>client IDs, channel IDs, credentials, and settings
+`}
+/>
+
+The important point is that the external key is never sent over the network. The service returns usable configuration only after the device proves it already knows that key.
+
 ## The four main ideas
 
 ### Enrollment
@@ -104,7 +128,8 @@ All required slots must be bound before a device can retrieve its configuration.
 
 ## Complete lifecycle
 
-```mermaid
+<Mermaid
+  chart={`
 flowchart LR
   A[Administrator creates clients and channels] --> B[Administrator creates a reusable profile]
   B --> C[Administrator creates one device enrollment]
@@ -115,7 +140,8 @@ flowchart LR
   G --> H[Device proves possession of its key]
   H --> I[Bootstrap renders and encrypts the configuration]
   I --> J[Device decrypts, parses, and saves the configuration]
-```
+`}
+/>
 
 The device can repeat the Bootstrap process after a factory reset, lost local configuration, or a planned configuration refresh. Every retrieval uses a fresh one-minute, single-use challenge.
 
