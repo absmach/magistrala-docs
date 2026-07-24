@@ -10,15 +10,22 @@ export const docs = defineDocs({
   docs: {
     // `new: true` marks a page as recently added; rendered as a "New" badge
     // in the sidebar and next to the page title (see lib/source.ts, app/[[...slug]]/page.tsx)
+    // `enterprise: true` marks a page as Enterprise Edition only; filtered out
+    // of the Community Edition build (see lib/edition.ts, lib/source.tsx)
     schema: pageSchema.extend({
       new: z.boolean().optional(),
+      enterprise: z.boolean().optional(),
     }),
     postprocess: {
       includeProcessedMarkdown: true,
     },
   },
   meta: {
-    schema: metaSchema,
+    // `enterprise: true` marks a whole folder (and its descendants) as
+    // Enterprise Edition only; filtered out of the Community Edition build
+    schema: metaSchema.extend({
+      enterprise: z.boolean().optional(),
+    }),
   },
 });
 
