@@ -7,10 +7,11 @@ Visiting `/docs/magistrala/` redirects to `/docs/magistrala/user-guide/architect
 ## Development
 
 ```bash
-pnpm dev
+pnpm dev             # Enterprise Edition — http://localhost:3000/docs/magistrala/
+pnpm dev:community   # Community Edition — http://localhost:3001/docs/magistrala/community/
 ```
 
-Open http://localhost:3000 with your browser to see the result.
+Run both at once, in separate terminals, to check edition-gated content side by side. Each `next dev` process only serves one edition (its `basePath`/`NEXT_PUBLIC_EDITION` are baked in at startup — see [Environment Variables](#environment-variables)), so the Edition switcher can't navigate correctly between two different dev ports; visit each URL directly instead. To test the real merged deployment, including the switcher, run `pnpm run build && pnpm start` and visit both editions on the same port (see [Deployment](#deployment)).
 
 ## Editions
 

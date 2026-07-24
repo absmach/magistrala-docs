@@ -45,7 +45,7 @@ export function EditionSwitcher() {
       value={CURRENT_EDITION}
       onValueChange={(value) => {
         const target = DOC_EDITIONS.find((edition) => edition.value === value);
-        if (target) window.location.href = target.url;
+        if (target) window.location.href = target.path;
       }}
     >
       <Select.Trigger

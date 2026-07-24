@@ -5,6 +5,7 @@
   "scripts": {
     "build": "node scripts/build-editions.mjs",
     "dev": "NODE_OPTIONS='--max-old-space-size=3072' next dev",
+    "dev:community": "NODE_OPTIONS='--max-old-space-size=3072' NEXT_PUBLIC_EDITION=community NEXT_PUBLIC_BASE_PATH=/docs/magistrala/community NEXT_PUBLIC_BASE_URL=https://absmach.eu/docs/magistrala/community next dev -p 3001",
     "start": "serve out",
     "deploy": "pnpm run build && wrangler deploy",
     "upload": "pnpm run build && wrangler versions upload",
