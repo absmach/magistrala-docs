@@ -105,9 +105,11 @@ Enter:
 
 Select **Create**, open the new enrollment, and copy its provisioning bundle through a trusted process. The bundle contains the Bootstrap URL, external ID, external key, and key version.
 
-::::warning
+<Callout type="warn" title="Protect the external key">
+
 The external key authenticates the physical device. Do not place it in tickets, logs, screenshots, or source control. Store it in protected device storage.
-::::
+
+</Callout>
 
 New enrollments must be **Enabled** before a device can retrieve configuration. Use the state switch on the enrollment page.
 
