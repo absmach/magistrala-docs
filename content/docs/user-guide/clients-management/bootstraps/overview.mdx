@@ -1,0 +1,192 @@
+---
+title: Bootstrap service
+description: Understand how Magistrala securely delivers configuration to a new or reset device.
+keywords:
+  - Magistrala Bootstrap
+  - IoT Device Provisioning
+  - Device Configuration
+  - Secure Onboarding
+  - Bootstrap Profiles
+  - Bootstrap Bindings
+image: /img/mg-preview.png
+new: true
+---
+
+The **Bootstrap service** gives a device the information it needs to start working with Magistrala.
+
+Think of a new gateway that leaves the factory knowing only:
+
+- where the Bootstrap service is;
+- its public name, called the **external ID**; and
+- its private Bootstrap password, called the **external key**.
+
+The gateway does not yet need to know its Magistrala client IDs, channel IDs, certificates, or application settings. It proves that it knows its external key, downloads an encrypted configuration, saves it, and then uses that configuration to connect to the platform.
+
+## A real-world example
+
+Imagine a cold-storage gateway named `warehouse-gateway-07`. It must collect data from three sensors and communicate over two Magistrala channels.
+
+An administrator prepares:
+
+| Bootstrap object | Example | Purpose |
+| --- | --- | --- |
+| Enrollment/configuration | `warehouse-gateway-07` | Represents this one physical gateway |
+| Profile | `cold-storage-gateway-v1` | Reusable configuration template for this kind of gateway |
+| Binding slot | `temperature-sensor` | A named place in the template that expects a Magistrala client |
+| Binding | `temperature-sensor` → client `temp-sensor-07` | Connects the named place to a real resource |
+
+When the gateway starts, Magistrala renders the profile using its enrollment and bindings. The result can contain the gateway's client IDs, channel IDs, MQTT settings, certificate data, and any other values the firmware understands.
+
+## The four main ideas
+
+### Enrollment
+
+An enrollment, also called a Bootstrap configuration in the UI, represents **one device**.
+
+It contains:
+
+- a unique external ID;
+- an external key containing at least 10 characters;
+- an enabled or disabled state;
+- an optional assigned profile;
+- device-specific render values;
+- optional client certificate, client key, and CA certificate data; and
+- a Bootstrap key version.
+
+Leaving the external-key field empty makes the service generate a strong random key. A custom key such as `gateway-key-2026` is also valid. The exact UTF-8 bytes of the text are used; do not base64-decode the key.
+
+The external ID is not secret. A device serial number, hardware ID, or another stable unique value is a good choice. The external key **is secret** and must be stored in protected device storage.
+
+### Profile
+
+A profile is a **reusable configuration template**. One profile can be assigned to many device enrollments.
+
+For example, every cold-storage gateway may use the same profile while each gateway receives different client and channel IDs through its own bindings.
+
+A profile has two related format fields:
+
+| Field | Meaning |
+| --- | --- |
+| `content_format` | How Magistrala renders and validates the template: `go-template`, `raw`, `json`, `yaml`, or `toml` |
+| `content_type` | How the device parses the rendered content: `application/json`, `application/yaml`, `application/toml`, or `text/plain` |
+
+These fields are independent. A `go-template` can produce JSON, so its content type can be `application/json`.
+
+### Binding slot
+
+A binding slot is a named placeholder declared by a profile.
+
+For example, a profile can declare:
+
+| Slot | Type | Required |
+| --- | --- | --- |
+| `temperature-sensor` | client | yes |
+| `telemetry-channel` | channel | yes |
+| `command-channel` | channel | no |
+
+The slot name belongs to the profile. It is not the name or ID of a real Magistrala resource.
+
+### Binding
+
+A binding connects one slot to one real Magistrala client or channel.
+
+For example:
+
+```text
+profile slot "temperature-sensor"
+        ↓ is bound to
+Magistrala client "Freezer room temperature sensor"
+```
+
+The Bootstrap service stores a snapshot of the selected resource when it is bound. Use **Refresh bindings** after relevant client or channel data changes.
+
+All required slots must be bound before a device can retrieve its configuration. If `temperature-sensor` is required but unbound, the service returns an error instead of sending an incomplete configuration.
+
+## Complete lifecycle
+
+```mermaid
+flowchart LR
+  A[Administrator creates clients and channels] --> B[Administrator creates a reusable profile]
+  B --> C[Administrator creates one device enrollment]
+  C --> D[Administrator assigns the profile]
+  D --> E[Administrator binds profile slots to real resources]
+  E --> F[Administrator enables the enrollment]
+  F --> G[External ID and external key are securely provisioned to the device]
+  G --> H[Device proves possession of its key]
+  H --> I[Bootstrap renders and encrypts the configuration]
+  I --> J[Device decrypts, parses, and saves the configuration]
+```
+
+The device can repeat the Bootstrap process after a factory reset, lost local configuration, or a planned configuration refresh. Every retrieval uses a fresh one-minute, single-use challenge.
+
+## What is installed on the device
+
+Provision these values during manufacturing, installation, or another trusted setup process:
+
+```json
+{
+  "bootstrap_url": "https://bootstrap.example.com",
+  "external_id": "warehouse-gateway-07",
+  "external_key": "replace-with-the-device-secret",
+  "key_version": 1
+}
+```
+
+The device's external key is **not** its normal Magistrala client key. The external key is used only to authenticate and encrypt the Bootstrap exchange. The configuration returned by Bootstrap can contain the normal credentials that the device needs afterward.
+
+## Secure retrieval in plain language
+
+The device never sends its external key.
+
+1. The device asks the service for a short-lived challenge.
+2. The device combines the challenge with its external key to make a proof.
+3. The service verifies the proof and returns an encrypted configuration.
+4. The device uses its external key to decrypt the configuration locally.
+
+Anyone watching the network sees the challenge, proof, and encrypted response, but not the external key or plaintext configuration.
+
+The protocol uses:
+
+- HKDF-SHA256 to derive separate authentication and response keys;
+- HMAC-SHA256 to prove possession of the external key; and
+- AES-256-GCM to authenticate and encrypt the response.
+
+This application-layer protection also works on constrained networks where only HTTP is available. Use HTTPS whenever possible because HTTPS additionally hides more metadata and protects the rest of the connection from network interference.
+
+## Two different encryption boundaries
+
+Bootstrap protects secrets at two different boundaries:
+
+| Boundary | Key | Purpose |
+| --- | --- | --- |
+| PostgreSQL storage | Service-owned `MG_BOOTSTRAP_DB_ENCRYPTION_KEY` | Encrypts external keys and secret binding snapshots at rest |
+| Device exchange | Per-enrollment external key | Authenticates one device and encrypts only that device's response |
+
+Changing one device's external key increments its key version and invalidates outstanding challenges for that device. It does not change the database master key or any other enrollment.
+
+## What the device receives
+
+After decryption, the outer response is JSON:
+
+```json
+{
+  "id": "enrollment-uuid",
+  "content_type": "application/json",
+  "content": "{\"mqtt\":{\"host\":\"mqtt.example.com\"}}"
+}
+```
+
+`content` is always a string in the protocol response. The device must inspect `content_type` before parsing it:
+
+- parse the string as JSON for `application/json`;
+- parse it as YAML for `application/yaml`;
+- parse it as TOML for `application/toml`; or
+- use it unchanged for `text/plain`.
+
+Optional `client_cert`, `client_key`, and `ca_cert` fields are returned when they are configured.
+
+## Next steps
+
+- Follow [Manage Bootstrap in the UI](./manage-in-ui) to prepare a profile, enrollment, and bindings.
+- Follow [Write a device client](./device-clients) to retrieve and decrypt configuration in JavaScript, Node.js, Python, or Go.
+- Consult the [Bootstrap OpenAPI document](https://docs.api.magistrala.absmach.eu/?urls.primaryName=bootstrap.yaml) for the complete management and device API.
