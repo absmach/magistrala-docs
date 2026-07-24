@@ -2,7 +2,7 @@ import { createMDX } from "fumadocs-mdx/next";
 
 const withMDX = createMDX();
 
-const BASE_PATH = "/docs/magistrala";
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "/docs/magistrala";
 
 /** @type {import('next').NextConfig} */
 const config = {

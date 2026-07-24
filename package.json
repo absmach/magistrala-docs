@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "next build && node scripts/nest-static-export.mjs",
+    "build": "node scripts/build-editions.mjs",
     "dev": "NODE_OPTIONS='--max-old-space-size=3072' next dev",
     "start": "serve out",
     "deploy": "pnpm run build && wrangler deploy",

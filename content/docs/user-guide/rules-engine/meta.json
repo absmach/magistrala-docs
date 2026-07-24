@@ -1,4 +1,5 @@
 {
   "title": "Rules Engine",
+  "enterprise": true,
   "pages": ["overview", "custom-nodes"]
 }

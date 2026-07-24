@@ -2,7 +2,11 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 
 const outDir = path.resolve("out");
-const basePath = path.join("docs", "magistrala");
+const basePath = path.join(
+  ...(process.env.NEXT_PUBLIC_BASE_PATH || "/docs/magistrala")
+    .split("/")
+    .filter(Boolean),
+);
 const nestedDir = path.join(outDir, basePath);
 const tempDir = path.join(outDir, ".basepath-root");
 const controlFiles = new Set(["_headers", "_redirects"]);

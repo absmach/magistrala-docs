@@ -1,11 +1,13 @@
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { Rubik } from "next/font/google";
+import { EditionSwitcher } from "@/components/edition-switcher";
 import { Provider } from "@/components/provider";
 import { VersionSwitcher } from "@/components/version-switcher";
 import { baseOptions } from "@/lib/layout.shared";
 import { source } from "@/lib/source";
 import "./global.css";
 import { baseUrl, createMetadata } from "@/lib/metadata";
+import { CURRENT_VERSION } from "@/lib/versions";
 
 const rubik = Rubik({ subsets: ["latin"], variable: "--font-rubik" });
 
@@ -31,7 +33,14 @@ export default function Layout({ children }: LayoutProps<"/">) {
             tree={source.getPageTree()}
             links={base.links?.filter((item) => item.type === "icon")}
             nav={{ ...base.nav }}
-            sidebar={{ banner: <VersionSwitcher /> }}
+            sidebar={{
+              banner: (
+                <>
+                  <VersionSwitcher />
+                  {CURRENT_VERSION === "latest" && <EditionSwitcher />}
+                </>
+              ),
+            }}
           >
             {children}
           </DocsLayout>
