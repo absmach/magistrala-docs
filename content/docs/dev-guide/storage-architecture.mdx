@@ -197,6 +197,8 @@ LIMIT 100;
 
 TimescaleDB's planner first uses chunk pruning to narrow the scan to the relevant time chunks, then applies the attribute filters against the hypertable's indexes. Message rows reference entities by identifier (`channel`, `publisher`) rather than by foreign key — the time-series store and the identity store (Atom's PostgreSQL) are deliberately separate services. Mapping those identifiers back to human-readable metadata (client names, tenant, location) is resolved at the application layer through Atom, keeping the high-write message path decoupled from the control plane.
 
+The fixed `messages` hypertable above is SenML-only. Arbitrary JSON payloads don't fit that flat, typed schema, so `timescale-writer` stores them differently: instead of one shared table, it creates a table on demand for each distinct message *format* (a name derived from the message's subtopic, not a fixed schema), with a single `payload JSONB` column holding the whole object. See [Running SenML and JSON Writers Together](/dev-guide/dev-tools/storage#running-senml-and-json-writers-together) for how this is configured and deployed.
+
 ---
 
 ## Authorization

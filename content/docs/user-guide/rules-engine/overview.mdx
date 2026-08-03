@@ -341,7 +341,7 @@ Store message processing results to your PostgreSQL database. Select the Postgre
 
 #### Internal DB
 
-To be able to store messages in the internal Magistrala DB, you need to create a rule that processes the results. More information about this is in the [Store Messages](#store-messages) section.
+To be able to store messages in the internal Magistrala DB, you need to create a rule that processes the results. There are two Internal DB output nodes: one that stores the result as **SenML**, and one that stores it as raw **JSON**. More information about both is in the [Store Messages](#store-messages) section.
 
 ![Magistrala DB rule example](../../img/rules/internal-db-rule.png)
 
@@ -445,9 +445,11 @@ This helps automate rule execution based on custom schedules.
 
 ## Store Messages
 
-To store messages in Magistrala's internal database, you must create a **Rule** for this.
+To store messages in Magistrala's internal database, you must create a **Rule** for this. The Rules Engine has two output nodes for this: **Internal DB** (SenML) and **Internal DB (JSON)**.
 
-- Magistrala only stores messages in [**SenML** format](https://datatracker.ietf.org/doc/html/rfc8428#section-4.3).
+### Store as SenML
+
+- The **Internal DB** output node stores messages in [**SenML** format](https://datatracker.ietf.org/doc/html/rfc8428#section-4.3).
 - You can submit data in any format(e.g, JSON), but must convert it to SenML using a Lua script.
   SenML format fields:
 
@@ -541,6 +543,27 @@ return logicFunction()
 ```
 
 ![Storage with senml input](../../img/rules/rule.png)
+
+### Store as JSON
+
+If you don't want to convert your payload to SenML, use the **Internal DB (JSON)** output node instead. It stores whatever your logic script returns as raw JSON, with no format validation — return the message payload directly, or any JSON-marshalable value your script builds:
+
+```lua title="Lua script"
+function logicFunction()
+  return message.payload
+end
+return logicFunction()
+```
+
+Add an **Internal DB (JSON)** output node to the rule the same way you would an **Internal DB** (SenML) node — the two are independent and a rule can use both at once if you want the same result saved in both formats.
+
+Messages saved this way show up in the channel's [Message Views](/user-guide/message-views) as JSON-format views.
+
+:::info
+
+A JSON-capable message writer must be deployed for these messages to actually persist — see [Running SenML and JSON Writers Together](/dev-guide/dev-tools/storage#running-senml-and-json-writers-together). Without it, the rule will run successfully but the message won't be saved.
+
+:::
 
 :::info
 
