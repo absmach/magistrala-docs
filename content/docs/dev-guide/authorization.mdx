@@ -179,6 +179,13 @@ A `platform` is the highest-level entity that manages multiple organizations.
 
 Each Magistrala service maps its API operations to SpiceDB permissions via `docker/permission.yaml`, loaded at startup. The **Scope** column indicates whether the check runs against the **domain** entity (broad, domain-wide access) or the **specific entity** (fine-grained, object-level access).
 
+<Callout type="warn" title="Enterprise Edition">
+  The `rule`, `alarm`, and `report` entities below are managed by services that are part of
+  Magistrala Enterprise Edition (EE) — their source code is not included in this open-source
+  repository. The SpiceDB relations/permissions themselves are still defined in this repository's
+  schema, since they are shared infrastructure loaded by the EE service images at deploy time.
+</Callout>
+
 ### Rules
 
 A `rule` defines the conditions that trigger alarms. Rules support role management and can grant fine-grained alarm lifecycle permissions per rule.

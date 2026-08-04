@@ -73,11 +73,14 @@ PATs allow API access without primary credentials. They are scoped to specific e
 
 Auth is distributed as a Docker container. It requires a running PostgreSQL instance, SpiceDB, and (optionally) Redis for PAT caching.
 
+> **Note:** `auth` is not currently in the Makefile's `SERVICES` list, so `make auth` will fail
+> with "No rule to make target". Build it directly with `go build` instead, as shown below.
+
 ```bash
 git clone https://github.com/absmach/magistrala
 cd magistrala
 
-make auth
+go build -o build/auth cmd/auth/main.go
 make install
 
 MG_AUTH_LOG_LEVEL=info \

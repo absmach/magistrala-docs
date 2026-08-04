@@ -10,6 +10,7 @@ keywords:
   - Events
   - Magistrala
 image: /img/mg-preview.png
+enterprise: true
 ---
 
 The **Notifications service** is an event-driven service that sends email notifications for domain invitation lifecycle events. It listens to the platform event stream (NATS or RabbitMQ), fetches user details from the Users service over gRPC, and delivers styled HTML emails via SMTP when a user is invited to a domain, accepts an invitation, or rejects one.
