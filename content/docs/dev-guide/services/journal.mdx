@@ -9,6 +9,7 @@ keywords:
   - Observability
   - Magistrala
 image: /img/mg-preview.png
+enterprise: true
 ---
 
 The **Journal service** consumes the platform event stream from NATS, persists each event to PostgreSQL, and exposes HTTP endpoints for querying the audit log and viewing per-client telemetry (first/last seen, message in/out counters, active subscriptions). It is the primary observability tool for tracking what happened and when across the platform.

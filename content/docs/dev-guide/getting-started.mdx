@@ -103,18 +103,23 @@ Individual microservices can be built with:
 make <microservice_name>
 ```
 
+`<microservice_name>` must be one of the names in the Makefile's `SERVICES` list — currently
+`atom-bootstrap`, `certs`, `postgres-writer`, `postgres-reader`, `timescale-writer`,
+`timescale-reader`, and `fluxmq`. Services outside this list (e.g. `auth`, which still has a
+`cmd/auth` entry point) can be built directly with `go build -o build/<name> cmd/<name>/main.go`.
+
 For example:
 
 ```bash
-make bootstrap
+make atom-bootstrap
 ```
 
-will build the Bootstrap microservice.
+will build the Atom Bootstrap microservice.
 
 The response will be:
 
 ```bash
-CGO_ENABLED=0 GOOS= GOARCH=amd64 GOARM= go build -tags nats --tags nats -ldflags "-s -w -X 'github.com/absmach/magistrala.BuildTime=2025-02-11_14:54:15' -X 'github.com/absmach/magistrala.Version=unknown' -X 'github.com/absmach/magistrala.Commit=ddc43c482f6c98f3a4d49aa1d609bfae9e0e7d34'" -o build/bootstrap cmd/bootstrap/main.go
+CGO_ENABLED=0 GOOS= GOARCH=amd64 GOARM= go build -tags nats --tags nats -ldflags "-s -w -X 'github.com/absmach/magistrala.BuildTime=2025-02-11_14:54:15' -X 'github.com/absmach/magistrala.Version=unknown' -X 'github.com/absmach/magistrala.Commit=ddc43c482f6c98f3a4d49aa1d609bfae9e0e7d34'" -o build/atom-bootstrap cmd/atom-bootstrap/main.go
 ```
 
 #### Build Dockers
@@ -134,7 +139,7 @@ make docker_<microservice_name>
 For example:
 
 ```bash
-make docker_bootstrap
+make docker_atom-bootstrap
 ```
 
 > N.B. Magistrala creates `FROM scratch` docker containers which are compact and small in size.
@@ -540,65 +545,22 @@ With Magistrala installed and running, you can now explore its messaging capabil
 
 ## SpiceDB Schema Management
 
-Magistrala's authorization is powered by [SpiceDB](https://authzed.com/spicedb). The schema is split across two source files and merged into a single deployable schema:
+Magistrala's authorization is powered by [SpiceDB](https://authzed.com/spicedb). Unlike [SuperMQ](https://github.com/absmach/supermq) — which Magistrala builds on and which splits its schema into an override/combined pair fetched and merged via `scripts/combine-schema.sh` — Magistrala ships a single, directly-edited schema file:
 
 | File | Purpose |
 |---|---|
-| `docker/spicedb/override-schema.zed` | Magistrala extensions (alarm, rule, report definitions + domain/team injections) — edit this file to extend the schema |
-| `docker/spicedb/combined-schema.zed` | Generated output — the schema actually loaded into SpiceDB at runtime |
+| `docker/spicedb/schema.zed` | The full schema loaded into SpiceDB at runtime, including Magistrala's entity, relation, and permission definitions (e.g. `alarm`, `rule`, `report`) |
 
-> **Never edit `combined-schema.zed` directly.** It is auto-generated and will be overwritten on the next combine run.
-
-The `docker/spicedb/` directory intentionally contains only `override-schema.zed` and `combined-schema.zed`. Any stale `schema.zed` that appears there (e.g. after a manual copy) is automatically removed by the combine script.
-
-### Fetching the Latest Magistrala Schema
-
-When Magistrala publishes upstream schema changes, pull them and regenerate the combined schema with:
-
-```bash
-make fetch_magistrala
-```
-
-This runs `scripts/magistrala.sh`, which:
-
-1. Clones the Magistrala repository (sparse checkout, `docker/` folder only).
-2. Replaces `docker/magistrala-docker/` with the freshly fetched files.
-3. Automatically runs `scripts/combine-schema.sh` to regenerate `combined-schema.zed`.
-
-### How the Combine Script Works
-
-`scripts/combine-schema.sh` merges the two schemas by injecting Magistrala's extensions directly into the upstream Magistrala schema:
-
-1. **Extract the `domain` overlay block** from `override-schema.zed` — reads Magistrala-specific relations (e.g. `alarm_update`, `rule_create`), domain-level permissions (e.g. `alarm_read_permission`), and the `membership_extension` expression.
-2. **Extract the `team` overlay block** — same process, relations only.
-3. **Inject into the upstream Magistrala schema** — Magistrala relations and permissions are inserted after the last Magistrala group relation/permission; `membership_extension` is spliced into `permission membership` before `organization->admin`.
-4. **Append remaining definitions** — the overlay `domain`/`team` blocks are stripped (already merged); everything else (`definition alarm`, `definition rule`, `definition report`, etc.) is appended verbatim.
-5. **Write output** to `docker/spicedb/combined-schema.zed` with a generated-file header.
-6. **Clean up** — any stale `docker/spicedb/schema.zed` is removed.
+There is no fetch step and no generated/combined file for this schema — edit `docker/spicedb/schema.zed` directly.
 
 ### Adding a New Entity to the Schema
 
 To extend the schema with a new Magistrala entity (for example `dashboard`):
 
-1. In `override-schema.zed`, add the new relations and permissions to the overlay `definition domain` block (e.g. `dashboard_read`, `dashboard_read_permission`).
-2. Update `permission membership_extension` in the overlay domain block to include the new relations.
-3. Mirror the new relations in the overlay `definition team` block.
-4. Add the entity definition (`definition dashboard { ... }`) below the team block in `override-schema.zed`.
-5. Regenerate:
-
-```bash
-sh scripts/combine-schema.sh
-```
-
-6. Update `docker/permission.yaml` with the new entity's operation-to-permission mappings.
-
-### Regenerating Without Fetching
-
-If you only changed `override-schema.zed` and don't need a Magistrala update:
-
-```bash
-sh scripts/combine-schema.sh
-```
+1. Add the new relations and permissions to `definition domain` in `docker/spicedb/schema.zed` (e.g. `dashboard_read`, `dashboard_read_permission`).
+2. Add the entity definition (`definition dashboard { ... }`) alongside the other entity definitions in the same file.
+3. Update `docker/permission.yaml` with the new entity's operation-to-permission mappings.
+4. Restart the SpiceDB container (or redeploy) to pick up the schema change.
 
 [docker]: https://docs.docker.com/install/
 [docker-compose]: https://docs.docker.com/compose/install/

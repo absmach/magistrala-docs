@@ -4,6 +4,15 @@ title: Architecture
 
 ## Components
 
+<Callout type="error" title="Table below needs maintainer verification">
+  Magistrala went through an identity/authorization migration to Atom shortly before this page was
+  last reviewed. As a result, `users`, `groups`, `clients`, `channels`, and `domains` no longer
+  exist as top-level packages in the [magistrala repository](https://github.com/absmach/magistrala)
+  — their current canonical location could not be confirmed (the repository they previously lived
+  in, SuperMQ, has since been archived). The links below are left as-is for reference but are
+  likely broken; please confirm the current locations before treating this table as accurate.
+</Callout>
+
 Magistrala IoT platform is comprised of the following services:
 
 | Service                          | Description                                                                                   |
@@ -19,7 +28,7 @@ Magistrala IoT platform is comprised of the following services:
 | [consumers][consumers]           | Receives messages and persists or forwards them to configured destinations                    |
 | [provision][provision]           | Provides an HTTP API for automated provisioning of clients and channels                       |
 | [readers][readers]               | Implements message readers for PostgreSQL and TimescaleDB                                     |
-| [rules-engine][rules-engine]     | Creates rules using Lua scripts that process incoming messages                                |
+| rules-engine (Enterprise Edition)| Creates rules using Lua scripts that process incoming messages — see [Rules Engine][ee-rules-engine] |
 
 ![arch](../img/architecture.svg)
 
@@ -64,7 +73,7 @@ Running Magistrala on gateway moves computation from cloud towards the edge thus
 [consumers]: https://github.com/absmach/magistrala/tree/main/consumers
 [provision]: https://github.com/absmach/magistrala/tree/main/provision
 [readers]: https://github.com/absmach/magistrala/tree/main/readers
-[rules-engine]: https://github.com/absmach/magistrala/tree/main/re
+[ee-rules-engine]: /dev-guide/services/rules-engine
 [nats]: https://nats.io/
 [rabbitmq]: https://www.rabbitmq.com/
 [vernemq]: https://vernemq.com/

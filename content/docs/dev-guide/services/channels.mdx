@@ -12,6 +12,14 @@ keywords:
 image: /img/mg-preview.png
 ---
 
+<Callout type="warn" title="Source location needs maintainer verification">
+  There is no `cmd/channels` entry point in the current Magistrala repository, so the `make channels`
+  command shown below will not work as-is. This service's code appears to have moved as part of
+  Magistrala's identity/authorization migration to Atom (see the note on the
+  [Architecture](/dev-guide/architecture) page) — its current canonical source location
+  could not be confirmed.
+</Callout>
+
 The **Channels service** manages communication channels in Magistrala. A channel is a message topic that clients connect to for pub/sub messaging. The service handles channel creation, configuration, client connections, group hierarchy, and role-based access control. It exposes both HTTP and gRPC APIs.
 
 ## Configuration

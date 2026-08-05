@@ -26,9 +26,17 @@ The latest Magistrala release is published on the Magistrala releases page:
 
 Recent Magistrala releases do not consistently publish `magistrala-cli` binaries under the release assets. If you need the CLI locally, use one of the installation methods below.
 
-### Option 2 — Build from Source
+### Option 2 — Build from Source (unverified)
 
-Alternatively, **magistrala-cli** can be built directly from source.
+<Callout type="error" title="Build instructions need maintainer verification">
+  The Magistrala repository no longer contains a `cmd/cli` entry point or a `make cli` target —
+  `cli/` is now a command library only (`bootstrap`, `certs`, `channels`, `consumers`,
+  `invitations`, `health`, `message`, `provision`), with no `main` package wiring it into a
+  binary. The previous composition point was the SuperMQ repository, but that repository has
+  since been archived. As of this writing there is no confirmed, buildable source for the
+  `magistrala-cli` binary. Please confirm the current build/distribution path before publishing
+  this section.
+</Callout>
 
 1. Clone the Magistrala repository.
 
@@ -51,20 +59,20 @@ Alternatively, **magistrala-cli** can be built directly from source.
   sudo cp ./build/cli /usr/local/bin/mg
   ```
 
-> *Tip:* Running `make cli` automatically checks for an existing binary and rebuilds only if necessary.
+> **Note:** `cli` is not currently part of the Makefile's service list, so `make cli` is expected to fail until the build is restored.
 
-### **Option 3 — Run via Docker**
+### Option 3 — Run via Docker (unverified)
 
-The CLI can also be executed through the official **`magistrala/cli`** Docker image:
+The CLI has previously been distributed as a Docker image:
 
 ```bash
-docker run -it --rm magistrala/cli -u http://<SERVER_URL> [command]
+docker run -it --rm ghcr.io/absmach/magistrala/cli:latest -u http://<SERVER_URL> [command]
 ```
 
 **For Example:**
 
 ```bash
-docker run -it --rm magistrala/cli -u http://192.168.160.1 users token admin@example.com 12345678
+docker run -it --rm ghcr.io/absmach/magistrala/cli:latest -u http://192.168.160.1 users token admin@example.com 12345678
 ```
 
 The response should be:
@@ -79,7 +87,7 @@ The response should be:
 This allows direct interaction with Magistrala services without installing the binary locally.
 
 **Example:**  
-Run `magistrala/cli` and connect it to a running Magistrala instance using the `-u` flag to specify the server URL.  
+Run the `cli` image and connect it to a running Magistrala instance using the `-u` flag to specify the server URL.  
 The CLI will return authentication tokens or perform other operations as requested.
 
 ## Usage
@@ -221,10 +229,10 @@ For "users" service, the response should look like this:
 When Magistrala is updated, a new Docker image of **`magistrala-cli`** is also published.  
 Developers can update the CLI by either:
 
-- Pulling the latest Docker image (`magistrala/cli:latest`), or
+- Pulling the latest Docker image (`ghcr.io/absmach/magistrala/cli:latest`), or
 
 ```bash
-docker pull magistrala/cli:latest
+docker pull ghcr.io/absmach/magistrala/cli:latest
 ```
 
 - Downloading the newest binary from the [**Magistrala releases page**][releases].

@@ -9,7 +9,7 @@
     "clients-cli",
     "messages-cli",
     "provision-cli",
-    "boostrap-cli",
+    "bootstrap-cli",
     "consumers-cli"
   ]
 }
