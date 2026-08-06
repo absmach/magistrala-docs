@@ -13,7 +13,8 @@
     "postinstall": "fumadocs-mdx",
     "lint": "biome check",
     "format": "biome format --write",
-    "lint:fix": "biome check --write"
+    "lint:fix": "biome check --write",
+    "publish-image": "node scripts/publish-image.mjs"
   },
   "dependencies": {
     "@orama/orama": "^3.1.18",
