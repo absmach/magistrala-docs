@@ -27,6 +27,7 @@ yarn-error.log*
 .vercel
 next-env.d.ts
 .wrangler
+scripts/.env.publish-image
 
 .claude
 .wolf

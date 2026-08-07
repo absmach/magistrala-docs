@@ -91,6 +91,20 @@ Defaults (when unset, e.g. running `next build` directly) match the Enterprise p
 | `lib/layout.shared.tsx`     | Shared layout options                                   |
 | `scripts/nest-static-export.mjs` | Moves one build pass's static export under its base path |
 | `scripts/build-editions.mjs` | Runs both edition builds and merges them into one `out/` |
+| `workers/image-proxy.ts`    | Worker serving `/docs/magistrala/{img,diagrams,screenshots}/*` from R2 — see `scripts/README.md` |
+| `scripts/publish-image.mjs` | Maintainer-only CLI to upload an image to R2 and purge its cache entry |
+| `lib/remark-doc-images.ts`  | Remark plugin resolving markdown image paths (relative or `/screenshots/...`) to their R2-proxy URL at build time |
+
+## Deploying images and diagrams
+
+All doc images (`content/docs/img`, `content/docs/diagrams`, `public/screenshots`) are
+served from R2, not committed to git. Authoring is unchanged — write plain markdown
+image syntax exactly as before (`![alt](../img/foo.png)`, `![alt](/screenshots/foo.png)`,
+relative paths and all); [`lib/remark-doc-images.ts`](./lib/remark-doc-images.ts) resolves
+the path to its R2-proxy URL at build time (pure path math, no manifest, nothing to fill
+in), and `mdx-components.tsx`'s `img:` override renders it as a plain, zoomable `<img>`.
+New or updated images go through [`scripts/publish-image.mjs`](./scripts/README.md) — see
+that doc for setup and usage.
 
 ## Learn More
 
