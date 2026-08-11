@@ -13,8 +13,8 @@ image: /img/mg-preview.png
 
 ## Overview
 
-Domain administrators can invite users to their domain with a specific role. Each role grants the invitee a predefined set of actions they can perform within the domain.  
-The **Invitations** tab displays a list of all invitations sent by the user, including their **status**, **role**, and **timestamps** for confirmation or rejection.
+Domain administrators can invite users to their domain with a specific role. Each role grants the invitee a predefined set of actions they can perform within the domain.
+The **Invitations** tab displays invitations for the selected domain, including each invitee, role, status, inviter, and confirmation or rejection timestamps.
 
 ![Invitations Table](../../img/invitations/invitation-table.png)
 
@@ -28,27 +28,27 @@ The **Status** column shows the current state of each invitation:
 
 ## Send Invitation
 
-To invite users to a domain, the administrator can click the **`Send Invitation`** button and select multiple existing users along with their assigned role.
+To invite users to a domain, the administrator can click **Send Invitation** and select one or more existing users along with the role they should receive.
 
 **Email invites** — you can also invite people who don't yet have a Magistrala account by entering their email addresses (comma-separated) in the **Email invites** field. An account is created for them and they receive the invitation the first time they log in.
 
 ![Send Invitations](../../img/invitations/send-invitation.png)
 
-Once sent, the recipients will be notified the next time they log in and can **accept** or **decline** the invitation.
+Once sent, recipients can see the pending invitation from the invitations icon in the top bar and can **accept** or **decline** it.
 
 ## Accept or Decline an Invitation
 
-After logging in, the recipient will see a pop-up notification on the **Domains** page displaying all pending invitations.  
+After logging in, the recipient can open the invitations popover from the top bar to review pending invitations.
 
-The user has the option to **accept** or **decline** the invitation directly from this pop-up. A maximum of five invitations will be displayed at a time, refreshing each time an invitation is accepted or declined.  
+The user has the option to **accept** or **decline** the invitation directly from this popover.
 
 ![Invitations PopUp](../../img/invitations/invitation-popup.png)
 
-If there are more than five pending invitations, the user can click `View All` to navigate to the **Invitations Table**, where all pending invitations are listed.  
+The user can click **View All** to navigate to the **Invitations** page, where all pending invitations are listed.
 
 ![Invitations Table](../../img/invitations/invitation-viewall.png)
 
-Once the Invitation is accepted, the user will be able to log into the domain. Their details will be added to the **Members Table** within the domain, reflecting the assigned role.
+Once the invitation is accepted, the user can access the domain. Their details are added to the domain members table with the assigned role.
 
 ![Members Table](../../img/invitations/members-table.png)
 
@@ -65,4 +65,4 @@ The **Invitations Table** also includes management options depending on the invi
 
 ![Resend and Delete](../../img/invitations/invitation-actions.png)
 
-This ensures only relevant invitations remain editable, while accepted and rejected ones are preserved for tracking and auditing purposes.
+This keeps only active invitations editable, while accepted and rejected invitations remain available for tracking.
