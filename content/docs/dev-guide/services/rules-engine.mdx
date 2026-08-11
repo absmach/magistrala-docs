@@ -27,7 +27,19 @@ The **Rules Engine** in Magistrala provides powerful, flexible message processin
 
 ## Architecture
 
-![rules engine architecture](../../diagrams/rules_engine_architecture.jpg)
+```mermaid
+flowchart LR
+  Input[Channel input] --> Executor[Rule executor]
+  Schedule[Schedule] --> Executor
+  Executor --> Logic[Lua or Go logic]
+  Logic --> Outputs{Outputs}
+  Outputs --> Channel[Channel publisher]
+  Outputs --> InternalDB[Internal DB]
+  Outputs --> Postgres[External PostgreSQL]
+  Outputs --> Alarm[Alarm]
+  Outputs --> Email[Email]
+  Outputs --> Slack[Slack]
+```
 
 The Magistrala Rules Engine is designed for **real-time** and **scheduled message processing**. Its architecture revolves around applying custom business logic to incoming messages or scheduled triggers and forwarding results to one or more output targets.
 
