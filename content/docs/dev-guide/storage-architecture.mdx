@@ -274,7 +274,7 @@ An HVAC sensor (a Magistrala client) in `Building-A` is configured to publish te
    With authentication and authorization complete, the adapter accepts the reading and publishes it as a standardized message onto the internal **FluxMQ** message bus (AMQP 0.9.1). FluxMQ runs as a clustered broker and also backs Magistrala's event stream.
 
 4. **Message persistence (TimescaleDB):**
-   The `timescale-writer` service, subscribed to the relevant subject, consumes the message from the bus, normalizes the payload, and inserts it as a new row in the `messages` hypertable within **TimescaleDB**.
+   A rule matching that channel selects the reading for storage through its `save_senml` output and republishes it onto the broker's `writers` stream. The `timescale-writer` service, consuming that stream, normalizes the payload and inserts it as a new row in the `messages` hypertable within **TimescaleDB**. Storage is selective rather than automatic — see [Message Storage Backends](#message-storage-backends) for what feeds the writers.
 
 5. **Authorization to read (Atom):**
    Hours later the facility manager logs into the web application. Using the manager's session, the backend asks **Atom** whether they may view data on that channel. Atom confirms and returns **allow**.
@@ -298,7 +298,7 @@ Not every payload fits neatly into a relational row or a time-series point. For 
 
 Message persistence follows a **writer/reader** pattern that keeps the transport and the storage engine decoupled:
 
-- **Writers** subscribe to the internal message bus (FluxMQ, with NATS available as a build-time alternative) and store messages in the chosen backend.
+- **Writers** consume a durable stream on the internal message bus (FluxMQ, with NATS available as a build-time alternative) and store messages in the chosen backend.
 - **Readers** expose an HTTP API for querying stored messages.
 
 Magistrala ships writer and reader services for two backends:
@@ -309,5 +309,27 @@ Magistrala ships writer and reader services for two backends:
 | **PostgreSQL**  | `postgres-writer`  | `postgres-reader`  |
 
 TimescaleDB is the default for production-scale time-series workloads; the plain-PostgreSQL backend is available for smaller or simpler deployments. Because both share the same message structure, switching between them requires no change to the core message format.
+
+### What feeds the writers
+
+The broker provisions two durable streams that matter for storage. Their bindings use different syntax in FluxMQ and NATS, but their roles are the same:
+
+| Stream    | FluxMQ binding     | NATS subject | Receives                                                                      |
+| --------- | ------------------ | ------------ | ----------------------------------------------------------------------------- |
+| `m`       | `m/#`              | `m.>`        | Every message published to any channel, captured automatically by the binding |
+| `writers` | `$queue/writers/#` | `writers.>`  | Only messages a service explicitly republishes there                          |
+
+Writers consume **`writers`**, not `m`. Nothing publishes into `writers` on its own: Magistrala's built-in producer is the Rules Engine, whose `save_senml` and `save_json` outputs republish a matched message for storage. Persistence is therefore *selective* — a message is stored because a rule chose it, not because it was published.
+
+<Callout type="info" title="Community Edition">
+  Community Edition includes a Rules Engine build limited to one rule per deployment. That rule can
+  use `save_senml` or `save_json` and feeds the same `writers` stream as Enterprise Edition. The
+  Enterprise Edition build removes the rule-count limit. In either edition, writers can start,
+  connect and report healthy while persisting nothing when no matching storage rule exists.
+</Callout>
+
+Pointing a writer directly at the `m` stream would make it store all channel traffic without a rule. It is **not supported today**: a writer's stream name and topic prefix are fixed when the service is built, and a message delivered out of `m` fails the writer's topic parsing, which expects the `writers/` prefix. Setting `topics` in the writer's `config.toml` does not achieve it either — that field filters *within* the stream the writer is already bound to, so it cannot move the writer to a different one.
+
+A deployment that specifically needs to persist all channel traffic without a rule must provide a custom consumer for the broker's `m` stream or modify the writer's broker adapter, using `consumers/writers` as the reference implementation.
 
 In conclusion, Magistrala's polyglot architecture avoids the trade-offs of one-size-fits-all systems. PostgreSQL (via Atom) keeps identity and metadata consistent, TimescaleDB scales time-series messages, Atom makes fast authorization decisions, FluxMQ moves messages, and SeaweedFS holds bulky objects. Each system does one job well, and together they form a platform that is consistent, scalable, and secure by design.

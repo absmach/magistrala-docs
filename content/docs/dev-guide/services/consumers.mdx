@@ -28,6 +28,16 @@ Consumers process messages in two primary ways:
 
 Writers are responsible for persisting messages into databases for storage, analysis, and future retrieval. Magistrala supports two primary database writers:
 
+<Callout type="warn" title="Selective persistence">
+  Writers consume the broker's `writers` stream, which the Rules Engine feeds through its
+  `save_senml` and `save_json` outputs. A message is stored because a rule selected it, not merely
+  because it was published. Both editions support this path: Community Edition is limited to one
+  rule per deployment, while Enterprise Edition has no rule-count limit. Without a matching storage
+  rule, the writers can start and report healthy but persist nothing. Subscribing a writer directly
+  to the `m` stream (all channel traffic) is not supported today; see [Storage
+  Architecture](/dev-guide/storage-architecture#what-feeds-the-writers).
+</Callout>
+
 ### **TimescaleDB Writer**
 
 Stores messages into TimescaleDB with optimized handling for time-series data.
