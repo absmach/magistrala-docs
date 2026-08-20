@@ -26,17 +26,7 @@ The latest Magistrala release is published on the Magistrala releases page:
 
 Recent Magistrala releases do not consistently publish `magistrala-cli` binaries under the release assets. If you need the CLI locally, use one of the installation methods below.
 
-### Option 2 — Build from Source (unverified)
-
-<Callout type="error" title="Build instructions need maintainer verification">
-  The Magistrala repository no longer contains a `cmd/cli` entry point or a `make cli` target —
-  `cli/` is now a command library only (`bootstrap`, `certs`, `channels`, `consumers`,
-  `invitations`, `health`, `message`, `provision`), with no `main` package wiring it into a
-  binary. The previous composition point was the SuperMQ repository, but that repository has
-  since been archived. As of this writing there is no confirmed, buildable source for the
-  `magistrala-cli` binary. Please confirm the current build/distribution path before publishing
-  this section.
-</Callout>
+### Option 2 — Build from Source
 
 1. Clone the Magistrala repository.
 

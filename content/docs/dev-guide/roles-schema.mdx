@@ -1,0 +1,55 @@
+---
+title: Roles Schema
+description: Permission reference for Enterprise Edition rules, reports, and alarms.
+keywords:
+  - Roles
+  - Permissions
+  - Rules
+  - Reports
+  - Alarms
+  - RBAC
+  - Magistrala
+enterprise: true
+---
+
+Magistrala uses scoped roles to decide which users can read, update, delete, or manage
+Enterprise Edition resources. The exact role names can be deployment-specific, but the
+permissions below are the API-level actions referenced by the rules, reports, and alarms
+services.
+
+## Rules
+
+| Permission | Description |
+| ---------- | ----------- |
+| `rule_create` | Create rules in the domain. |
+| `rule_read` | View rules and rule details. |
+| `rule_update` | Update rule metadata, scripts, schedules, status, and outputs. |
+| `rule_delete` | Delete rules. |
+| `rule_manage_role` | Create, update, or delete roles scoped to a rule. |
+| `rule_add_role_users` | Assign users to rule roles. |
+| `rule_view_role_users` | View users assigned to rule roles. |
+| `rule_remove_role_users` | Remove users from rule roles. |
+
+## Reports
+
+| Permission | Description |
+| ---------- | ----------- |
+| `report_create` | Create report configurations in the domain. |
+| `report_read` | View report configurations and generated report details. |
+| `report_update` | Update report configuration, metrics, recipients, schedules, and templates. |
+| `report_delete` | Delete report configurations. |
+| `report_manage_role` | Create, update, or delete roles scoped to a report. |
+| `report_add_role_users` | Assign users to report roles. |
+| `report_view_role_users` | View users assigned to report roles. |
+| `report_remove_role_users` | Remove users from report roles. |
+
+## Alarms
+
+| Permission | Description |
+| ---------- | ----------- |
+| `alarm_read` | View alarms and alarm details. |
+| `alarm_update` | Update alarm metadata. |
+| `alarm_delete` | Delete alarms. |
+| `alarm_assign` | Assign alarms to users. |
+| `alarm_acknowledge` | Acknowledge alarms. |
+| `alarm_resolve` | Resolve or clear alarms. |

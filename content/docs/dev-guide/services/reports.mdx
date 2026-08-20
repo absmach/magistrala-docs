@@ -22,9 +22,22 @@ The Reports Service operates through three main components:
 
 1. **Report Configurations**: Define what data to collect and how to process it.
 2. **Scheduler**: Handles recurring report generation based on defined schedules.
-3. **Generator Engine**: Generates human-readable reports in various formats..
+3. **Generator Engine**: Generates human-readable reports in various formats.
 
-![reports_architecture](../../diagrams/reports_architecture.svg)
+```mermaid
+flowchart TD
+  UI[MG UI or API client] --> Config[Report configuration]
+  Config --> Metrics[Metrics and filters]
+  Config --> Schedule[Schedule]
+  Metrics --> Reader[Message reader]
+  Reader --> Store[(TimescaleDB / PostgreSQL)]
+  Schedule --> Generator[Report generator]
+  Store --> Generator
+  Generator --> PDF[PDF export]
+  Generator --> CSV[CSV export]
+  Generator --> Email[Email delivery]
+  Generator --> Download[Direct download]
+```
 
 > **Note:** All API operations require appropriate role-based permissions. Refer to the [Roles Schema](/dev-guide/roles-schema#reports) for details on available roles and the permissions they grant.
 
