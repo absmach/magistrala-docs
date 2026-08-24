@@ -2,14 +2,12 @@
   "title": "CLI",
   "pages": [
     "introduction-to-cli",
-    "users-cli",
-    "domains-cli",
-    "groups-cli",
+    "workspaces-cli",
+    "devices-cli",
+    "gateways-cli",
+    "devicetypes-cli",
     "channels-cli",
-    "clients-cli",
-    "messages-cli",
-    "provision-cli",
-    "bootstrap-cli",
-    "consumers-cli"
+    "groups-cli",
+    "authz-cli"
   ]
 }

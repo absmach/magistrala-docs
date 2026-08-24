@@ -1,0 +1,66 @@
+---
+title: Device Types
+description: Manage device types in Magistrala using the CLI.
+keywords:
+  - CLI
+  - Device Types
+  - Devices
+  - Management
+  - Magistrala
+  - Atom
+image: /img/mg-preview.png
+---
+
+Device Types define a schema (capabilities/measurements) that devices can be bound to, so Atom can validate a device's attributes against it. This wraps Atom's device-type API (`cli/devicetypes.go`); Atom's own internal name for this concept is `Profile` — the CLI and this documentation use Magistrala's public name, Device Type.
+
+### Create a device type
+
+```bash
+magistrala-cli devicetypes create <JSON_device_type> <workspace_id> --token <token>
+```
+
+```bash
+magistrala-cli devicetypes create '{"key":"thermostat","name":"Thermostat"}' <workspace_id> --token $TOKEN
+```
+
+### List device types in a workspace
+
+```bash
+magistrala-cli devicetypes all get <workspace_id> --token <token>
+```
+
+Listing is always workspace-scoped — Atom's device type filter is either "this tenant" or "no filter at all," and no filter crosses tenants, so even `all` takes a `workspace_id`.
+
+### Get a device type
+
+```bash
+magistrala-cli devicetypes <device_type_id> get --token <token>
+```
+
+### Update a device type
+
+```bash
+magistrala-cli devicetypes <device_type_id> update '{"name":"Thermostat","status":"deprecated"}' --token <token>
+```
+
+There is no `delete` — a device type has no delete operation in Atom (no `deleteProfile` mutation). Retire one by setting `status`. Status has three values — `active`, `deprecated`, `disabled` — that don't reduce to a simple enable/disable pair, so all status changes go through `update`.
+
+### Versions
+
+A device type's schema is versioned; each version is immutable once created.
+
+```bash
+magistrala-cli devicetypes <device_type_id> versions --token <token>
+magistrala-cli devicetypes <device_type_id> create-version '{"capabilities":{"measurements":[{"name":"temperature","type":"number","unit":"Cel"}]}}' --token <token>
+magistrala-cli devicetypes <device_type_id> active-version --token <token>
+```
+
+Create a version with `"status":"draft"` to stage it (define its schema) without making it bindable yet — a draft version can't be bound to a device until it's made active.
+
+### Bind a device to a device type
+
+```bash
+magistrala-cli devicetypes <device_type_id> bind <device_id> [version_id] --token <token>
+```
+
+Omitting `version_id` binds to the type's highest-numbered active version. This is the checked way to attach a device to a type — it refuses a type or version that is not active, unlike writing `device_type_id` directly through [`devices update`](/dev-guide/cli/devices-cli#update-a-device), which does not check that.

@@ -6,194 +6,38 @@ keywords:
   - Groups
   - Management
   - Magistrala
-  - Entities
-  - Members
-  - Enable
-  - Disable
+  - Atom
 image: /img/mg-preview.png
 ---
 
-<Callout type="warn" title="Source verification needed">
-  These commands are not currently present in the `magistrala/cli` package (they were removed as
-  part of the Atom identity migration). They may still be accurate if provided by another CLI
-  composed elsewhere — see the note on the [CLI introduction](/dev-guide/cli/introduction-to-cli)
-  page.
+Groups are a logical grouping of devices, channels, or other groups, used to simplify access control (`cli/atom_commands.go`'s `newGraphQLGroupsCmd`).
+
+### Create a group
+
+```bash
+magistrala-cli groups create <workspace_id> <name> [--type object|principal] [--description <text>] [--attributes <json>] --token <token>
+```
+
+```bash
+magistrala-cli groups create 16a4ad70-a385-45c5-b50a-6d7e48d768d7 "Building A Sensors" --type object --token $TOKEN
+```
+
+`--type` defaults to `object`. Atom distinguishes **object groups** (grouping devices/channels/other resources — the common case) from **principal groups** (grouping users/identities for access-control purposes); pick the one that matches what you're grouping.
+
+### List groups in a workspace
+
+```bash
+magistrala-cli groups list <workspace_id> --token <token>
+```
+
+### Get a group
+
+```bash
+magistrala-cli groups get <group_id> --token <token>
+```
+
+<Callout type="info">
+  There is no `update`/`delete`/membership-management operation on this command in the current
+  CLI — only `create`, `list`, and `get`. Manage group membership and hierarchy through the web
+  UI until (or unless) an equivalent CLI operation exists.
 </Callout>
-
-
-Magistrala CLI provides an efficient way to manage groups within your system. This guide covers the key commands for **creating**, **retrieving**, **updating**, and **managing groups**.
-
-## Group Management
-
-### Create Group
-
-To create a new group, run the following command:
-
-```bash
-magistrala-cli groups create '{"name":"<group_name>","description":"<description>","metadata":"<metadata>"}' <domain_id> <user_token>
-```
-
-This command registers a new group with the provided details.
-
-Example usage:
-
-```bash
-magistrala-cli groups create '{"name":"group 1"}' 9879f314-8b0a-4a11-b157-8523491ffa81 token
-```
-
-Expected response:
-
-```json
-{
-  "created_at": "2025-02-12T09:48:21.886997Z",
-  "domain_id": "9879f314-8b0a-4a11-b157-8523491ffa81",
-  "id": "a90eced3-daaa-4f51-a031-0103ff00e746",
-  "level": 1,
-  "name": "group 1",
-  "path": "a90eced3-daaa-4f51-a031-0103ff00e746",
-  "status": "enabled",
-  "updated_at": "0001-01-01T00:00:00Z"
-}
-```
-
-### Retrieve a Specific Group
-
-To get the details of group:
-
-```bash
-magistrala-cli groups get <group_id> <user_token>
-```
-
-Example usage:
-
-Expected response:
-
-### Retrieve all Groups
-
-To list all groups:
-
-```bash
-magistrala-cli groups get all <user_token>
-```
-
-Example usage:
-
-Expected response:
-
-### Update Group Information
-
-To update a group's details:
-
-```bash
-magistrala-cli groups update '{"id":"<group_id>","name":"<group_name>","description":"<description>","metadata":"<metadata>"}' <domain_id>  <user_token>
-```
-
-This command allows you to modify the group name, description, and metadata.
-
-Example usage:
-
-```bash
-magistrala-cli groups update '{"id":"497b188c-d439-43bb-bbd6-d728a736d4ce","name":"Group duo"}' 9879f314-8b0a-4a11-b157-8523491ffa81 token
-```
-
-Expected response:
-
-```json
-{
-  "created_at": "2025-02-12T09:57:57.05256Z",
-  "domain_id": "9879f314-8b0a-4a11-b157-8523491ffa81",
-  "id": "497b188c-d439-43bb-bbd6-d728a736d4ce",
-  "name": "Group duo",
-  "status": "enabled",
-  "updated_at": "2025-02-12T09:59:44.829208Z",
-  "updated_by": "6ccaf13c-ef88-4cf2-8e3a-c7c04c5eaf9b"
-}
-```
-
-### Enable Group
-
-To change group status to enabled:
-
-```bash
-magistrala-cli groups enable <group_id> <domain_id> <user_token>
-```
-
-Example usage:
-
-```bash
-magistrala-cli groups enable a90eced3-daaa-4f51-a031-0103ff00e746 9879f314-8b0a-4a11-b157-8523491ffa81 token
-```
-
-Expected response:
-
-```json
-{
-  "created_at": "2025-02-12T09:48:21.886997Z",
-  "domain_id": "9879f314-8b0a-4a11-b157-8523491ffa81",
-  "id": "a90eced3-daaa-4f51-a031-0103ff00e746",
-  "name": "group 1",
-  "status": "enabled",
-  "updated_at": "2025-02-12T10:08:37.864362Z",
-  "updated_by": "6ccaf13c-ef88-4cf2-8e3a-c7c04c5eaf9b"
-}
-```
-
-### Disable Group
-
-To change group status to disabled:
-
-```bash
-magistrala-cli groups disable <group_id> <domain_id> <user_token>
-```
-
-Example usage:
-
-```bash
-magistrala-cli groups disable a90eced3-daaa-4f51-a031-0103ff00e746 9879f314-8b0a-4a11-b157-8523491ffa81 token
-```
-
-Expected response:
-
-```json
-{
-  "created_at": "2025-02-12T09:48:21.886997Z",
-  "domain_id": "9879f314-8b0a-4a11-b157-8523491ffa81",
-  "id": "a90eced3-daaa-4f51-a031-0103ff00e746",
-  "name": "group 1",
-  "status": "disabled",
-  "updated_at": "2025-02-12T10:07:04.741721Z",
-  "updated_by": "6ccaf13c-ef88-4cf2-8e3a-c7c04c5eaf9b"
-}
-```
-
-### Delete Group
-
-To delete a group from the system:
-
-```bash
-magistrala-cli groups delete <group_id> <domain_id> <user_token>
-```
-
-### Get Group Members
-
-```bash
-magistrala-cli groups members <group_id> <user_token>
-```
-
-### Get Memberships
-
-```bash
-magistrala-cli groups membership <member_id> <user_token>
-```
-
-### Assign Members to Group
-
-```bash
-magistrala-cli groups assign <member_ids> <member_type> <group_id> <user_token>
-```
-
-### Unassign Members to Group
-
-```bash
-magistrala-cli groups unassign <member_ids> <group_id>  <user_token>
-```

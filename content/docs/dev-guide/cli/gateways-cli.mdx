@@ -1,0 +1,55 @@
+---
+title: Gateways
+description: Manage device-gateway reachability in Magistrala using the CLI.
+keywords:
+  - CLI
+  - Gateways
+  - Devices
+  - Management
+  - Magistrala
+  - Atom
+image: /img/mg-preview.png
+---
+
+<Callout type="info" title="Not a separate entity type">
+  A gateway is a [device](/dev-guide/cli/devices-cli) with `attributes.is_gateway` set — there is
+  no separate gateway entity kind in Atom. Create or edit one with `devices create`/`devices
+  update`; this `gateways` command only manages the *reachability relation* between a device and
+  the gateway(s) it's reachable through (`cli/gateways.go`).
+</Callout>
+
+### Make a device a gateway
+
+```bash
+magistrala-cli devices create '{"name":"Office Gateway","attributes":{"is_gateway":true}}' <workspace_id> --token <token>
+```
+
+or on an existing device:
+
+```bash
+magistrala-cli devices <device_id> update '{"attributes":{"is_gateway":true}}' --token <token>
+```
+
+### Declare which gateway(s) a device is reachable through
+
+```bash
+magistrala-cli gateways set <device_id> <gateway_id1,gateway_id2,...> --token <token>
+```
+
+```bash
+magistrala-cli gateways set device-123 gw-1,gw-2 --token $TOKEN
+```
+
+This is the checked way to declare a reachability relation — it validates the resulting chain (a device cannot be both a gateway and reachable through gateways of its own) and flags the referenced device(s) as gateways if they aren't already. Writing a device's `attributes.gateways` directly through `devices update` bypasses that validation and the automatic flagging.
+
+### List devices reachable through a gateway
+
+```bash
+magistrala-cli gateways <gateway_id> devices <workspace_id> --token <token>
+```
+
+```bash
+magistrala-cli gateways gw-1 devices workspace-1 --token $TOKEN
+```
+
+A device can declare more than one gateway (`gateway_id1,gateway_id2,...`), so more than one gateway can be reachability-registered for the same device.
