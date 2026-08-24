@@ -50,7 +50,7 @@ At the top of the page, a series of summary cards displays the current state of 
 
 - **Members** – Shows the total number of users assigned to the workspace, along with their enabled or disabled status.  
   The workspace creator is automatically assigned the **admin** role and appears as the first active member.
-- **Clients** – Displays the number of clients within the workspace and their operational status.
+- **Devices** – Displays the number of devices within the workspace and their operational status.
 - **Channels** – Lists the channels available for message publishing and subscription.
 - **Groups** – Indicates the total number of groups configured in the workspace.
 
@@ -76,14 +76,14 @@ It highlights alarms that are currently active, assigned or acknowledged, helpin
 
 ### Overview Chart
 
-Below the summary cards, a **bar graph** presents a visual comparison of workspace entities such as members, clients, channels, and groups.  
+Below the summary cards, a **bar graph** presents a visual comparison of workspace entities such as members, devices, channels, and groups.  
 This graph mirrors the numeric information shown in the cards but offers a more immediate and visually intuitive representation of workspace activity.
 
 ### Usage and Limits
 
 > This section is only shown on **Magistrala Cloud** workspaces — see [Billing](/user-guide/workspace-management/billing) for details.
 
-The **Usage & Limits** section displays resource utilization across various entity types, including rules, users, groups, clients, and channels.  
+The **Usage & Limits** section displays resource utilization across various entity types, including rules, users, groups, devices, and channels.  
 It provides insight into the current usage relative to the workspace's maximum allocation, ensuring that administrators can monitor and manage capacity efficiently.  
 The **Manage Billing** option links directly to the billing section for plan adjustments or usage expansion.
 
@@ -126,7 +126,7 @@ For detailed instructions on managing metadata, including working with interacti
 ## Workspace Members
 
 A **Workspace Admin** (or any member with the appropriate permission) can add users to a workspace and assign them a **role**.  
-Every member must have a role; roles determine what they can do across **Clients**, **Channels**, **Groups**, **Dashboards**, and other resources.
+Every member must have a role; roles determine what they can do across **Devices**, **Channels**, **Groups**, **Dashboards**, and other resources.
 
 > **Important:** The **read** permission is the most basic permission required for workspace access.  
 > Without **read**, a user **cannot view the workspace at all** after signing in — **not just** specific entities.  
@@ -165,7 +165,7 @@ Roles are no longer built from a long list of per-entity action names (for examp
 **Scopes** — what the permission block applies to:
 
 - Whole workspace
-- All clients
+- All devices
 - All channels
 - All groups
 - All rules

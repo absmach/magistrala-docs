@@ -21,9 +21,9 @@ Operators work with three pre-built dashboards: a field operations map with live
 
 ## Key Features
 
-**End-to-end field telemetry pipeline.** The pack provisions ten device clients across two independent irrigation zones, three channels (Telemetry, Commands, and Alerts), and two zone groups for access control. Every SenML record that arrives in the Telemetry Channel is processed continuously by detection rules, so alarm latency is governed by your device's publish interval, not a polling schedule.
+**End-to-end field telemetry pipeline.** The pack provisions ten devices across two independent irrigation zones, three channels (Telemetry, Commands, and Alerts), and two zone groups for access control. Every SenML record that arrives in the Telemetry Channel is processed continuously by detection rules, so alarm latency is governed by your device's publish interval, not a polling schedule.
 
-![Provisioned device clients](/screenshots/solutions/smart-irrigation/solution-clients.png)
+![Provisioned devices](/screenshots/solutions/smart-irrigation/solution-clients.png)
 
 ![Provisioned channels](/screenshots/solutions/smart-irrigation/solution-channels.png)
 
@@ -37,7 +37,7 @@ Operators work with three pre-built dashboards: a field operations map with live
 
 **Rainfall event detection.** The Rainfall Event Alert fires an Info alarm (Severity 1) when either zone's weather station reports rainfall above 2 mm, notifying farm managers to review active irrigation schedules and avoid overwatering already-saturated soil.
 
-**Remote actuator control.** The Field Operations Dashboard includes switch widgets that send commands directly to the Smart Valve Zone A, Smart Valve Zone B, and Pump Controller clients via the Commands Channel. Operators can open or close valves and start or stop the pump without leaving the monitoring UI.
+**Remote actuator control.** The Field Operations Dashboard includes switch widgets that send commands directly to the Smart Valve Zone A, Smart Valve Zone B, and Pump Controller devices via the Commands Channel. Operators can open or close valves and start or stop the pump without leaving the monitoring UI.
 
 **Role-based dashboards and templates.** Three operational dashboards serve workspace admins: the Field Operations Dashboard for live zone control, the Irrigation Analytics Dashboard for historical trend analysis, and the Alarm Monitoring Dashboard for alarm triage. Two dashboard templates use tag-based device references: Zone Monitoring for zone managers and Field Report for farmers, so a single template definition scales to any number of zones or accounts without duplicating configuration.
 
@@ -62,7 +62,7 @@ Before deploying the solution pack, confirm the following:
 
 **Step 1: Provision credentials from the platform.**
 
-Navigate to your workspace's Clients section and create a new client for each device. The platform will generate a `client_id` and `client_secret`. Note the channel ID of the Telemetry Channel; you will find it in the Channels section after the solution pack is deployed.
+Navigate to your workspace's Devices section and create a new device for each sensor. The platform will generate a `client_id` and `client_secret`. Note the channel ID of the Telemetry Channel; you will find it in the Channels section after the solution pack is deployed.
 
 **Step 2: Configure your device.**
 
@@ -123,7 +123,7 @@ After publishing, check the Telemetry Channel's message log in the platform UI t
 
 The Field Operations Dashboard is the main screen for farm managers during an active irrigation shift. It combines a live device map, per-zone soil and flow status, tank level, rainfall status, actuator controls, and the current alarm count on a single screen.
 
-**Device Location Map** is a marker map widget. It plots all ten field devices on a map using the latitude and longitude coordinates stored in each device's metadata. Before this widget displays correctly, verify that the `location` metadata on each device client record matches your actual field installation coordinates. The coordinates shipped with the solution pack reflect the sample farm in northern Italy. Replace them with your own.
+**Device Location Map** is a marker map widget. It plots all ten field devices on a map using the latitude and longitude coordinates stored in each device's metadata. Before this widget displays correctly, verify that the `location` metadata on each device's record matches your actual field installation coordinates. The coordinates shipped with the solution pack reflect the sample farm in northern Italy. Replace them with your own.
 
 **Soil Moisture: Zone A and Zone B** are gauge widgets driven by the most recent `soil_moisture` reading from each zone's sensor. The gauge spans 0–100%. Values below 35% indicate a watering is due; below 20%, the Dry Soil Alert critical alarm will have fired.
 
@@ -302,7 +302,7 @@ Aggregates `total_volume` (sum) at 86400-second intervals over the past 30 days 
 
 **Messages are not appearing in the Telemetry Channel.**
 
-Check that the MQTT client is using the correct topic format: `channels/<channel_id>/messages`. The channel ID must be the Telemetry Channel provisioned by the solution pack, not the Commands or Alerts channel. Verify that `username` is the `client_id` and `password` is the `client_secret` from the Clients section, not the client's display name. Use a tool like MQTT Explorer to confirm the connection is established and that the publish is accepted before the platform UI shows anything.
+Check that the MQTT client is using the correct topic format: `channels/<channel_id>/messages`. The channel ID must be the Telemetry Channel provisioned by the solution pack, not the Commands or Alerts channel. Verify that `username` is the `client_id` and `password` is the `client_secret` from the Devices section, not the device's display name. Use a tool like MQTT Explorer to confirm the connection is established and that the publish is accepted before the platform UI shows anything.
 
 **Messages arrive in the Telemetry Channel but no alarms fire.**
 
@@ -326,7 +326,7 @@ The `battery` field is reported by the device firmware and may reflect the previ
 
 **Valve control switch on the Field Operations Dashboard has no effect.**
 
-Commands sent from the dashboard travel through the Commands Channel. Verify that the Smart Valve device client is connected to both the Telemetry Channel (for status reporting) and the Commands Channel (for receiving commands). If the client is only connected to Telemetry, it will not receive the command payload. Check the client's channel connections in the Clients section and add the Commands Channel connection if missing.
+Commands sent from the dashboard travel through the Commands Channel. Verify that the Smart Valve device is connected to both the Telemetry Channel (for status reporting) and the Commands Channel (for receiving commands). If the device is only connected to Telemetry, it will not receive the command payload. Check the device's channel connections in the Devices section and add the Commands Channel connection if missing.
 
 **Reports are not being delivered by email.**
 
@@ -340,7 +340,7 @@ Yes. The sensors do not need to speak MQTT or HTTP directly. A local gateway (a 
 
 **Can the pack handle more than two irrigation zones?**
 
-Yes. The solution pack ships with two zones (Zone A, North Field and Zone B, South Field), but the architecture scales to any number. Each additional zone requires its own set of device clients, a group for access control, and connections to the Telemetry and Commands channels. The Zone Monitoring template scales automatically. Assign it to any group containing devices tagged `device:soil-moisture`, `device:flow-meter`, `device:weather-station`, and `device:smart-valve` and it will render the correct data for that zone without any template changes.
+Yes. The solution pack ships with two zones (Zone A, North Field and Zone B, South Field), but the architecture scales to any number. Each additional zone requires its own set of devices, a group for access control, and connections to the Telemetry and Commands channels. The Zone Monitoring template scales automatically. Assign it to any group containing devices tagged `device:soil-moisture`, `device:flow-meter`, `device:weather-station`, and `device:smart-valve` and it will render the correct data for that zone without any template changes.
 
 **How often should field devices publish to get effective alarm detection?**
 
