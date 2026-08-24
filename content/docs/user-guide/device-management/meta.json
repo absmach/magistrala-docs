@@ -1,0 +1,4 @@
+{
+  "title": "Device Management",
+  "pages": ["introduction", "groups", "channels", "devices"]
+}

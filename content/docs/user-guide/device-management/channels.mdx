@@ -7,28 +7,28 @@ keywords:
   - Channel Roles
   - Publish Subscribe
   - Audit Logs
-  - Clients
+  - Devices
   - Metadata
   - Route
   - Members
 image: /img/mg-preview.png
 ---
 
-**Channels** act as message conduits. They are responsible for the messages exchange between clients and act as message topics that can be **published** or **subscribed** to by multiple Clients.
+**Channels** act as message conduits. They are responsible for the messages exchange between devices and act as message topics that can be **published** or **subscribed** to by multiple Devices.
 
-Clients are able to **publish** or **subscribe** to a channel depending on their connection.
+Devices are able to **publish** or **subscribe** to a channel depending on their connection.
 
 ## Create a Channel
 
 To create a channel, click on the `Create` button. You can also create multiple channels by clicking on the `Upload` button and uploading a `.csv` file.
 
-![Create channel](../../img/clients/channel-create-buttons.png)
+![Create channel](../../img/devices/channel-create-buttons.png)
 
 ### Channel Information
 
 Add a channel **name** and optionally a **Route**, **tags** and **metadata**. Like a domain's Route, the channel **Route** is a short, human-readable identifier for the channel.
 
-![Channel information](../../img/clients/channel-create.png)
+![Channel information](../../img/devices/channel-create.png)
 
 ### Bulk Creation
 
@@ -40,13 +40,13 @@ You can be able to create channels in bulk by uploading a _.csv_ file with the f
 
 A [sample channels CSV file](https://github.com/absmach/magistrala-ui/blob/main/samples/channels.csv) is available.
 
-![Bulk create channels](../../img/clients/channels-bulk-create.png)
+![Bulk create channels](../../img/devices/channels-bulk-create.png)
 
 ## View a Channel
 
 After creating a channel, it will appear in the channels table. To view that channel click on the **row** or the **view** button in the row actions.
 
-![View channel](../../img/clients/channel-view.png)
+![View channel](../../img/devices/channel-view.png)
 
 The channel page has two tabs: **Settings** and **Metadata**.
 
@@ -66,7 +66,7 @@ The **Settings** tab displays key details about a channel and allows you to edit
 
 To update a field, click the **pencil** icon next to it. Once you have updated the value, click the **check** icon to save changes or the **cross** icon to cancel.
 
-![Channel Settings](../../img/clients/channel-settings.png)
+![Channel Settings](../../img/devices/channel-settings.png)
 
 ### Metadata Tab
 
@@ -74,31 +74,31 @@ The **Metadata** tab allows you to add, view, and manage additional information 
 
 For detailed instructions on managing metadata, including working with interactive maps for location and perimeter data, see the [Metadata Management Guide](/user-guide/metadata).
 
-![Channel Metadata](../../img/clients/channel-metadata.png)
+![Channel Metadata](../../img/devices/channel-metadata.png)
 
-## Connect to a Client
+## Connect to a Device
 
-Navigate to the **Connections** tab on the channel sidebar. This will lead you to the connections page where you can view the clients connected to a channel.
+Navigate to the **Connections** tab on the channel sidebar. This will lead you to the connections page where you can view the devices connected to a channel.
 
-![Connections page](../../img/clients/channel-connections.png)
+![Connections page](../../img/devices/channel-connections.png)
 
 In this page you are able to add a connection by clicking on the `Connect` button on the top right corner.
 
-A dialog will open where you can select clients and connection types. A client can have both connection types selected.  
+A dialog will open where you can select devices and connection types. A device can have both connection types selected.  
 There are two connection type options:
 
-1. **Publish**: allows the client to send messages in the channel
-2. **Subscribe**: allows the client to read messages in the channel  
+1. **Publish**: allows the device to send messages in the channel
+2. **Subscribe**: allows the device to read messages in the channel  
 
-![Connect client](../../img/clients/channel-connect-client.png)
+![Connect device](../../img/devices/channel-connect-client.png)
 
-To disconnect the client, click on the `Disconnect` button at the end of the channel row.
+To disconnect the device, click on the `Disconnect` button at the end of the channel row.
 
-![Disconnect client button](../../img/clients/channel-disc-client.png)
+![Disconnect device button](../../img/devices/channel-disc-client.png)
 
 This will open up a dialog that allows you to select which connection type you want to remove. You can remove one or both of the connection types if there are multiple.
 
-![Disconnect client dialog](../../img/clients/channel-disc-client-dialog.png)
+![Disconnect device dialog](../../img/devices/channel-disc-client-dialog.png)
 
 ## Channel Roles
 
@@ -106,13 +106,13 @@ Roles define a set of actions that can be allocated to users.
 
 Navigate to the **Roles** tab of the channel sidebar. This will lead you to a table of all the available roles in the channel, listing each role's **Name**, **Created By**, **Created At**, **Updated By** and **Updated At**.
 
-To create a role, navigate to the roles section on the client navbar. Click on the `Create` button and provide a role name. The actions and members are optional fields.
+To create a role, navigate to the roles section on the channel navbar. Click on the `Create` button and provide a role name. The actions and members are optional fields.
 
-![Create channel role](../../img/clients/channel-create-role.png)
+![Create channel role](../../img/devices/channel-create-role.png)
 
 ### Channel Role Information
 
-![Channel role information](../../img/clients/channel-create-role-dialog.png)
+![Channel role information](../../img/devices/channel-create-role-dialog.png)
 
 The **Role Name** is compulsory.
 You can provide the role actions by selecting from the available actions in the dropdown menu depending on which permissions you would wish each member to have access to.
@@ -134,13 +134,13 @@ Click a role in the **Roles table** to open its page. The page shows the role's 
 
 To update a role name, click on the **pencil** icon on the far right end of the field, update the value then click on the **check** icon to update the changes or the `cross` icon to cancel the changes.
 
-![Update role name](../../img/clients/channel-role-update.png)
+![Update role name](../../img/devices/channel-role-update.png)
 
 ### Update Channel Role Actions
 
 To update the **role actions**, click the **pencil** icon on the row. It will open a dialog box allowing you to select the Role Actions you want to add. This list will include all available actions that are not currently among your Role Actions.
 
-![Update role actions](../../img/clients/channel-role-add-actions.png)
+![Update role actions](../../img/devices/channel-role-add-actions.png)
 
 ### Update Channel Role Members
 
@@ -148,23 +148,23 @@ Members are listed in a separate table below the **Role Actions** section.
 
 To add new members to the channel under the current role click on `Add Members` button. The pop-up dialog will allow you to add any user that is a member of the domain to the channel. The users will show up on a dropdown menu.
 
-![Channel role add members](../../img/clients/channel-role-add-members.png)
+![Channel role add members](../../img/devices/channel-role-add-members.png)
 
 ### Delete Channel Role
 
 If you would like to remove or delete any **Role Action**, click on the **trash** icon. It pops up a dialog that allows you to select which Role Action you want to remove. Optionally you can delete all of the Role Actions by clicking on the `Delete All Actions` button.
 
-![Delete role actions](../../img/clients/channel-role-delete-actions.png)
+![Delete role actions](../../img/devices/channel-role-delete-actions.png)
 
 ### Delete Channel Role Members
 
 Clicking on the `Delete All Members` button will open an alert pop-up that requests for confirmation to delete the channel Role Members.
 
-![Delete role members](../../img/clients/channel-role-delete-members.png)
+![Delete role members](../../img/devices/channel-role-delete-members.png)
 
 To delete specific members from the Role Members Table, click on the **trash** icon.
 
-![Delete role member](../../img/clients/channel-role-member-delete.png)
+![Delete role member](../../img/devices/channel-role-member-delete.png)
 
 ## Channel Members
 
@@ -175,7 +175,7 @@ A channel can have multiple users assigned to it with various roles. Much like t
 Navigate to the Members tab under the Channel Menu. This will lead you to a table of all the available members as well their roles.
 The roles present here are the same roles as the Channel Roles in the section just above
 
-![View role members](../../img/clients/channel-members.png)
+![View role members](../../img/devices/channel-members.png)
 
 ### Assign Channel Members
 
@@ -183,24 +183,24 @@ Members can be assigned to a channel by clicking on the `Assign Member` button.
 This will open up a dialog that allows you to select from amongst the Domain Members present from a dropdown list.
 The roles presented will also be the very same Channel Roles from above.
 
-![Assign role members](../../img/clients/channel-assign-member.png)
+![Assign role members](../../img/devices/channel-assign-member.png)
 
 ### Unassign Channel Members
 
 To unassign a specific member from a channel, simply click on the **trash** Icon on their row in the table. This will bring up a confirmation dialog.
 
-![Unassign role members](../../img/clients/channel-members-unassign.png)
+![Unassign role members](../../img/devices/channel-members-unassign.png)
 
 ## Messages
 
 While on channels, a user can view, send and download messages associated to the channel.
 
-![Messages Page](../../img/clients/empty-messages-page.png)
+![Messages Page](../../img/devices/empty-messages-page.png)
 
 ### Send Messages
 
 The **Send Message** feature allows you to publish sensor or device data directly from the Magistrala UI.  
-A connected client acts as the publisher, and the message can be sent over different supported protocols (**HTTP**, **MQTT**, **CoAP**, **WebSocket**).
+A connected device acts as the publisher, and the message can be sent over different supported protocols (**HTTP**, **MQTT**, **CoAP**, **WebSocket**).
 
 To send a message navigate to the **Messages** section and click on the `Send Message` button.
 In the dialog box, fill in the required fields:
@@ -214,7 +214,7 @@ In the dialog box, fill in the required fields:
      - _string_
      - _data-value_
 3. **Value** - This is the actual measurement or reading (e.g., `6354.886`).
-4. **Publisher** - This is the **connected** Client which can be selected from an infinite select. From this client the backend will get the special _Client-Key_ which will be used to send the message.
+4. **Publisher** - This is the **connected** Device which can be selected from an infinite select. From this device the backend will get the special _Device-Key_ which will be used to send the message.
 
 #### Optional Fields
 
@@ -223,7 +223,7 @@ Additional optional fields that help enhance message clarity:
 - **Unit** - This is the unit of the Value of the payload being sent.
 - **Subtopic** - This is a field that can assist in classifying the messages sent. This field **MUST** match the Rules Engine Publisher topic for the message to be saved in the database.
 
-![Send Message](../../img/clients/send-messages.png)
+![Send Message](../../img/devices/send-messages.png)
 
 ### Message Format
 
@@ -245,7 +245,7 @@ For a message to be saved on the Magistrala database, a **Rule** must be created
 
 The messages table will then update to include the message sent with the latest message appearing first.
 
-![Messages Table](../../img/clients/messages-table.png)
+![Messages Table](../../img/devices/messages-table.png)
 
 ### Using CLI Tools
 
@@ -275,16 +275,18 @@ wscat -c "ws://localhost:8186/m/292f15fe-6a8c-4d7d-adc5-8b68dcdfd19b/c/403937cb-
 curl -s -S -i -X POST -H "Content-Type: application/senml+json" -H "Authorization: Client defa2b7b-3b9f-49dd-bcda-be6b941db96a" http://localhost:8008/m/292f15fe-6a8c-4d7d-adc5-8b68dcdfd19b/c/403937cb-87f9-49d4-9867-1b137cf81e70/ -d '[{"n":"volume","bu":"L","u":"L","bt":1755693352880000000,"v":67382.6452}]'
 ```
 
+The `Authorization` header keyword is `Client` regardless of the publishing device's type — this is a fixed wire-protocol prefix and isn't renamed alongside the Device entity.
+
 ### Filter Messages
 
 Magistrala provides a detailed **Messages Filter Panel** to help you query and view only the messages you’re interested in. By clicking on the `Filter` button in the Messages section, a filter menu appears with various filtering options:
 
-![Filter Messages](../../img/clients/filter-panel.png)  
+![Filter Messages](../../img/devices/filter-panel.png)  
 
 You can filter messages by:
 
 - **Protocol** – Select the communication protocol used (e.g., MQTT, HTTP).
-- **Publisher** – Choose the client that published the message.
+- **Publisher** – Choose the device that published the message.
 - **Value** – Input specific values to filter by.
 - **Boolean Value** – Filter by true/false type messages.
 - **String Value / Data Value** – Provide string or data-specific content to match.
@@ -300,14 +302,14 @@ You can also reset all filters by clicking the **Clear All** button.
 
 To download messages for reporting or analysis, click on the `Download` button. A dialog will appear that lets you customize which messages are downloaded:
 
-![Download Messages Dialog](../../img/clients/download-messages.png)
+![Download Messages Dialog](../../img/devices/download-messages.png)
 
 In the download dialog, you can configure:
 
 - **Offset & Limit** – Control pagination of the result set.
 - **Name** – Filter messages by message name.
 - **Protocol** – Choose protocol type.
-- **Publisher** – Filter by client who published the messages.
+- **Publisher** – Filter by device who published the messages.
 - **Value** – Match a specific message value.
 - **File Name** – Customize the name of the downloaded file. If a name is not provided we will default to using the Channel ID as the csv file name.
 
@@ -323,7 +325,7 @@ You can search logs by operation type using the search input above the log table
 
 The most recent operations—such as `entity.create` and `entity.update`—are displayed at the top.
 
-![Channel Audit Logs](../../img/clients/channel-logs.png)
+![Channel Audit Logs](../../img/devices/channel-logs.png)
 
 Clicking on the `···` button at the end of each row opens a modal displaying structured details about the selected operation.
 
@@ -331,7 +333,7 @@ For most operations, the details modal shows an `outcome` field (e.g., `"allow"`
 
 This enables users to **trace changes**, **audit security**, and **diagnose issues** efficiently.
 
-![View Channel Audit Log Actions](../../img/clients/channel-audit-action-button.png)
+![View Channel Audit Log Actions](../../img/devices/channel-audit-action-button.png)
 
 ## Delete a Channel
 
@@ -339,4 +341,4 @@ To delete a channel, click the **Delete** button in the row actions of the chann
 
 A confirmation dialog appears asking you to type the channel's name before deletion is finalized. Use the **copy button** to copy the name, paste it into the input field, then click **Delete** to permanently remove the channel.
 
-![Delete Channel](../../img/clients/channel-delete.png)
+![Delete Channel](../../img/devices/channel-delete.png)

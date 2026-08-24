@@ -3,7 +3,7 @@ title: Groups
 description: Manage and Organize Groups
 keywords:
   - Magistrala Groups
-  - Client Organization
+  - Device Organization
   - Channel Management
   - Group Roles
   - IoT Access Control
@@ -13,14 +13,14 @@ keywords:
 image: /img/mg-preview.png
 ---
 
-**Groups** in Magistrala are collections that organize **clients** and **channels** together.  
-They make it easier to assign users with specific roles to a set of related channels and clients.
+**Groups** in Magistrala are collections that organize **devices** and **channels** together.  
+They make it easier to assign users with specific roles to a set of related channels and devices.
 
 ## Create a Group
 
 To create a group, click on the `Create` button present on the top of the **Groups** sidebar. You can also create multiple groups by clicking `Upload` and uploading a _.csv_ file with group **names** and any other fields you would like to add.
 
-![Create group](../../img/clients/group-create-button.png)
+![Create group](../../img/devices/group-create-button.png)
 
 ### Bulk Creation
 
@@ -32,18 +32,18 @@ Groups can be created in bulk using a `.csv` file with the following fields (in 
 
 A [sample groups CSV file](https://github.com/absmach/magistrala-ui/blob/main/samples/groups.csv) is available for reference.
 
-![Bulk create groups](../../img/clients/groups-bulk-create.png)
+![Bulk create groups](../../img/devices/groups-bulk-create.png)
 
 ### Group Information
 
 When creating a group, you must provide a **name** and can optionally add a **description**, **tags**, **metadata**, and a **parent group**.
 
-![Group information](../../img/clients/group-information.png)
+![Group information](../../img/devices/group-information.png)
 
 If a **parent group** is selected, the new group becomes its child.  
 This creates a hierarchy where role actions assigned in the parent group are automatically inherited by all child groups.
 
-![Create Group with Parent](../../img/clients/group-create-with-parent.png)
+![Create Group with Parent](../../img/devices/group-create-with-parent.png)
 
 ## View a Group
 
@@ -67,7 +67,7 @@ The **Settings** tab displays key details about a group and allows you to edit c
 
 To update a field, click the **pencil** icon next to it. Once you have updated the value, click the **check** icon to save changes or the **cross** icon to cancel.
 
-![Group Settings](../../img/clients/group-settings.png)
+![Group Settings](../../img/devices/group-settings.png)
 
 ### Metadata Tab
 
@@ -75,18 +75,18 @@ The **Metadata** tab allows you to add, view, and manage additional information 
 
 For detailed instructions on managing metadata, including working with interactive maps for location and perimeter data, see the [Metadata Management Guide](/user-guide/metadata).
 
-![Group Metadata](../../img/clients/group-metadata.png)
+![Group Metadata](../../img/devices/group-metadata.png)
 
 ## Update a Group
 
 While on the **View Group** page, you are allowed to update the group details such as the **name**, **description**, **metadata**, and **status**.
 To update a field, click on the `pencil` icon on the far end of the field to edit. Once you have updated the value, click on the `check` icon to update the changes or the `cross` icon to cancel the change.
 
-![Edit Group](../../img/clients/group-update-view.png)
+![Edit Group](../../img/devices/group-update-view.png)
 
 Groups can also be **enabled or disabled** by toggling the switch in the **Status** field.  
 
-![Disabled Group](../../img/clients/group-disabled.png)
+![Disabled Group](../../img/devices/group-disabled.png)
 
 
 ## Share a Group
@@ -95,17 +95,17 @@ A group can also be shared to another domain member with specific **group roles*
 
 Group Roles will be explained in the next section.
 
-![Share Group](../../img/clients/group-share.png)
+![Share Group](../../img/devices/group-share.png)
 
 ## Manage Parent Groups
 
 To remove a child from the hierarchy it currently resides in, simply click on the `Remove Parent` button. This will remove it from the tier in the group sidebar and have it lose all the role actions and members it previously had access to.
 
-![Remove Parent Group](../../img/clients/group-remove-parent.png)
+![Remove Parent Group](../../img/devices/group-remove-parent.png)
 
 In the case of a group without a parent, the button will instead prompt you to select a parent group from the current list of groups.
 
-![Add Parent Group](../../img/clients/group-add-parent.png)
+![Add Parent Group](../../img/devices/group-add-parent.png)
 
 ## Group Roles
 
@@ -115,19 +115,19 @@ In the case of a group without a parent, the button will instead prompt you to s
 
 To create a role, navigate to the **Roles** section on the group navbar. Click on the `Create` button and provide a role name. The permissions and members are optional fields.
 
-![Create Group Role](../../img/clients/group-role-create.png)
+![Create Group Role](../../img/devices/group-role-create.png)
 
 #### Role Information
 
 When creating the Group Role, the role name is compulsory. For each permission block you choose what it **Applies to** and which **Actions** are allowed, then optionally provide members by searching for a user with their **username**. These users must be members of the same domain however.
 
-Groups use the same generic-action model as domains, clients and channels, but with scopes that reflect the group hierarchy. The **Applies to** options are:
+Groups use the same generic-action model as domains, devices and channels, but with scopes that reflect the group hierarchy. The **Applies to** options are:
 
 - **This group** – applies only to this group object
-- **Clients in this group** – excludes subgroup clients
+- **Clients in this group** – excludes subgroup devices (the option label still reads "Clients" in the current UI, not yet updated to "Devices")
 - **Channels in this group** – excludes subgroup channels
 - **Direct child groups** – applies to child groups under this group
-- **Clients in subgroups** – excludes clients directly in this group
+- **Clients in subgroups** – excludes devices directly in this group (same outstanding "Clients" label as above)
 - **Channels in subgroups** – excludes channels directly in this group
 - **All subgroups** – applies to every nested subgroup
 
@@ -143,25 +143,25 @@ For each scope, the available **actions** are:
 
 To update a **role name**, click on the `pencil` icon on the far right end of the field, update the value then click on the `check` icon to update the changes or the `cross` icon to cancel the changes.
 
-![Update role name](../../img/clients/group-role-update.png)
+![Update role name](../../img/devices/group-role-update.png)
 
 To update a role's permissions, use the **Add actions** / **Remove actions** buttons on a permission scope card. A dialog will appear where you can select additional actions.
 
-![Update role actions](../../img/clients/group-role-actions.png)
+![Update role actions](../../img/devices/group-role-actions.png)
 
 To manage **role members**, open the Members table and click **Add Members**. A dialog will allow you to search and assign users.  
 
-![Update role members](../../img/clients/group-role-members-add.png)
+![Update role members](../../img/devices/group-role-members-add.png)
 
 ### Delete Group Roles
 
 You can also delete actions and members by clicking on the `trash` icon. It pops up a dialog that allows you to select which action you want to remove. Optionally you can delete all of the actions by clicking on the `Delete All Actions` buttons.
 
-![Delete role actions](../../img/clients/group-role-delete-actions.png)
+![Delete role actions](../../img/devices/group-role-delete-actions.png)
 
 To delete All the Members in the Role simply use the `Delete All Members` button and click on the confirmation.
 
-![Delete role members](../../img/clients/group-role-delete-members.png)
+![Delete role members](../../img/devices/group-role-delete-members.png)
 
 The Members table also has individual `trash` icons on each row which facilitates deleting specific Role Members.
 
@@ -172,34 +172,34 @@ To add role members, one can add them when creating a role or in the specific ro
 
 We have the capacity to add users by assigning them to a group in the **Members** section of the group. This will allow you to assign a user to a group by adding them to a specific role.
 
-![View Group Users](../../img/clients/group-asssign-member.png)
+![View Group Users](../../img/devices/group-asssign-member.png)
 
 To remove members, use the **trash** icon next to each user.  
 
-## Group Clients
+## Group Devices
 
-Groups support managing **clients** directly at the group level.  
-From here, you can **create**, **update**, **enable**, **disable**, **delete**, **assign**, and **connect** clients.  
-(See the [Clients](/user-guide/clients-management/clients) section for a full overview of client functionality.)
+Groups support managing **devices** directly at the group level.  
+From here, you can **create**, **update**, **enable**, **disable**, **delete**, **assign**, and **connect** devices.  
+(See the [Devices](/user-guide/device-management/devices) section for a full overview of device functionality.)
 
-![Group clients](../../img/clients/group-clients.png)
+![Group devices](../../img/devices/group-clients.png)
 
-To assign clients to a group, click on the `Assign Clients` button.
-A dialog will open where you can select multiple clients to attach to the group.
+To assign devices to a group, click on the `Assign Devices` button.
+A dialog will open where you can select multiple devices to attach to the group.
 
-![Assign Group clients](../../img/clients/assign-group-clients.png)
+![Assign Group devices](../../img/devices/assign-group-clients.png)
 
 ## Group Channels
 
 Groups also support managing **channels** directly at the group level.  
 You can **create**, **update**, **enable**, **disable**, **delete**, **assign**, and **connect** channels.  
-(See the [Channels](/user-guide/clients-management/channels) section for more details.)
+(See the [Channels](/user-guide/device-management/channels) section for more details.)
 
-![Group channels](../../img/clients/group-channels.png)
+![Group channels](../../img/devices/group-channels.png)
 
 To assign channels to a group, click on the `Assign Channels` button. A dialog will open where you can select multiple channels to attach to the group.
 
-![Assign Group channels](../../img/clients/assign-group-channels.png)
+![Assign Group channels](../../img/devices/assign-group-channels.png)
 
 ## Journals
 
@@ -211,9 +211,9 @@ You can search logs by operation type using the search input above the log table
 
 The most recent operations—such as `entity.create` and `entity.update`—are displayed at the top.
 
-![Group Audit Logs](../../img/clients/groups-audit-logs.png)
+![Group Audit Logs](../../img/devices/groups-audit-logs.png)
 
-Clicking on the `···` button at the end of each row opens a modal displaying structured details about the selected operation, the same way it does for [Client](/docs/user-guide/clients-management/clients#journals) and [Channel](/docs/user-guide/clients-management/channels#journals) journals.
+Clicking on the `···` button at the end of each row opens a modal displaying structured details about the selected operation, the same way it does for [Device](/docs/user-guide/device-management/devices#journals) and [Channel](/docs/user-guide/device-management/channels#journals) journals.
 
 For most operations, the details modal shows an `outcome` field (e.g., `"allow"`), which is the access-control decision for that action.
 
@@ -222,4 +222,4 @@ This enables users to **trace changes**, **audit hierarchy**, and **verify autho
 ## Delete a Group
 To permanently delete a group, click the **Delete Group** button. A confirmation dialog appears asking you to type the group’s name — use the **copy button** to copy it, paste it into the input field, then click **Delete** to finalize.
 
-![Delete Group](../../img/clients/group-delete.png)
+![Delete Group](../../img/devices/group-delete.png)
