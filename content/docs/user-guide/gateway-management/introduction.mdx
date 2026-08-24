@@ -1,0 +1,16 @@
+---
+title: Introduction
+description: Learn what a Gateway is in Magistrala, when a Device needs one, and how reachability, declared devices and authorization work.
+keywords:
+  - Magistrala Gateway
+  - Device Reachability
+  - IoT Edge
+  - Gateway Management
+image: /img/mg-preview.png
+---
+
+A **Gateway** is not a separate kind of entity in Magistrala — it is a [Device](/user-guide/device-management) with its gateway capability turned on. Any device can publish its own telemetry; a device with gateway mode enabled can additionally act as a **reachability path** for other devices that cannot reach the platform directly (for example, BLE or Modbus sensors with no IP connectivity of their own).
+
+Use a Gateway when a device cannot connect to Magistrala on its own and needs another device — one already online — to relay its data on its behalf. If a device connects directly, it never needs a Gateway.
+
+This section covers creating and configuring a Gateway, declaring which devices it relays for, how that traffic is attributed and authorized, and what changes (and does not change) when a device is deleted or a Gateway stops relaying for it.
