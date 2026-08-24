@@ -1,6 +1,6 @@
 ---
 title: API
-description: Magistrala API reference for workspaces, devices, channels, groups, and messages — Atom's GraphQL API plus the still-current HTTP/MQTT/CoAP/WS message publishing endpoints, with sample requests.
+description: Magistrala API reference for users, workspaces, devices, channels, groups, and messages — Atom's GraphQL API plus the still-current HTTP/MQTT/CoAP/WS message publishing endpoints, with sample requests.
 keywords:
   - Magistrala API
   - GraphQL
@@ -18,824 +18,198 @@ image: /img/mg-preview.png
 
 The API reference is available at the [Magistrala API documentation site](https://docs.api.magistrala.absmach.eu/)
 
-<Callout type="warn" title="Users section below is stale — the REST surface it describes no longer exists">
-  Verified against `cmd/` and `docker-compose.yaml`: there is no standalone users Magistrala
-  service anymore, and no `transport.go` for it — see [Entities](/dev-guide/entities) and
-  [Architecture](/dev-guide/architecture). Users are entities (kind `human`) managed through
-  **Atom's GraphQL API** (`src/graphql/{entities,auth}.rs` in the Atom repository), which the CLI
-  wraps for the small set of operations it exposes — see the [CLI
-  reference](/dev-guide/cli/introduction-to-cli) for what's actually runnable today. Rewriting
-  this section from Atom's GraphQL schema is a follow-up on its own — do not trust specific
-  endpoints, request/response shapes, or status codes below without re-verifying against the
-  GraphQL schema first.
-
-  The **Workspaces**, **Devices**, **Channels**, and **Groups** sections further down have already
-  been rewritten against Atom's GraphQL schema (`src/graphql/{tenants,entities,resources,groups}.rs`)
-  and the CLI's actual queries (`cli/atom_commands.go`, `pkg/atom/api.go`) — those are current.
-  **Messages** is a different story again: publishing over HTTP/MQTT/CoAP/WS is unrelated to Atom
-  and still works as described, aside from the `domain_id` → `workspace_id` path segment rename
-  (already fixed).
+<Callout type="info" title="Rewritten for Atom's GraphQL API">
+  The **Workspaces**, **Devices**, **Channels**, **Groups**, and now **Users** sections below are
+  current — all five were rewritten against Atom's actual GraphQL schema
+  (`src/graphql/{tenants,entities,resources,groups,auth,credentials}.rs` in the Atom repository)
+  and cross-checked against what the CLI and UI actually send over the wire
+  (`cli/atom_commands.go`, `pkg/atom/api.go`), not invented from the schema alone. **Messages** is
+  a different story again: publishing over HTTP/MQTT/CoAP/WS is unrelated to Atom and still works
+  as described, aside from the `domain_id` → `workspace_id` path segment rename (already fixed).
 </Callout>
 
 ## Users
 
-### Create User
+A **User** is an Atom `Entity` of kind `human` — the same generic entity type documented in [Devices](#devices), with the same `createEntity`/`entity`/`entities`/`updateEntity`/`enableEntity`/`disableEntity`/`deleteEntity` mutations and queries. This section only covers what's specific to human users: signing up, logging in, and password/session management (`src/graphql/auth.rs`, `src/graphql/credentials.rs`).
 
-To start working with the Magistrala system, you need to create a user account.
+<Callout type="warn" title="No CLI equivalent">
+  Unlike Workspaces/Devices/Channels/Groups, user management has no CLI wrapper — the shipped CLI
+  (`cli/root.go`) has no `users` command. Everything below is GraphQL-only, or reachable through
+  `magistrala-ui`'s sign-up/login pages.
+</Callout>
 
-This function registers a new user account with a unique email and username.
+Same connection details as the rest of this API reference: `POST http://localhost:8080/graphql`, `Content-Type: application/json`, body `{"query": "...", "variables": {...}}`. Login/signup requests need no `Authorization` header (they establish one); everything else needs `Authorization: Bearer <user_token>`.
 
-> The user's names, email and username must all be unique.
+### Sign Up
+
+Self-service registration — creates a new `human` entity and, depending on configuration, sends a verification email before the account is usable.
 
 ```bash
-curl -X POST http://localhost:9002/users \
+curl -sSiX POST http://localhost:8080/graphql \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
 -d @- <<EOF
 {
-  "first_name": "<first_name>",
-  "last_name": "<last_name>",
-  "email": "<email>",
-  "tags": ["tag1", "tag2"],
-  "credentials": {
-    "username": "<username>",
-    "secret": "<password>"
-  },
-  "metadata": {
-    "key1": "value1",
-    "key2": "value2"
-  },
-  "profile_picture": "<profile_picture_url>",
-  "status": "enabled"
+  "query": "mutation Signup(\$input: SignupInput!) { signup(input: \$input) { entityId email verificationRequired } }",
+  "variables": {
+    "input": {
+      "name": "<full_name>",
+      "email": "<email>",
+      "password": "<password>",
+      "attributes": {}
+    }
+  }
 }
 EOF
 ```
 
-**Example Usage:**
-
-```bash
-curl -X POST http://localhost:9002/users \
--H "Content-Type: application/json" \
--d @- <<EOF
-{
-  "first_name": "Jane",
-  "last_name": "Doe",
-  "email": "janedoe@example.com",
-  "tags": ["developer", "backend"],
-  "credentials": {
-    "username": "janedoe",
-    "secret": "securepassword"
-  },
-  "metadata": {
-    "location": "Paris"
-  },
-  "profile_picture": "https://example.com/janedoe.jpg",
-  "status": "enabled"
-}
-EOF
-
-```
-
-**Expected Create User Response:**
+Expected response:
 
 ```json
 {
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Jane",
-  "last_name": "Doe",
-  "email": "janedoe@example.com",
-  "credentials": {
-    "username": "janedoe"
-  },
-  "tags": ["developer", "backend"],
-  "metadata": {
-    "location": "Paris"
-  },
-  "profile_picture": "https://example.com/janedoe.jpg",
-  "status": "enabled",
-  "created_at": "2025-02-11T16:15:12Z",
-  "updated_at": "2025-02-11T16:15:12Z"
-}
-```
-
-### Create Token
-
-To log in to the Magistrala system, you need to create a `user_token`.
-
-```bash
-curl -sSiX POST http://localhost/users/tokens/issue -H "Content-Type: application/json" -d @- << EOF
-{
-  "username": "<user_name> | <username>",
-  "password": "<user_secret>"
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost/users/tokens/issue -H "Content-Type: application/json" -d @- << EOF
-{
-  "username": "john.doe@email.com",
-  "password": "12345678"
-}
-EOF
-
-HTTP/2 201
-server: nginx/1.25.4
-date: Thu, 13 Feb 2025 21:30:06 GMT
-content-type: application/json
-content-length: 583
-Access-Control-Expose-Headers: Location
-
-{"access_token":"eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzk0ODU4MDYsImlhdCI6MTczOTQ4MjIwNiwiaXNzIjoic3VwZXJtcS5hdXRoIiwidHlwZSI6MCwidXNlciI6IjBkNDA5NDgyLTA3MzctNDVlYS04Mjg0LTViZDg4MDU5ZjYyNSJ9.nFeihdM7KQJKr_2WQaKUFqBGWVw1qfjh0N6Uc5C6UXc2ugtm4LCf0sjDawi9ok_szk0fQeWWX8bqOsnEvhobZA","refresh_token":"eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzk1Njg2MDYsImlhdCI6MTczOTQ4MjIwNiwiaXNzIjoic3VwZXJtcS5hdXRoIiwidHlwZSI6MSwidXNlciI6IjBkNDA5NDgyLTA3MzctNDVlYS04Mjg0LTViZDg4MDU5ZjYyNSJ9.DbaMpgVPtL7ER5wlsFmVtC3izKgjB66qsl1beT0qnlcWcfp7NQyvBtT0EW3OyibcqG56SnqO0ye1mzaJLgViqg"}
-```
-
-### Refresh Token
-
-To issue another `access_token` after getting expired, you need to use a `refresh_token`.
-
-```bash
-curl -sSiX POST http://localhost/users/tokens/refresh -H "Content-Type: application/json" -H "Authorization: Bearer <refresh_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost/users/tokens/refresh -H "Content-Type: application/json" -H "Authorization: Bearer <refresh_token>"
-
-HTTP/1.1 201 Created
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:49:45 GMT
-Content-Type: application/json
-Content-Length: 709
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "access_token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODY3NTE0ODUsImlhdCI6MTY4Njc1MDU4NSwiaWRlbnRpdHkiOiJqb2huLmRvZUBlbWFpbC5jb20iLCJpc3MiOiJjbGllbnRzLmF1dGgiLCJzdWIiOiI5NDkzOTE1OS1kMTI5LTRmMTctOWU0ZS1jYzJkNjE1NTM5ZDciLCJ0eXBlIjoiYWNjZXNzIn0.zZcUH12x7Tlnecrc3AAFnu3xbW4wAOGifWZMnba2EnhosHWDuSN4N7s2S7OxPOrBGAG_daKvkA65mi5n1sxi9A",
-  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODY4MzY5ODUsImlhdCI6MTY4Njc1MDU4NSwiaWRlbnRpdHkiOiJqb2huLmRvZUBlbWFpbC5jb20iLCJpc3MiOiJjbGllbnRzLmF1dGgiLCJzdWIiOiI5NDkzOTE1OS1kMTI5LTRmMTctOWU0ZS1jYzJkNjE1NTM5ZDciLCJ0eXBlIjoicmVmcmVzaCJ9.AjxJ5xlUUSjW99ECUAU19ONeCs8WlRl52Ost2qGTADxHGYBjPMqctruyoTYJbdORtL5f2RTxZsnLX_1vLKRY2A",
-  "access_type": "Bearer"
-}
-```
-
-### Get User Profile
-
-You can always check the user profile that is logged-in by using the `user_token`.
-
-```bash
-curl -sSiX GET http://localhost/users/profile -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost/users/profile -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:51:59 GMT
-Content-Type: application/json
-Content-Length: 312
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Jane",
-  "last_name": "Doe",
-  "email": "janedoe@example.com",
-  "credentials": {"username": "janedoe"},
-  "tags": [
-    "developer", 
-    "backend"
-  ],
-  "metadata": {"location": "Paris"},
-  "profile_picture": "https://example.com/janedoe.jpg",
-  "status": "enabled",
-  "created_at": "2025-02-11T16:15:12Z",
-  "updated_at": "2025-02-11T16:15:12Z"
-}
-```
-
-### Get User
-
-You can always check the user entity by entering the user ID and `user_token`.
-
-```bash
-curl -sSiX GET http://localhost/users/{user_id} -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281  -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:51:59 GMT
-Content-Type: application/json
-Content-Length: 312
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Jane",
-  "last_name": "Doe",
-  "email": "janedoe@example.com",
-  "credentials": {"username": "janedoe"},
-  "tags": [
-    "developer", 
-    "backend"
-  ],
-  "metadata": {"location": "Paris"},
-  "profile_picture": "https://example.com/janedoe.jpg",
-  "status": "enabled",
-  "created_at": "2025-02-11T16:15:12Z",
-  "updated_at": "2025-02-11T16:15:12Z"
-}
-
-```
-
-### Get Users
-
-You can get all users in the database by querying `/users` endpoint.
-
-```bash
-curl -sSiX GET http://localhost/users -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost/users -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:52:36 GMT
-Content-Type: application/json
-Content-Length: 285
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "limit": 5,
-  "offset": 0,
-  "total": 2,
-  "users": [
-    {
-      "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-      "first_name": "Jane",
-      "last_name": "Doe",
-      "email": "janedoe@example.com",
-      "credentials": {"username": "janedoe"},
-      "status": "enabled"
-    },
-    {
-      "id": "c1adf32-3dac-4aad-bead-ae96fe071239",
-      "first_name": "John",
-      "last_name": "Smith",
-      "email": "johnsmith@example.com",
-      "credentials": {"username": "johnsmith"},
-      "status": "disabled"
+  "data": {
+    "signup": {
+      "entityId": "b3f1c9a2-5e2d-4a11-9c3f-7a8b2e6d1f90",
+      "email": "user@example.com",
+      "verificationRequired": true
     }
-  ]
+  }
 }
 ```
 
-If you want to paginate your results then use `offset`, `limit`, `metadata`, `last_name`, `first_name`, `email`, `tags`, `status` and `visibility` as query parameters.
+> **Notes**:
+>
+> - Signup only succeeds if `self_registration_enabled` is set on the deployment; otherwise it returns `"sign up is not enabled"`. Admin-created accounts (self-registration disabled) go through `createEntity` instead — see [Create User](#create-user) below — but that path doesn't set a password or send verification email; a separate [Set Password](#set--change-password) call is needed to make the account loginable.
+> - `email` is normalized (lowercased) and used as the login identifier — it is not a field on the `Entity` type itself, and no mutation for changing it was found in this pass; treat email changes as unverified until confirmed against a maintainer.
+
+### Log In
 
 ```bash
-curl -sSiX GET http://localhost/users?[offset=<offset>]&[limit=<limit>]&[identity=<identity>]&[name=<name>]&[tag=<tag>]&[status=<status>]&[visibility=<visibility>] -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost/users?offset=0&limit=5&email=janedoe@example.com -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:53:16 GMT
-Content-Type: application/json
-Content-Length: 284
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "limit": 5,
-  "total": 1,
-  "users": [
-    {
-      "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-      "first_name": "Jane",
-      "last_name": "Doe",
-      "email": "janedoe@example.com",
-      "credentials": {"username": "janedoe"},
-      "status": "enabled"
-    }
-  ]
-}
-```
-
-### Update User
-
-Updating user's names and/or metadata
-
-```bash
-curl -sSiX PATCH http://localhost/users/{user_id} \
+curl -sSiX POST http://localhost:8080/graphql \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
 -d @- <<EOF
 {
-  "first_name": "<new_first_name>",
-  "last_name": "<new_last_name>",
-  "metadata": {
-    "key": "value"
+  "query": "mutation Login(\$input: LoginInput!) { login(input: \$input) { token entityId sessionId } }",
+  "variables": {
+    "input": {
+      "identifier": "<email>",
+      "secret": "<password>",
+      "kind": "password"
+    }
   }
 }
 EOF
 ```
 
-For example:
+Expected response:
+
+```json
+{
+  "data": {
+    "login": {
+      "token": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9...",
+      "entityId": "b3f1c9a2-5e2d-4a11-9c3f-7a8b2e6d1f90",
+      "sessionId": "9c7a1e2d-3b4f-4a5e-8d6c-1f2a3b4c5d6e"
+    }
+  }
+}
+```
+
+> **Notes**:
+>
+> - `kind` defaults to `"password"` if omitted; `"shared_key"` is also accepted (`src/graphql/auth.rs`'s `parse_login_credential_kind`) for shared-key-based login.
+> - To log into a specific workspace directly, pass `tenantId` or `tenantAlias` (the workspace's `route`) alongside `identifier`/`secret` — same `LoginInput`.
+> - The returned `token` is the bearer token for every other request in this reference.
+
+### Log Out / Refresh Session
 
 ```bash
-curl -sSiX PATCH http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281 \
+# Log out (revokes the current session)
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d '{"query": "mutation { logout }"}'
+
+# Refresh (issues a new token for the current session)
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d '{"query": "mutation { refreshSession { token entityId sessionId } }"}'
+```
+
+`refreshSession` requires the token to actually carry a session (i.e. it came from `login`, not a personal access token) — it errors with `"session refresh requires a session token"` otherwise.
+
+### Create User
+
+Admin-created account — bypasses self-registration, does not set a password. Same `createEntity` mutation as [Devices](#create-device), with `kind: "human"`.
+
+```bash
+curl -sSiX POST http://localhost:8080/graphql \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <user_token>" \
 -d @- <<EOF
 {
-  "first_name": "Janet",
-  "last_name": "Doyle",
-  "metadata": {
-    "location": "Lyon"
+  "query": "mutation CreateUser(\$input: CreateEntityInput!) { createEntity(input: \$input) { id kind name tenantId status attributes createdAt } }",
+  "variables": {
+    "input": {
+      "kind": "human",
+      "name": "<full_name>",
+      "tenantId": "<workspace_id>",
+      "attributes": {}
+    }
   }
 }
 EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:54:40 GMT
-Content-Type: application/json
-Content-Length: 354
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Janet",
-  "last_name": "Doyle",
-  "email": "janedoe@example.com",
-  "credentials": {"username": "janedoe"},
-  "tags": [
-    "developer",
-    "backend"
-  ],
-  "metadata": {"location": "Lyon"},
-  "profile_picture": "https://example.com/janedoe.jpg",
-  "status": "enabled",
-  "updated_at": "2025-02-11T18:00:12Z"
-}
-
 ```
 
-### Update User Tags
+Follow up with [Set Password](#set--change-password) to make the account loginable, since `createEntity` has no `email`/`password` fields (those are signup-specific — see the note under [Sign Up](#sign-up)).
 
-Updating user's tags
+### Get User / List Users
+
+Same `entity(id)` and `entities(...)` queries documented in [Get Device](#get-device) / [Get Devices](#get-devices), filtered to `kind: "human"`. `entities` also takes a free-text `q` argument, which doubles as user search:
 
 ```bash
-curl -sSiX PATCH http://localhost/users/{user_id}/tags \
+curl -sSiX POST http://localhost:8080/graphql \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <user_token>" \
 -d @- <<EOF
 {
-  "tags": [
-    "[tag_1]",
-    "...",
-    "[tag_N]"
-  ]
+  "query": "query ListUsers(\$q: String, \$tenantId: ID) { entities(kind: human, q: \$q, tenantId: \$tenantId, limit: 20) { total items { id name status attributes createdAt } } }",
+  "variables": { "q": "<search_term>", "tenantId": "<workspace_id>" }
 }
 EOF
 ```
 
-For example:
+### Update / Enable / Disable / Delete User
+
+Same `updateEntity`, `enableEntity`, `disableEntity`, `deleteEntity` (soft-delete), `restoreEntity`, and `purgeEntity` mutations as [Devices](#update-device) — pass the user's entity `id`. `updateEntity` can change `name` and `attributes`; it cannot change email (see the [Sign Up](#sign-up) note) or password (see below).
+
+### Set / Change Password
 
 ```bash
-curl -sSiX PATCH http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/tags \
+curl -sSiX POST http://localhost:8080/graphql \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <user_token>" \
 -d @- <<EOF
 {
-  "tags": ["backend", "golang"]
-}
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:55:18 GMT
-Content-Type: application/json
-Content-Length: 375
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Janet",
-  "last_name": "Doyle",
-  "email": "janedoe@example.com",
-  "credentials": {"username": "janedoe"},
-  "tags": [
-    "backend", 
-    "golang"
-  ],
-  "metadata": {"location": "Lyon"},
-  "profile_picture": "https://example.com/janedoe.jpg",
-  "status": "enabled",
-  "updated_at": "2025-02-11T18:00:12Z"
-}
-```
-
-### Update User Profile Picture
-
-Updates the profile picture URL of a user.
-
-```bash
-curl -X PATCH http://localhost:9002/users/{user_id}/picture \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "profile_picture": "<picture_url>"
+  "query": "mutation SetPassword(\$entityId: ID!, \$password: String!) { createPassword(entityId: \$entityId, password: \$password) }",
+  "variables": { "entityId": "<user_entity_id>", "password": "<new_password>" }
 }
 EOF
 ```
 
-For example:
+Returns `true` on success. Despite the name, `createPassword` also handles changing an existing password — there is no separate "update password" mutation. A caller can set another entity's password only with `manage` capability on it (or on the target's workspace) — see `require_credential_management` in `src/graphql/auth.rs`; a scoped access token can never call this at all (self-escalation is explicitly blocked).
 
-```bash
-curl -X PATCH http://localhost:9002/users/b7edb32-2eac-4aad-aebe-ed96fe073879/picture \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <access_token>" \
--d @- <<EOF
-{
-  "profile_picture": "https://example.com/newpic.jpg"
-}
-EOF
+### Personal Access Tokens
 
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:59:53 GMT
-Content-Type: application/json
-Content-Length: 382
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
+Covered in depth in the [Personal Access Tokens](/user-guide/pats) user guide and backed by the same `credentials.rs` mutations (`createAccessToken`, `replaceAccessTokenPermissions`, `revokeAccessToken`) and the `accessTokens`/`credentials` queries — not duplicated here.
 
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Janet",
-  "last_name": "Doyle",
-  "email": "janedoe@example.com",
-  "credentials": {"username": "janedoe"},
-  "tags": [
-    "backend", 
-    "golang"
-  ],
-  "profile_picture": "https://example.com/newpic.jpg",
-  "metadata": {"location": "Lyon"},
-  "status": "enabled",
-  "updated_at": "2025-02-11T18:00:12Z"
-}
-```
-
-### Update User Email
-
-Updating user's email
-
-```bash
-curl -sSiX PATCH http://localhost/users/{user_id}/email \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "email": "<user_email>"
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -sSiX PATCH http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/email \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "email": "newemail@example.com"
-}
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:59:53 GMT
-Content-Type: application/json
-Content-Length: 382
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Janet",
-  "last_name": "Doyle",
-  "email": "newemail@example.com",
-  "credentials": {"username": "janedoe"},
-  "tags": [
-    "backend", 
-    "golang"
-  ],
-  "profile_picture": "https://example.com/newpic.jpg",
-  "metadata": {"location": "Lyon"},
-  "status": "enabled",
-  "updated_at": "2025-02-11T18:00:12Z"
-}
-```
-
-### Update User Username
-
-Updating user's username.
-
-```bash
-curl -sSiX PATCH http://localhost/users/{user_id}/username \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "username": "<username>"
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -sSiX PATCH http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/username \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "username": "janedoe2025"
-}
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:59:53 GMT
-Content-Type: application/json
-Content-Length: 382
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Janet",
-  "last_name": "Doyle",
-  "email": "newemail@example.com",
-  "credentials": {"username": "janedoe2025"},
-  "tags": [
-    "backend", 
-    "golang"
-  ],
-  "profile_picture": "https://example.com/newpic.jpg",
-  "metadata": {"location": "Lyon"},
-  "profile_picture": "https://example.com/janedoe.jpg",
-  "status": "enabled",
-  "updated_at": "2025-02-11T18:00:12Z"
-}
-```
-
-### Change Secret
-
-Changing the user secret can be done by calling the update secret method
-
-```bash
-curl -sSiX PATCH http://localhost/users/secret \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "old_secret": "<old_secret>",
-  "new_secret": "<new_secret>"
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -sSiX PATCH http://localhost/users/secret \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "old_secret": "12345678",
-  "new_secret": "12345678a"
-}
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 14:00:35 GMT
-Content-Type: application/json
-Content-Length: 281
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-```
-
-### Enable User
-
-Changing the user status to enabled can be done by calling the enable user method
-
-```bash
-curl -sSiX POST http://localhost/users/{user_id}/enable -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/enable -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 14:01:25 GMT
-Content-Type: application/json
-Content-Length: 382
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Janet",
-  "last_name": "Doyle",
-  "email": "newemail@example.com",
-  "credentials": {"username": "janedoe2025"},
-  "tags": [
-    "backend",
-    "golang"
-  ],
-  "metadata": {"location": "Lyon"},
-  "profile_picture": "https://example.com/newpic.jpg",
-  "status": "enabled",
-  "updated_at": "2025-02-11T18:00:12Z"
-}
-```
-
-### Disable User
-
-Changing the user status to disabled can be done by calling the disable user method
-
-```bash
-curl -sSiX POST http://localhost/users/{user_id}/disable -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/disable -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 14:01:23 GMT
-Content-Type: application/json
-Content-Length: 383
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Janet",
-  "last_name": "Doyle",
-  "email": "newemail@example.com",
-  "credentials": {"username": "janedoe2025"},
-  "tags": [
-    "backend", 
-    "golang"
-  ],
-  "metadata": {"location": "Lyon"},
-  "profile_picture": "https://example.com/newpic.jpg",
-  "status": "disabled",
-  "updated_at": "2025-02-11T18:00:12Z"
-}
-```
-
-### Delete User
-
-Delete a user from the system.
-
-```bash
-curl -X DELETE http://localhost:9002/users/{user_id} \
--H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -X DELETE http://localhost:9002/users/b7edb32-2eac-4aad-aebe-ed96fe073879 \
--H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 14:01:23 GMT
-Content-Type: application/json
-Content-Length: 383
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "message": "User deleted successfully"
-}
-```
-
-### Search User
-
-Searches for users by various parameters.
-
-```bash
-curl -X GET "http://localhost:9002/users/search?username=<username>&email=<email>" \
--H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -X GET "http://localhost:9002/users/search?username=janedoe2025&email=newemail@example.com" \
--H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 14:01:23 GMT
-Content-Type: application/json
-Content-Length: 383
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "limit": 10,
-  "offset": 0,
-  "total": 1,
-  "users": [
-    {
-      "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-      "username": "janedoe2025",
-      "email": "newemail@example.com"
-    }
-  ]
-}
-```
-
-### Get User Memberships
-
-You can get all groups a user is assigned to by calling the get user memberships method.
-
-If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parent_id`, `tree` and `dir` as query parameters.
-
-> The user identified by the `user_token` must be assigned to the same group as the user with id `user_id` with `c_list` action. Alternatively, the user identified by the `user_token` must be the owner of the user with id `user_id`.
-
-```bash
-curl -sSiX GET http://localhost/users/{user_id}/memberships -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/memberships -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 11:22:18 GMT
-Content-Type: application/json
-Content-Length: 367
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "limit": 0,
-  "offset": 0,
-  "memberships": [
-    {
-      "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-      "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "Data analysts",
-      "description": "This group would be responsible for analyzing data collected from sensors.",
-      "metadata": { "location": "london" },
-      "created_at": "2023-06-15T09:41:42.860481Z",
-      "updated_at": "2023-06-15T10:17:56.475241Z",
-      "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "status": "enabled"
-    }
-  ]
-}
-```
-
+<Callout type="warn" title="Not re-verified in this pass">
+  A few of the old REST API's user operations have no confirmed GraphQL equivalent found here:
+  changing a user's **email** or a distinct **username** (Atom's login `identifier` is the email
+  itself, normalized — there's no separate username field or credential kind for one), and any
+  bulk/batch user operations (consistent with [Devices](#create-device): no `createEntities`
+  exists). Treat these as open questions for a maintainer rather than assuming they're unsupported.
+</Callout>
 
 ## Workspaces
 
