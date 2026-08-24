@@ -21,7 +21,7 @@ The alarm object includes the following fields:
 | ----------------- | --------------------------------------------------------- | -------------------- |
 | `id`              | Unique identifier of the alarm                            | ❌                   |
 | `rule_id`         | ID of the rule that triggered the alarm                   | ✅ (added by system) |
-| `workspace_id`    | ID of the workspace this alarm belongs to                 | ✅ (added by system) |
+| `domain_id`       | ID of the domain this alarm belongs to                    | ✅ (added by system) |
 | `channel_id`      | ID of the channel related to the alarm                    | ✅ (added by system) |
 | `client_id`       | ID of the client associated with the alarm                | ✅ (added by system) |
 | `subtopic`        | Subtopic of the message that triggered the alarm          | ❌                   |
@@ -304,7 +304,7 @@ To clear an alarm:
 
 ## Assign Alarm
 
-To assign an alarm to a workspace member:
+To assign an alarm to a domain member:
 
 1. Click the quick links button next to the alarm
 2. Select **Assign** from the dropdown menu

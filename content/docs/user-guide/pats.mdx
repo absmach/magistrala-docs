@@ -27,7 +27,7 @@ This action redirects the user to the PAT creation page, where required details 
 
 ![Create Pat](../img/pats/create-pat.png)
 
-Available scope entities are **Clients**, **Channels**, **Groups**, and **Workspace**. Each entity type exposes a distinct set of operations:
+Available scope entities are **Clients**, **Channels**, **Groups**, and **Domain**. Each entity type exposes a distinct set of operations:
 
 #### Clients
 
@@ -85,31 +85,27 @@ Available scope entities are **Clients**, **Channels**, **Groups**, and **Worksp
 | `set_child_channel`          | Assign a channel as a child of the group     |
 | `remove_child_channel`       | Remove a channel from the group              |
 
-#### Workspace
+#### Domain
 
-The **Workspace** entity scope is automatically locked to the current workspace.
-
-<Callout type="warn" title="Operation names need verification">
-  The operation identifiers below are carried over from the pre-rename docs. `auth/postgres/init.go`'s `auth_9` migration confirms `create_clients`/`list_clients` are stale and should be `create_devices`/`list_devices` (entity type `devices`, not `clients`) — this overlaps with the Clients→Devices rename tracked on a separate branch. Whether `list_domain_invitation` was similarly renamed (e.g. to `list_workspace_invitation`) could not be confirmed against the current source and needs a direct check before this table is trusted.
-</Callout>
+The **Domain** entity scope is automatically locked to the current domain.
 
 | Operation                | Description                              |
 | ------------------------ | ---------------------------------------- |
-| `update`                 | Update workspace information             |
-| `read`                   | Read workspace details                   |
-| `enable`                 | Enable the workspace                     |
-| `disable`                | Disable the workspace                    |
-| `list`                   | List workspaces                          |
-| `send_invitation`        | Send a workspace invitation               |
+| `update`                 | Update domain information                |
+| `read`                   | Read domain details                      |
+| `enable`                 | Enable the domain                        |
+| `disable`                | Disable the domain                       |
+| `list`                   | List domains                             |
+| `send_invitation`        | Send a domain invitation                 |
 | `list_invitation`        | List invitations sent by the user        |
-| `list_domain_invitation` | List all invitations for the workspace   |
-| `delete_invitation`      | Delete a workspace invitation             |
-| `create_clients`         | Create clients within the workspace       |
-| `list_clients`           | List clients in the workspace            |
-| `create_channels`        | Create channels within the workspace     |
-| `list_channels`          | List channels in the workspace           |
-| `create_groups`          | Create groups within the workspace       |
-| `list_groups`            | List groups in the workspace             |
+| `list_domain_invitation` | List all invitations for the domain      |
+| `delete_invitation`      | Delete a domain invitation               |
+| `create_clients`         | Create clients within the domain         |
+| `list_clients`           | List clients in the domain               |
+| `create_channels`        | Create channels within the domain        |
+| `list_channels`          | List channels in the domain              |
+| `create_groups`          | Create groups within the domain          |
+| `list_groups`            | List groups in the domain                |
 
 #### Rules
 

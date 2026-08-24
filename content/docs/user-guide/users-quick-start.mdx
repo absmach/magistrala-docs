@@ -37,7 +37,7 @@ On the **Sign Up** page, check the boxes for:
 
 Then click **Sign up with Google**.
 
-Select your Google account to complete registration. You’ll be redirected to the **Workspaces Homepage**, where you can create or join existing workspaces.
+Select your Google account to complete registration. You’ll be redirected to the **Domains Homepage**, where you can create or join existing domains.
 
 ![Google Sign Up](../img/users-guide/google-signup-page.png)
 
@@ -58,18 +58,18 @@ If the button doesn’t work, you can also copy the verification link provided i
 > The verification link is valid for **24 hours** for security reasons.  
 > If it expires or you didn’t receive the email, click **Resend Email Verification** on your profile page.
 
-Once verified, your profile status will update to **Verified**, and you’ll gain full access to the platform, including the ability to log in to workspaces.
+Once verified, your profile status will update to **Verified**, and you’ll gain full access to the platform, including the ability to log in to domains.
 
 ### After Verification
 
 After your email has been verified:
 
-- You’ll be redirected to the **Workspaces Homepage**.
-- From there, you can create a new workspace or access any existing ones you belong to.
+- You’ll be redirected to the **Domains Homepage**.
+- From there, you can create a new domain or access any existing ones you belong to.
 
-> **Tip:** If you’ve already verified your email and are still on the verification page, click **Go to Workspaces Page** to continue.
+> **Tip:** If you’ve already verified your email and are still on the verification page, click **Go to Domains Page** to continue.
 
-![Workspace Homepage](../img/users-guide/janedoe-workspaceshome.png)
+![Domain Homepage](../img/users-guide/janedoe-domainshome.png)
 
 ## Log In
 
@@ -89,25 +89,25 @@ Choose your preferred Google account to continue. Once authenticated, you’ll b
 > **Note:**  
 > If this is your first time signing in with Google, Magistrala will automatically create a new user profile associated with your Google email.
 
-## Log into a Workspace
+## Log into a Domain
 
-Upon logging in, users are redirected to the **Workspace Selection Page**.
+Upon logging in, users are redirected to the **Domain Selection Page**.
 
-A **Workspace** is where you manage **Clients**, **Channels**, **Groups**, **Dashboards**, **Members**, **Rules** and **Bootstrap** services.
+A **Domain** is a workspace that allows you to manage **Clients**, **Channels**, **Groups**, **Dashboards**, **Members**, **Rules** and **Bootstrap** services.
 
-Click the `+ Create` button in the top-right corner to start. In addition to the workspace name, you’ll need to set a **route**, a unique, user-friendly alias for the workspace’s ID. This route makes it easier to reference or subscribe to the workspace without using its full UUID.
+Click the `+ Create` button in the top-right corner to start. In addition to the domain name, you’ll need to set a **route**, a unique, user-friendly alias for the domain’s ID. This route makes it easier to reference or subscribe to the domain without using its full UUID.
 
 > **The route is defined only at creation and cannot be changed later, so choose something short, clear, and descriptive.**
 
-![Workspace Create](../img/users-guide/jdoe-create-workspace.png)
+![Domain Create](../img/users-guide/jdoe-create-domain.png)
 
-Once you create a workspace, you are given **admin** role over the workspace by default. You are able to perform all actions available over the workspace and all the entities provisioned inside the workspace. You can also assign or invite members to the workspace with various levels of permissions. Click on the respective card to log into a workspace of your choice.
+Once you create a domain, you are given **admin** role over the domain by default. You are able to perform all actions available over the domain and all the entities provisioned inside the domain. You can also assign or invite members to the domain with various levels of permissions. Click on the respective card to log into a domain of your choice.
 
-We will delve deeper into Workspaces in [another section](/user-guide/workspace-management/workspace). For now you need to be able to log into a Workspace to move on to **Groups**.
+We will delve deeper into Domains in [another section](/user-guide/domain-management/domain). For now you need to be able to log into a Domain to move on to **Groups**.
 
 ## Create a Group
 
-Once logged in, you will be directed to the **Homepage** where you can view all the available entities in the workspace.
+Once logged in, you will be directed to the **Homepage** where you can view all the available entities in the domain.
 
 On the sidebar navigation, click on **Groups** under the _Clients Management_ section to be redirected to the groups page.
 
@@ -122,7 +122,7 @@ To create a group, click on the `+ Create` button present on the top-left corner
 A **Client** represents a device connected to Magistrala, capable of communication with other devices.
 It can be a **physical** or **virtual** device that sends and receives messages, often through **embedded systems**.
 
-When you create a client within a specific group, it is automatically assigned to that group and can be connected to **any channel in the workspace**.
+When you create a client within a specific group, it is automatically assigned to that group and can be connected to **any channel in the domain**.
 
 To create a new client, go to the **Clients** page of the desired group and click the `+ Create` button.  
 A dialog will appear asking for details such as:
@@ -261,13 +261,13 @@ Here are some examples:
 **Using HTTP**:
 
 ```bash
-curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/senml+json" -H "Authorization: Client <client_secret>" https://localhost/http/m/<workspace_id>/c/<channel_id> -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/senml+json" -H "Authorization: Client <client_secret>" https://localhost/http/m/<domain_id>/c/<channel_id> -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
 **Using MQTT**:
 
 ```bash
-mosquitto_pub -I <client_name> -u <client_id> -P <client_secret> -t m/<workspace_id>/c/<channel_id> -h localhost -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+mosquitto_pub -I <client_name> -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
 :::info
