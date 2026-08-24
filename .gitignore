@@ -32,3 +32,6 @@ scripts/.env.publish-image
 .claude
 .wolf
 CLAUDE.md
+
+# local screenshot staging (see screenshot-upload-manifest.md)
+/.tmp/
