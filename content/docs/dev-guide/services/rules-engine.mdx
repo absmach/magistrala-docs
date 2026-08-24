@@ -21,7 +21,7 @@ The **Rules Engine** in Magistrala provides powerful, flexible message processin
 
 1. **Scriptable logic** - Use Lua or Go to define message execution behavior.
 2. **Flexible execution** - Rules can be triggered from input messages, schedules or both.
-3. **Pluggable outputs** - Built-in support for alarms, channels, email, Postgres, and SenML writers.
+3. **Pluggable outputs** - Built-in support for alarms, channels, email, Postgres, and SenML/JSON internal-DB writers.
 4. **Secure, scoped execution** - Using domain-level isolation and bearer token authorization. See the [Roles Schema](/dev-guide/roles-schema) for details on available roles and permissions.
 5. **Disabled rules** - Rules can be disabled individually to prevent further executions. They can also be enabled to re-start their executions.
 
@@ -222,7 +222,7 @@ The script should return a value if it triggers an action. Otherwise, it should 
 
 ### Supported Message Formats
 
-The Rules Engine supports multiple message formats, but when **storing messages to the internal database**, the payload **must be in SenML format**.  
+The Rules Engine supports multiple message formats. When **storing messages to the internal database**, you choose the output that matches your payload: the **save_senml** output requires the payload to be a valid SenML message (see below), while the **save_json** output accepts any JSON-marshalable value with no format validation.  
 Valid SenML Example:
 
 ```json
@@ -278,11 +278,12 @@ These may break internal parsing or rule pattern matching.
 The **outputs** field allows a rule to define **multiple destinations** or **actions** for its result. Supported output types include:
 
 1. **channels**: Publishes the result to a specific channel/topic.
-2. **save_senml**: Stores messages in Magistrala’s internal database.
-3. **save_remote_pg**: Forwards the result to an external PostgreSQL database.
-4. **alarms**: Triggers an alarm with a structured severity report.
-5. **email**: Sends a notification email.
-6. **Slack**: Sends a slack notification.
+2. **save_senml**: Stores messages in Magistrala’s internal database as SenML.
+3. **save_json**: Stores messages in Magistrala’s internal database as raw JSON, with no SenML validation.
+4. **save_remote_pg**: Forwards the result to an external PostgreSQL database.
+5. **alarms**: Triggers an alarm with a structured severity report.
+6. **email**: Sends a notification email.
+7. **Slack**: Sends a slack notification.
 
 #### channels
 
@@ -301,6 +302,16 @@ type SenML struct {
   Type    string  `json:"type"`
 }
 ```
+
+#### save_json
+
+```go
+type JSON struct {
+  Type    string  `json:"type"`
+}
+```
+
+Unlike `save_senml`, this output does not validate the logic's result as SenML - any JSON-marshalable value is stored as-is. The message's stored `subtopic` is suffixed with `json` so it lands in a table by that name, matching what a [Message View](/user-guide/message-views) in JSON format queries for. It requires a JSON-capable writer to be deployed - see [Running SenML and JSON Writers Together](/dev-guide/dev-tools/storage#running-senml-and-json-writers-together).
 
 #### save_remote_pg
 
@@ -348,7 +359,7 @@ type Slack struct {
 ```
 
 Each output type expects a different data structure depending on its destination.
-For example, if your output is save_senml, it expects the result of the logic to be a valid SenML message.
+For example, if your output is save_senml, it expects the result of the logic to be a valid SenML message; if your output is save_json instead, any JSON-marshalable result is accepted.
 e.g.
 
 ```lua

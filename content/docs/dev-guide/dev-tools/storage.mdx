@@ -167,6 +167,30 @@ docker-compose -f docker/addons/timescale-writer/docker-compose.yml up -d
 
 Timescale default port (5432) is exposed, so you can use various tools for database inspection and data visualization.
 
+By default, the `timescale-writer` add-on's `config.toml` has no `[transformer]` section at all, which means it silently falls back to the SenML transformer (see [Transformer config](#transformer-config) above) - it will not persist JSON messages, including ones saved via the Rules Engine's [Internal DB (JSON)](/user-guide/rules-engine#store-as-json) output.
+
+#### Running SenML and JSON Writers Together
+
+A single writer *process* is locked to whichever transformer `format` its `config.toml` specifies - it can't switch between SenML and JSON per message. To store both formats at once, run a **second** `timescale-writer` instance dedicated to JSON, alongside the default SenML one:
+
+1. Copy the `timescale-writer` add-on's compose service (or the `MG_TIMESCALE_WRITER_CONFIG_PATH` config it loads) to a second instance, e.g. `timescale-writer-json`.
+2. Give the new instance a `config.toml` with the JSON transformer. The `[subscriber]` section's `topics` key takes slash-delimited MQTT-style filters (`+` for one level, `#` for a variable-length trailing suffix) - the same syntax the writer add-ons already use, for both NATS and FluxMQ builds:
+
+   ```toml
+   [subscriber]
+   topics = ["writers/+/c/+/json"]
+
+   [transformer]
+   format = "JSON"
+   ```
+
+   This particular filter matches messages whose subtopic is exactly `json` - the case where the rule's input channel itself has no subtopic, which the Rules Engine's [Internal DB (JSON)](/user-guide/rules-engine#store-as-json) output produces by default. If your rule's input channel does have a subtopic, the JSON output appends `/json` to it instead (e.g. an input subtopic of `devices/dev-1` becomes `devices/dev-1/json`), which needs an extra `+` per subtopic level to match, e.g. `writers/+/c/+/+/json`.
+3. Leave the existing SenML `timescale-writer` instance's `config.toml` and `topics` filter unchanged (it defaults to `["writers/#"]`, matching every writer-bound message regardless of format).
+
+`#` is a trailing wildcard only - it can't express "anything ending in `.../json`" regardless of depth in a single filter, so a topic tree with subtopics of varying depth needs either one `+`-based filter per depth you expect, or falling back to the broader `["writers/#"]` catch-all. With that catch-all, the JSON writer attempts to parse every message it receives as JSON: messages whose subtopic doesn't end in a `json` segment still get stored, just under a table named after whatever their own last subtopic segment is, rather than the `json` table - harmless clutter, not data corruption, but worth scoping down with the `+`-based filter above once you know your deployment's topic structure.
+
+As explained above, the JSON transformer derives its destination table from the last segment of the message's subtopic - so messages published (or, from a rule, saved) with a subtopic ending in `json` land in a table literally named `json`, matching what a channel's [Message Views](/user-guide/message-views) JSON-format view queries for.
+
 ## Readers
 
 Readers provide an implementation of various `message readers`. Message readers are services that consume normalized (in `SenML` format) Magistrala messages from data storage and opens HTTP API for message consumption. Installing corresponding writer before reader is implied.
