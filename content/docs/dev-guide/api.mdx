@@ -17,6 +17,21 @@ image: /img/mg-preview.png
 
 The API reference is available at the [Magistrala API documentation site](https://docs.api.magistrala.absmach.eu/)
 
+<Callout type="warn" title="Users, Domains, Clients, Channels, and Groups sections below are stale — the REST surface they describe no longer exists">
+  Verified against `cmd/` and `docker-compose.yaml`: there are no standalone users, clients,
+  channels, domains, or groups Magistrala services anymore, and no `transport.go` for any of them
+  — see [Entities](/dev-guide/entities) and [Architecture](/dev-guide/architecture). Those
+  concepts (now Workspaces/Devices/Channels/Groups) are managed through **Atom's GraphQL API**
+  (`src/graphql/{query,mutation}.rs` in the Atom repository), which the CLI wraps for the small
+  set of operations it exposes — see the [CLI reference](/dev-guide/cli/introduction-to-cli) for
+  what's actually runnable today. Rebuilding this section from Atom's GraphQL schema is a
+  substantial follow-up on its own, out of scope for this pass — do not trust specific endpoints,
+  request/response shapes, or status codes below for those five sections without re-verifying
+  against the GraphQL schema first. The **Messages** section further down is a different story:
+  publishing over HTTP/MQTT/CoAP/WS is unrelated to Atom and still works as described, aside from
+  the `domain_id` → `workspace_id` path segment rename (fixed below).
+</Callout>
+
 ## Users
 
 ### Create User
@@ -2378,7 +2393,7 @@ Access-Control-Expose-Headers: Location
 Sends message via HTTP protocol
 
 ```bash
-curl -sSiX POST http://localhost/http/m/{domain_id}/c/{channel_id} \
+curl -sSiX POST http://localhost/http/m/{workspace_id}/c/{channel_id} \
 -H "Content-Type: application/senml+json" \
 -H "Authorization: Client <client_secret>" \
 -d @- <<EOF
@@ -2404,7 +2419,7 @@ EOF
 For example:
 
 ```bash
-curl -sSiX POST http://localhost/http/m/{domain_id}/c/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8 \
+curl -sSiX POST http://localhost/http/m/{workspace_id}/c/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8 \
 -H "Content-Type: application/senml+json" \
 -H "Authorization: Client a83b9afb-9022-4f9e-ba3d-4354a08c273a" \
 -d @- <<EOF
@@ -2440,10 +2455,16 @@ Connection: keep-alive
 
 ### Read Messages
 
-Reads messages from database for a given channel.
+Reads messages from database for a given channel, via the `timescale-reader`/`postgres-reader` HTTP API (see [Storage Architecture § Message Storage Backends](/dev-guide/storage-architecture#message-storage-backends)).
+
+<Callout type="warn" title="Needs maintainer verification">
+  The path segment rename below (`domain_id` → `workspace_id`) follows the same convention
+  confirmed for message publishing, but the readers' HTTP route itself was not independently
+  re-verified against `readers/api/http/transport.go` in this pass.
+</Callout>
 
 ```bash
-curl -sSiX GET http://localhost:{service_port}/{domain_id}/channels/{channel_id}/messages?[offset={offset}]&[limit={limit}] \
+curl -sSiX GET http://localhost:{service_port}/{workspace_id}/channels/{channel_id}/messages?[offset={offset}]&[limit={limit}] \
 -H "Authorization: Bearer <access_token>"
 ```
 
