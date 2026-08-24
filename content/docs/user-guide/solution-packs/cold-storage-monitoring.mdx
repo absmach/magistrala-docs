@@ -30,7 +30,7 @@ Operators work with three pre-built dashboards: a Cold Storage Operations Overvi
 
 **Door event tracking.** The Door Open Alert monitors cumulative open duration for both cold room doors, warning at 120 seconds and escalating to Critical at 300 seconds, to limit thermal ingress and energy loss from doors left open during loading.
 
-**Power continuity and backup protection.** The Power Failure Alert raises an immediate Critical alarm the moment the facility switches to battery backup, and a Critical Grid Undervoltage alarm fires below 180V — outside the safe range for compressor motors. The Backup Battery Alert warns at <20% charge and reaches Critical at <10%, so there's lead time to start a generator or restore grid power before backup runtime runs out.
+**Power continuity and backup protection.** The Power Failure Alert raises an immediate Critical alarm the moment the facility switches to battery backup, and a Critical Grid Undervoltage alarm fires below 180V — outside the safe range for compressor motors. The Backup Battery Alert warns below 20% charge and reaches Critical below 10%, so there's lead time to start a generator or restore grid power before backup runtime runs out.
 
 **Refrigeration energy anomaly detection.** The Energy Anomaly Alert monitors compressor power draw per unit, warning above 5,000W and reaching Critical above 7,000W — both well above the normal 1,500–4,000W operating range — flagging dirty condenser coils, refrigerant leaks, or a failing compressor motor before a full breakdown.
 
@@ -135,7 +135,7 @@ Passes all SenML records that contain a numeric `v` field through to storage, en
 
 ### Temperature Alert
 
-Monitors `temperature` and raises zone-specific alarms: **Frozen Zone Temperature Warning** (>-15°C, Warning), **Frozen Zone Temperature Critical** (>-12°C, Critical — HACCP limit), **Frozen Zone Overcooled** (<-26°C, Warning), **Chilled Zone Temperature Warning** (>5°C, Warning), **Chilled Zone Temperature Critical** (>8°C, Critical — HACCP limit), **Chilled Zone Too Cold** (≤0°C, High).
+Monitors `temperature` and raises zone-specific alarms: **Frozen Zone Temperature Warning** (above -15°C, Warning), **Frozen Zone Temperature Critical** (above -12°C, Critical — HACCP limit), **Frozen Zone Overcooled** (below -26°C, Warning), **Chilled Zone Temperature Warning** (above 5°C, Warning), **Chilled Zone Temperature Critical** (above 8°C, Critical — HACCP limit), **Chilled Zone Too Cold** (≤0°C, High).
 
 - **Outputs:** alarms, channels → Alerts Channel, email
 
