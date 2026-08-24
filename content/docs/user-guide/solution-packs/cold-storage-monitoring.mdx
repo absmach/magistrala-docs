@@ -22,7 +22,7 @@ Operators work with three pre-built dashboards: a Cold Storage Operations Overvi
 
 ## Key Features
 
-**End-to-end cold chain telemetry pipeline.** The pack provisions ten device clients across two independent storage zones, three channels (Telemetry, Commands, and Alerts), and three groups for access control (Cold Room A — Frozen Storage, Cold Room B — Chilled Storage, and Power Systems). Every SenML record that arrives in the Telemetry Channel is processed continuously by detection rules, so alarm latency is governed by your device's publish interval, not a polling schedule.
+**End-to-end cold chain telemetry pipeline.** The pack provisions ten devices across two independent storage zones, three channels (Telemetry, Commands, and Alerts), and three groups for access control (Cold Room A — Frozen Storage, Cold Room B — Chilled Storage, and Power Systems). Every SenML record that arrives in the Telemetry Channel is processed continuously by detection rules, so alarm latency is governed by your device's publish interval, not a polling schedule.
 
 **HACCP-aligned dual-zone temperature monitoring.** The frozen zone (Cold Room A, -20°C target) raises a Warning when temperature rises above -15°C and escalates to Critical at the HACCP limit of -12°C; it also warns if the zone runs colder than -26°C (freezer burn / energy waste risk). The chilled zone (Cold Room B, +3°C target) raises a Warning above 5°C, a Critical alarm at the HACCP limit of 8°C, and a High-severity alarm if it drops to or below 0°C, where refrigerated product may begin freezing.
 
@@ -44,7 +44,7 @@ Operators work with three pre-built dashboards: a Cold Storage Operations Overvi
 
 Before deploying the solution pack, confirm the following:
 
-- A Magistrala domain is provisioned and you have administrator credentials.
+- A Magistrala workspace is provisioned and you have administrator credentials.
 - At least one compatible field device is available: a temperature/humidity sensor, a CO2 sensor, a door sensor, a power supply monitor, or an energy meter capable of reporting compressor power draw.
 - Your device supports MQTT, HTTP, CoAP, or WebSocket and can publish JSON-encoded SenML payloads.
 - If you want email delivery for alarms and reports, SMTP credentials are configured in the platform settings.
@@ -53,7 +53,7 @@ Before deploying the solution pack, confirm the following:
 
 **Step 1: Provision credentials from the platform.**
 
-Navigate to your domain's Clients section and create a new client for each device. The platform will generate a `client_id` and `client_secret`. Note the channel ID of the Telemetry Channel; you will find it in the Channels section after the solution pack is deployed.
+Navigate to your workspace's Devices section and create a new device for each sensor. The platform will generate a `client_id` and `client_secret`. Note the channel ID of the Telemetry Channel; you will find it in the Channels section after the solution pack is deployed.
 
 **Step 2: Configure your device.**
 
@@ -109,7 +109,7 @@ The primary operations view for facility managers: live temperature and humidity
 
 **Temperature — Cold Room A** is a gauge scaled -30°C to 0°C for the frozen zone. **Temperature — Cold Room B** is a gauge scaled -5°C to +15°C for the chilled zone. **Ambient Temperature** is a gauge fed by the loading-area monitoring station. **Humidity — Cold Room A/B** are 0–100% gauges. **CO2 Level — Cold Room A/B** are value cards in ppm. **Door Status — Cold Room A/B** are value cards showing open/closed state. **Active Alarms** is a count card for all open alarms. **Temperature Trend — Cold Room A/B** are 24-hour line charts. **Facility Device Map** is a marker map plotting all ten sensors and meters at their installation coordinates. **Cold Room Zone Map** is a polygon map showing the Cold Room A and Cold Room B perimeters with device markers inside each zone.
 
-Before this dashboard displays correctly, verify that the `location` metadata on each device client matches your actual facility coordinates — the pack ships with sample coordinates for a Hamburg, Germany warehouse.
+Before this dashboard displays correctly, verify that the `location` metadata on each device's record matches your actual facility coordinates — the pack ships with sample coordinates for a Hamburg, Germany warehouse.
 
 ### Energy & Power Dashboard
 
@@ -234,7 +234,7 @@ Delivers a monthly HACCP compliance summary across both zones. Use it for regula
 
 **Messages are not appearing in the Telemetry Channel.**
 
-Check that the MQTT client uses the topic format `channels/<channel_id>/messages` for the Telemetry Channel (not Commands or Alerts), and that `username`/`password` are the `client_id`/`client_secret` from the Clients section, not the display name.
+Check that the MQTT client uses the topic format `channels/<channel_id>/messages` for the Telemetry Channel (not Commands or Alerts), and that `username`/`password` are the `client_id`/`client_secret` from the Devices section, not the display name.
 
 **Messages arrive but no alarms fire.**
 
@@ -252,7 +252,7 @@ Confirm SMTP credentials are configured in the platform settings and that the pl
 
 **Can the pack monitor more than two cold rooms?**
 
-Yes. The pack ships with two zones (Cold Room A, frozen; Cold Room B, chilled), but the architecture scales to any number. Each additional room needs its own device clients, a group for access control, and Telemetry Channel connections. The Cold Room Status template scales automatically to any group containing devices tagged `device:temp-humidity`, `device:co2-sensor`, and `device:door-sensor`.
+Yes. The pack ships with two zones (Cold Room A, frozen; Cold Room B, chilled), but the architecture scales to any number. Each additional room needs its own devices, a group for access control, and Telemetry Channel connections. The Cold Room Status template scales automatically to any group containing devices tagged `device:temp-humidity`, `device:co2-sensor`, and `device:door-sensor`.
 
 **Can we monitor a third temperature band, like a dry storage or ambient zone?**
 
