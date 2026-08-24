@@ -1,125 +1,45 @@
 ---
 title: Notifications
-description: Email notification service for Magistrala — listens to workspace invitation events and sends styled HTML email notifications to users when they are invited, accept, or reject a workspace invitation.
+description: How Magistrala sends workspace-invitation emails today — via Atom's built-in mail sender, not a standalone Magistrala service.
 keywords:
   - Notifications
   - Email
   - SMTP
   - Invitations
-  - Domains
-  - Events
+  - Atom
   - Magistrala
 image: /img/mg-preview.png
 enterprise: true
 ---
 
-<Callout type="warn" title="Needs maintainer verification">
-  There is no standalone Notifications service or Users service in the current
-  `cmd/`/`docker-compose.yaml` (verified) — this page's "fetches user details from the Users
-  service over gRPC" claim can't be current since that service doesn't exist standalone anymore
-  (see [users.mdx](/dev-guide/services/users)). Whether workspace-invitation emails are still sent
-  this way, and by what, was not re-verified in this pass.
+<Callout type="warn" title="Rewritten: this is no longer a Magistrala service">
+  There is no standalone Notifications service, Users service, or NATS-driven event flow in the
+  current `cmd/`/`docker-compose.yaml` (verified). Invitation emails are now sent by **Atom**
+  itself, synchronously, as part of handling the invitation — not by a separate event-driven
+  Magistrala service. Verified against Atom's `src/mail.rs` and `src/tenants/email.rs`.
 </Callout>
 
-The **Notifications service** is an event-driven service that sends email notifications for workspace invitation lifecycle events. It listens to the platform event stream (NATS or RabbitMQ), fetches user details from the Users service over gRPC, and delivers styled HTML emails via SMTP when a user is invited to a workspace, accepts an invitation, or rejects one.
+When a user is invited to a workspace, Atom renders and sends the invitation email inline — there's no event stream, no gRPC call to a Users service, and nothing for Magistrala to deploy or configure for this to work. The old asynchronous, NATS-driven, cross-service design this page previously described does not exist anymore.
 
-## Events Handled
+## How it works
 
-| Event                | Trigger                                          |
-| -------------------- | ------------------------------------------------ |
-| `invitation.send`    | A user is invited to join a domain               |
-| `invitation.accept`  | The invited user accepts the domain invitation   |
-| `invitation.reject`  | The invited user rejects the domain invitation   |
+Atom ships three built-in email templates (verification, password reset, invitation) as `.tmpl` files — a `Subject:` header line, an optional `Content-Type:` header line, a blank line, then a [minijinja](https://docs.rs/minijinja)-templated body. Sending an invitation email calls `mail::send_templated_email` with the `Invitation` template kind and the invitation URL as the single templated variable.
 
 ## Configuration
 
-### General
+Set on Atom, not on any Magistrala service:
 
-| Variable                              | Description                                            | Default                    |
-| ------------------------------------- | ------------------------------------------------------ | -------------------------- |
-| `MG_NOTIFICATIONS_LOG_LEVEL`          | Log level (debug, info, warn, error)                   | info                       |
-| `MG_NOTIFICATIONS_INSTANCE_ID`        | Instance identifier                                    | ""                         |
-| `MG_NOTIFICATIONS_DOMAIN_ALT_NAME`    | Alternative label for "domain" (e.g. workspace)        | domains                    |
-| `MG_ES_URL`                           | Event store URL                                        | nats://localhost:4222      |
+| Variable                    | Description                                                        |
+| ---------------------------- | ------------------------------------------------------------------- |
+| `ATOM_SMTP_HOST`             | SMTP server host — SMTP is considered unconfigured if unset         |
+| `ATOM_SMTP_FROM`              | Sender address                                                       |
+| `ATOM_SMTP_TLS`               | `none`, `tls`, or `starttls` (default)                               |
+| `ATOM_EMAIL_TEMPLATES_DIR`    | Directory checked first, one file at a time, before the built-in default — override only the templates you need |
+| `ATOM_ALLOW_UNVERIFIED_EMAIL_LOGIN` | Development-only: if SMTP isn't configured, log the invitation URL instead of failing, rather than sending it |
 
-### Email (SMTP)
+If SMTP isn't configured and the dev bypass isn't set, sending fails outright rather than silently dropping the email.
 
-| Variable                              | Description                                            | Default                         |
-| ------------------------------------- | ------------------------------------------------------ | ------------------------------- |
-| `MG_EMAIL_HOST`                       | SMTP server host                                       | localhost                       |
-| `MG_EMAIL_PORT`                       | SMTP server port                                       | 25                              |
-| `MG_EMAIL_USERNAME`                   | SMTP username                                          | ""                              |
-| `MG_EMAIL_PASSWORD`                   | SMTP password                                          | ""                              |
-| `MG_EMAIL_FROM_ADDRESS`               | Sender email address                                   | noreply@magistrala.com          |
-| `MG_EMAIL_FROM_NAME`                  | Sender display name                                    | Magistrala Notifications        |
+## What's genuinely gone
 
-### Email Templates
-
-| Variable                              | Description                                            |
-| ------------------------------------- | ------------------------------------------------------ |
-| `MG_EMAIL_INVITATION_TEMPLATE`        | Path to invitation sent email template                 |
-| `MG_EMAIL_ACCEPTANCE_TEMPLATE`        | Path to invitation accepted email template             |
-| `MG_EMAIL_REJECTION_TEMPLATE`         | Path to invitation rejected email template             |
-
-### gRPC (Users service)
-
-| Variable                              | Description                                            |
-| ------------------------------------- | ------------------------------------------------------ |
-| `MG_USERS_GRPC_URL`                   | Users service gRPC URL                                 |
-| `MG_USERS_GRPC_TIMEOUT`               | gRPC request timeout                                   |
-| `MG_USERS_GRPC_CLIENT_CERT`           | Path to client certificate                             |
-| `MG_USERS_GRPC_CLIENT_KEY`            | Path to client key                                     |
-| `MG_USERS_GRPC_SERVER_CA_CERTS`       | Path to trusted CA certificates for Users gRPC         |
-
-## Email Templates
-
-The service ships three HTML email templates with Magistrala branding:
-
-| Template                          | Header Color     | Purpose                             |
-| --------------------------------- | ---------------- | ----------------------------------- |
-| `invitation-sent-email.tmpl`      | Blue (`#083662`) | Notify user of a domain invitation  |
-| `invitation-accepted-email.tmpl`  | Green            | Notify inviter that user accepted   |
-| `invitation-rejected-email.tmpl`  | Red              | Notify inviter that user rejected   |
-
-All templates are responsive HTML and include a call-to-action section. You can supply custom templates via the `MG_EMAIL_*_TEMPLATE` environment variables.
-
-## Deployment
-
-The service requires NATS for the event stream and the Users service gRPC endpoint. It has no database of its own.
-
-```bash
-git clone https://github.com/absmach/magistrala
-cd magistrala
-
-go build -o notifications cmd/notifications/main.go
-
-MG_NOTIFICATIONS_LOG_LEVEL=info \
-MG_ES_URL=nats://localhost:4222 \
-MG_EMAIL_HOST=smtp.example.com \
-MG_EMAIL_PORT=587 \
-MG_EMAIL_USERNAME=user \
-MG_EMAIL_PASSWORD=pass \
-MG_EMAIL_FROM_ADDRESS=noreply@example.com \
-MG_USERS_GRPC_URL=localhost:7009 \
-./notifications
-```
-
-## Architecture
-
-```
-domains service → event store (NATS) → notifications service → users service (gRPC)
-                                                 ↓
-                                           SMTP Server → Email Recipients
-```
-
-The service is stateless — it fetches all required data per event from the Users gRPC endpoint and delivers immediately via SMTP. No local state is kept between events.
-
-## Testing
-
-```bash
-# Unit tests
-go test ./notifications/... -v
-
-# Email integration tests (requires a running SMTP server)
-MG_RUN_EMAIL_TESTS=true go test ./notifications/emailer -v
-```
+- The old event-driven architecture (`domains service → NATS → notifications service → users service gRPC → SMTP`) — replaced by a direct in-process send inside Atom.
+- SMPP/SMS notifications, and the generic (non-invitation) SMTP notifier — those lived in Magistrala's own `consumers/notifiers` package, which still exists as source but isn't wired into any running service; see [Consumers § Notifiers](/dev-guide/services/consumers#notifiers).
