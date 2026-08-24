@@ -50,7 +50,7 @@ Operators work with five pre-built dashboards: a KPI summary, a real-time monito
 
 Before deploying the solution pack, confirm the following:
 
-- A Magistrala domain is provisioned and you have administrator credentials.
+- A Magistrala workspace is provisioned and you have administrator credentials.
 - At least one compatible field device is available: a water meter capable of reporting flow rate and accumulated volume, a pressure sensor, a water quality sensor (pH, turbidity, temperature, TDS), a pump controller, or a tank level sensor.
 - Your device supports MQTT, HTTP, CoAP, or WebSocket and can publish JSON-encoded SenML payloads.
 - If you plan to use the Data Archival rule, a PostgreSQL instance is reachable from the Magistrala deployment and the connection string is available.
@@ -60,7 +60,7 @@ Before deploying the solution pack, confirm the following:
 
 **Step 1 — Provision credentials from the platform.**
 
-Navigate to your domain's Clients section and create a new client for each device. The platform will generate a `client_id` and `client_secret`. Note the channel ID of the Raw Telemetry Channel — you will find it in the Channels section after the solution pack is deployed.
+Navigate to your workspace's Clients section and create a new client for each device. The platform will generate a `client_id` and `client_secret`. Note the channel ID of the Raw Telemetry Channel — you will find it in the Channels section after the solution pack is deployed.
 
 **Step 2 — Configure your device.**
 

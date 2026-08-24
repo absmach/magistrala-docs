@@ -39,7 +39,7 @@ Operators work with three pre-built dashboards: a field operations map with live
 
 **Remote actuator control.** The Field Operations Dashboard includes switch widgets that send commands directly to the Smart Valve Zone A, Smart Valve Zone B, and Pump Controller clients via the Commands Channel. Operators can open or close valves and start or stop the pump without leaving the monitoring UI.
 
-**Role-based dashboards and templates.** Three operational dashboards serve domain admins: the Field Operations Dashboard for live zone control, the Irrigation Analytics Dashboard for historical trend analysis, and the Alarm Monitoring Dashboard for alarm triage. Two dashboard templates use tag-based device references: Zone Monitoring for zone managers and Field Report for farmers, so a single template definition scales to any number of zones or accounts without duplicating configuration.
+**Role-based dashboards and templates.** Three operational dashboards serve workspace admins: the Field Operations Dashboard for live zone control, the Irrigation Analytics Dashboard for historical trend analysis, and the Alarm Monitoring Dashboard for alarm triage. Two dashboard templates use tag-based device references: Zone Monitoring for zone managers and Field Report for farmers, so a single template definition scales to any number of zones or accounts without duplicating configuration.
 
 ![Provisioned dashboards](/screenshots/solutions/smart-irrigation/solution-dashboards.png)
 
@@ -53,7 +53,7 @@ Operators work with three pre-built dashboards: a field operations map with live
 
 Before deploying the solution pack, confirm the following:
 
-- A Magistrala domain is provisioned and you have administrator credentials.
+- A Magistrala workspace is provisioned and you have administrator credentials.
 - At least one compatible field device is available: a soil moisture sensor capable of reporting volumetric water content as a percentage, a weather station with rainfall measurement, a flow meter with real-time flow rate and cumulative volume, a smart valve actuator, a tank level sensor, or a pump controller.
 - Your device supports MQTT, HTTP, CoAP, or WebSocket and can publish JSON-encoded SenML payloads.
 - If you want email delivery for alarms and reports, SMTP credentials are configured in the platform settings.
@@ -62,7 +62,7 @@ Before deploying the solution pack, confirm the following:
 
 **Step 1: Provision credentials from the platform.**
 
-Navigate to your domain's Clients section and create a new client for each device. The platform will generate a `client_id` and `client_secret`. Note the channel ID of the Telemetry Channel; you will find it in the Channels section after the solution pack is deployed.
+Navigate to your workspace's Clients section and create a new client for each device. The platform will generate a `client_id` and `client_secret`. Note the channel ID of the Telemetry Channel; you will find it in the Channels section after the solution pack is deployed.
 
 **Step 2: Configure your device.**
 

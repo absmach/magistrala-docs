@@ -18,7 +18,7 @@ The pack monitors a wellhead production site from field sensors through to the d
 
 Readings from seven field devices (wellhead gateway, flow meter, wellhead pressure sensor, gas detector, oil storage tank sensor, separator controller, and transfer pump controller) arrive in the Raw Telemetry Channel. A data processing rule validates each record before passing clean data to the Processed Data Channel. Five detection rules run continuously from there: catching high wellhead and casing pressure, H2S and LEL gas hazards, low oil flow, rising water cut, and tank overfill events. When thresholds are crossed, alarms fire immediately and email notifications go to configured recipients. A Commands Channel carries pump and separator control commands sent from the dashboards.
 
-Three pre-built dashboards serve domain admins: a Field Operations KPI Dashboard for the top-level view, a Real-Time Well Monitoring Dashboard for on-shift situational awareness, and an Alarm Monitoring Dashboard for triage. Two templates, Well Operator and Field Manager Summary, use tag-based device references so the same definition scales to multiple wells without configuration changes.
+Three pre-built dashboards serve workspace admins: a Field Operations KPI Dashboard for the top-level view, a Real-Time Well Monitoring Dashboard for on-shift situational awareness, and an Alarm Monitoring Dashboard for triage. Two templates, Well Operator and Field Manager Summary, use tag-based device references so the same definition scales to multiple wells without configuration changes.
 
 ## Key Features
 
@@ -40,7 +40,7 @@ Three pre-built dashboards serve domain admins: a Field Operations KPI Dashboard
 
 **Device health monitoring.** The Device Health Monitor evaluates the timestamp of incoming records hourly. Any device whose last message is more than 600 seconds (10 minutes) behind server time raises a Warning alarm, flagging connectivity or hardware failures before they create gaps in regulatory records. For safety-critical devices such as the gas detector and pressure sensor, the alarm description recommends dispatching a field inspection.
 
-**Role-differentiated dashboards and templates.** Three dashboards serve domain admins. Two templates use tag-based device references (`device:flow-meter`, `device:pressure-sensor`, `device:gas-detector`, `device:tank-sensor`) so a single definition applies to any wellhead when assigned to a group containing devices with those tags.
+**Role-differentiated dashboards and templates.** Three dashboards serve workspace admins. Two templates use tag-based device references (`device:flow-meter`, `device:pressure-sensor`, `device:gas-detector`, `device:tank-sensor`) so a single definition applies to any wellhead when assigned to a group containing devices with those tags.
 
 ![Provisioned dashboards](/screenshots/solutions/oil-and-gas-monitoring/solution-dashboards.png)
 
@@ -56,7 +56,7 @@ Three pre-built dashboards serve domain admins: a Field Operations KPI Dashboard
 
 Before deploying the solution pack, confirm the following:
 
-- A Magistrala domain is provisioned and you have administrator credentials.
+- A Magistrala workspace is provisioned and you have administrator credentials.
 - At least one compatible field device is available: a flow meter reporting flow rate and gas flow, a wellhead pressure transducer, a fixed-head gas detection unit for H2S and LEL, a tank level transmitter, a separator controller, or a pump controller with pump status output.
 - Your device or gateway supports MQTT, HTTP, CoAP, or WebSocket and can publish JSON-encoded SenML payloads.
 - If you plan to use the Data Archival rule, a PostgreSQL instance is reachable from the Magistrala deployment and the connection string is available.
@@ -66,7 +66,7 @@ Before deploying the solution pack, confirm the following:
 
 **Step 1 — Provision credentials from the platform.**
 
-After deploying the solution pack, navigate to your domain's Clients section. Each device (Flow Meter, Wellhead Pressure Sensor, Gas Detector, etc.) has its own `client_id` and `client_secret`. Note the channel ID of the Raw Telemetry Channel from the Channels section.
+After deploying the solution pack, navigate to your workspace's Clients section. Each device (Flow Meter, Wellhead Pressure Sensor, Gas Detector, etc.) has its own `client_id` and `client_secret`. Note the channel ID of the Raw Telemetry Channel from the Channels section.
 
 **Step 2 — Configure your device or gateway.**
 
@@ -374,7 +374,7 @@ Open the High Pressure Alert rule in the Rules page and edit the threshold const
 
 **Can the pack handle multiple wells or field sites?**
 
-Yes. Each field site is a Magistrala domain with its own device clients, channels, rules, and groups. The Well Operator and Field Manager Summary templates use tag-based device references, so deploying a new well means provisioning its clients and assigning a group, not duplicating template definitions. A central operations view can aggregate alarm counts across all sites while individual site data stays isolated.
+Yes. Each field site is a Magistrala workspace with its own device clients, channels, rules, and groups. The Well Operator and Field Manager Summary templates use tag-based device references, so deploying a new well means provisioning its clients and assigning a group, not duplicating template definitions. A central operations view can aggregate alarm counts across all sites while individual site data stays isolated.
 
 **How are H2S safety alarms escalated if no one acknowledges them?**
 
