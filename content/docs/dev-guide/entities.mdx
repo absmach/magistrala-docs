@@ -147,6 +147,33 @@ Allowed examples: `temperature`, `meter-type:water`, `zone-A`
   verified in this pass — check against Atom's actual `QueryRoot` before trusting the URL form.
 </Callout>
 
+## Audit logs
+
+The old standalone `journal` service is gone (verified against `cmd/` and `docker/docker-compose.yaml` — no trace remains). Entity/channel/group activity (creation, updates, disabling, connectivity, role changes) is now tracked by **Atom's own audit log**, exposed via a GraphQL query (`magistrala-ui`'s `packages/ui/src/lib/journal.ts`, which the UI's per-entity **Journals** tab calls):
+
+```graphql
+query ObjectAuditLogs($targetKind: String!, $targetId: ID!, $event: String, $limit: Int, $offset: Int) {
+  auditLogs(targetKind: $targetKind, targetId: $targetId, event: $event, limit: $limit, offset: $offset) {
+    total
+    items {
+      id
+      event
+      outcome
+      details
+      createdAt
+    }
+  }
+}
+```
+
+`targetKind` follows Atom's own event-recording convention (`atom`: `src/graphql/{resources,entities,groups}.rs`): `"resource"` for Channels, `"group"` for Groups, `"entity"` for everything else (Devices, Users, Gateways, Device Types).
+
+<Callout type="warn" title="Atom-backed deployments only">
+  This query is only available when the deployment targets Atom (`MG_ATOM_URL` set). Legacy
+  deployments without Atom fall back to the old journal SDK — not documented here since that
+  service no longer exists in this repository.
+</Callout>
+
 ## Attributes / Metadata
 
 `Attributes` (`map[string]any` in Go, called `Metadata` in the old per-entity structs) is a free-form JSON object available on Tenants, Entities, and Groups, used to attach arbitrary structured data.
