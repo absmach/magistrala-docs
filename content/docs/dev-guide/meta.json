@@ -14,8 +14,7 @@
     "dev-tools",
     "edge",
     "certs",
-    "extensions",
-    "benchmark"
+    "extensions"
   ],
   "defaultOpen": true
 }
