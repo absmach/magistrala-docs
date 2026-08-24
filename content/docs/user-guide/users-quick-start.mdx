@@ -1,6 +1,6 @@
 ---
 title: Quick Start Guide
-description: Get up and running with Magistrala — the open-source IoT platform. Learn how to create users, manage clients and channels, and explore key services.
+description: Get up and running with Magistrala — the open-source IoT platform. Learn how to create users, manage devices and channels, and explore key services.
 keywords:
   - Magistrala Quick Start
   - IoT Setup Guide
@@ -10,7 +10,7 @@ keywords:
 image: /img/mg-preview.png
 ---
 
-Magistrala provides core **Services** for handling the creation, deletion, updating, and retrieval of user accounts, clients and channels.
+Magistrala provides core **Services** for handling the creation, deletion, updating, and retrieval of user accounts, devices and channels.
 Users in Magistrala must have **unique credentials**, including a `username`, `secret`, and `email` address upon creation.
 
 This guide will take you through the core services for a quick setup of Magistrala and a walkthrough of its services and components.
@@ -37,7 +37,7 @@ On the **Sign Up** page, check the boxes for:
 
 Then click **Sign up with Google**.
 
-Select your Google account to complete registration. You’ll be redirected to the **Domains Homepage**, where you can create or join existing domains.
+Select your Google account to complete registration. You’ll be redirected to the **Workspaces Homepage**, where you can create or join existing workspaces.
 
 ![Google Sign Up](../img/users-guide/google-signup-page.png)
 
@@ -58,18 +58,18 @@ If the button doesn’t work, you can also copy the verification link provided i
 > The verification link is valid for **24 hours** for security reasons.  
 > If it expires or you didn’t receive the email, click **Resend Email Verification** on your profile page.
 
-Once verified, your profile status will update to **Verified**, and you’ll gain full access to the platform, including the ability to log in to domains.
+Once verified, your profile status will update to **Verified**, and you’ll gain full access to the platform, including the ability to log in to workspaces.
 
 ### After Verification
 
 After your email has been verified:
 
-- You’ll be redirected to the **Domains Homepage**.
-- From there, you can create a new domain or access any existing ones you belong to.
+- You’ll be redirected to the **Workspaces Homepage**.
+- From there, you can create a new workspace or access any existing ones you belong to.
 
-> **Tip:** If you’ve already verified your email and are still on the verification page, click **Go to Domains Page** to continue.
+> **Tip:** If you’ve already verified your email and are still on the verification page, click **Go to Workspaces Page** to continue.
 
-![Domain Homepage](../img/users-guide/janedoe-domainshome.png)
+![Workspace Homepage](../img/users-guide/janedoe-domainshome.png)
 
 ## Log In
 
@@ -89,27 +89,27 @@ Choose your preferred Google account to continue. Once authenticated, you’ll b
 > **Note:**  
 > If this is your first time signing in with Google, Magistrala will automatically create a new user profile associated with your Google email.
 
-## Log into a Domain
+## Log into a Workspace
 
-Upon logging in, users are redirected to the **Domain Selection Page**.
+Upon logging in, users are redirected to the **Workspace Selection Page**.
 
-A **Domain** is a workspace that allows you to manage **Clients**, **Channels**, **Groups**, **Dashboards**, **Members**, **Rules** and **Bootstrap** services.
+A **Workspace** lets you manage **Devices**, **Channels**, **Groups**, **Dashboards**, **Members**, **Rules** and **Bootstrap** services.
 
-Click the `+ Create` button in the top-right corner to start. In addition to the domain name, you’ll need to set a **route**, a unique, user-friendly alias for the domain’s ID. This route makes it easier to reference or subscribe to the domain without using its full UUID.
+Click the `+ Create` button in the top-right corner to start. In addition to the workspace name, you’ll need to set a **route**, a unique, user-friendly alias for the workspace’s ID. This route makes it easier to reference or subscribe to the workspace without using its full UUID.
 
 > **The route is defined only at creation and cannot be changed later, so choose something short, clear, and descriptive.**
 
-![Domain Create](../img/users-guide/jdoe-create-domain.png)
+![Workspace Create](../img/users-guide/jdoe-create-domain.png)
 
-Once you create a domain, you are given **admin** role over the domain by default. You are able to perform all actions available over the domain and all the entities provisioned inside the domain. You can also assign or invite members to the domain with various levels of permissions. Click on the respective card to log into a domain of your choice.
+Once you create a workspace, you are given **admin** role over the workspace by default. You are able to perform all actions available over the workspace and all the entities provisioned inside the workspace. You can also assign or invite members to the workspace with various levels of permissions. Click on the respective card to log into a workspace of your choice.
 
-We will delve deeper into Domains in [another section](/user-guide/domain-management/domain). For now you need to be able to log into a Domain to move on to **Groups**.
+We will delve deeper into Workspaces in [another section](/user-guide/workspace-management/workspace). For now you need to be able to log into a Workspace to move on to **Groups**.
 
 ## Create a Group
 
-Once logged in, you will be directed to the **Homepage** where you can view all the available entities in the domain.
+Once logged in, you will be directed to the **Homepage** where you can view all the available entities in the workspace.
 
-On the sidebar navigation, click on **Groups** under the _Clients Management_ section to be redirected to the groups page.
+On the sidebar navigation, click on **Groups** under the _Device Management_ section to be redirected to the groups page.
 
 ![Groups Page](../img/users-guide/jdoe-groups-page.png)
 
@@ -117,25 +117,25 @@ To create a group, click on the `+ Create` button present on the top-left corner
 
 ![Create Group](../img/users-guide/group-information.png)
 
-## Create a Client
+## Create a Device
 
-A **Client** represents a device connected to Magistrala, capable of communication with other devices.
+A **Device** represents a device connected to Magistrala, capable of communication with other devices.
 It can be a **physical** or **virtual** device that sends and receives messages, often through **embedded systems**.
 
-When you create a client within a specific group, it is automatically assigned to that group and can be connected to **any channel in the domain**.
+When you create a device within a specific group, it is automatically assigned to that group and can be connected to **any channel in the workspace**.
 
-To create a new client, go to the **Clients** page of the desired group and click the `+ Create` button.  
+To create a new device, go to the **Devices** page of the desired group and click the `+ Create` button.  
 A dialog will appear asking for details such as:
 
 - **Name** (required)
-- **Key** (optional) - The client key is used to authorize the device to send messages. If left blank, a key is auto-generated during client creation. Users may also provide their own key, and it can be edited later.
+- **Key** (optional) - The device key is used to authorize the device to send messages. If left blank, a key is auto-generated during device creation. Users may also provide their own key, and it can be edited later.
 - **Tags** (optional, for organization and filtering)
 
-Adding tags can help you quickly locate and manage clients in larger setups.
+Adding tags can help you quickly locate and manage devices in larger setups.
 
-![Create Client](../img/users-guide/group-client-create.png)
+![Create Device](../img/users-guide/group-client-create.png)
 
-A user can also create bulk clients by clicking on the `Upload` button. This will lead to a dialog box that takes in a _.CSV_ file with the client's details filled in correctly as seen in these [samples](https://github.com/absmach/magistrala-ui/tree/main/samples).
+A user can also create bulk devices by clicking on the `Upload` button. This will lead to a dialog box that takes in a _.CSV_ file with the device's details filled in correctly as seen in these [samples](https://github.com/absmach/magistrala-ui/tree/main/samples).
 
 The file should have the following fields in order:
 
@@ -143,37 +143,37 @@ The file should have the following fields in order:
 2. Metadata
 3. Tags
 
-![Create Clients](../img/users-guide/group-clients-create.png)
+![Create Devices](../img/users-guide/group-clients-create.png)
 
-### View a Client
+### View a Device
 
-Once created, a **group-client** can be viewed and updated in the unique Client's ID page.
-To open this page, click on the desired client in the **Clients** table.
+Once created, a **group-device** can be viewed and updated in the unique Device's ID page.
+To open this page, click on the desired device in the **Devices** table.
 
-From the Client Details page, you can:
+From the Device Details page, you can:
 
-- Update the client’s information
+- Update the device’s information
 - Copy its **ID** and **secret**
 - Manage its connections
-- Manage the Client's **Roles** as well as **Members**
-- View the Client's audit logs
+- Manage the Device's **Roles** as well as **Members**
+- View the Device's audit logs
 
-![View Client](../img/users-guide/group-client-view.png)
+![View Device](../img/users-guide/group-client-view.png)
 
-The **Connections** tab in the **group-client page** is where a User can connect a Client to a Channel.
+The **Connections** tab in the **group-device page** is where a User can connect a Device to a Channel.
 
 ## Create a Channel
 
-Channels act as **message conduits**, enabling communication between clients.
+Channels act as **message conduits**, enabling communication between devices.
 
-They serve as topics that multiple clients can **publish** to or **subscribe** from, allowing seamless device-to-device messaging.  
+They serve as topics that multiple devices can **publish** to or **subscribe** from, allowing seamless device-to-device messaging.  
 While subtopics are supported for more granular message routing, they are optional for basic interactions.
 
 Each channel has a **route**, which is a user-friendly alias for the channel’s ID.  
 The route makes it easier to reference or subscribe to the channel without needing the full UUID.  
 It is defined **only during creation** and cannot be changed later, so choose something short, clear, and descriptive.
 
-To create a channel, navigate to the fourth tab under the groups and click on `+ Create`. This will open a dialog box which will take in a unique Channel name. Much like the Clients, clicking on `Upload` will allow a user to upload a _.CSV_ file with multiple channels.
+To create a channel, navigate to the fourth tab under the groups and click on `+ Create`. This will open a dialog box which will take in a unique Channel name. Much like the Devices, clicking on `Upload` will allow a user to upload a _.CSV_ file with multiple channels.
 
 ![Create Group Channel](../img/users-guide/group-channel-create.png)
 
@@ -183,12 +183,12 @@ After the Channel is created, clicking on it while it is on the Channels table l
 
 ![View Group Channel](../img/users-guide/group-channel-view.png)
 
-Clients can be connected to channels in groups. This is done in the **Connections** tab. There are two connection types:
+Devices can be connected to channels in groups. This is done in the **Connections** tab. There are two connection types:
 
 - **Subscribe**
 - **Publish**
 
-![Connect Group Channel Clients](../img/users-guide/group-channel-connections.png)
+![Connect Group Channel Devices](../img/users-guide/group-channel-connections.png)
 
 ## Create a Rule
 
@@ -247,7 +247,7 @@ Your new rule will now appear in the Rules table, ready to process incoming mess
 
 ## Send a Message
 
-Once a Channel and Client are connected as well as Rule created, a user is able to send messages. Navigate to the `Messages` tab of the Group-Channel and click on `Send Messages`.
+Once a Channel and Device are connected as well as Rule created, a user is able to send messages. Navigate to the `Messages` tab of the Group-Channel and click on `Send Messages`.
 
 ![View Messages Page](../img/users-guide/group-messages-view.png)
 
@@ -261,13 +261,13 @@ Here are some examples:
 **Using HTTP**:
 
 ```bash
-curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/senml+json" -H "Authorization: Client <client_secret>" https://localhost/http/m/<domain_id>/c/<channel_id> -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/senml+json" -H "Authorization: Client <device_secret>" https://localhost/http/m/<workspace_id>/c/<channel_id> -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
 **Using MQTT**:
 
 ```bash
-mosquitto_pub -I <client_name> -u <client_id> -P <client_secret> -t m/<domain_id>/c/<channel_id> -h localhost -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+mosquitto_pub -I <device_name> -u <device_id> -P <device_secret> -t m/<workspace_id>/c/<channel_id> -h localhost -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
 :::info
