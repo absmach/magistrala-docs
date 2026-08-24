@@ -21,8 +21,8 @@ A common temptation is to throw a single, massive database at the problem. But t
 
 That is where Magistrala takes a smarter path. Rather than forcing every kind of data into a single model, it embraces **polyglot persistence** — a strategy that is as practical as it is powerful. The idea is simple: use the right tool for the job. Magistrala breaks its storage needs down like this:
 
-- **Identity & core metadata**: users, clients (devices or applications), groups, channels, domains, and the roles and policies that govern them. This data changes relatively infrequently but must always be consistent.
-- **Time-series message data**: the billions of messages published by clients, where each message is an immutable event stamped with a precise time.
+- **Identity & core metadata**: users, devices, groups, channels, workspaces, and the roles and policies that govern them. This data changes relatively infrequently but must always be consistent.
+- **Time-series message data**: the billions of messages published by devices, where each message is an immutable event stamped with a precise time.
 - **Authorization**: who can perform which action on which resource, evaluated with very low latency on every request.
 - **Objects & binary assets**: larger or unstructured payloads that don't belong in a relational or time-series store.
 
@@ -38,32 +38,32 @@ The table below gives a high-level overview of this strategy, which the followin
 
 ## Core Metadata & Identity
 
-Magistrala keeps its familiar product concepts — domains, users, clients, channels, groups, connections, rules, reports, and alarms — but it does **not** run its own identity, credential, role, or policy database. Instead it builds directly on **[Atom](https://github.com/absmach/atom)**, a lightweight identity-and-authorization service (a slimmer alternative to Keycloak) that persists everything in **PostgreSQL** and acts as the system of record for the control plane.
+Magistrala keeps its familiar product concepts — workspaces, users, devices, channels, groups, connections, rules, reports, and alarms — but it does **not** run its own identity, credential, role, or policy database. Instead it builds directly on **[Atom](https://github.com/absmach/atom)**, a lightweight identity-and-authorization service (a slimmer alternative to Keycloak) that persists everything in **PostgreSQL** and acts as the system of record for the control plane.
 
 Magistrala's concepts map onto Atom's native primitives rather than onto bespoke tables:
 
 | Magistrala concept                    | Atom primitive                     | Stored as                                         |
 | ------------------------------------- | ---------------------------------- | ------------------------------------------------- |
-| Domain                                | Tenant                             | `tenants` row (tenant id = domain UUID)           |
+| Workspace                             | Tenant                             | `tenants` row (tenant id = workspace UUID)        |
 | User                                  | Entity (`kind = human`)            | `entities` row, usually global (`tenant_id` null) |
-| Client (device/application)           | Entity (`kind = device`/`service`) | tenant-owned `entities` row                       |
+| Device / Gateway (device or service)  | Entity (`kind = device`/`service`) | tenant-owned `entities` row                       |
 | Channel / Rule / Report / Alarm       | Resource                           | tenant-owned `resources` row                      |
 | Group boundary                        | Object Group                       | `object_groups`                                   |
 | Set of subjects                       | Principal Group                    | `principal_groups`                                |
 | Connection / access grant             | Role assignment or Direct Policy   | `role_assignments` / `direct_policies`            |
 | Credentials (password, API key, cert) | Credential                         | `credentials`                                     |
 
-Application-specific fields that Atom doesn't model natively live in an `attributes.magistrala` JSONB blob on the object, so Magistrala never needs a second store. Because a Magistrala **domain** is an Atom **tenant**, multi-tenancy is a first-class property of the schema — every entity, resource, group, role, and credential is scoped to a tenant.
+Application-specific fields that Atom doesn't model natively live in an `attributes.magistrala` JSONB blob on the object, so Magistrala never needs a second store. Because a Magistrala **workspace** is an Atom **tenant**, multi-tenancy is a first-class property of the schema — every entity, resource, group, role, and credential is scoped to a tenant.
 
 This metadata changes relatively infrequently compared with the message firehose, but when it does it must update atomically, consistently, and reliably, because it is the foundation the whole platform rests on. That is why it lives in a relational database.
 
 ### Why PostgreSQL?
 
 - **ACID Transactions**
-  PostgreSQL guarantees atomicity, consistency, isolation, and durability. Multi-step operations — like creating a user, assigning clients, or updating channel access — either succeed entirely or not at all. This eliminates any chance of partial, invalid state.
+  PostgreSQL guarantees atomicity, consistency, isolation, and durability. Multi-step operations — like creating a user, assigning devices, or updating channel access — either succeed entirely or not at all. This eliminates any chance of partial, invalid state.
 
 - **Enforced Relational Integrity**
-  Atom's schema captures real-world constraints at the database level. An entity's `tenant_id` is a foreign key into `tenants` (`ON DELETE CASCADE`), so a client can never belong to a non-existent domain; a `credential` references its `entity_id` the same way, so credentials can't outlive their owner; a `CHECK` limits an entity's `kind` to `human`/`device`/`service`/`workload`/`application`; and a unique index on `(name, tenant_id)` keeps names unambiguous within a tenant. These rules hold regardless of application logic.
+  Atom's schema captures real-world constraints at the database level. An entity's `tenant_id` is a foreign key into `tenants` (`ON DELETE CASCADE`), so a device can never belong to a non-existent workspace; a `credential` references its `entity_id` the same way, so credentials can't outlive their owner; a `CHECK` limits an entity's `kind` to `human`/`device`/`service`/`workload`/`application`; and a unique index on `(name, tenant_id)` keeps names unambiguous within a tenant. These rules hold regardless of application logic.
 
 - **Race Condition Protection**
   With transactional isolation and row-level locking, PostgreSQL prevents concurrent operations from corrupting critical state, which is especially important under multi-tenant workloads.
@@ -81,20 +81,20 @@ Together these guarantees keep Magistrala's control plane robust, auditable, and
 
 Let's make this concrete.
 
-### Modeling a Client-to-Channel Connection
+### Modeling a Device-to-Channel Connection
 
-Connecting a `client` to a `channel` shows both why the relational model matters and how Atom avoids bespoke join tables. There is **no `connections` table** — a connection is expressed with Atom's generic access primitives:
+Connecting a `device` to a `channel` shows both why the relational model matters and how Atom avoids bespoke join tables. There is **no `connections` table** — a connection is expressed with Atom's generic access primitives:
 
-- **Preferred — a role assignment.** A role carries a permission block that applies to the channel resource with the `publish`/`subscribe` actions, and that role is assigned to the client entity (or to a Principal Group it belongs to).
-- **Strict runtime links — a Direct Policy.** A trusted Magistrala service can attach a Direct Policy (`subject = client entity`, `permission_block = publish/subscribe on the channel resource`). Direct Policies are created only by trusted flows and are audited.
+- **Preferred — a role assignment.** A role carries a permission block that applies to the channel resource with the `publish`/`subscribe` actions, and that role is assigned to the device entity (or to a Principal Group it belongs to).
+- **Strict runtime links — a Direct Policy.** A trusted Magistrala service can attach a Direct Policy (`subject = device entity`, `permission_block = publish/subscribe on the channel resource`). Direct Policies are created only by trusted flows and are audited.
 
-Both the client (an `entities` row) and the channel (a `resources` row) carry a `tenant_id` foreign key, so a client can only ever be linked to a channel **within the same tenant** — cross-tenant linkage is structurally impossible, and there is no separate `connections` or `direct_grants` table to keep in sync.
+Both the device (an `entities` row) and the channel (a `resources` row) carry a `tenant_id` foreign key, so a device can only ever be linked to a channel **within the same tenant** — cross-tenant linkage is structurally impossible, and there is no separate `connections` or `direct_grants` table to keep in sync.
 
 Contrast this with a schemaless **NoSQL** store like MongoDB or DynamoDB, where the same operation relies on best-effort writes: nothing guarantees the referenced entity or resource exists, nothing prevents cross-tenant linking, and referential integrity has to be re-implemented in application code. The result is broken routing, cross-tenant data leakage, and brittle access rules.
 
 ### Querying
 
-The relational model also makes listings fast and safe. Suppose you need every active device in a domain tagged `region:EU`. Because Atom indexes the `attributes` JSONB (a GIN index) alongside `tenant_id` and `kind`, this is a single indexed query:
+The relational model also makes listings fast and safe. Suppose you need every active device in a workspace tagged `region:EU`. Because Atom indexes the `attributes` JSONB (a GIN index) alongside `tenant_id` and `kind`, this is a single indexed query:
 
 ```sql
 SELECT id, name
@@ -111,7 +111,7 @@ Crucially, Atom applies **authorization filtering in SQL**: a listing returns on
 
 ## Message Storage
 
-In Magistrala, every piece of client data, event log, or telemetry update is recorded as a message with a timestamp. This makes message storage a time-series challenge. Messages are generated, queued, and consumed in a stream and exhibit specific properties:
+In Magistrala, every piece of device data, event log, or telemetry update is recorded as a message with a timestamp. This makes message storage a time-series challenge. Messages are generated, queued, and consumed in a stream and exhibit specific properties:
 
 - **High write volume**: the system must sustain hundreds of thousands to millions of writes per second, particularly during IoT bursts or synchronized device reporting.
 - **Time-driven access patterns**: every data point is indexed by time.
@@ -195,7 +195,7 @@ ORDER BY time DESC
 LIMIT 100;
 ```
 
-TimescaleDB's planner first uses chunk pruning to narrow the scan to the relevant time chunks, then applies the attribute filters against the hypertable's indexes. Message rows reference entities by identifier (`channel`, `publisher`) rather than by foreign key — the time-series store and the identity store (Atom's PostgreSQL) are deliberately separate services. Mapping those identifiers back to human-readable metadata (client names, tenant, location) is resolved at the application layer through Atom, keeping the high-write message path decoupled from the control plane.
+TimescaleDB's planner first uses chunk pruning to narrow the scan to the relevant time chunks, then applies the attribute filters against the hypertable's indexes. Message rows reference entities by identifier (`channel`, `publisher`) rather than by foreign key — the time-series store and the identity store (Atom's PostgreSQL) are deliberately separate services. Mapping those identifiers back to human-readable metadata (device names, workspace, location) is resolved at the application layer through Atom, keeping the high-write message path decoupled from the control plane.
 
 The fixed `messages` hypertable above is SenML-only. Arbitrary JSON payloads don't fit that flat, typed schema, so `timescale-writer` stores them differently: instead of one shared table, it creates a table on demand for each distinct message *format* (a name derived from the message's subtopic, not a fixed schema), with a single `payload JSONB` column holding the whole object. See [Running SenML and JSON Writers Together](/dev-guide/dev-tools/storage#running-senml-and-json-writers-together) for how this is configured and deployed.
 
@@ -203,7 +203,7 @@ The fixed `messages` hypertable above is SenML-only. Arbitrary JSON payloads don
 
 ## Authorization
 
-Magistrala requires a mechanism to determine which users can access which resources across tenants, domains, and devices. The access-control logic must span a wide range of actions: publishing to channels, subscribing to topics, provisioning clients, and managing domains. Traditional Role-Based Access Control (RBAC), which assigns users fixed roles like "admin" or "viewer," is not expressive enough — and modeling these relationships directly in a relational schema would require recursive joins, join tables, and nested queries that are slow, brittle, and hard to maintain.
+Magistrala requires a mechanism to determine which users can access which resources across tenants, workspaces, and devices. The access-control logic must span a wide range of actions: publishing to channels, subscribing to topics, provisioning devices, and managing workspaces. Traditional Role-Based Access Control (RBAC), which assigns users fixed roles like "admin" or "viewer," is not expressive enough — and modeling these relationships directly in a relational schema would require recursive joins, join tables, and nested queries that are slow, brittle, and hard to maintain.
 
 To address this, Magistrala externalizes identity and authorization to **Atom**, a dedicated identity-and-authorization service (a lightweight alternative to Keycloak). Atom acts as a **policy decision point (PDP)**: services ask Atom a direct question — "is this subject allowed to perform this action on this resource?" — and Atom returns the decision.
 
@@ -211,16 +211,16 @@ Atom's access model is built from a small set of primitives:
 
 | Atom concept         | Meaning                                           | Example                                          |
 | -------------------- | ------------------------------------------------- | ------------------------------------------------ |
-| **Tenant**           | Top-level boundary                                | Magistrala domain `d1`                           |
+| **Tenant**           | Top-level boundary                                | Magistrala workspace `w1`                         |
 | **Action**           | A single action                                   | `read`, `publish`, `role.manage`                 |
 | **Permission Block** | Scope + actions + effect + conditions             | "topic in Plant-A → read, publish"               |
-| **Role**             | A named collection of Permission Blocks           | `Plant Operator` bundles client + channel access |
+| **Role**             | A named collection of Permission Blocks           | `Plant Operator` bundles device + channel access |
 | **Role Assignment**  | Grants a role to an entity or Principal Group     | assign `Plant Operator` to `user1`               |
 | **Direct Policy**    | Grants one Permission Block directly to a subject | `client1` can publish to `channel1`              |
 | **Principal Group**  | A collection of identities                        | `Operators` contains `user1`, `user2`            |
-| **Object Group**     | A boundary/container for objects                  | `Plant-A` contains clients, channels, groups     |
+| **Object Group**     | A boundary/container for objects                  | `Plant-A` contains devices, channels, groups     |
 
-In Atom, **every principal is a first-class entity** — humans, devices, services, and workloads are all treated the same way, with no special "user" class. Access is granted by assigning roles (bundles of permission blocks) to identities or principal groups, or by attaching a direct policy for one-off grants, and can be further constrained with **ABAC guardrails** (attribute-based conditions). Everything is scoped to a tenant, so a grant in domain `d1` never leaks into domain `d2`.
+In Atom, **every principal is a first-class entity** — humans, devices, services, and workloads are all treated the same way, with no special "user" class. Access is granted by assigning roles (bundles of permission blocks) to identities or principal groups, or by attaching a direct policy for one-off grants, and can be further constrained with **ABAC guardrails** (attribute-based conditions). Everything is scoped to a tenant, so a grant in workspace `w1` never leaks into workspace `w2`.
 
 ### Evaluating a Permission
 
@@ -254,7 +254,7 @@ Because this is a purpose-built engine rather than a set of recursive SQL joins,
 
 ### Enforcing It on the Message Path
 
-Authorization isn't only an API-layer concern. Magistrala's message broker, **FluxMQ**, ships with an **auth bridge** (`fluxmq-auth`) that authorizes every publish and subscribe. On each attempt the broker invokes its `auth_on_publish` / `auth_on_subscribe` hooks, which parse the topic into a domain and channel and call Atom's `Check` (with the `publish` or `subscribe` action) before the message is accepted. A device cannot publish to a channel it has no permission for, because that check happens in the broker itself — identity, authorization, and transport are wired together end to end.
+Authorization isn't only an API-layer concern. Magistrala's message broker, **FluxMQ**, ships with an **auth bridge** (`fluxmq-auth`) that authorizes every publish and subscribe. On each attempt the broker invokes its `auth_on_publish` / `auth_on_subscribe` hooks, which parse the topic into a workspace and channel and call Atom's `Check` (with the `publish` or `subscribe` action) before the message is accepted. A device cannot publish to a channel it has no permission for, because that check happens in the broker itself — identity, authorization, and transport are wired together end to end.
 
 ---
 
@@ -264,13 +264,13 @@ The elegance of a polyglot architecture shows when the pieces work together. Let
 
 ### Scenario
 
-An HVAC sensor (a Magistrala client) in `Building-A` is configured to publish temperature readings to a channel. A facility manager later logs into a dashboard to view the temperature trends from the last 24 hours.
+An HVAC sensor (a Magistrala device) in `Building-A` is configured to publish temperature readings to a channel. A facility manager later logs into a dashboard to view the temperature trends from the last 24 hours.
 
 1. **Connection & authentication (Atom):**
-   The HVAC sensor connects to a Magistrala protocol adapter and presents its credentials (an API key or a certificate). The adapter validates those credentials against **Atom**, which confirms the client is a known, active entity and establishes its identity.
+   The HVAC sensor connects to a Magistrala protocol adapter and presents its credentials (an API key or a certificate). The adapter validates those credentials against **Atom**, which confirms the device is a known, active entity and establishes its identity.
 
 2. **Authorization to publish (Atom via FluxMQ):**
-   Before accepting any data, the broker's auth bridge asks Atom whether the sensor may publish to the target channel — a `Check` for the `publish` action on that channel within the client's domain. Atom evaluates the relevant roles and policies and returns **allow**.
+   Before accepting any data, the broker's auth bridge asks Atom whether the sensor may publish to the target channel — a `Check` for the `publish` action on that channel within the device's workspace. Atom evaluates the relevant roles and policies and returns **allow**.
 
 3. **Message ingestion (FluxMQ):**
    With authentication and authorization complete, the adapter accepts the reading and publishes it as a standardized message onto the internal **FluxMQ** message bus (AMQP 0.9.1). FluxMQ runs as a clustered broker and also backs Magistrala's event stream.
