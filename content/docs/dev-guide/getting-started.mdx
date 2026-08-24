@@ -16,6 +16,15 @@ image: /img/mg-preview.png
 
 Welcome to the **Magistrala Developer Guide**! This guide provides comprehensive instructions for installing, building, running, and interacting with Magistrala, an advanced messaging platform. Follow the steps below to get started with Magistrala development, understand its architecture, and interact with the system.
 
+<Callout type="warn" title="Partially stale — verified fixes applied, some example output not yet re-captured">
+  The install/build/run instructions on this page were spot-checked against the current
+  `Makefile` and `cmd/` in this pass (see inline corrections below). The example command *output*
+  further down — service log lines like `magistrala-users`, `magistrala-clients`,
+  `magistrala-broker`, and the `SpiceDB Schema Management` section — predates the Atom migration
+  and was not re-captured from a live run; treat those specific blocks as illustrative history,
+  not current behavior, until someone re-runs them against today's stack.
+</Callout>
+
 ## Fast Start
 
 To spin up Magistrala, run the following commands:
@@ -198,10 +207,12 @@ Assuming all required tools are installed and the necessary ports are available,
 git clone https://github.com/absmach/magistrala.git
 cd magistrala
 export MG_UI_DOCKER_ACCEPT_EULA=yes
-make run args=-d
+make run_latest args=-d
 ```
 
 Go to [http://localhost:3000](http://localhost:3000) to start using UI.
+
+(Corrected from a bare `make run`, which is not a target in the current `Makefile` — verified `run_latest`, `run_latest_ci`, `run_stable`, `run_live`, `run_tls`, `run_addons`, and `rundev` all exist; there is no plain `run`.)
 
 ### Suggested workflow
 
@@ -269,18 +280,16 @@ Build `magistrala-cli` by following the [CLI guide][cli].
 
 ### Step 6 - Provision the System
 
-Once installed, you can use the CLI to quick-provision the system for testing:
+<Callout type="warn" title="This command no longer exists">
+  `magistrala-cli provision test` and the example output below are from the pre-Atom CLI. There is
+  no `provision` command in the current CLI (verified against `cli/root.go`'s `NewRootCmd()` — see
+  [CLI Introduction](/dev-guide/cli/introduction-to-cli)). To provision a workspace with devices
+  and channels today, use [`workspaces create`](/dev-guide/cli/workspaces-cli),
+  [`devices create`](/dev-guide/cli/devices-cli), and [`channels
+  create`](/dev-guide/cli/channels-cli) directly.
+</Callout>
 
-```bash
-magistrala-cli provision test
-```
-
-This command actually creates a temporary testing user, logs it in, then creates two clients and two channels on behalf of this user.
-This quickly provisions a Magistrala system with one simple testing scenario.
-
-You can read more about system provisioning in the dedicated [Provisioning][provisioning] chapter
-
-Output of the command follows this pattern:
+Output of the old command followed this pattern (kept for historical reference only):
 
 ```json
 {
@@ -378,16 +387,17 @@ With Magistrala running, you can now send messages.
 
 #### Send Messages
 
-Once system is provisioned, a `client` can start sending messages on a `channel`:
+<Callout type="warn" title="This command no longer exists">
+  There is no `messages` command in the current CLI (verified against `cli/root.go`'s
+  `NewRootCmd()`). Send messages over the platform's protocol adapters (HTTP, MQTT, CoAP,
+  WebSocket) directly instead — see [Architecture § Who Connects](/dev-guide/architecture#who-connects).
+  The example below is kept for historical reference only.
+</Callout>
+
+Once system is provisioned, a device can start sending messages on a channel. The old command looked like:
 
 ```bash
 magistrala-cli messages send <channel_id> <JSON_string> <client_secret>
-```
-
-For example:
-
-```bash
-magistrala-cli messages send a31e16f8-343c-4366-8b4f-c95e190937f4 '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]' fc9473d8-6756-4fcc-968f-ea43cd0b803b
 ```
 
 In the Magistrala system terminal you should see following logs:
@@ -543,30 +553,21 @@ With Magistrala installed and running, you can now explore its messaging capabil
 
 ---
 
-## SpiceDB Schema Management
+## Authorization schema management
 
-Magistrala's authorization is powered by [SpiceDB](https://authzed.com/spicedb). Unlike [SuperMQ](https://github.com/absmach/supermq) — which Magistrala builds on and which splits its schema into an override/combined pair fetched and merged via `scripts/combine-schema.sh` — Magistrala ships a single, directly-edited schema file:
-
-| File | Purpose |
-|---|---|
-| `docker/spicedb/schema.zed` | The full schema loaded into SpiceDB at runtime, including Magistrala's entity, relation, and permission definitions (e.g. `alarm`, `rule`, `report`) |
-
-There is no fetch step and no generated/combined file for this schema — edit `docker/spicedb/schema.zed` directly.
-
-### Adding a New Entity to the Schema
-
-To extend the schema with a new Magistrala entity (for example `dashboard`):
-
-1. Add the new relations and permissions to `definition domain` in `docker/spicedb/schema.zed` (e.g. `dashboard_read`, `dashboard_read_permission`).
-2. Add the entity definition (`definition dashboard { ... }`) alongside the other entity definitions in the same file.
-3. Update `docker/permission.yaml` with the new entity's operation-to-permission mappings.
-4. Restart the SpiceDB container (or redeploy) to pick up the schema change.
+<Callout type="warn" title="This section describes a service that no longer exists">
+  Confirmed via `docker-compose.yaml` and `cmd/`: there is no SpiceDB deployment. Authorization is
+  now provided by Atom (see [Architecture § Identity & Access
+  Control](/dev-guide/architecture#identity--access-control)) — `docker/permission.yaml` still
+  exists in the repository and may be relevant to Atom's setup, but the SpiceDB-specific schema
+  workflow below (`docker/spicedb/schema.zed`) was not re-verified in this pass and should be
+  checked before use.
+</Callout>
 
 [docker]: https://docs.docker.com/install/
 [docker-compose]: https://docs.docker.com/compose/install/
 [mg-releases]: https://github.com/absmach/magistrala/releases
 [cli]: /dev-guide/cli/introduction-to-cli
-[provisioning]: /dev-guide/cli/provision-cli
 [magistrala-repo]: https://github.com/absmach/magistrala
 [golang-protobuf]: https://github.com/golang/protobuf
 [protobuf-install]: https://github.com/golang/protobuf#installation
