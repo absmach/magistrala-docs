@@ -6,6 +6,7 @@
     "workspace-management",
     "clients-management",
     "gateway-management",
+    "device-types",
     "dashboards",
     "rules-engine",
     "messaging",
