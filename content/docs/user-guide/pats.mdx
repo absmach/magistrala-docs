@@ -27,12 +27,14 @@ This action redirects the user to the PAT creation page, where required details 
 
 ![Create Pat](../img/pats/create-pat.png)
 
-Available scope entities are **Clients**, **Channels**, **Groups**, and **Domain**. Each entity type exposes a distinct set of operations:
+Available scope entities are **Clients**, **Channels**, **Groups**, **Workspace**, **Rules**, **Reports**, and **Bootstrap**. Each entity type exposes a distinct set of operations:
 
 #### Clients
 
+> The scope entity is still labeled **Clients** in the PAT scope selector even though this same entity is called **Device** elsewhere in the product — the rename hasn't reached this part of the UI yet.
+
 | Operation                  | Description                              |
-| -------------------------- | ---------------------------------------- |
+| --------------------------- | ---------------------------------------- |
 | `create`                   | Creates a client                         |
 | `view`                     | View a client                            |
 | `update`                   | Update client information                |
@@ -85,27 +87,29 @@ Available scope entities are **Clients**, **Channels**, **Groups**, and **Domain
 | `set_child_channel`          | Assign a channel as a child of the group     |
 | `remove_child_channel`       | Remove a channel from the group              |
 
-#### Domain
+#### Workspace
 
-The **Domain** entity scope is automatically locked to the current domain.
+The **Workspace** entity scope is automatically locked to the current workspace.
 
-| Operation                | Description                              |
-| ------------------------ | ---------------------------------------- |
-| `update`                 | Update domain information                |
-| `read`                   | Read domain details                      |
-| `enable`                 | Enable the domain                        |
-| `disable`                | Disable the domain                       |
-| `list`                   | List domains                             |
-| `send_invitation`        | Send a domain invitation                 |
-| `list_invitation`        | List invitations sent by the user        |
-| `list_domain_invitation` | List all invitations for the domain      |
-| `delete_invitation`      | Delete a domain invitation               |
-| `create_clients`         | Create clients within the domain         |
-| `list_clients`           | List clients in the domain               |
-| `create_channels`        | Create channels within the domain        |
-| `list_channels`          | List channels in the domain              |
-| `create_groups`          | Create groups within the domain          |
-| `list_groups`            | List groups in the domain                |
+| Operation                    | Description                              |
+| ------------------------------ | ---------------------------------------- |
+| `update`                     | Update workspace information             |
+| `read`                       | Read workspace details                   |
+| `enable`                     | Enable the workspace                     |
+| `disable`                    | Disable the workspace                    |
+| `list`                       | List workspaces                          |
+| `send_invitation`            | Send a workspace invitation              |
+| `list_invitation`            | List invitations sent by the user        |
+| `list_workspace_invitation`  | List all invitations for the workspace   |
+| `delete_invitation`          | Delete a workspace invitation            |
+| `create_clients`             | Create clients within the workspace      |
+| `list_clients`               | List clients in the workspace            |
+| `create_channels`            | Create channels within the workspace     |
+| `list_channels`              | List channels in the workspace           |
+| `create_groups`              | Create groups within the workspace       |
+| `list_groups`                | List groups in the workspace             |
+
+There's no `create` operation here — a Workspace-scoped PAT is always locked to a workspace that already exists, so it can't be used to create a new one.
 
 #### Rules
 
@@ -142,6 +146,21 @@ The **Domain** entity scope is automatically locked to the current domain.
 | `update_template`      | Update the report template                       |
 | `view_template`        | View the report template                         |
 | `delete_template`      | Delete the report template                       |
+
+#### Bootstrap
+
+| Operation         | Description                                    |
+| ------------------ | ------------------------------------------------- |
+| `create`          | Create a Bootstrap configuration                  |
+| `view`            | View a Bootstrap configuration                    |
+| `update`          | Update a Bootstrap configuration                  |
+| `delete`          | Delete a Bootstrap configuration                  |
+| `enable`          | Enable a Bootstrap configuration                  |
+| `disable`         | Disable a Bootstrap configuration                 |
+| `create_profile`  | Create a Bootstrap profile                        |
+| `view_profile`    | View a Bootstrap profile                          |
+| `update_profile`  | Update a Bootstrap profile                        |
+| `delete_profile`  | Delete a Bootstrap profile                        |
 
 ## View a PAT
 
