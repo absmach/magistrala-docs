@@ -15,13 +15,17 @@ image: /img/mg-preview.png
 ---
 
 
+<Callout type="warn">
+Current `docker/docker-compose.yaml` only shows Postgres and Timescale (`postgres-writer`/`postgres-reader`, `timescale-writer`/`timescale-reader`) — no Cassandra, MongoDB, or InfluxDB services. They may still exist as optional add-ons; unconfirmed.
+</Callout>
+
 Magistrala supports various storage databases in which messages are stored:
 
-- CassandraDB
-- MongoDB
-- InfluxDB
 - PostgreSQL
 - Timescale
+- CassandraDB (unconfirmed as a current add-on)
+- MongoDB (unconfirmed as a current add-on)
+- InfluxDB (unconfirmed as a current add-on)
 
 These storages are activated via docker-compose add-ons.
 

@@ -12,6 +12,10 @@ keywords:
 image: /img/mg-preview.png
 ---
 
+<Callout type="warn">
+This page's specifics (Docker Compose stack, `MG_AGENT_*` env vars, `make provision`/`scripts/provision.sh`, the port-9999 HTTP API, Node-RED integration) could not be verified against `/home/ian/work/magistrala` — there is no `agent` package, no `provision.sh`, and none of the `MG_AGENT_*` variables appear anywhere in that repo. If this describes a separate `github.com/absmach/agent` repo, it needs verifying against that repo directly before Latest ships it; if it doesn't correspond to anything currently shipped, it should be removed. Treat everything below as unconfirmed.
+</Callout>
+
 The **Magistrala IoT Agent** runs in the project Docker environment and acts as a bridge between local services and the Magistrala platform. Inside the container stack it loads runtime configuration, connects to MQTT, subscribes to remote commands, 
 exposes a local HTTP API, manages Node-RED flows, executes shell commands, maintains terminal sessions, and tracks heartbeat messages from local services.
 
