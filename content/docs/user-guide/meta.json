@@ -5,6 +5,7 @@
     "solution-packs",
     "domain-management",
     "clients-management",
+    "gateway-management",
     "dashboards",
     "rules-engine",
     "messaging",
