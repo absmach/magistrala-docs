@@ -1,336 +1,116 @@
 ---
 title: Overview
-description: Understand core Magistrala entities ie Users, Roles, Groups, Clients, Channels and Domains — and how they interact within the IoT platform.
+description: Understand core Magistrala entities — Workspaces, Devices, Channels, Gateways, Device Types and Groups — and how they interact within the IoT platform.
 keywords:
   - Entities
-  - Users
-  - Roles
-  - Groups
-  - Clients
+  - Workspaces
+  - Devices
   - Channels
-  - Domains
+  - Groups
+  - Gateways
+  - Device Types
   - Magistrala
 image: /img/mg-preview.png
 ---
 
+<Callout type="info" title="Entity model rewritten for the Atom-backed platform">
+  This page previously documented standalone Go structs (`User`, `Domain`, `Role`, `Group`,
+  `Client`, `Channel`) owned by per-entity Magistrala services (users, clients, channels, auth).
+  Those services no longer exist (verified against `cmd/` and `docker/docker-compose.yaml`) —
+  identity, tenancy, entities and authorization are now owned by **Atom**, a separate Rust service
+  Magistrala's Go code talks to over gRPC/GraphQL (`pkg/atom/types.go`). The types below are
+  transcribed directly from that package, not guessed.
+</Callout>
 
-Magistrala operates with several key entities that define the structure and interactions within the system. This document provides an overview of these entities, explaining their attributes and how they interact.
+Magistrala organizes everything under a **Workspace** (an Atom `Tenant`). Within a workspace, most of what used to be separate entity types — Devices, Channels, Gateways — are now one generic, kind-discriminated **Entity** type. **Groups** remain a separate hierarchical structure for organizing entities. This page explains those shapes; see [Authorization](/dev-guide/authorization) for how access to them is controlled.
 
-## User
-
-A **User** represents an individual interacting with the system. Each user has a unique **Username** and **Secret**. Users can have different roles and permissions, manage clients, and be assigned to domains or groups.
-This User entity is structured in Go with specific fields:
+## Workspace (Atom `Tenant`)
 
 ```go
-type User struct {
- ID             string      `json:"id"`
- FirstName      string      `json:"first_name,omitempty"`
- LastName       string      `json:"last_name,omitempty"`
- Tags           []string    `json:"tags,omitempty"`
- Metadata       Metadata    `json:"metadata,omitempty"`
- Status         Status      `json:"status"`                    // 0 for enabled, 1 for disabled
- Role           Role        `json:"role"`                      // 0 for normal user, 1 for admin
- ProfilePicture string      `json:"profile_picture,omitempty"` // profile picture URL
- Credentials    Credentials `json:"credentials,omitempty"`
- Permissions    []string    `json:"permissions,omitempty"`
- Email          string      `json:"email,omitempty"`
- CreatedAt      time.Time   `json:"created_at,omitempty"`
- UpdatedAt      time.Time   `json:"updated_at,omitempty"`
- UpdatedBy      string      `json:"updated_by,omitempty"`
-}
-
-// Credentials represent user credentials: its
-// "username"  a user's unique username;
-// and "secret" which can be a password or access token.
-type Credentials struct {
- Username string `json:"username,omitempty"` // username or profile name
- Secret   string `json:"secret,omitempty"`   // password or token
+type Tenant struct {
+	ID         string     `json:"id,omitempty"`
+	Name       string     `json:"name"`
+	Route      string     `json:"route,omitempty"`
+	Tags       []string   `json:"tags,omitempty"`
+	Status     string     `json:"status,omitempty"`
+	Attributes Attributes `json:"attributes,omitempty"` // map[string]any
+	CreatedBy  string     `json:"created_by,omitempty"`
+	UpdatedBy  string     `json:"updated_by,omitempty"`
+	CreatedAt  time.Time  `json:"created_at,omitempty"`
+	UpdatedAt  time.Time  `json:"updated_at,omitempty"`
 }
 ```
 
-### User Attributes
+- `ID` — unique tenant identifier.
+- `Name` — the workspace's display name.
+- `Route` — a URL-safe slug used to address the tenant (successor to the old Domain `Alias`).
+- `Tags`, `Status`, `Attributes` (free-form JSON, replaces the old flat `Metadata` field), `CreatedBy`/`UpdatedBy`/`CreatedAt`/`UpdatedAt` — as before.
 
-- `ID` is a unique identifier for each user. It is a string value.
-- `FirstName` is a required field that represents the first name of the user.
-- `LastName` is a required field that represents the last name of the user.
-- `Email` is a required filed that represents the email address of the user which can be used to log them in.
-- `Tags` is an optional field that represents the tags related to the user. It is a slice of string values.
-- `Credentials` is a struct that represents the user's authentication details. It contains two fields:
-  - `Username` This is the username of the user, which must be unique.
-  - `Secret` This is the secret of the user, which can be a password, secret key, or access token.
-- `Metadata` is an optional field that is used for customized describing of the user.
-- `CreatedAt` is a field that represents the time when the user was created. It is a `time.Time` value.
-- `UpdatedAt` is a field that represents the time when the user was last updated. It is a `time.Time` value.
-- `UpdatedBy` is a field that represents the user who last updated the user.
-- `Status` is a field that represents the status for the user. It can be either 1 for enabled or 0 for disabled.
-- `Role` is an optional field that represents the role of the user. It can be either 1 for admin or 0 for the user.
-- `ProfilePicture` is a string url that leads to an image in the database that can be used as the user's profile picture.
-- `Permissions` is a list of actions the user is allowed to perform.
+The API/CLI for interacting with Workspaces is described in the [Workspaces CLI](/dev-guide/cli/workspaces-cli). There is no `workspaces` REST section in [API](./api) — workspace management goes through Atom's GraphQL API, which the CLI wraps; see the callout on that page.
 
-The **Users Service** allows for creating, updating, reading, and deleting **Users** and **Groups**.
-Users can bear multiple permissions that allow them various actions over other services and entities in the platform.
+## Entity — Devices, Channels, and Gateways
 
-The API endpoint for interacting with users are described in the [Users API](./api#users).
-There is no dedicated `users` CLI command in the current CLI (verified against `cli/root.go`'s `NewRootCmd()`) — user accounts are managed through Atom; see the [CLI Introduction](/dev-guide/cli/introduction-to-cli) for what's actually available.
-
-## Domain
-
-A **Domain** is a logical grouping that separates different tenants and governs access control.
+Devices, Channels, and Gateways are not separate Go types. They are all `atom.Entity`, discriminated by `Kind`:
 
 ```go
-type Domain struct {
- ID        string    `json:"id"`
- Name      string    `json:"name"`
- Metadata  Metadata  `json:"metadata,omitempty"`
- Tags      []string  `json:"tags,omitempty"`
- Alias     string    `json:"alias,omitempty"`
- Status    Status    `json:"status"`
- RoleID    string    `json:"role_id,omitempty"`
- RoleName  string    `json:"role_name,omitempty"`
- Actions   []string  `json:"actions,omitempty"`
- CreatedBy string    `json:"created_by,omitempty"`
- CreatedAt time.Time `json:"created_at"`
- UpdatedBy string    `json:"updated_by,omitempty"`
- UpdatedAt time.Time `json:"updated_at,omitempty"`
+type Entity struct {
+	ID         string     `json:"id,omitempty"`
+	Kind       string     `json:"kind"` // e.g. "device", "channel"
+	Name       string     `json:"name"`
+	ExternalID string     `json:"external_id,omitempty"` // caller-assigned ID: serial, MAC, SKU
+	TenantID   string     `json:"tenant_id,omitempty"`
+
+	// Bind to a Device Type — see below. Both are write-once-per-call:
+	// leaving them empty on an update keeps the existing binding.
+	DeviceTypeID        string `json:"device_type_id,omitempty"`
+	DeviceTypeVersionID string `json:"device_type_version_id,omitempty"`
+
+	Status     string     `json:"status,omitempty"`
+	Attributes Attributes `json:"attributes,omitempty"` // map[string]any
+	CreatedAt  time.Time  `json:"created_at,omitempty"`
+	UpdatedAt  time.Time  `json:"updated_at,omitempty"`
 }
 ```
 
-### Domain Attributes
+- `Kind` replaces the old separate `Client`/`Channel` structs — `"device"` and `"channel"` are the two kinds the platform's own UI and CLI use today.
+- `ExternalID` is the successor to the old `Credentials.Identity` concept — an opaque, caller-assigned identifier (device serial/MAC/SKU), unique per tenant among live entities.
+- **A Gateway is not a third kind.** It's a device entity with `attributes.is_gateway = true` and an `attributes.gateways` list identifying which gateway(s) may publish/observe on its behalf (verified against `cli/devices.go`'s help text and `magistrala-ui`'s device create form). See the [Gateway Management](/user-guide/gateway-management) user guide for the reachability model this enables.
+- `DeviceTypeID`/`DeviceTypeVersionID` bind a device entity to a [Device Type](/user-guide/device-types) — a versioned schema Atom validates the entity's `Attributes` against on every write. Note the Go comment on this field is explicit that Atom's own internal name for this concept is "Profile," never exposed publicly because it collides with Bootstrap's unrelated Profile concept — always say **Device Type** in docs and UI copy.
+- `Attributes` (`map[string]any`) replaces the old typed `Credentials`/`Metadata` fields — everything caller-defined about an entity, including secrets/credentials where applicable, lives here now.
 
-- `ID` is a unique identifier for each domain. It is a string value.
-- `Name` is a required field representing the name of the domain. It is a string value.
-- `Metadata` is an optional field that provides additional structured data about the domain.
-- `Tags` is an optional field that represents tags related to the domain. It is a slice of string values.
-- `Alias` is an optional field that represents an alternate identifier for the domain. It is a string value.
-- `Status` is a field that represents whether the domain is enabled or disabled.
-- `RoleID` is an optional field representing the role ID assigned to the domain. It is a string value.
-- `RoleName` is an optional field representing the role name assigned to the domain. It is a string value.
-- `Actions` is an optional list of allowed operations within the domain.
-- `CreatedBy` is an optional field representing the user who created the domain. It is a string value.
-- `CreatedAt` is a field that represents the time when the domain was created. It is a `time.Time` value.
-- `UpdatedBy` is an optional field representing the user who last updated the domain. It is a string value.
-- `UpdatedAt` is a field that represents the time when the domain was last updated. It is a `time.Time` value.
+Secrets/credentials for publishing (what used to be `Client.Credentials.Secret`) are still issued per device and sent as `Authorization: Client <secret>` on the wire — the HTTP header keyword itself was not renamed even though the entity kind was (verified in `api/http/util/token.go`).
 
-The API endpoint for interacting with Domains are described in the [domains API][domains-api].
-The CLI for interacting with Domains are described in the [channels CLI][domains-cli].
-
-## Role
-
-A **Role** defines a set of permissions that a user can have within the system. Roles allow for fine-grained access control by associating users with actions they are allowed to perform.
-
-```go
-type Role struct {
- ID        string    `json:"id"`
- Name      string    `json:"name"`
- EntityID  string    `json:"entity_id"`
- CreatedBy string    `json:"created_by"`
- CreatedAt time.Time `json:"created_at"`
- UpdatedBy string    `json:"updated_by"`
- UpdatedAt time.Time `json:"updated_at"`
-}
-```
-
-### Role Attributes
-
-- `ID` is a unique identifier for each role. It is a string value.
-- `Name` is a required field representing the name of the role. It is a string value.
-- `EntityID` is the ID of the user associated with the role. It is a string value.
-- `CreatedBy` is the ID of the user who created the role. It is a string value.
-- `CreatedAt` is a field that represents the time when the role was created. It is a `time.Time` value.
-- `UpdatedBy` is an optional field representing the user who last updated the role. It is a string value.
-- `UpdatedAt` is a field that represents the time when the role was last updated. It is a `time.Time` value.
-- `OptionalActions` is an optional list of actions that can be assigned to the role.
-- `OptionalMembers` is an optional list of members associated with the role.
+The API/CLI for interacting with Devices is in the [Devices CLI](/dev-guide/cli/devices-cli); Channels in the [Channels CLI](/dev-guide/cli/channels-cli); Gateways in the [Gateways CLI](/dev-guide/cli/gateways-cli); Device Types in the [Device Types CLI](/dev-guide/cli/device-types-cli).
 
 ## Group
 
-A **Group** is a hierarchical structure used to organize clients and channels within a domain. A group entity is structured in Go with these specific fields:
+Groups are still a distinct type — a hierarchy for organizing entities within a workspace:
 
 ```go
 type Group struct {
- ID                        string    `json:"id"`
- Domain                    string    `json:"domain_id,omitempty"`
- Parent                    string    `json:"parent_id,omitempty"`
- Name                      string    `json:"name"`
- Description               string    `json:"description,omitempty"`
- Metadata                  Metadata  `json:"metadata,omitempty"`
- Level                     int       `json:"level,omitempty"`
- Path                      string    `json:"path,omitempty"`
- Children                  []*Group  `json:"children,omitempty"`
- CreatedAt                 time.Time `json:"created_at"`
- UpdatedAt                 time.Time `json:"updated_at,omitempty"`
- UpdatedBy                 string    `json:"updated_by,omitempty"`
- Status                    Status    `json:"status"`
- RoleID                    string    `json:"role_id,omitempty"`
- RoleName                  string    `json:"role_name,omitempty"`
- Actions                   []string  `json:"actions,omitempty"`
- AccessType                string    `json:"access_type,omitempty"`
- AccessProviderId          string    `json:"access_provider_id,omitempty"`
- AccessProviderRoleId      string    `json:"access_provider_role_id,omitempty"`
- AccessProviderRoleName    string    `json:"access_provider_role_name,omitempty"`
- AccessProviderRoleActions []string  `json:"access_provider_role_actions,omitempty"`
+	ID          string     `json:"id,omitempty"`
+	Name        string     `json:"name"`
+	TenantID    string     `json:"tenant_id,omitempty"`
+	Description string     `json:"description,omitempty"`
+	ParentID    string     `json:"parent_id,omitempty"`
+	Status      string     `json:"status,omitempty"`
+	Attributes  Attributes `json:"attributes,omitempty"`
+	CreatedAt   time.Time  `json:"created_at,omitempty"`
+	UpdatedAt   time.Time  `json:"updated_at,omitempty"`
 }
 ```
 
-### Group Attributes
+The role/access fields the old `Group` struct carried (`RoleID`, `RoleName`, `Actions`, `AccessType`, `AccessProvider*`) are gone from the type itself — access is now expressed separately via Atom's authorization primitives (`PermissionBlock`, `ActionAssignmentRule`, `DirectPolicy`/`GroupGrant`), covered in [Authorization](/dev-guide/authorization).
 
-- `ID` is a unique identifier for each group. It is a string value.
-- `Domain` is an optional field that represents the ID of the domain the group belongs to. It is a string value.
-- `Parent` is an optional field that contains the ID of the parent group. It is a string value.
-- `Name` is a required field representing the name of the group. It is a string value.
-- `Description` is an optional field describing the group’s purpose. It is a string value.
-- `Metadata` is an optional field that provides additional structured data about the group.
-- `Level` is an optional field that represents the depth of the group within the hierarchy. It is an integer value. Root node is level 1.
-- `Path` is an optional field representing the full hierarchical path from the root to this group. It is a string value consisting of group IDs. Paths are unique per domain.
-- `Children` is an optional field representing sub-groups contained within this group.
-- `CreatedAt` is a field that represents the time when the group was created. It is a `time.Time` value.
-- `UpdatedAt` is a field that represents the time when the group was last updated. It is a `time.Time` value.
-- `UpdatedBy` is an optional field representing the user who last updated the group. It is a string value.
-- `Status` is a field that represents whether the group is enabled or disabled.
-- `RoleID` is an optional field representing the role ID associated with the group. It is a string value.
-- `RoleName` is an optional field representing the role name associated with the group. It is a string value.
-- `Actions` is an optional list of actions allowed on the group.
-- `AccessType` is an optional field defining a group's reach. It is a string value.
-- `AccessProviderId` is an optional field representing the ID of the entity providing access to the group. It is a string value.
-- `AccessProviderRoleId` is an optional field representing the role ID assigned by the access provider. It is a string value.
-- `AccessProviderRoleName` is an optional field representing the role name assigned by the access provider. It is a string value.
-- `AccessProviderRoleActions` is an optional list of actions assigned by the access provider.
+The API/CLI for interacting with Groups is in the [Groups CLI](/dev-guide/cli/groups-cli).
 
-The API endpoint for interacting with groups are described in the [groups API](./api#groups).
-The CLI for interacting with groups are described in the [Groups CLI](./cli/groups-cli).
+## Users and roles
 
-## Client
-
-A **Client** represents a device or service that connects to channels for communication.
-
-```go
-type Client struct {
- ID          string      `json:"id"`
- Name        string      `json:"name,omitempty"`
- Tags        []string    `json:"tags,omitempty"`
- Domain      string      `json:"domain_id,omitempty"`
- ParentGroup string      `json:"parent_group_id,omitempty"`
- Credentials Credentials `json:"credentials,omitempty"`
- Metadata    Metadata    `json:"metadata,omitempty"`
- CreatedAt   time.Time   `json:"created_at,omitempty"`
- UpdatedAt   time.Time   `json:"updated_at,omitempty"`
- UpdatedBy   string      `json:"updated_by,omitempty"`
- Status      Status      `json:"status,omitempty"` // 1 for enabled, 0 for disabled
- Identity    string      `json:"identity,omitempty"`
- // Extended
- ParentGroupPath           string                 `json:"parent_group_path,omitempty"`
- RoleID                    string                 `json:"role_id,omitempty"`
- RoleName                  string                 `json:"role_name,omitempty"`
- Actions                   []string               `json:"actions,omitempty"`
- AccessType                string                 `json:"access_type,omitempty"`
- AccessProviderId          string                 `json:"access_provider_id,omitempty"`
- AccessProviderRoleId      string                 `json:"access_provider_role_id,omitempty"`
- AccessProviderRoleName    string                 `json:"access_provider_role_name,omitempty"`
- AccessProviderRoleActions []string               `json:"access_provider_role_actions,omitempty"`
- ConnectionTypes           []connections.ConnType `json:"connection_types,omitempty"`
-}
-
-type Credentials struct {
- Identity string `json:"identity,omitempty"` // username or generated login ID
- Secret   string `json:"secret,omitempty"`   // password or token
-}
-```
-
-### Client Attributes
-
-- `ID` is a unique identifier for each client. It is a string value.
-- `Name` is an optional field that represents the name of the client. It is a string value.
-- `Tags` is an optional field that represents tags related to the client. It is a slice of string values.
-- `Domain` is an optional field that represents the ID of the domain to which the client belongs. It is a string value.
-- `ParentGroup` is an optional field that contains the ID of the group that owns the client. It is a string value.
-- `Credentials` is an optional struct representing authentication details for the client, containing:
-  - `Identity` is a unique identifier assigned to the client. It is a string value.
-  - `Secret` is a password, access token, or other authentication mechanism. It is a string value that is always generated upon client creation if not specified.
-- `Metadata` is an optional field that provides additional structured data about the client.
-- `CreatedAt` is a field that represents the time when the client was created. It is a `time.Time` value.
-- `UpdatedAt` is a field that represents the time when the client was last updated. It is a `time.Time` value.
-- `UpdatedBy` is an optional field that represents the user who last updated the client. It is a string value.
-- `Status` is a field that represents whether the client is enabled (`1`) or disabled (`0`). It is an integer value.
-- `Identity` is an optional field that represents a unique identifier assigned to the client. It is a string value.
-- `ParentGroupPath` is an optional field representing the hierarchical path of the parent group. It is a string value.
-- `RoleID` is an optional field representing the role ID assigned to the client. It is a string value.
-- `RoleName` is an optional field representing the role name assigned to the client. It is a string value.
-- `Actions` is an optional list of actions that the client is allowed to perform.
-- `AccessType` is an optional field defining how access is controlled. It is a string value.
-- `AccessProviderId` is an optional field representing the ID of the entity providing access to the client. It is a string value.
-- `AccessProviderRoleId` is an optional field representing the role ID assigned by the access provider. It is a string value.
-- `AccessProviderRoleName` is an optional field representing the role name assigned by the access provider. It is a string value.
-- `AccessProviderRoleActions` is an optional list of actions assigned by the access provider.
-- `ConnectionTypes` is an optional field representing different connection protocols the client can use. It is a slice of connection types.
-
-Hence any phsical device with an embeded system can be handed a unique key (**secret**) that will be used as a token during publishing and subscribing to a channel can be classified as a client.
-
-The API endpoint for interacting with clients are described in the [clients API][clients-api].
-The CLI for interacting with clients are described in the [clients CLI][clients-cli].
-
-## Channel
-
-A **Channel** is a message conduit between clients connected to it.
-It serves as a message topic that can be consumed by all of the clients connected to it.
-Clients can publish or subscribe to the Channel.
-
-```go
-type Channel struct {
- ID          string           `json:"id"`
- Name        string           `json:"name,omitempty"`
- Tags        []string         `json:"tags,omitempty"`
- ParentGroup string           `json:"parent_group_id,omitempty"`
- Domain      string           `json:"domain_id,omitempty"`
- Metadata    clients.Metadata `json:"metadata,omitempty"`
- CreatedBy   string           `json:"created_by,omitempty"`
- CreatedAt   time.Time        `json:"created_at,omitempty"`
- UpdatedAt   time.Time        `json:"updated_at,omitempty"`
- UpdatedBy   string           `json:"updated_by,omitempty"`
- Status      clients.Status   `json:"status,omitempty"` // 1 for enabled, 0 for disabled
- // Extended
- ParentGroupPath           string                 `json:"parent_group_path,omitempty"`
- RoleID                    string                 `json:"role_id,omitempty"`
- RoleName                  string                 `json:"role_name,omitempty"`
- Actions                   []string               `json:"actions,omitempty"`
- AccessType                string                 `json:"access_type,omitempty"`
- AccessProviderId          string                 `json:"access_provider_id,omitempty"`
- AccessProviderRoleId      string                 `json:"access_provider_role_id,omitempty"`
- AccessProviderRoleName    string                 `json:"access_provider_role_name,omitempty"`
- AccessProviderRoleActions []string               `json:"access_provider_role_actions,omitempty"`
- ConnectionTypes           []connections.ConnType `json:"connection_types,omitempty"`
-}
-```
-
-### Channel Attributes
-
-- `ID` is a unique identifier for each channel. It is a string value.
-- `Name` is an optional field that represents the name of the channel. It is a string value.
-- `Tags` is an optional field that represents tags related to the channel. It is a slice of string values.
-- `ParentGroup` is an optional field that contains the ID of the group that owns the channel. It is a string value.
-- `Domain` is an optional field that represents the ID of the domain under which the channel exists. It is a string value.
-- `Metadata` is an optional field that provides additional structured data about the channel.
-- `CreatedBy` is an optional field representing the ID of the user who created the channel. It is a string value.
-- `CreatedAt` is a field that represents the time when the channel was created. It is a `time.Time` value.
-- `UpdatedAt` is a field that represents the time when the channel was last updated. It is a `time.Time` value.
-- `UpdatedBy` is an optional field that represents the user who last updated the channel. It is a string value.
-- `Status` is a field that represents whether the channel is enabled (`1`) or disabled (`0`). It is an integer value.
-- `ParentGroupPath` is an optional field that represents the full hierarchical path of the parent group. It is a string value.
-- `RoleID` is an optional field representing the role ID assigned to the channel. It is a string value.
-- `RoleName` is an optional field representing the role name assigned to the channel. It is a string value.
-- `Actions` is an optional list of actions that can be performed on the channel.
-- `AccessType` is an optional field defining how access to the channel is managed. It is a string value.
-- `AccessProviderId` is an optional field representing the ID of the entity providing access to the channel. It is a string value.
-- `AccessProviderRoleId` is an optional field representing the role ID assigned by the access provider. It is a string value.
-- `AccessProviderRoleName` is an optional field representing the role name assigned by the access provider. It is a string value.
-- `AccessProviderRoleActions` is an optional list of actions assigned by the access provider.
-- `ConnectionTypes` is an optional field representing different connection protocols supported by the channel. It is a slice of connection types.
-
-The API endpoint for interacting with channels are described in the [channels API][channels-api].
-The CLI for interacting with channels are described in the [channels CLI][channels-cli].
+There is no dedicated `User` Go struct owned by Magistrala anymore, and no `users` CLI command (verified against `cli/root.go`'s `NewRootCmd()`) — user accounts, authentication, and role/permission assignment are owned entirely by Atom. See the [CLI Introduction](/dev-guide/cli/introduction-to-cli) for what's actually available from Magistrala's side (`login`, `authz check`), and [Authorization](/dev-guide/authorization) for the permission model.
 
 ## Tags Filtering
 
-Tags are supported on **Users**, **Domains**, **Groups**, **Clients**, and **Channels**. When listing any of these entities, the `tags` query parameter can be used to filter results by one or more tag values.
+Tags are supported on **Workspaces**, **Groups**, and **Entities** (Devices/Channels). When listing any of these, the `tags` query parameter can be used to filter results by one or more tag values.
 
 ### Operators
 
@@ -344,13 +124,13 @@ Tags are supported on **Users**, **Domains**, **Groups**, **Clients**, and **Cha
 **OR filter** — return entities tagged `temperature` or `humidity`:
 
 ```
-GET /domains/{domainID}/channels?tags=temperature,humidity
+GET /workspaces/{workspaceID}/channels?tags=temperature,humidity
 ```
 
 **AND filter** — return entities tagged both `outdoor` and `sensor`:
 
 ```
-GET /domains/{domainID}/channels?tags=outdoor%2Bsensor
+GET /workspaces/{workspaceID}/channels?tags=outdoor%2Bsensor
 ```
 
 > **Note:** Because `+` is interpreted as a space in URL query strings, always percent-encode it as `%2B` when constructing AND filter requests manually.
@@ -361,13 +141,15 @@ Because `,` and `+` are reserved as filter operators, **tag values themselves mu
 
 Allowed examples: `temperature`, `meter-type:water`, `zone-A`
 
-## Metadata
+<Callout type="warn" title="Needs maintainer verification">
+  The query examples above keep the shape of the pre-Atom REST filters. Whether Atom's GraphQL API
+  exposes the same `tags=` query-parameter syntax (as opposed to a GraphQL filter argument) was not
+  verified in this pass — check against Atom's actual `QueryRoot` before trusting the URL form.
+</Callout>
 
-`Metadata` is a free-form JSON object (`map[string]interface{}` in Go) available on all entity types. It is used to attach arbitrary structured data to an entity.
+## Attributes / Metadata
 
-```go
-type Metadata map[string]interface{}
-```
+`Attributes` (`map[string]any` in Go, called `Metadata` in the old per-entity structs) is a free-form JSON object available on Tenants, Entities, and Groups, used to attach arbitrary structured data.
 
 ### UI-Compatible Format
 
@@ -389,11 +171,8 @@ Entities provisioned via the API or CLI with raw (unwrapped) values — e.g. `{"
 
 For complete details on metadata value types and the location/perimeter formats used by dashboard map widgets, see the [Metadata Management](/user-guide/metadata) user guide.
 
-> **Note:** Older deployments may store UI-managed metadata under a nested `ui` key (i.e. `metadata.ui`) rather than at the top level. A database migration is provided to flatten this structure automatically — existing users only need to upgrade to the latest version of Magistrala.
-
-[clients-api]: ./api#clients
-[channels-api]: ./api#channels
-[domains-api]: ./api#domains
-[clients-cli]: /dev-guide/cli/devices-cli
-[channels-cli]: /dev-guide/cli/channels-cli
-[domains-cli]: /dev-guide/cli/workspaces-cli
+<Callout type="warn" title="Needs maintainer verification">
+  The nested `metadata.ui` migration note from the previous version of this page (older
+  deployments storing UI-managed metadata under a nested `ui` key) was not re-verified against the
+  Atom-backed `Attributes` field — carried over as a caveat, not confirmed current.
+</Callout>
