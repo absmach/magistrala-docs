@@ -13,6 +13,14 @@ keywords:
 image: /img/mg-preview.png
 ---
 
+<Callout type="warn" title="Merged into atom-bootstrap — API/config details below need re-verification">
+  Confirmed via `docker-compose.yaml` and `cmd/`: there is no standalone Bootstrap service anymore
+  — it now runs merged with Atom as the `atom-bootstrap` deployment (`cmd/atom-bootstrap`). The
+  concept itself is still current (devices still bootstrap); the specifics below (standalone
+  service, external ID/key encryption details, whitelist API) were written against the old
+  service and need to be re-checked against `cmd/atom-bootstrap` before being trusted verbatim.
+</Callout>
+
 **Bootstrapping** is the process where a device retrieves the configuration it needs to start or recover communication with Magistrala. A device usually bootstraps when:
 
 - it has only bootstrap credentials and does not yet have its runtime configuration

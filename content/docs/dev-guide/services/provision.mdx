@@ -13,6 +13,13 @@ keywords:
 image: /img/mg-preview.png
 ---
 
+<Callout type="warn" title="Needs maintainer verification">
+  `provision` is listed in the Makefile's `ADDON_SERVICES` (optional, non-default services), but
+  there is no `cmd/provision` directory in the current repository for it to build from — the
+  addon target looks stale. There is also no `provision` command in the current CLI (see [CLI
+  Introduction](/dev-guide/cli/introduction-to-cli)). Verify whether provisioning automation still
+  exists in another form before relying on the content below.
+</Callout>
 
 Provisioning is a process of configuration of an IoT platform in which system operator creates and sets-up different entities used in the platform - users, groups, channels and clients.
 

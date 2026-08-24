@@ -14,6 +14,14 @@ keywords:
 image: /img/mg-preview.png
 ---
 
+<Callout type="warn" title="This page describes a service that no longer exists standalone">
+  Confirmed via `docker-compose.yaml` and `cmd/`: there is no separate Auth service and no SpiceDB
+  deployment. Identity, tokens, and fine-grained access control are now provided by Atom, which
+  issues the JWTs/JWKS every other service validates directly — see [Architecture § Identity &
+  Access Control](/dev-guide/architecture#identity--access-control). The content below documents
+  the pre-Atom architecture and is kept for historical reference only.
+</Callout>
+
 The **Auth service** is the security backbone of Magistrala. It issues and verifies all authentication tokens, manages domains, and enforces fine-grained access control via [SpiceDB](https://authzed.com/spicedb). Every other service delegates authentication and authorization decisions to Auth over gRPC.
 
 ## Key Types

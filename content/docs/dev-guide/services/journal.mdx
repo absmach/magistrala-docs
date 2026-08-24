@@ -12,7 +12,14 @@ image: /img/mg-preview.png
 enterprise: true
 ---
 
-The **Journal service** consumes the platform event stream from NATS, persists each event to PostgreSQL, and exposes HTTP endpoints for querying the audit log and viewing per-client telemetry (first/last seen, message in/out counters, active subscriptions). It is the primary observability tool for tracking what happened and when across the platform.
+<Callout type="warn" title="Needs maintainer verification">
+  There is no standalone Journal service in the current `cmd/`/`docker-compose.yaml` (verified) —
+  this page's "per-client telemetry" framing also predates the Devices rename. Not re-verified in
+  this pass: whether journal/audit-log functionality still exists in another form (e.g. folded
+  into Atom or the UI backend) before trusting the specifics below.
+</Callout>
+
+The **Journal service** consumes the platform event stream from NATS, persists each event to PostgreSQL, and exposes HTTP endpoints for querying the audit log and viewing per-device telemetry (first/last seen, message in/out counters, active subscriptions). It is the primary observability tool for tracking what happened and when across the platform.
 
 ## Configuration
 

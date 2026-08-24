@@ -1,6 +1,6 @@
 ---
 title: Notifications
-description: Email notification service for Magistrala — listens to domain invitation events and sends styled HTML email notifications to users when they are invited, accept, or reject a domain invitation.
+description: Email notification service for Magistrala — listens to workspace invitation events and sends styled HTML email notifications to users when they are invited, accept, or reject a workspace invitation.
 keywords:
   - Notifications
   - Email
@@ -13,7 +13,15 @@ image: /img/mg-preview.png
 enterprise: true
 ---
 
-The **Notifications service** is an event-driven service that sends email notifications for domain invitation lifecycle events. It listens to the platform event stream (NATS or RabbitMQ), fetches user details from the Users service over gRPC, and delivers styled HTML emails via SMTP when a user is invited to a domain, accepts an invitation, or rejects one.
+<Callout type="warn" title="Needs maintainer verification">
+  There is no standalone Notifications service or Users service in the current
+  `cmd/`/`docker-compose.yaml` (verified) — this page's "fetches user details from the Users
+  service over gRPC" claim can't be current since that service doesn't exist standalone anymore
+  (see [users.mdx](/dev-guide/services/users)). Whether workspace-invitation emails are still sent
+  this way, and by what, was not re-verified in this pass.
+</Callout>
+
+The **Notifications service** is an event-driven service that sends email notifications for workspace invitation lifecycle events. It listens to the platform event stream (NATS or RabbitMQ), fetches user details from the Users service over gRPC, and delivers styled HTML emails via SMTP when a user is invited to a workspace, accepts an invitation, or rejects one.
 
 ## Events Handled
 

@@ -13,6 +13,14 @@ keywords:
 image: /img/mg-preview.png
 ---
 
+<Callout type="warn" title="Needs maintainer verification">
+  There is no standalone `cmd/consumers` binary — `consumers/` is a library package in the current
+  repository, most likely consumed by the `postgres-writer`/`timescale-writer` binaries that do
+  appear in `cmd/` and `docker-compose.yaml` (see [Architecture § Application & Data
+  Services](/dev-guide/architecture#application--data-services)), rather than a service of its
+  own. The notifier half described below (SMTP/SMPP) could not be located in the current `cmd/`
+  or `docker-compose.yaml` at all. Verify against `consumers/` before trusting the specifics.
+</Callout>
 
 The **Consumers Service** in Magistrala handles the processing, storage, and notification of messages received from various channels. It is divided into two primary groups:
 

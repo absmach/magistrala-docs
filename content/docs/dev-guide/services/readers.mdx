@@ -13,6 +13,14 @@ keywords:
 image: /img/mg-preview.png
 ---
 
+<Callout type="info">
+  Still current at a high level — `timescale-reader` and `postgres-reader` are real, separately
+  deployed services (`cmd/timescale-reader`, `cmd/postgres-reader`, and both appear in
+  `docker-compose.yaml`), matching [Architecture § Application & Data
+  Services](/dev-guide/architecture#application--data-services)'s "Timescale Reader." The
+  specifics below (query parameters, response shape) were not re-verified against current
+  handlers in this pass — spot-check before publishing exact request/response examples.
+</Callout>
 
 The **Readers Service** in Magistrala provides functionality to read messages stored in the platform's databases. It supports querying and retrieving messages from databases like **TimescaleDB** and **PostgreSQL**, using flexible filtering and pagination mechanisms to meet diverse application needs.
 
