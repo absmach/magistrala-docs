@@ -35,14 +35,14 @@ Writers provide an implementation of various `message writers`. Message writers 
 
 ### Subscriber config
 
-Each writer can filter messages based on subjects list that is set in `config.toml` configuration file. If you want to listen on all subjects, just set the field `subjects` in the `[subscriber]` section as `["channels.>"]`, otherwise pass the list of subjects. Here is an example:
+Each writer can filter messages based on a topics list that is set in the `config.toml` configuration file's `[subscriber]` section. This is a *different* topic namespace from the channel pub/sub topics covered in the [Subtopics Section][subtopic]: writers consume from the broker's internal `writers/#` queue (every message a rule or writer-bound publish routes there), not directly from `channels.<channel_id>...`. If you want to listen on every writer topic, leave `topics` at its default `["writers/#"]`; otherwise pass a list of more specific filters. Filters are slash-delimited and support the MQTT-style wildcards `+` (one level) and `#` (a variable-length trailing suffix), for both NATS and FluxMQ builds. Here is an example:
 
 ```toml
 [subscriber]
-subjects = ["channels.*.messages.bedroom.temperature","channels.*.messages.bedroom.humidity"]
+topics = ["writers/<domain_id>/c/<channel_id>/bedroom/temperature", "writers/<domain_id>/c/<channel_id>/bedroom/humidity"]
 ```
 
-Regarding the [Subtopics Section][subtopic] in the messaging page, the example `channels/<channel_id>/messages/bedroom/temperature` can be filtered as `"channels.*.bedroom.temperature"`. The formatting of this filtering list is determined by the default message broker, NATS, format ([Subject-Based Messaging][nats-subject] & [Wildcards][nats-wildcards]).
+Regarding the [Subtopics Section][subtopic] in the messaging page, a message published to `m/<domain_id>/c/<channel_id>/bedroom/temperature` is republished to writers under `writers/<domain_id>/c/<channel_id>/bedroom/temperature` - substitute your actual domain and channel IDs, or use `+` in their place to match across all of them (e.g. `writers/+/c/+/bedroom/temperature`).
 
 ### Transformer config
 
@@ -286,8 +286,6 @@ docker-compose -f docker/addons/timescale-reader/docker-compose.yml up -d
 ```
 
 [subtopic]: /dev-guide/dev-tools/messaging#subtopics
-[nats-subject]: https://docs.nats.io/nats-concepts/subjects
-[nats-wildcards]: https://docs.nats.io/nats-concepts/subjects#wildcards
 [writers]: /dev-guide/dev-tools/storage#writers
 [influxdb]: https://docs.influxdata.com/influxdb
 [readers-api]: /dev-guide/services/readers/
