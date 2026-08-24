@@ -4,7 +4,7 @@ import path from "node:path";
 
 const outDir = path.resolve("out");
 const enterpriseHold = path.resolve(".build-enterprise-out");
-const communityBasePath = "/docs/magistrala/community";
+const communityBasePath = "/docs/magistrala/v0-51-0/community";
 const communitySegments = communityBasePath.split("/").filter(Boolean);
 
 function run(command, env = {}) {

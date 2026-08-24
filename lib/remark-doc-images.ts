@@ -25,7 +25,7 @@ interface CompileFile {
 //   just get the fixed prefix added.
 // - Full external URLs (http://, https://) are left untouched.
 const CONTENT_ROOT = join(process.cwd(), "content/docs");
-const IMAGE_BASE_PATH = "/docs/magistrala";
+const IMAGE_BASE_PATH = "/docs/magistrala/v0-51-0";
 
 function walk(node: MdastNode, visitor: (node: MdastNode) => void) {
   if (node.type === "image") visitor(node);

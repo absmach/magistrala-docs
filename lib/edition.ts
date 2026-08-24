@@ -12,12 +12,12 @@ export const DOC_EDITIONS: DocEdition[] = [
   {
     label: "Enterprise Edition",
     value: "enterprise",
-    path: "/docs/magistrala/",
+    path: "/docs/magistrala/v0-51-0/",
   },
   {
     label: "Community Edition",
     value: "community",
-    path: "/docs/magistrala/community/",
+    path: "/docs/magistrala/v0-51-0/community/",
   },
 ];
 

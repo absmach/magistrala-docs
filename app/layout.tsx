@@ -7,7 +7,6 @@ import { baseOptions } from "@/lib/layout.shared";
 import { source } from "@/lib/source";
 import "./global.css";
 import { baseUrl, createMetadata } from "@/lib/metadata";
-import { CURRENT_VERSION } from "@/lib/versions";
 
 const rubik = Rubik({ subsets: ["latin"], variable: "--font-rubik" });
 
@@ -37,7 +36,10 @@ export default function Layout({ children }: LayoutProps<"/">) {
               banner: (
                 <>
                   <VersionSwitcher />
-                  {CURRENT_VERSION === "latest" && <EditionSwitcher />}
+                  {/* v0.51.0, like latest, ships both editions merged into
+                  one deployment (see scripts/build-editions.mjs); only
+                  v0.30.0 predates the edition split. */}
+                  <EditionSwitcher />
                 </>
               ),
             }}

@@ -13,10 +13,15 @@ export const DOC_VERSIONS: DocVersion[] = [
     url: "https://absmach.eu/docs/magistrala/",
   },
   {
+    label: "v0.51.0",
+    value: "v0.51.0",
+    url: "https://absmach.eu/docs/magistrala/v0-51-0/",
+  },
+  {
     label: "v0.30.0",
     value: "v0.30.0",
     url: "https://absmach.eu/docs/magistrala/v0-30-0/",
   },
 ];
 
-export const CURRENT_VERSION = "latest";
+export const CURRENT_VERSION = "v0.51.0";

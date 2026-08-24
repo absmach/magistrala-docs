@@ -19,17 +19,25 @@ import {
   type ExecutionContext,
 } from "./r2-proxy";
 
-const BASE_PATH = "/docs/magistrala";
+// v0.51.0 is a frozen historical snapshot: it reads from its own
+// version-scoped R2 prefix (magistrala-docs/v0-51-0/...) instead of the
+// unversioned prefix Latest keeps writing to, so future Latest screenshot
+// uploads can never change what this version displays. See the image
+// preservation handoff for the one-time copy this requires.
+const BASE_PATH = "/docs/magistrala/v0-51-0";
 
 const ROUTES = [
-  { segment: "img", handler: createR2ProxyHandler("magistrala-docs/img") },
+  {
+    segment: "img",
+    handler: createR2ProxyHandler("magistrala-docs/v0-51-0/img"),
+  },
   {
     segment: "diagrams",
-    handler: createR2ProxyHandler("magistrala-docs/diagrams"),
+    handler: createR2ProxyHandler("magistrala-docs/v0-51-0/diagrams"),
   },
   {
     segment: "screenshots",
-    handler: createR2ProxyHandler("magistrala-docs/screenshots"),
+    handler: createR2ProxyHandler("magistrala-docs/v0-51-0/screenshots"),
   },
 ] as const;
 
