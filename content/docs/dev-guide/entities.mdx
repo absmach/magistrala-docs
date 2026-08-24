@@ -71,7 +71,7 @@ The **Users Service** allows for creating, updating, reading, and deleting **Use
 Users can bear multiple permissions that allow them various actions over other services and entities in the platform.
 
 The API endpoint for interacting with users are described in the [Users API](./api#users).
-The CLI for interacting with users are described in the [Users CLI](./cli/users-cli).
+There is no dedicated `users` CLI command in the current CLI (verified against `cli/root.go`'s `NewRootCmd()`) — user accounts are managed through Atom; see the [CLI Introduction](/dev-guide/cli/introduction-to-cli) for what's actually available.
 
 ## Domain
 
@@ -394,6 +394,6 @@ For complete details on metadata value types and the location/perimeter formats 
 [clients-api]: ./api#clients
 [channels-api]: ./api#channels
 [domains-api]: ./api#domains
-[clients-cli]: /dev-guide/cli/clients-cli
+[clients-cli]: /dev-guide/cli/devices-cli
 [channels-cli]: /dev-guide/cli/channels-cli
-[domains-cli]: /dev-guide/cli/domains-cli
+[domains-cli]: /dev-guide/cli/workspaces-cli
