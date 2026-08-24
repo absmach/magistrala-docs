@@ -13,7 +13,11 @@ keywords:
 image: /img/mg-preview.png
 ---
 
-In order to be easily integrable system, Magistrala is using [Redis Streams][redis-streams] as an event log for event sourcing. Services that are publishing events to Redis Streams are `users` service, `clients` service, `bootstrap` service and `mqtt` adapter.
+<Callout type="warn">
+References `users`/`clients` as standalone services publishing events — per the current architecture, most per-entity services (including `clients`) have been consolidated into Atom, and `bootstrap` is now `atom-bootstrap`. Whether Redis Streams event sourcing survived that consolidation, and in what form, needs verifying against Atom's implementation before this page is trusted.
+</Callout>
+
+In order to be easily integrable system, Magistrala is using [Redis Streams][redis-streams] as an event log for event sourcing. Services that previously published events to Redis Streams included `users`, `clients`, `bootstrap`, and the `mqtt` adapter.
 
 ## Users Service
 
