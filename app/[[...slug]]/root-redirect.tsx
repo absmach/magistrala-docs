@@ -5,7 +5,7 @@ import { useEffect } from "react";
 export function RootRedirect() {
   const router = useRouter();
   useEffect(() => {
-    router.replace("/user-guide/architecture");
+    router.replace("/user-guide/users-quick-start");
   }, [router]);
   return null;
 }
