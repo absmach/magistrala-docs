@@ -1,0 +1,29 @@
+---
+title: Authorization
+description: Run Atom authorization checks from the Magistrala CLI.
+keywords:
+  - CLI
+  - Authorization
+  - Access Control
+  - Magistrala
+  - Atom
+image: /img/mg-preview.png
+---
+
+`authz check` asks Atom whether a subject can perform an action, using the same permission evaluation the platform applies on every request (see [Architecture § Identity & Access Control](/dev-guide/architecture#identity--access-control)). It's useful for debugging "why can't this user/device do X" without reproducing the request that triggers the check.
+
+```bash
+magistrala-cli authz check <subject_id> <action> [--object-kind <kind>] [--object-id <id>] [--resource-id <id>] [--context <json>] --token <token>
+```
+
+```bash
+magistrala-cli authz check user-123 read --object-kind channel --object-id chan-1 --token $TOKEN
+```
+
+```json
+{ "authorized": true }
+```
+
+- `<subject_id>` / `<action>` are required positional arguments — the entity asking, and the permission verb (`read`, `write`, `delete`, `publish`, `subscribe`, `role.manage`, `policy.manage`, ...).
+- `--object-kind` / `--object-id` scope the check to a specific object (e.g. a channel or device).
+- `--resource-id` and `--context` support finer-grained or conditional checks where applicable.

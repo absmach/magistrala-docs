@@ -13,6 +13,14 @@ keywords:
 image: /img/mg-preview.png
 ---
 
+<Callout type="info" title="Writers are real; Notifiers are dead code">
+  There is no standalone `cmd/consumers` binary — `consumers/` is a library package imported by
+  `cmd/timescale-writer` and `cmd/postgres-writer`. The **Writers** section below is current. The
+  **Notifiers** section (SMTP/SMPP) is not: `consumers/notifiers/*` still exists as source but
+  nothing wires it up to a running service. The current mechanism for the one notification
+  Magistrala still sends (workspace-invitation emails) is Atom, not this package — see
+  [Notifications](/dev-guide/services/notifications).
+</Callout>
 
 The **Consumers Service** in Magistrala handles the processing, storage, and notification of messages received from various channels. It is divided into two primary groups:
 
@@ -80,6 +88,11 @@ consumer.ConsumeBlocking(ctx, messages)
 
 ## Notifiers
 
+<Callout type="warn" title="Not currently wired up">
+  Nothing in the current codebase imports this package outside of itself — it is not part of any
+  running service. Kept below for reference only; do not treat it as a supported feature.
+</Callout>
+
 Notifiers are responsible for sending real-time alerts or notifications when specific conditions are met. They ensure that critical messages reach users or systems promptly.
 
 ### **SMTP Notifier**
@@ -124,6 +137,12 @@ notifier.Notify("1234", []string{"5678"}, message)
 ```
 
 ## Subscriptions API
+
+<Callout type="warn" title="Not currently wired up">
+  Part of the same unused `consumers/notifiers` package — `consumers/notifiers/api/transport.go`
+  exists but isn't mounted by any running service, so these endpoints are not actually reachable
+  today.
+</Callout>
 
 The Subscriptions API in Magistrala allows users to manage subscriptions, enabling selective notifications based on specific topics.
 

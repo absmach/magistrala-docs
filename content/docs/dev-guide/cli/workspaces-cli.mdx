@@ -1,0 +1,51 @@
+---
+title: Workspaces
+description: Manage workspaces in Magistrala using the CLI.
+keywords:
+  - CLI
+  - Workspaces
+  - Management
+  - Magistrala
+  - Atom
+  - Tenants
+image: /img/mg-preview.png
+---
+
+Workspaces are Magistrala's top-level isolation boundary — every user, device, channel, and group belongs to one. The CLI manages them through Atom's tenant API (`cli/atom_commands.go`'s `newWorkspacesCmd`); see [Architecture § Core Concepts](/dev-guide/architecture#core-concepts) for how the two map. All commands below require `--token` from [`login`](/dev-guide/cli/introduction-to-cli#authentication).
+
+### Create a workspace
+
+```bash
+magistrala-cli workspaces create <name> [--alias <alias>] [--attributes <json>] --token <token>
+```
+
+```bash
+magistrala-cli workspaces create "Acme IoT" --alias acme-iot --token $TOKEN
+```
+
+Creating a workspace also seeds it with Magistrala's default Device Types, so newly created workspaces aren't empty of device-type choices.
+
+### List workspaces
+
+```bash
+magistrala-cli workspaces list --token <token>
+```
+
+### Get a workspace
+
+```bash
+magistrala-cli workspaces get <workspace_id> --token <token>
+```
+
+```json
+{
+  "id": "16a4ad70-a385-45c5-b50a-6d7e48d768d7",
+  "name": "Acme IoT",
+  "alias": "acme-iot"
+}
+```
+
+<Callout type="info">
+  There is no `update`, `enable`/`disable`, or `users` (member-listing) subcommand on `workspaces`
+  — only `create`, `list`, and `get`. Manage workspace membership and settings through the web UI.
+</Callout>

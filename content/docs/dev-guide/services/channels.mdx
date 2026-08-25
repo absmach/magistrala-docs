@@ -12,12 +12,11 @@ keywords:
 image: /img/mg-preview.png
 ---
 
-<Callout type="warn" title="Source location needs maintainer verification">
-  There is no `cmd/channels` entry point in the current Magistrala repository, so the `make channels`
-  command shown below will not work as-is. This service's code appears to have moved as part of
-  Magistrala's identity/authorization migration to Atom (see the note on the
-  [Architecture](/dev-guide/architecture) page) — its current canonical source location
-  could not be confirmed.
+<Callout type="warn" title="This page describes a service that no longer exists standalone">
+  There is no separate Channels service. Channels are Atom resources of kind `channel`, managed
+  through Atom's GraphQL API — see [Architecture § Core Concepts](/dev-guide/architecture#core-concepts)
+  and the CLI's [Channels page](/dev-guide/cli/channels-cli). The content below documents the
+  pre-Atom architecture and is kept for historical reference only.
 </Callout>
 
 The **Channels service** manages communication channels in Magistrala. A channel is a message topic that clients connect to for pub/sub messaging. The service handles channel creation, configuration, client connections, group hierarchy, and role-based access control. It exposes both HTTP and gRPC APIs.

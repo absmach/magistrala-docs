@@ -1,0 +1,84 @@
+---
+title: Devices
+description: Manage devices in Magistrala using the CLI.
+keywords:
+  - CLI
+  - Devices
+  - Management
+  - Magistrala
+  - Atom
+  - Gateways
+image: /img/mg-preview.png
+---
+
+Devices are Atom entities of kind `device` (`cli/devices.go`). This command replaces the older `clients` command — the CLI (and Atom's own entity kind) now call this concept "device," not "client." All commands require `--token` from [`login`](/dev-guide/cli/introduction-to-cli#authentication).
+
+### Create a device
+
+```bash
+magistrala-cli devices create <JSON_device> <workspace_id> --token <token>
+```
+
+```bash
+magistrala-cli devices create '{"name":"Temperature Sensor 1"}' 16a4ad70-a385-45c5-b50a-6d7e48d768d7 --token $TOKEN
+```
+
+`<JSON_device>` accepts the same fields as [`update`](#update-a-device) below (`name`, `external_id`, `device_type_id`, `device_type_version_id`, `status`, `attributes`). Set `"attributes":{"is_gateway":true}` to create the device as a gateway — see [Gateways](/dev-guide/cli/gateways-cli).
+
+### List devices in a workspace
+
+```bash
+magistrala-cli devices all get <workspace_id> --token <token>
+```
+
+### Get a device
+
+```bash
+magistrala-cli devices <device_id> get --token <token>
+```
+
+```json
+{
+  "id": "8c6f6cf1-...",
+  "kind": "device",
+  "name": "Temperature Sensor 1",
+  "tenant_id": "16a4ad70-a385-45c5-b50a-6d7e48d768d7",
+  "status": "active",
+  "attributes": {}
+}
+```
+
+### Update a device
+
+```bash
+magistrala-cli devices <device_id> update <JSON_string> --token <token>
+```
+
+```bash
+magistrala-cli devices 8c6f6cf1-... update '{"name":"Temperature Sensor 1 (Lobby)"}' --token $TOKEN
+```
+
+A device can be bound to a [Device Type](/dev-guide/cli/devicetypes-cli) via `device_type_id`/`device_type_version_id` — the checked way to do this is `devicetypes ... bind`, not this command directly, since `bind` refuses an inactive type/version.
+
+### Enable / disable a device
+
+```bash
+magistrala-cli devices <device_id> enable --token <token>
+magistrala-cli devices <device_id> disable --token <token>
+```
+
+These map to Atom's `active`/`inactive` entity status, not Magistrala's separate enabled/disabled vocabulary used elsewhere.
+
+### Delete a device
+
+```bash
+magistrala-cli devices <device_id> delete --token <token>
+```
+
+<Callout type="warn">
+  Gateway relations are stored as a plain string list inside a device's own `attributes.gateways`
+  — `DeleteEntity` is a single-entity GraphQL mutation with no cross-entity cleanup, so deleting a
+  device that other devices declare as their gateway leaves those declarations dangling. Check
+  `gateways <gateway_id> devices <workspace_id>` before removing a device that may be relied on as
+  a gateway.
+</Callout>

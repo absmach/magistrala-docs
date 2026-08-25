@@ -13,6 +13,13 @@ keywords:
 image: /img/mg-preview.png
 ---
 
+<Callout type="warn" title="Merged into atom-bootstrap">
+  There is no standalone Bootstrap service anymore — it now runs merged with Atom as the
+  `atom-bootstrap` deployment. The concept itself is still current (devices still bootstrap); the
+  standalone-service specifics below (external ID/key encryption details, whitelist API) describe
+  the pre-Atom service and are kept for historical reference only.
+</Callout>
+
 **Bootstrapping** is the process where a device retrieves the configuration it needs to start or recover communication with Magistrala. A device usually bootstraps when:
 
 - it has only bootstrap credentials and does not yet have its runtime configuration

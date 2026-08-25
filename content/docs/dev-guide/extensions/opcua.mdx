@@ -14,6 +14,10 @@ image: /img/mg-preview.png
 ---
 
 
+<Callout type="warn">
+The OPC-UA adapter is a `magistrala-contrib` service and has been obsolete for a while (see the [magistrala-contrib overview](/dev-guide/extensions/magistrala-contrib)). Also uses pre-rename `client`/`Client` terminology throughout.
+</Callout>
+
 OPC Unified Architecture (OPC-UA) is a communication protocol and framework that is widely used in industrial automation and the Industrial Internet of Clients (IIoT). It provides a standard platform for connecting industrial devices and systems, allowing them to share data and information seamlessly. Data from the devices is sent to the OPC-UA Server where a client can consume it.
 
 Bridging with an OPC-UA Server can be done over the [opcua-adapter][opcua-adapter], which is typically an OPC-UA client built on top of magistrala. This service sits between Magistrala and an [OPC-UA Server][opcua-arch] and consumes/sends messages to and from the OPC-UA server.

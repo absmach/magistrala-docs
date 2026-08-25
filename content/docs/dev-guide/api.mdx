@@ -1,15 +1,16 @@
 ---
 title: API
-description: Complete Magistrala REST API reference for users, clients, channels, messages, and groups with sample curl commands.
+description: Magistrala API reference for users, workspaces, devices, channels, groups, and messages — Atom's GraphQL API plus the still-current HTTP/MQTT/CoAP/WS message publishing endpoints, with sample requests.
 keywords:
   - Magistrala API
-  - REST
-  - Users
-  - Clients
+  - GraphQL
+  - Atom
+  - Workspaces
+  - Devices
   - Channels
   - Groups
   - Messages
-  - Tokens
+  - Users
 image: /img/mg-preview.png
 ---
 
@@ -17,2359 +18,532 @@ image: /img/mg-preview.png
 
 The API reference is available at the [Magistrala API documentation site](https://docs.api.magistrala.absmach.eu/)
 
+The **Workspaces**, **Devices**, **Channels**, **Groups**, and **Users** sections below cover Atom's GraphQL API (`POST /graphql`). **Messages** is a different story: publishing over HTTP/MQTT/CoAP/WS is unrelated to Atom and uses its own REST-style endpoints, documented in its own section below.
+
 ## Users
 
-### Create User
+A **User** is an Atom `Entity` of kind `human` — the same generic entity type documented in [Devices](#devices), with the same `createEntity`/`entity`/`entities`/`updateEntity`/`enableEntity`/`disableEntity`/`deleteEntity` mutations and queries. This section only covers what's specific to human users: signing up, logging in, and password/session management (`src/graphql/auth.rs`, `src/graphql/credentials.rs`).
 
-To start working with the Magistrala system, you need to create a user account.
+<Callout type="warn" title="No CLI equivalent">
+  Unlike Workspaces/Devices/Channels/Groups, user management has no CLI wrapper — the shipped CLI
+  (`cli/root.go`) has no `users` command. Everything below is GraphQL-only, or reachable through
+  `magistrala-ui`'s sign-up/login pages.
+</Callout>
 
-This function registers a new user account with a unique email and username.
+Same connection details as the rest of this API reference: `POST http://localhost:8080/graphql`, `Content-Type: application/json`, body `{"query": "...", "variables": {...}}`. Login/signup requests need no `Authorization` header (they establish one); everything else needs `Authorization: Bearer <user_token>`.
 
-> The user's names, email and username must all be unique.
+### Sign Up
+
+Self-service registration — creates a new `human` entity and, depending on configuration, sends a verification email before the account is usable.
 
 ```bash
-curl -X POST http://localhost:9002/users \
+curl -sSiX POST http://localhost:8080/graphql \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
 -d @- <<EOF
 {
-  "first_name": "<first_name>",
-  "last_name": "<last_name>",
-  "email": "<email>",
-  "tags": ["tag1", "tag2"],
-  "credentials": {
-    "username": "<username>",
-    "secret": "<password>"
-  },
-  "metadata": {
-    "key1": "value1",
-    "key2": "value2"
-  },
-  "profile_picture": "<profile_picture_url>",
-  "status": "enabled"
+  "query": "mutation Signup(\$input: SignupInput!) { signup(input: \$input) { entityId email verificationRequired } }",
+  "variables": {
+    "input": {
+      "name": "<full_name>",
+      "email": "<email>",
+      "password": "<password>",
+      "attributes": {}
+    }
+  }
 }
 EOF
 ```
 
-**Example Usage:**
-
-```bash
-curl -X POST http://localhost:9002/users \
--H "Content-Type: application/json" \
--d @- <<EOF
-{
-  "first_name": "Jane",
-  "last_name": "Doe",
-  "email": "janedoe@example.com",
-  "tags": ["developer", "backend"],
-  "credentials": {
-    "username": "janedoe",
-    "secret": "securepassword"
-  },
-  "metadata": {
-    "location": "Paris"
-  },
-  "profile_picture": "https://example.com/janedoe.jpg",
-  "status": "enabled"
-}
-EOF
-
-```
-
-**Expected Create User Response:**
+Expected response:
 
 ```json
 {
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Jane",
-  "last_name": "Doe",
-  "email": "janedoe@example.com",
-  "credentials": {
-    "username": "janedoe"
-  },
-  "tags": ["developer", "backend"],
-  "metadata": {
-    "location": "Paris"
-  },
-  "profile_picture": "https://example.com/janedoe.jpg",
-  "status": "enabled",
-  "created_at": "2025-02-11T16:15:12Z",
-  "updated_at": "2025-02-11T16:15:12Z"
-}
-```
-
-### Create Token
-
-To log in to the Magistrala system, you need to create a `user_token`.
-
-```bash
-curl -sSiX POST http://localhost/users/tokens/issue -H "Content-Type: application/json" -d @- << EOF
-{
-  "username": "<user_name> | <username>",
-  "password": "<user_secret>"
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost/users/tokens/issue -H "Content-Type: application/json" -d @- << EOF
-{
-  "username": "john.doe@email.com",
-  "password": "12345678"
-}
-EOF
-
-HTTP/2 201
-server: nginx/1.25.4
-date: Thu, 13 Feb 2025 21:30:06 GMT
-content-type: application/json
-content-length: 583
-Access-Control-Expose-Headers: Location
-
-{"access_token":"eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzk0ODU4MDYsImlhdCI6MTczOTQ4MjIwNiwiaXNzIjoic3VwZXJtcS5hdXRoIiwidHlwZSI6MCwidXNlciI6IjBkNDA5NDgyLTA3MzctNDVlYS04Mjg0LTViZDg4MDU5ZjYyNSJ9.nFeihdM7KQJKr_2WQaKUFqBGWVw1qfjh0N6Uc5C6UXc2ugtm4LCf0sjDawi9ok_szk0fQeWWX8bqOsnEvhobZA","refresh_token":"eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzk1Njg2MDYsImlhdCI6MTczOTQ4MjIwNiwiaXNzIjoic3VwZXJtcS5hdXRoIiwidHlwZSI6MSwidXNlciI6IjBkNDA5NDgyLTA3MzctNDVlYS04Mjg0LTViZDg4MDU5ZjYyNSJ9.DbaMpgVPtL7ER5wlsFmVtC3izKgjB66qsl1beT0qnlcWcfp7NQyvBtT0EW3OyibcqG56SnqO0ye1mzaJLgViqg"}
-```
-
-### Refresh Token
-
-To issue another `access_token` after getting expired, you need to use a `refresh_token`.
-
-```bash
-curl -sSiX POST http://localhost/users/tokens/refresh -H "Content-Type: application/json" -H "Authorization: Bearer <refresh_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost/users/tokens/refresh -H "Content-Type: application/json" -H "Authorization: Bearer <refresh_token>"
-
-HTTP/1.1 201 Created
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:49:45 GMT
-Content-Type: application/json
-Content-Length: 709
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "access_token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODY3NTE0ODUsImlhdCI6MTY4Njc1MDU4NSwiaWRlbnRpdHkiOiJqb2huLmRvZUBlbWFpbC5jb20iLCJpc3MiOiJjbGllbnRzLmF1dGgiLCJzdWIiOiI5NDkzOTE1OS1kMTI5LTRmMTctOWU0ZS1jYzJkNjE1NTM5ZDciLCJ0eXBlIjoiYWNjZXNzIn0.zZcUH12x7Tlnecrc3AAFnu3xbW4wAOGifWZMnba2EnhosHWDuSN4N7s2S7OxPOrBGAG_daKvkA65mi5n1sxi9A",
-  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODY4MzY5ODUsImlhdCI6MTY4Njc1MDU4NSwiaWRlbnRpdHkiOiJqb2huLmRvZUBlbWFpbC5jb20iLCJpc3MiOiJjbGllbnRzLmF1dGgiLCJzdWIiOiI5NDkzOTE1OS1kMTI5LTRmMTctOWU0ZS1jYzJkNjE1NTM5ZDciLCJ0eXBlIjoicmVmcmVzaCJ9.AjxJ5xlUUSjW99ECUAU19ONeCs8WlRl52Ost2qGTADxHGYBjPMqctruyoTYJbdORtL5f2RTxZsnLX_1vLKRY2A",
-  "access_type": "Bearer"
-}
-```
-
-### Get User Profile
-
-You can always check the user profile that is logged-in by using the `user_token`.
-
-```bash
-curl -sSiX GET http://localhost/users/profile -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost/users/profile -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:51:59 GMT
-Content-Type: application/json
-Content-Length: 312
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Jane",
-  "last_name": "Doe",
-  "email": "janedoe@example.com",
-  "credentials": {"username": "janedoe"},
-  "tags": [
-    "developer", 
-    "backend"
-  ],
-  "metadata": {"location": "Paris"},
-  "profile_picture": "https://example.com/janedoe.jpg",
-  "status": "enabled",
-  "created_at": "2025-02-11T16:15:12Z",
-  "updated_at": "2025-02-11T16:15:12Z"
-}
-```
-
-### Get User
-
-You can always check the user entity by entering the user ID and `user_token`.
-
-```bash
-curl -sSiX GET http://localhost/users/{user_id} -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281  -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:51:59 GMT
-Content-Type: application/json
-Content-Length: 312
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Jane",
-  "last_name": "Doe",
-  "email": "janedoe@example.com",
-  "credentials": {"username": "janedoe"},
-  "tags": [
-    "developer", 
-    "backend"
-  ],
-  "metadata": {"location": "Paris"},
-  "profile_picture": "https://example.com/janedoe.jpg",
-  "status": "enabled",
-  "created_at": "2025-02-11T16:15:12Z",
-  "updated_at": "2025-02-11T16:15:12Z"
-}
-
-```
-
-### Get Users
-
-You can get all users in the database by querying `/users` endpoint.
-
-```bash
-curl -sSiX GET http://localhost/users -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost/users -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:52:36 GMT
-Content-Type: application/json
-Content-Length: 285
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "limit": 5,
-  "offset": 0,
-  "total": 2,
-  "users": [
-    {
-      "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-      "first_name": "Jane",
-      "last_name": "Doe",
-      "email": "janedoe@example.com",
-      "credentials": {"username": "janedoe"},
-      "status": "enabled"
-    },
-    {
-      "id": "c1adf32-3dac-4aad-bead-ae96fe071239",
-      "first_name": "John",
-      "last_name": "Smith",
-      "email": "johnsmith@example.com",
-      "credentials": {"username": "johnsmith"},
-      "status": "disabled"
+  "data": {
+    "signup": {
+      "entityId": "b3f1c9a2-5e2d-4a11-9c3f-7a8b2e6d1f90",
+      "email": "user@example.com",
+      "verificationRequired": true
     }
-  ]
-}
-```
-
-If you want to paginate your results then use `offset`, `limit`, `metadata`, `last_name`, `first_name`, `email`, `tags`, `status` and `visibility` as query parameters.
-
-```bash
-curl -sSiX GET http://localhost/users?[offset=<offset>]&[limit=<limit>]&[identity=<identity>]&[name=<name>]&[tag=<tag>]&[status=<status>]&[visibility=<visibility>] -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost/users?offset=0&limit=5&email=janedoe@example.com -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:53:16 GMT
-Content-Type: application/json
-Content-Length: 284
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "limit": 5,
-  "total": 1,
-  "users": [
-    {
-      "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-      "first_name": "Jane",
-      "last_name": "Doe",
-      "email": "janedoe@example.com",
-      "credentials": {"username": "janedoe"},
-      "status": "enabled"
-    }
-  ]
-}
-```
-
-### Update User
-
-Updating user's names and/or metadata
-
-```bash
-curl -sSiX PATCH http://localhost/users/{user_id} \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "first_name": "<new_first_name>",
-  "last_name": "<new_last_name>",
-  "metadata": {
-    "key": "value"
   }
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -sSiX PATCH http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281 \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "first_name": "Janet",
-  "last_name": "Doyle",
-  "metadata": {
-    "location": "Lyon"
-  }
-}
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:54:40 GMT
-Content-Type: application/json
-Content-Length: 354
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Janet",
-  "last_name": "Doyle",
-  "email": "janedoe@example.com",
-  "credentials": {"username": "janedoe"},
-  "tags": [
-    "developer",
-    "backend"
-  ],
-  "metadata": {"location": "Lyon"},
-  "profile_picture": "https://example.com/janedoe.jpg",
-  "status": "enabled",
-  "updated_at": "2025-02-11T18:00:12Z"
-}
-
-```
-
-### Update User Tags
-
-Updating user's tags
-
-```bash
-curl -sSiX PATCH http://localhost/users/{user_id}/tags \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "tags": [
-    "[tag_1]",
-    "...",
-    "[tag_N]"
-  ]
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -sSiX PATCH http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/tags \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "tags": ["backend", "golang"]
-}
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:55:18 GMT
-Content-Type: application/json
-Content-Length: 375
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Janet",
-  "last_name": "Doyle",
-  "email": "janedoe@example.com",
-  "credentials": {"username": "janedoe"},
-  "tags": [
-    "backend", 
-    "golang"
-  ],
-  "metadata": {"location": "Lyon"},
-  "profile_picture": "https://example.com/janedoe.jpg",
-  "status": "enabled",
-  "updated_at": "2025-02-11T18:00:12Z"
-}
-```
-
-### Update User Profile Picture
-
-Updates the profile picture URL of a user.
-
-```bash
-curl -X PATCH http://localhost:9002/users/{user_id}/picture \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "profile_picture": "<picture_url>"
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -X PATCH http://localhost:9002/users/b7edb32-2eac-4aad-aebe-ed96fe073879/picture \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <access_token>" \
--d @- <<EOF
-{
-  "profile_picture": "https://example.com/newpic.jpg"
-}
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:59:53 GMT
-Content-Type: application/json
-Content-Length: 382
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Janet",
-  "last_name": "Doyle",
-  "email": "janedoe@example.com",
-  "credentials": {"username": "janedoe"},
-  "tags": [
-    "backend", 
-    "golang"
-  ],
-  "profile_picture": "https://example.com/newpic.jpg",
-  "metadata": {"location": "Lyon"},
-  "status": "enabled",
-  "updated_at": "2025-02-11T18:00:12Z"
-}
-```
-
-### Update User Email
-
-Updating user's email
-
-```bash
-curl -sSiX PATCH http://localhost/users/{user_id}/email \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "email": "<user_email>"
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -sSiX PATCH http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/email \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "email": "newemail@example.com"
-}
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:59:53 GMT
-Content-Type: application/json
-Content-Length: 382
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Janet",
-  "last_name": "Doyle",
-  "email": "newemail@example.com",
-  "credentials": {"username": "janedoe"},
-  "tags": [
-    "backend", 
-    "golang"
-  ],
-  "profile_picture": "https://example.com/newpic.jpg",
-  "metadata": {"location": "Lyon"},
-  "status": "enabled",
-  "updated_at": "2025-02-11T18:00:12Z"
-}
-```
-
-### Update User Username
-
-Updating user's username.
-
-```bash
-curl -sSiX PATCH http://localhost/users/{user_id}/username \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "username": "<username>"
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -sSiX PATCH http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/username \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "username": "janedoe2025"
-}
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 13:59:53 GMT
-Content-Type: application/json
-Content-Length: 382
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Janet",
-  "last_name": "Doyle",
-  "email": "newemail@example.com",
-  "credentials": {"username": "janedoe2025"},
-  "tags": [
-    "backend", 
-    "golang"
-  ],
-  "profile_picture": "https://example.com/newpic.jpg",
-  "metadata": {"location": "Lyon"},
-  "profile_picture": "https://example.com/janedoe.jpg",
-  "status": "enabled",
-  "updated_at": "2025-02-11T18:00:12Z"
-}
-```
-
-### Change Secret
-
-Changing the user secret can be done by calling the update secret method
-
-```bash
-curl -sSiX PATCH http://localhost/users/secret \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "old_secret": "<old_secret>",
-  "new_secret": "<new_secret>"
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -sSiX PATCH http://localhost/users/secret \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "old_secret": "12345678",
-  "new_secret": "12345678a"
-}
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 14:00:35 GMT
-Content-Type: application/json
-Content-Length: 281
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-```
-
-### Enable User
-
-Changing the user status to enabled can be done by calling the enable user method
-
-```bash
-curl -sSiX POST http://localhost/users/{user_id}/enable -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/enable -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 14:01:25 GMT
-Content-Type: application/json
-Content-Length: 382
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Janet",
-  "last_name": "Doyle",
-  "email": "newemail@example.com",
-  "credentials": {"username": "janedoe2025"},
-  "tags": [
-    "backend",
-    "golang"
-  ],
-  "metadata": {"location": "Lyon"},
-  "profile_picture": "https://example.com/newpic.jpg",
-  "status": "enabled",
-  "updated_at": "2025-02-11T18:00:12Z"
-}
-```
-
-### Disable User
-
-Changing the user status to disabled can be done by calling the disable user method
-
-```bash
-curl -sSiX POST http://localhost/users/{user_id}/disable -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/disable -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 14:01:23 GMT
-Content-Type: application/json
-Content-Length: 383
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-  "first_name": "Janet",
-  "last_name": "Doyle",
-  "email": "newemail@example.com",
-  "credentials": {"username": "janedoe2025"},
-  "tags": [
-    "backend", 
-    "golang"
-  ],
-  "metadata": {"location": "Lyon"},
-  "profile_picture": "https://example.com/newpic.jpg",
-  "status": "disabled",
-  "updated_at": "2025-02-11T18:00:12Z"
-}
-```
-
-### Delete User
-
-Delete a user from the system.
-
-```bash
-curl -X DELETE http://localhost:9002/users/{user_id} \
--H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -X DELETE http://localhost:9002/users/b7edb32-2eac-4aad-aebe-ed96fe073879 \
--H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 14:01:23 GMT
-Content-Type: application/json
-Content-Length: 383
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "message": "User deleted successfully"
-}
-```
-
-### Search User
-
-Searches for users by various parameters.
-
-```bash
-curl -X GET "http://localhost:9002/users/search?username=<username>&email=<email>" \
--H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -X GET "http://localhost:9002/users/search?username=janedoe2025&email=newemail@example.com" \
--H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Wed, 14 Jun 2023 14:01:23 GMT
-Content-Type: application/json
-Content-Length: 383
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "limit": 10,
-  "offset": 0,
-  "total": 1,
-  "users": [
-    {
-      "id": "b7edb32-2eac-4aad-aebe-ed96fe073879",
-      "username": "janedoe2025",
-      "email": "newemail@example.com"
-    }
-  ]
-}
-```
-
-### Get User Memberships
-
-You can get all groups a user is assigned to by calling the get user memberships method.
-
-If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parent_id`, `tree` and `dir` as query parameters.
-
-> The user identified by the `user_token` must be assigned to the same group as the user with id `user_id` with `c_list` action. Alternatively, the user identified by the `user_token` must be the owner of the user with id `user_id`.
-
-```bash
-curl -sSiX GET http://localhost/users/{user_id}/memberships -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost/users/1890c034-7ef9-4cde-83df-d78ea1d4d281/memberships -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 11:22:18 GMT
-Content-Type: application/json
-Content-Length: 367
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "limit": 0,
-  "offset": 0,
-  "memberships": [
-    {
-      "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-      "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "Data analysts",
-      "description": "This group would be responsible for analyzing data collected from sensors.",
-      "metadata": { "location": "london" },
-      "created_at": "2023-06-15T09:41:42.860481Z",
-      "updated_at": "2023-06-15T10:17:56.475241Z",
-      "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "status": "enabled"
-    }
-  ]
-}
-```
-
-## Domains
-
-Domains represent organizational workspaces in Magistrala.  
-Each domain acts as an isolated environment that contains entities such as **Clients**, **Channels**, **Groups**, **Roles** and **Invitations**.  
-Every user can create one or more domains, each identified by a unique route.
-
-Base URL:
-
-- [`http://localhost:9003`](http://localhost:9003)
-
-### Create Domain
-
-Registers a new domain.  
-This endpoint requires a valid **user token**.
-
-```bash
-curl -sSiX POST http://localhost:9003/domains \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "name": "<domain_name>",
-  "route": "<domain_route>",
-  "tags": ["<tag1>", "<tag2>"],
-  "metadata": {
-    "key": "value"
-  }
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost:9003/domains \
--H "Content-Type: application/json" \
--H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
--d @- <<EOF
-{
-  "name": "Magistrala",
-  "route": "magistrala",
-  "tags": ["absmach", "IoT"],
-  "metadata": {
-    "region": "EU"
-  }
-}
-EOF
-```
-
-The expected response would be:
-
-```bash
-{
-  "id": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b",
-  "name": "Magistrala",
-  "route": "magistrala",
-  "tags": ["absmach", "IoT"],
-  "metadata": {
-    "region": "EU"
-  },
-  "status": "enabled",
-  "created_by": "c8c3e4f1-56b2-4a22-8e5f-8a77b1f9b2f4",
-  "created_at": "2025-10-29T14:12:01Z",
-  "updated_at": "2025-10-29T14:12:01Z"
 }
 ```
 
 > **Notes**:
 >
-> - `name` and `route` are required fields.
-> - `route` must be unique and cannot be changed after creation.
-> - `metadata` must be a valid JSON object.
-> - The `id` is automatically generated if not provided.
+> - Signup only succeeds if `self_registration_enabled` is set on the deployment; otherwise it returns `"sign up is not enabled"`. Admin-created accounts (self-registration disabled) go through `createEntity` instead — see [Create User](#create-user) below — but that path doesn't set a password or send verification email; a separate [Set Password](#set--change-password) call is needed to make the account loginable.
+> - `email` is normalized (lowercased) and used as the login identifier — it is not a field on the `Entity` type itself.
 
-### Get Domain
-
-Retrieves details of a specific domain by its ID.
+### Log In
 
 ```bash
-curl -sSiX GET http://localhost:9003/domains/{domain_id} \
--H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost:9003/domains/d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b \
--H "Authorization: Bearer <user_token>"
-```
-
-Expected Response:
-
-```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-d @- <<EOF
 {
-  "id": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b",
-  "name": "Magistrala",
-  "route": "magistrala",
-  "tags": ["absmach", "IoT"],
-  "metadata": {
-    "region": "EU"
-  },
-  "status": "enabled",
-  "created_by": "c8c3e4f1-56b2-4a22-8e5f-8a77b1f9b2f4",
-  "created_at": "2025-10-29T14:12:01Z",
-  "updated_at": "2025-10-29T14:12:01Z"
+  "query": "mutation Login(\$input: LoginInput!) { login(input: \$input) { token entityId sessionId } }",
+  "variables": {
+    "input": {
+      "identifier": "<email>",
+      "secret": "<password>",
+      "kind": "password"
+    }
+  }
+}
+EOF
+```
+
+Expected response:
+
+```json
+{
+  "data": {
+    "login": {
+      "token": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9...",
+      "entityId": "b3f1c9a2-5e2d-4a11-9c3f-7a8b2e6d1f90",
+      "sessionId": "9c7a1e2d-3b4f-4a5e-8d6c-1f2a3b4c5d6e"
+    }
+  }
 }
 ```
 
-### Get All Domains
+> **Notes**:
+>
+> - `kind` defaults to `"password"` if omitted; `"shared_key"` is also accepted (`src/graphql/auth.rs`'s `parse_login_credential_kind`) for shared-key-based login.
+> - To log into a specific workspace directly, pass `tenantId` or `tenantAlias` (the workspace's `route`) alongside `identifier`/`secret` — same `LoginInput`.
+> - The returned `token` is the bearer token for every other request in this reference.
 
-Retrieves a paginated list of domains accessible to the authenticated user.
+### Log Out / Refresh Session
 
 ```bash
-curl -sSiX GET "http://localhost:9003/domains?limit=<limit>&offset=<offset>&status=<status>&name=<domain_name>" \
--H "Authorization: Bearer <user_token>"
+# Log out (revokes the current session)
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d '{"query": "mutation { logout }"}'
+
+# Refresh (issues a new token for the current session)
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d '{"query": "mutation { refreshSession { token entityId sessionId } }"}'
 ```
 
-For Example
+`refreshSession` requires the token to actually carry a session (i.e. it came from `login`, not a personal access token) — it errors with `"session refresh requires a session token"` otherwise.
+
+### Create User
+
+Admin-created account — bypasses self-registration, does not set a password. Same `createEntity` mutation as [Devices](#create-device), with `kind: "human"`.
 
 ```bash
-curl -sSiX GET "http://localhost:9003/domains?limit=5&offset=0&status=enabled" \
--H "Authorization: Bearer <user_token>"
-```
-
-Expected Response:
-
-```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
 {
-  "total": 2,
-  "offset": 0,
-  "limit": 5,
-  "domains": [
-    {
+  "query": "mutation CreateUser(\$input: CreateEntityInput!) { createEntity(input: \$input) { id kind name tenantId status attributes createdAt } }",
+  "variables": {
+    "input": {
+      "kind": "human",
+      "name": "<full_name>",
+      "tenantId": "<workspace_id>",
+      "attributes": {}
+    }
+  }
+}
+EOF
+```
+
+Follow up with [Set Password](#set--change-password) to make the account loginable, since `createEntity` has no `email`/`password` fields (those are signup-specific — see the note under [Sign Up](#sign-up)).
+
+### Get User / List Users
+
+Same `entity(id)` and `entities(...)` queries documented in [Get Device](#get-device) / [Get Devices](#get-devices), filtered to `kind: "human"`. `entities` also takes a free-text `q` argument, which doubles as user search:
+
+```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "query ListUsers(\$q: String, \$tenantId: ID) { entities(kind: human, q: \$q, tenantId: \$tenantId, limit: 20) { total items { id name status attributes createdAt } } }",
+  "variables": { "q": "<search_term>", "tenantId": "<workspace_id>" }
+}
+EOF
+```
+
+### Update / Enable / Disable / Delete User
+
+Same `updateEntity`, `enableEntity`, `disableEntity`, `deleteEntity` (soft-delete), `restoreEntity`, and `purgeEntity` mutations as [Devices](#update-device) — pass the user's entity `id`. `updateEntity` can change `name` and `attributes`; it cannot change email (see the [Sign Up](#sign-up) note) or password (see below).
+
+### Set / Change Password
+
+```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "mutation SetPassword(\$entityId: ID!, \$password: String!) { createPassword(entityId: \$entityId, password: \$password) }",
+  "variables": { "entityId": "<user_entity_id>", "password": "<new_password>" }
+}
+EOF
+```
+
+Returns `true` on success. Despite the name, `createPassword` also handles changing an existing password — there is no separate "update password" mutation. A caller can set another entity's password only with `manage` capability on it (or on the target's workspace) — see `require_credential_management` in `src/graphql/auth.rs`; a scoped access token can never call this at all (self-escalation is explicitly blocked).
+
+### Personal Access Tokens
+
+Covered in depth in the [Personal Access Tokens](/user-guide/pats) user guide and backed by the same `credentials.rs` mutations (`createAccessToken`, `replaceAccessTokenPermissions`, `revokeAccessToken`) and the `accessTokens`/`credentials` queries — not duplicated here.
+
+## Workspaces
+
+A **Workspace** is Atom's `Tenant` — an isolated organizational unit that contains entities such as **Devices**, **Gateways**, **Device Types**, **Channels**, **Groups**, **Roles**, and **Invitations**. Every user can belong to one or more workspaces, each identified by a unique `route`.
+
+Workspaces are managed through **Atom's GraphQL API**, not a REST service — there is no standalone `domains`/`workspaces` HTTP service anymore. All requests below are `POST` requests to the GraphQL endpoint with an `Authorization: Bearer <token>` header, `Content-Type: application/json`, and a JSON body of the shape `{"query": "...", "variables": {...}}`.
+
+GraphQL endpoint:
+
+- `http://localhost:8080/graphql` (Atom's default port; the base URL is configured via the `ATOM_URL` environment variable — see [Getting Started](/dev-guide/getting-started))
+
+### Create Workspace
+
+Registers a new workspace. Requires the `manage` or `create` capability at platform scope.
+
+```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "mutation CreateWorkspace(\$input: CreateTenantInput!) { createTenant(input: \$input) { id name alias status tags attributes createdAt updatedAt } }",
+  "variables": {
+    "input": {
+      "name": "<workspace_name>",
+      "alias": "<workspace_route>",
+      "tags": ["<tag1>", "<tag2>"],
+      "attributes": { "region": "EU" }
+    }
+  }
+}
+EOF
+```
+
+Expected response:
+
+```json
+{
+  "data": {
+    "createTenant": {
       "id": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b",
       "name": "Magistrala",
-      "route": "magistrala",
-      "status": "enabled"
-    },
-    {
-      "id": "e1a3b4d9-73c1-4e22-9345-912abcf4fa76",
-      "name": "Magistrala",
-      "route": "magistrala",
-      "status": "disabled"
+      "alias": "magistrala",
+      "status": "active",
+      "tags": ["absmach", "IoT"],
+      "attributes": { "region": "EU" },
+      "createdAt": "2026-08-24T14:12:01Z",
+      "updatedAt": null
     }
-  ]
+  }
 }
 ```
 
-> Query parameters such as `limit`, `offset`, `status`, `name`, `role_id`, and `metadata` can be used for filtering and pagination.
+> **Notes**:
+>
+> - `name` is required; `alias` (the route/slug used to address the tenant, successor to the old Domain `alias`) is optional but must be unique when set.
+> - `attributes` is a free-form JSON object (successor to the old flat `metadata` field) — see [Entities' Attributes / Metadata](/dev-guide/entities#attributes--metadata).
+> - Creating a workspace also seeds its default Device Types.
 
-### Update Domain
+### Get Workspace
 
-Updates the name, tags, or metadata of a domain.
+Retrieves a specific workspace by ID. Requires `read` or `manage` access on the tenant.
 
 ```bash
-curl -sSiX PATCH http://localhost:9003/domains/{domain_id} \
+curl -sSiX POST http://localhost:8080/graphql \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <user_token>" \
 -d @- <<EOF
 {
-  "name": "<new_domain_name>",
-  "tags": ["<new_tag>"],
-  "metadata": {
-    "key": "updated_value"
+  "query": "query Workspace(\$id: ID!) { tenant(id: \$id) { id name alias status tags attributes createdAt updatedAt } }",
+  "variables": { "id": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b" }
+}
+EOF
+```
+
+### Get All Workspaces
+
+Retrieves a paginated list of workspaces. A platform admin sees every workspace; a normal user sees only the workspaces they belong to.
+
+```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "query ListWorkspaces(\$q: String, \$name: String, \$alias: String, \$status: TenantStatus, \$limit: Int, \$offset: Int) { tenants(q: \$q, name: \$name, alias: \$alias, status: \$status, limit: \$limit, offset: \$offset) { total items { id name alias status tags attributes createdAt updatedAt } } }",
+  "variables": { "limit": 20, "offset": 0, "status": "active" }
+}
+EOF
+```
+
+> Supported filter/sort arguments: `q` (free text), `name`, `alias`, `status` (`active`/`inactive`/`frozen`/`deleted`), `deleted` (`live`/`deleted`/`all`), `order` (`created_at`/`updated_at`/`name`/`alias`/`status`), `dir` (`asc`/`desc`), `limit`, `offset`.
+
+### Update Workspace
+
+Updates the name, alias, tags, or attributes of a workspace.
+
+```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "mutation UpdateWorkspace(\$id: ID!, \$input: UpdateTenantInput!) { updateTenant(id: \$id, input: \$input) { id name alias status tags attributes updatedAt } }",
+  "variables": {
+    "id": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b",
+    "input": {
+      "name": "Magistrala Cloud",
+      "tags": ["absmach", "cloud"],
+      "attributes": { "region": "EU", "tier": "premium" }
+    }
+  }
+}
+EOF
+```
+
+### Enable / Disable / Freeze Workspace
+
+`enableTenant`, `disableTenant`, and `freezeTenant` all take just an `id` and return the updated Workspace. Freezing locks all entity operations within the workspace while keeping its data readable.
+
+```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "mutation EnableWorkspace(\$id: ID!) { enableTenant(id: \$id) { id status } }",
+  "variables": { "id": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b" }
+}
+EOF
+```
+
+Replace `enableTenant` with `disableTenant` or `freezeTenant` for the other two operations. Platform-admin only (`manage` at platform scope).
+
+### Delete Workspace
+
+`deleteTenant(id: ID!): Boolean` soft-deletes a workspace. Two further platform-admin-only mutations exist for the deleted state: `restoreTenant(id: ID!): Tenant` (reactivate within the retention window — revoked sessions/certificates are not reinstated, members must re-authenticate) and `purgeTenant(id: ID!): Boolean` (irreversible, bypasses the retention window).
+
+```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "mutation DeleteWorkspace(\$id: ID!) { deleteTenant(id: \$id) }",
+  "variables": { "id": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b" }
+}
+EOF
+```
+
+### Workspace Members and Invitations
+
+- `tenantMembers(tenantId, q, limit, offset): EntityList` — list a workspace's members.
+- `tenantAssignableEntities(tenantId, q, limit, offset): EntityList` — search entities that could be invited/added (requires `q` of at least 3 characters).
+- `addTenantMember(tenantId, entityId, roleId): Boolean` / `removeTenantMember(tenantId, entityId): Boolean` — direct add/remove, no invitation flow.
+- `myTenantRoles(tenantId): [TenantRoleAssignment]` — the caller's own roles within a workspace (`roleId`, `roleName`, `actions`, `assignmentPaths`).
+- `createTenantInvitation(tenantId, input: CreateTenantInvitationInput!): TenantInvitation` — invite by `inviteeUserId` or `inviteeEmail`, optionally with a `roleId`; sends an email when `inviteeEmail` is set.
+- `tenantInvitations(tenantId, limit, offset): TenantInvitationList` / `myTenantInvitations(limit, offset): TenantInvitationList` — list a workspace's pending invitations, or the caller's own.
+- `acceptTenantInvitation(tenantId): Boolean`, `acceptTenantInvitationToken(input: InvitationTokenInput!): ID`, `rejectTenantInvitation(tenantId): Boolean`, `revokeTenantInvitation(tenantId, invitationId): Boolean`.
+
+```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "mutation InviteMember(\$tenantId: ID!, \$input: CreateTenantInvitationInput!) { createTenantInvitation(tenantId: \$tenantId, input: \$input) { id inviteeEmail roleId createdAt } }",
+  "variables": {
+    "tenantId": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b",
+    "input": { "inviteeEmail": "jane@example.com" }
   }
 }
 EOF
 ```
 
-For Example
+> **Tip**: Upon creation, the workspace creator automatically receives the Admin role within that workspace, granting full access to manage roles, members, devices, channels, and other entities.
+
+## Devices
+
+A **Device** is an Atom `Entity` of kind `device` — the same generic entity type used for Gateways and Device Types' bindings (a **Gateway** is just a Device with `attributes.is_gateway` set; see [Gateway Management](/user-guide/gateway-management/introduction)). Users and other principals are entities too, of kind `human` — see [Users](#users).
+
+Like Workspaces, Devices are managed through **Atom's GraphQL API**: `POST http://localhost:8080/graphql`, `Authorization: Bearer <token>`, `Content-Type: application/json`, body `{"query": "...", "variables": {...}}`. Field/argument names below match Atom's schema (`src/graphql/entities.rs`, `src/graphql/types/mod.rs`) and the [Devices CLI](/dev-guide/cli/devices-cli), which uses the friendlier aliases `device_type_id`/`device_type_version_id` for GraphQL's `profileId`/`profileVersionId`.
+
+### Create Device
 
 ```bash
-curl -sSiX PATCH http://localhost:9003/domains/d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b \
+curl -sSiX POST http://localhost:8080/graphql \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <user_token>" \
 -d @- <<EOF
 {
-  "name": "Magistrala Cloud",
-  "tags": ["absmach", "Cloud"],
-  "metadata": {
-    "region": "EU",
-    "tier": "premium"
-  }
-}
-EOF
-```
-
-Expected Response:
-
-```bash
-{
-  "id": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b",
-  "name": "Magistrala Cloud",
-  "route": "magistrala",
-  "tags": ["absmach", "Cloud"],
-  "metadata": {
-    "region": "EU",
-    "tier": "premium"
-  },
-  "status": "enabled",
-  "updated_at": "2025-10-29T14:22:33Z"
-}
-```
-
-### Enable Domain
-
-Re-enables a previously disabled domain.
-
-```bash
-curl -sSiX POST http://localhost:9003/domains/{domain_id}/enable \
--H "Authorization: Bearer <user_token>"
-
-```
-
-Expected Response:
-
-```bash
-{
-  "message": "Domain enabled successfully"
-}
-
-```
-
-### Disable a Domain
-
-Disables a domain, temporarily restricting access to its resources.
-
-```bash
-curl -sSiX POST http://localhost:9003/domains/{domain_id}/disable \
--H "Authorization: Bearer <user_token>"
-
-```
-
-Expected Response:
-
-```bash
-{
-  "message": "Domain disabled successfully"
-}
-
-```
-
-### Freeze Domain
-
-Freezes a domain, locking all entity operations while keeping data accessible.
-
-```bash
-curl -sSiX POST http://localhost:9003/domains/{domain_id}/freeze \
--H "Authorization: Bearer <user_token>"
-
-```
-
-Expected Response:
-
-```bash
-{
-  "message": "Domain frozen successfully"
-}
-
-```
-
-> **Tip**:
-> Upon creation, the domain creator automatically receives the Admin role within that domain, granting full access to manage roles, users, clients, channels, and other entities.
-
-## Clients
-
-All requests should include an Authorization: Bearer `<user_token>` header unless otherwise specified.
-
-Base URL:
-
-- [`http://localhost:9006`](http://localhost:9006)
-
-### Create Client
-
-To create a client, you need the client and a `user_token`
-
-```bash
-curl -X POST http://localhost:9006/{domain_id}/clients \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "name": "<client_name>",
-  "tags": ["<tag1>", "<tag2>"],
-  "credentials": {
-    "identity": "<client_identity>",
-    "secret": "<client_secret>"
-  },
-  "metadata": {"<key1>": "<value1>"},
-  "status": "enabled"
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -X POST http://localhost:9006/123e4567-e89b-12d3-a456-426614174000/clients \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <access_token>" \
--d @- <<EOF
-{
-  "name": "Temperature Sensor",
-  "tags": ["sensor", "environment"],
-  "credentials": {
-    "identity": "temp-sensor-001",
-    "secret": "secure-password"
-  },
-  "metadata": {"location": "warehouse"},
-  "status": "enabled"
-}
-EOF
-
-HTTP/1.1 201 Created
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:04:04 GMT
-Content-Type: application/json
-Content-Length: 280
-Connection: keep-alive
-Location: /clients/48101ecd-1535-40c6-9ed8-5b1d21e371bb
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-  "name": "Temperature Sensor",
-  "domain_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-  "tags": [
-    "sensor", 
-    "environment"
-  ],
-  "credentials": {"identity": "temp-sensor-001", "secret": "secure-password"},
-  "metadata": {"location": "warehouse"},
-  "status": "enabled",
-  "created_at": "2025-02-11T19:30:15Z",
-  "updated_at": "2025-02-11T19:30:15Z"
-}
-
-```
-
-### Create Client with External ID
-
-It is often the case that the user will want to integrate the existing solutions, e.g. an asset management system, with the Magistrala platform. To simplify the integration between the systems and avoid artificial cross-platform reference, such as special fields in Magistrala Clients metadata, it is possible to set Magistrala Client ID with an existing unique ID while create the Client. This way, the user can set the existing ID as the Client ID of a newly created Client to keep reference between Client and the asset that Client represents.
-
-The limitation is that the existing ID has to be unique in the Magistrala domain.
-
-To create a client with an external ID, you need to provide the ID together with client name, and other fields as well as a `user_token`
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost:9006/{domain_id}/clients \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-  "name": "Temperature Sensor"
-}
-EOF
-
-HTTP/1.1 201 Created
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:05:06 GMT
-Content-Type: application/json
-Content-Length: 280
-Connection: keep-alive
-Location: /clients/2766ae94-9a08-4418-82ce-3b91cf2ccd3e
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-  "name": "Temperature Sensor",
-  "domain_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-  "credentials": { "secret": "65ca03bd-eb6b-420b-9d5d-46d459d4f71c" },
-  "created_at": "2023-06-15T09:05:06.538170496Z",
-  "updated_at": "0001-01-01T00:00:00Z",
-  "status": "enabled"
-}
-```
-
-### Create Client with External Secret
-
-It is often the case that the user will want to integrate the existing solutions, e.g. an asset management system, with the Magistrala platform. To simplify the integration between the systems and avoid artificial cross-platform reference, such as special fields in Magistrala Clients metadata, it is possible to set Magistrala Client secret with an existing unique secret when creating the Client. This way, the user can set the existing secret as the Client secret of a newly created Client to keep reference between Client and the asset that Client represents.
-The limitation is that the existing secret has to be unique in the Magistrala domain.
-
-To create a client with an external secret, you need to provide the secret together with client name, and other fields as well as a `user_token`
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost:9006/{domain_id}/clients \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "name": "Temperature Sensor",
-  "credentials": {"secret": "94939159-9a08-4f17-9e4e-3b91cf2ccd3e"}
-}
-EOF
-
-HTTP/1.1 201 Created
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:05:06 GMT
-Content-Type: application/json
-Content-Length: 280
-Connection: keep-alive
-Location: /clients/2766ae94-9a08-4418-82ce-3b91cf2ccd3e
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-  "name": "Temperature Sensor",
-  "domain_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-  "credentials": { "secret": "94939159-9a08-4f17-9e4e-3b91cf2ccd3e" },
-  "created_at": "2023-06-15T09:05:06.538170496Z",
-  "updated_at": "0001-01-01T00:00:00Z",
-  "status": "enabled"
-}
-```
-
-### Create Clients
-
-You can create multiple clients at once by entering a series of clients structures and a `user_token`
-
-```bash
-curl -sSiX POST http://localhost:9006/{domain_id}/clients/bulk \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-[
-  {
-    "id": "[client_id]",
-    "name": "[client_name]",
-    "tags": ["[tag1]", "[tag2]"],
-    "credentials": {
-      "identity": "[client-identity]",
-      "secret": "[client-secret]"
-    },
-    "metadata": {
-      "[key1]": "[value1]",
-      "[key2]": "[value2]"
-    },
-    "status": "[enabled|disabled]"
-  },
-  {
-    "id": "[client_id]",
-    "name": "[client_name]",
-    "tags": ["[tag1]", "[tag2]"],
-    "credentials": {
-      "identity": "[client-identity]",
-      "secret": "[client-secret]"
-    },
-    "metadata": {
-      "[key1]": "[value1]",
-      "[key2]": "[value2]"
-    },
-    "status": "[enabled|disabled]"
-  }
-]
-EOF
-```
-
-For example:
-
-```bash
-curl -X POST http://localhost:9006/{domain_id}/clients/bulk \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-[
-  {
-    "name": "Motion Sensor",
-    "domain_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-    "tags": ["sensor", "security"],
-    "credentials": {
-      "identity": "motion-sensor-001",
-      "secret": "secure-secret"
-    }
-  },
-  {
-    "name": "Humidity Sensor",
-    "domain_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-    "tags": ["sensor", "environment"],
-    "credentials": {
-      "identity": "humidity-sensor-001",
-      "secret": "another-secret"
+  "query": "mutation CreateDevice(\$input: CreateEntityInput!) { createEntity(input: \$input) { id kind name externalId tenantId profileId profileVersionId status attributes createdAt updatedAt } }",
+  "variables": {
+    "input": {
+      "kind": "device",
+      "name": "<device_name>",
+      "tenantId": "<workspace_id>",
+      "externalId": "<serial_or_mac>",
+      "attributes": { "location": "warehouse-1" }
     }
   }
-]
+}
 EOF
+```
 
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:05:45 GMT
-Content-Type: application/json
-Content-Length: 583
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
+Expected response:
 
+```json
 {
-  "total": 2,
-  "clients": [
-    {
-      "id": "c3d4e5f6-a7b8-9012-3456-78901abcdef2",
-      "name": "Motion Sensor",
-      "domain_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-      "status": "enabled"
-    },
-    {
-      "id": "d4e5f6a7-b8c9-0123-4567-89012abcdef3",
-      "name": "Humidity Sensor",
-      "domain_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-      "status": "enabled"
-    }
-  ]
-}
-
-```
-
-### Create Clients with external ID
-
-The same as creating a Client with external ID the user can create multiple clients at once by providing UUID v4 format unique ID in a series of clients together with a `user_token`
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost:9006/{domain_id}/clients/bulk \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-[
-  {
-    "id": "eb2670ba-a2be-4ea4-83cb-111111111111",
-    "name": "Motion Sensor",
-    "domain_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0"
-  },
-  {
-    "id": "eb2670ba-a2be-4ea4-83cb-111111111112",
-    "name": "Light Sensor",
-    "domain_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0"
-  }
-]
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:06:17 GMT
-Content-Type: application/json
-Content-Length: 583
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "total": 2,
-  "clients": [
-    {
-      "id": "eb2670ba-a2be-4ea4-83cb-111111111111",
-      "name": "Motion Sensor",
-      "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "domain_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-      "credentials": { "secret": "325cda17-3a52-465d-89a7-2b63c7d0e3a6" },
-      "created_at": "2023-06-15T09:06:17.967825372Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "eb2670ba-a2be-4ea4-83cb-111111111112",
-      "name": "Light Sensor",
-      "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "domain_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-      "credentials": { "secret": "67b6cbb8-4a9e-4d32-8b9c-d7cd3352aa2b" },
-      "created_at": "2023-06-15T09:06:17.967828689Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    }
-  ]
-}
-```
-
-### Get Client
-
-You can get client entity by entering the client ID and `user_token`
-
-```bash
-curl -X GET http://localhost:9006/{domain_id}/clients/{client_id} \
--H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -X GET http://localhost:9006/123e4567-e89b-12d3-a456-426614174000/clients/a1b2c3d4-e5f6-7890-1234-56789abcdef0 \
--H "Authorization: Bearer <access_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:07:30 GMT
-Content-Type: application/json
-Content-Length: 277
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-  "name": "Temperature Sensor",
-  "tags": [
-    "sensor", 
-    "environment"
-  ],
-  "domain_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-  "credentials": {"identity": "temp-sensor-001", "secret": ""},
-  "metadata": {"location": "warehouse"},
-  "status": "enabled",
-  "created_at": "2025-02-11T19:30:15Z",
-  "updated_at": "2025-02-11T19:35:20Z"
-}
-
-```
-
-### Get Clients
-
-You can get all clients in the database by querying `/clients` endpoint.
-
-```bash
-curl -sSiX GET http://localhost:9006/{domain_id}/clients -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET "http://localhost:9006/{domain_id}/clients" -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:07:59 GMT
-Content-Type: application/json
-Transfer-Encoding: chunked
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "limit": 10,
-  "total": 8,
-  "clients": [
-    {
-      "id": "f3047c10-f2c7-4d53-b3c0-bc56c560c546",
-      "name": "Humidity Sensor",
-      "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "credentials": {"secret": "6d11a91f-0bd8-41aa-8e1b-4c6338329c9c"},
-      "created_at": "2023-06-14T12:04:12.740098Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "04b0b2d1-fdaf-4b66-96a0-740a3151db4c",
-      "name": "UV Sensor",
-      "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "credentials": {"secret": "a1e5d77f-8903-4cef-87b1-d793a3c28de3"},
-      "created_at": "2023-06-14T12:04:56.245743Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
+  "data": {
+    "createEntity": {
+      "id": "b3f1c9a2-5e2d-4a11-9c3f-7a8b2e6d1f90",
+      "kind": "device",
       "name": "Temperature Sensor",
-      "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "credentials": {"secret": "c3f8c096-c60f-4375-8494-bca20a12fca7"},
-      "created_at": "2023-06-15T09:04:04.292602Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-      "name": "Temperature Sensor",
-      "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "credentials": {"secret": "65ca03bd-eb6b-420b-9d5d-46d459d4f71c"},
-      "created_at": "2023-06-15T09:05:06.53817Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "19f59b2d-1e9c-43db-bc84-5432bd52a83f",
-      "name": "Motion Sensor",
-      "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "credentials": {"secret": "941c380a-3a41-40e9-8b79-3087daa4f3a6"},
-      "created_at": "2023-06-15T09:05:45.719182Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "3709f2b0-9c73-413f-992e-7f6f9b396b0d",
-      "name": "Light Sensor",
-      "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "credentials": {"secret": "798ee6be-311b-4640-99e4-0ccb19e0dcb9"},
-      "created_at": "2023-06-15T09:05:45.719186Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "eb2670ba-a2be-4ea4-83cb-111111111111",
-      "name": "Motion Sensor",
-      "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "credentials": {"secret": "325cda17-3a52-465d-89a7-2b63c7d0e3a6"},
-      "created_at": "2023-06-15T09:06:17.967825Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "eb2670ba-a2be-4ea4-83cb-111111111112",
-      "name": "Light Sensor",
-      "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "credentials": {"secret": "67b6cbb8-4a9e-4d32-8b9c-d7cd3352aa2b"},
-      "created_at": "2023-06-15T09:06:17.967828Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
+      "externalId": "SN-00123",
+      "tenantId": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b",
+      "profileId": null,
+      "profileVersionId": null,
+      "status": "active",
+      "attributes": { "location": "warehouse-1" },
+      "createdAt": "2026-08-24T14:20:01Z",
+      "updatedAt": null
     }
-  ]
-}
-```
-
-If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `tags` and `visibility` as query parameters.
-
-```bash
-curl -sSiX GET http://localhost/clients?[offset=<offset>]&[limit=<limit>]&name=[name]&[status=<status>] -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost/clients?offset=1&limit=5&name=Light Sensor -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:08:39 GMT
-Content-Type: application/json
-Content-Length: 321
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "limit": 5,
-  "offset": 1,
-  "total": 2,
-  "clients": [
-    {
-      "id": "eb2670ba-a2be-4ea4-83cb-111111111112",
-      "name": "Light Sensor",
-      "owner": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "credentials": { "secret": "67b6cbb8-4a9e-4d32-8b9c-d7cd3352aa2b" },
-      "created_at": "2023-06-15T09:06:17.967828Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    }
-  ]
-}
-```
-
-### Update Client
-
-Updating a client name and/or metadata
-
-```bash
-curl -X PATCH http://localhost:9006/{domain_id}/clients/{client_id} \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "name": "<new_name>",
-  "metadata": {"<key1>": "<value1>"}
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -X PATCH http://localhost:9006/123e4567-e89b-12d3-a456-426614174000/clients/a1b2c3d4-e5f6-7890-1234-56789abcdef0 \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <access_token>" \
--d @- <<EOF
-{
-  "name": "New Sensor Name",
-  "metadata": {"location": "office"}
-}
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:09:12 GMT
-Content-Type: application/json
-Content-Length: 332
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-  "name": "New Sensor Name",
-  "metadata": {"location": "office"},
-  "updated_at": "2025-02-11T20:00:00Z"
-}
-
-```
-
-### Update Client Tags
-
-Updating a client tags
-
-```bash
-curl -X PATCH http://localhost:9006/{domain_id}/clients/{client_id}/tags \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "tags": ["<tag1>", "<tag2>"]
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -X PATCH http://localhost:9006/123e4567-e89b-12d3-a456-426614174000/clients/a1b2c3d4-e5f6-7890-1234-56789abcdef0/tags \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <access_token>" \
--d @- <<EOF
-{
-  "tags": ["sensor", "environment"]
-}
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:09:44 GMT
-Content-Type: application/json
-Content-Length: 347
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-  "tags": [
-    "updated", 
-    "environment"
-  ],
-  "updated_at": "2025-02-11T20:15:30Z"
-}
-
-```
-
-### Update Client Secret
-
-Updating a client secret
-
-```bash
-curl -X PATCH http://localhost:9006/{domain_id}/clients/{client_id}/secret \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "secret": "<new_secret>"
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -X PATCH http://localhost:9006/123e4567-e89b-12d3-a456-426614174000/clients/a1b2c3d4-e5f6-7890-1234-56789abcdef0/secret \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <access_token>" \
--d @- <<EOF
-{
-  "secret": "new-secure-password"
-}
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:10:52 GMT
-Content-Type: application/json
-Content-Length: 321
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-  "status": "secret updated",
-  "updated_at": "2025-02-11T20:25:45Z"
-}
-```
-
-### Enable Client
-
-To enable a client you need a `client_id` and a `user_token`
-
-```bash
-curl -X POST http://localhost:9006/{domain_id}/clients/{client_id}/enable \
--H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -X POST http://localhost:9006/123e4567-e89b-12d3-a456-426614174000/clients/a1b2c3d4-e5f6-7890-1234-56789abcdef0/enable \
--H "Authorization: Bearer <access_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:11:43 GMT
-Content-Type: application/json
-Content-Length: 321
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-  "status": "enabled",
-  "updated_at": "2025-02-11T20:30:00Z"
-}
-```
-
-### Disable Client
-
-To disable a client you need a `client_id` and a `user_token`
-
-```bash
-curl -X POST http://localhost:9006/{domain_id}/clients/{client_id}/disable \
--H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -X POST http://localhost:9006/123e4567-e89b-12d3-a456-426614174000/clients/a1b2c3d4-e5f6-7890-1234-56789abcdef0/disable \
--H "Authorization: Bearer <access_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:11:38 GMT
-Content-Type: application/json
-Content-Length: 322
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-  "status": "disabled",
-  "updated_at": "2025-02-11T20:35:00Z"
-}
-
-```
-
-### Delete Client
-
-To delete a client you need a `client_id` and a `user_token`
-
-```bash
-curl -X DELETE http://localhost:9006/{domain_id}/clients/{client_id} \
--H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -X DELETE http://localhost:9006/123e4567-e89b-12d3-a456-426614174000/clients/a1b2c3d4-e5f6-7890-1234-56789abcdef0 \
--H "Authorization: Bearer <access_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:11:38 GMT
-Content-Type: application/json
-Content-Length: 322
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "message": "Client deleted successfully"
-}
-
-```
-
-## Channels
-
-### Create Channel
-
-To create a channel, you need a `user_token`
-
-```bash
-curl -sSiX POST http://localhost:9005/{domain_id}/channels \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "id": "[channel_id]",
-  "name": "[channel_name]",
-  "description": "[channel_description]",
-  "metadata": {
-    "[key1]": "[value1]",
-    "[key2]": "[value2]"
-  },
-  "status": "[enabled|disabled]"
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost:9005/123e4567-e89b-12d3-a456-426614174000/channels \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <access_token>" \
--d @- <<EOF
-{
-  "name": "Temperature Data",
-  "domain_id": "abc123-domain",
-  "metadata": {"unit": "Celsius"},
-  "status": "enabled"
-}
-EOF
-
-HTTP/1.1 201 Created
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:12:51 GMT
-Content-Type: application/json
-Content-Length: 218
-Connection: keep-alive
-Location: /channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "bb7edb32-2eac-4aad-aebe-ed96fe073879",
-  "name": "Temperature Data",
-  "description": "Weather temperature data",
-  "domain_id": "abc123-domain",
-  "metadata": {"unit": "Celsius"},
-  "status": "enabled",
-  "created_at": "2025-02-11T09:45:00Z"
-}
-```
-
-### Create Channel with external ID
-
-Channel is a group of clients that could represent a special category in existing systems, e.g. a building level channel could represent the level of a smarting building system. For helping to keep the reference, it is possible to set an existing ID while creating the Magistrala channel. There are two limitations - the existing ID has to be in UUID V4 format and it has to be unique in the Magistrala domain.
-
-To create a channel with external ID, the user needs to provide a UUID v4 format unique ID, and a `user_token`
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost:9005/{domain_id}/channels \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
-  "domain_id": "abc123-domain",
-  "name": "Humidity Data"
-}
-EOF
-
-HTTP/1.1 201 Created
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:15:11 GMT
-Content-Type: application/json
-Content-Length: 219
-Connection: keep-alive
-Location: /channels/48101ecd-1535-40c6-9ed8-5b1d21e371bb
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
-  "name": "Humidity Data",
-  "domain_id": "abc123-domain",
-  "metadata": {"location": "server1"},
-  "status": "enabled",
-  "created_at": "2025-02-11T09:45:00Z"
-}
-```
-
-### Create Channels
-
-The same as creating a channel with external ID the user can create multiple channels at once by providing UUID v4 format unique ID in a series of channels together with a `user_token`
-
-```bash
-curl -sSiX POST http://localhost:9005/{domain_id}/channels/bulk \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-[
-  {
-    "id": "[channel_id]",
-    "name": "[channel_name]",
-    "description": "[channel_description]",
-    "domain_id": "[domain_id]",
-    "metadata": {
-      "[key1]": "[value1]",
-      "[key2]": "[value2]"
-    },
-    "status": "[enabled|disabled]"
-  },
-  {
-    "id": "[channel_id]",
-    "name": "[channel_name]",
-    "description": "[channel_description]",
-    "domain_id": "[domain_id]",
-    "metadata": {
-      "[key1]": "[value1]",
-      "[key2]": "[value2]"
-    },
-    "status": "[enabled|disabled]"
   }
-]
-EOF
-```
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost:9005/{domain_id}/channels/bulk \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-[
-  {
-    "name": "Light Data"
-  },
-  {
-    "name": "Pressure Data"
-  }
-]
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:15:44 GMT
-Content-Type: application/json
-Content-Length: 450
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "channels": [
-    {
-      "id": "977bbd33-5b59-4b7a-a9c3-111111111111",
-      "name": "Light Data",
-      "description": "Weather temperature data",
-      "domain_id": "abc123-domain",
-      "metadata": {"location": "server1"},
-      "status": "enabled",
-      "created_at": "2025-02-11T09:45:00Z"
-    },
-    {
-      "id": "977bbd33-5b59-4b7a-a9c3-111111111112",
-      "name": "Pressure Data",
-      "description": "Weather temperature data",
-      "domain_id": "abc123-domain",
-      "metadata": {"location": "server1"},
-      "status": "enabled",
-      "created_at": "2025-02-11T09:45:00Z"
-    }
-  ]
 }
 ```
 
-### Create Channels with external ID
+> **Notes**:
+>
+> - `externalId` (identifier assigned outside Atom — serial number, MAC, SKU) is opaque, case-sensitive, trimmed, and must be unique per workspace among live entities. It replaces the old Client "external ID" concept 1:1.
+> - To create a **Gateway**, set `attributes: { "is_gateway": true }` — there is no separate Gateway create mutation.
+> - To bind a **Device Type**, pass `profileId` (and optionally `profileVersionId`); see [Device Type Management](/user-guide/device-types/introduction).
+> - There is no bulk/batch create mutation in Atom's GraphQL API. Each device must be created with its own `createEntity` call — the old REST API's bulk-create endpoints have no current equivalent.
 
-As with clients, you can create multiple channels with external ID at once
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost:9005/{domain_id}/channels/bulk \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-[
-  {
-    "id": "977bbd33-5b59-4b7a-a9c3-111111111111",
-    "name": "Light Data"
-  },
-  {
-    "id": "977bbd33-5b59-4b7a-a9c3-111111111112",
-    "name": "Pressure Data"
-  }
-]
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:16:16 GMT
-Content-Type: application/json
-Content-Length: 453
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "channels": [
-    {
-      "id": "977bbd33-5b59-4b7a-a9c3-111111111111",
-      "name":"Light Data"
-      "description": "Weather temperature data",
-      "domain_id": "abc123-domain",
-      "metadata": {"location": "server1"},
-      "status": "enabled",
-      "created_at": "2025-02-11T09:45:00Z"
-    }
-
-    {
-      "id": "977bbd33-5b59-4b7a-a9c3-111111111111",
-      "name":"Light Data"
-      "description": "Weather temperature data",
-      "domain_id": "abc123-domain",
-      "metadata": {"location": "server1"},
-      "status": "enabled",
-      "created_at": "2025-02-11T09:45:00Z"
-    }
-  ]
-}
-```
-
-### Get Channel
-
-Get a channel entity for a logged-in user
+### Get Device
 
 ```bash
-curl -sSiX GET http://localhost:9005/{domain_id}/channels/{channel_id} -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost:9005/{domain_id}/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8 -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:17:17 GMT
-Content-Type: application/json
-Content-Length: 218
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-  {
-    "id": "977bbd33-5b59-4b7a-a9c3-111111111111",
-    "name":"Light Data",
-    "description": "Weather temperature data",
-    "domain_id": "abc123-domain",
-    "metadata": { "location": "server1" },
-    "status": "enabled",
-    "created_at": "2025-02-11T09:45:00Z"
-  }
-```
-
-### Get Channels
-
-You can get all channels for a logged-in user.
-
-If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parent_id`, `owner_id`, `tree` and `dir` as query parameters.
-
-```bash
-curl -sSiX GET http://localhost:9005/{domain_id}/channels \
--H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost:9005/{domain_id}/channels -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:17:46 GMT
-Content-Type: application/json
-Content-Length: 1754
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "total": 8,
-  "channels": [
-    {
-      "id": "17129934-4f48-4163-bffe-0b7b532edc5c",
-      "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "Tokyo",
-      "created_at": "2023-06-14T12:10:07.950311Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "48101ecd-1535-40c6-9ed8-5b1d21e371bb",
-      "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "Humidity Data",
-      "created_at": "2023-06-15T09:15:11.477695Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "977bbd33-5b59-4b7a-a9c3-111111111111",
-      "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "Light Data",
-      "created_at": "2023-06-15T09:16:16.931016Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "977bbd33-5b59-4b7a-a9c3-111111111112",
-      "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "Pressure Data",
-      "created_at": "2023-06-15T09:16:16.934486Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8",
-      "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "Temperature Data",
-      "created_at": "2023-06-15T09:12:51.162431Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "b3867a52-675d-4f05-8cd0-df5a08a63ff3",
-      "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "London",
-      "created_at": "2023-06-14T12:09:34.205894Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "cb81bbff-850d-471f-bd74-c15d6e1a6c4e",
-      "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "Light Data",
-      "created_at": "2023-06-15T09:15:44.154283Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "fc9bf029-b1d3-4408-8d53-fc576247a4b3",
-      "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "Pressure Data",
-      "created_at": "2023-06-15T09:15:44.157210Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    }
-  ]
-}
-```
-
-### Update Channel
-
-Update channel name and/or metadata.
-
-```bash
-curl -sSiX PUT http://localhost:9005/{domain_id}/channels/{channel_id} \
+curl -sSiX POST http://localhost:8080/graphql \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <user_token>" \
 -d @- <<EOF
 {
-  "name": "[channel_name]",
-  "description": "[channel_description]",
-  "metadata": {
-    "[key1]": "[value1]",
-    "[key2]": "[value2]"
+  "query": "query Device(\$id: ID!) { entity(id: \$id) { id kind name externalId tenantId profileId profileVersionId status attributes objectGroupIds createdAt updatedAt } }",
+  "variables": { "id": "b3f1c9a2-5e2d-4a11-9c3f-7a8b2e6d1f90" }
+}
+EOF
+```
+
+### Get Devices
+
+Lists entities, filterable by kind, workspace, text search, attributes, parent group, and more.
+
+```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "query ListDevices(\$tenantId: ID, \$kind: EntityKind, \$q: String, \$status: EntityStatus, \$limit: Int, \$offset: Int) { entities(tenantId: \$tenantId, kind: \$kind, q: \$q, status: \$status, limit: \$limit, offset: \$offset) { total items { id kind name externalId status attributes createdAt updatedAt } } }",
+  "variables": {
+    "tenantId": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b",
+    "kind": "device",
+    "status": "active",
+    "limit": 20,
+    "offset": 0
   }
 }
 EOF
 ```
 
-For example:
+> Additional filter arguments: `externalId`, `profileId`, `attributesContains` (JSON containment match), `parentGroupId` + `includeDescendants`, `deleted` (`live`/`deleted`/`all`), `order` (`created_at`/`updated_at`/`name`/`kind`/`status`), `dir` (`asc`/`desc`). To list Gateways specifically, filter client-side on `attributes.is_gateway` — there is no server-side `isGateway` filter argument.
+
+### Update Device
 
 ```bash
-curl -sSiX PUT http://localhost:9005/{domain_id}/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8 \
+curl -sSiX POST http://localhost:8080/graphql \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <user_token>" \
 -d @- <<EOF
 {
-  "name": "Jane Doe",
-  "metadata": {"location": "london"}
+  "query": "mutation UpdateDevice(\$id: ID!, \$input: UpdateEntityInput!) { updateEntity(id: \$id, input: \$input) { id name status attributes updatedAt } }",
+  "variables": {
+    "id": "b3f1c9a2-5e2d-4a11-9c3f-7a8b2e6d1f90",
+    "input": {
+      "name": "Temperature Sensor (North Wing)",
+      "attributes": { "location": "warehouse-1", "floor": 2 }
+    }
+  }
 }
 EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:18:26 GMT
-Content-Type: application/json
-Content-Length: 296
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8",
-  "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "Jane Doe",
-  "metadata": {"location": "london"},
-  "created_at": "2023-06-15T09:12:51.162431Z",
-  "updated_at": "2023-06-15T09:18:26.886913Z",
-  "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "status": "enabled"
-}
 ```
 
-### Enable Channel
+> `attributes` in `UpdateEntityInput` **replaces** the whole attributes object, it does not merge — send the full desired object, not just the changed keys. `alias` and `externalId` use `MaybeUndefined` semantics: omit the field to leave it unchanged, or pass `null` explicitly to clear it.
 
-To enable a channel you need a `channel_id` and a `user_token`
+### Create a Device Credential (Secret)
 
-```bash
-curl -sSiX POST http://localhost:9005/{domain_id}/channels/{channel_id}/enable \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>"
-```
-
-For example:
+Devices authenticate over MQTT/HTTP/CoAP with a **shared key**, created via a separate credentials mutation rather than being part of the entity itself (successor to the old Client `secret` field):
 
 ```bash
-curl -sSiX POST http://localhost:9005/{domain_id}/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/enable \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:19:29 GMT
-Content-Type: application/json
-Content-Length: 296
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8",
-  "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "Jane Doe",
-  "metadata": {"location": "london"},
-  "created_at": "2023-06-15T09:12:51.162431Z",
-  "updated_at": "2023-06-15T09:18:26.886913Z",
-  "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "status": "enabled"
-}
-```
-
-### Disable Channel
-
-To disable a channel you need a `channel_id` and a `user_token`
-
-```bash
-curl -sSiX POST http://localhost:9005/{domain_id}/channels/{channel_id}/disable \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost:9005/{domain_id}/channels/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8/disable \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:19:24 GMT
-Content-Type: application/json
-Content-Length: 297
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8",
-  "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "Jane Doe",
-  "metadata": {"location": "london"},
-  "created_at": "2023-06-15T09:12:51.162431Z",
-  "updated_at": "2023-06-15T09:18:26.886913Z",
-  "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "status": "disabled"
-}
-```
-
-### Connect
-
-Connect one or more clients to one or more channels within a domain.
-
-> The `types` field specifies the connection type — e.g., `"publish"` or `"subscribe"`.
-> If `types` is not provided, the default actions are `m_read` and `m_write`.
-
-```bash
-curl -sSiX POST http://localhost:9005/{domain_id}/channels/connect \
+curl -sSiX POST http://localhost:8080/graphql \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <user_token>" \
 -d @- <<EOF
 {
-  "channel_ids": ["chan1", "chan2"],
-  "client_ids": ["client1", "client2"],
-  "types": ["publish", "subscribe"]
+  "query": "mutation CreateDeviceKey(\$entityId: ID!, \$input: CreateSharedKeyInput!) { createSharedKey(entityId: \$entityId, input: \$input) { credentialId key expiresAt } }",
+  "variables": {
+    "entityId": "b3f1c9a2-5e2d-4a11-9c3f-7a8b2e6d1f90",
+    "input": { "description": "primary device key" }
+  }
 }
 EOF
 ```
 
-For example:
+> The returned `key` is shown once at creation time. `revokeCredential(credentialId)` revokes it; `credentials(entityId)` lists a device's credentials (metadata only, keys are not re-displayed).
+
+### Enable / Disable Device
 
 ```bash
-curl -sSiX POST http://localhost:9005/{domain_id}/channels/connect \
+curl -sSiX POST http://localhost:8080/graphql \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <user_token>" \
 -d @- <<EOF
 {
-  "channel_ids": ["48101ecd-1535-40c6-9ed8-5b1d21e371bb"],
-  "client_ids": ["aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8"],
-  "types": ["publish", "subscribe"]
+  "query": "mutation EnableDevice(\$id: ID!) { enableEntity(id: \$id) { id status } }",
+  "variables": { "id": "b3f1c9a2-5e2d-4a11-9c3f-7a8b2e6d1f90" }
 }
 EOF
-
-HTTP/1.1 201 Created
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:21:37 GMT
-Content-Type: application/json
-Content-Length: 247
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
 ```
 
-### Disconnect
+Replace `enableEntity` with `disableEntity` to disable. There is a third status, `suspended`, reachable only via `updateEntity`'s `status` input — no dedicated `suspendEntity` mutation exists.
 
-Disconnect clients from channels specified by lists of IDs.
+### Delete Device
+
+`deleteEntity(id: ID!): Boolean` soft-deletes. Platform-admin-only `restoreEntity(id: ID!): Boolean` and `purgeEntity(id: ID!): Boolean` mirror the Workspace lifecycle above — restoring does not reinstate revoked credentials/sessions.
 
 ```bash
-curl -sSiX POST http://localhost:9005/{domain_id}/channels/disconnect \
+curl -sSiX POST http://localhost:8080/graphql \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <user_token>" \
 -d @- <<EOF
 {
-  "subjects": ["<client_id_1>", "<client_id_2>"],
-  "objects": ["<channel_id_1>", "<channel_id_2>"]
+  "query": "mutation DeleteDevice(\$id: ID!) { deleteEntity(id: \$id) }",
+  "variables": { "id": "b3f1c9a2-5e2d-4a11-9c3f-7a8b2e6d1f90" }
 }
 EOF
 ```
 
-For example:
+### Ownership
 
-```bash
-curl -sSiX POST http://localhost:9005/{domain_id}/channels/disconnect \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "subjects": ["48101ecd-1535-40c6-9ed8-5b1d21e371bb"],
-  "objects": ["aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8"]
-}
-EOF
-
-HTTP/1.1 204 No Content
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:23:07 GMT
-Content-Type: application/json
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-```
+`addOwnership(ownerId, ownedId, relation)` / `removeOwnership(ownerId, ownedId)` record a direct owner→owned relationship between two entities (e.g. a user owning a device) — this is separate from workspace membership or group assignment.
 
 ## Messages
 
@@ -2378,7 +552,7 @@ Access-Control-Expose-Headers: Location
 Sends message via HTTP protocol
 
 ```bash
-curl -sSiX POST http://localhost/http/m/{domain_id}/c/{channel_id} \
+curl -sSiX POST http://localhost/http/m/{workspace_id}/c/{channel_id} \
 -H "Content-Type: application/senml+json" \
 -H "Authorization: Client <client_secret>" \
 -d @- <<EOF
@@ -2404,7 +578,7 @@ EOF
 For example:
 
 ```bash
-curl -sSiX POST http://localhost/http/m/{domain_id}/c/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8 \
+curl -sSiX POST http://localhost/http/m/{workspace_id}/c/aecf0902-816d-4e38-a5b3-a1ad9a7cf9e8 \
 -H "Content-Type: application/senml+json" \
 -H "Authorization: Client a83b9afb-9022-4f9e-ba3d-4354a08c273a" \
 -d @- <<EOF
@@ -2440,10 +614,10 @@ Connection: keep-alive
 
 ### Read Messages
 
-Reads messages from database for a given channel.
+Reads messages from database for a given channel, via the `timescale-reader`/`postgres-reader` HTTP API (see [Storage Architecture § Message Storage Backends](/dev-guide/storage-architecture#message-storage-backends)).
 
 ```bash
-curl -sSiX GET http://localhost:{service_port}/{domain_id}/channels/{channel_id}/messages?[offset={offset}]&[limit={limit}] \
+curl -sSiX GET http://localhost:{service_port}/{workspace_id}/channels/{channel_id}/messages?[offset={offset}]&[limit={limit}] \
 -H "Authorization: Bearer <access_token>"
 ```
 
@@ -2500,526 +674,268 @@ Content-Length: 660
 > - Use `9009` for the **Postgres Reader** (HTTP)
 > - Use `9011` for the **Timescale Reader** (HTTP)
 
+
+## Channels
+
+A **Channel** is an Atom `Resource` of kind `channel` — messaging endpoints that Devices publish to and subscribe through (see [Messages](#messages) below for the actual publish/subscribe protocol traffic, which is unrelated to Atom).
+
+Like Workspaces and Devices, Channels are managed through **Atom's GraphQL API**: `POST http://localhost:8080/graphql`, `Authorization: Bearer <token>`, `Content-Type: application/json`, body `{"query": "...", "variables": {...}}`. Field/argument names below match Atom's schema (`src/graphql/resources.rs`, `src/graphql/types/mod.rs`) and the [Channels CLI](/dev-guide/cli/channels-cli).
+
+### Create Channel
+
+```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "mutation CreateChannel(\$input: CreateResourceInput!) { createResource(input: \$input) { id kind name alias tenantId ownerId attributes createdAt updatedAt } }",
+  "variables": {
+    "input": {
+      "kind": "channel",
+      "name": "<channel_name>",
+      "tenantId": "<workspace_id>",
+      "attributes": { "protocol": "mqtt" }
+    }
+  }
+}
+EOF
+```
+
+Expected response:
+
+```json
+{
+  "data": {
+    "createResource": {
+      "id": "9c2e7a41-3b5d-4f88-a2e0-6d1c8f4e9b73",
+      "kind": "channel",
+      "name": "Telemetry Channel",
+      "alias": null,
+      "tenantId": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b",
+      "ownerId": null,
+      "attributes": { "protocol": "mqtt" },
+      "createdAt": "2026-08-24T14:25:01Z",
+      "updatedAt": null
+    }
+  }
+}
+```
+
+> `kind` on a Resource is a free-form string, not a fixed enum — `"channel"` is the value the UI and CLI use, but `resourceKinds(tenantId)` lists every kind that's actually in use for a workspace if you need to check what's already there.
+
+### Get Channel
+
+```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "query Channel(\$id: ID!) { resource(id: \$id) { id kind name alias tenantId ownerId attributes objectGroupIds createdAt updatedAt } }",
+  "variables": { "id": "9c2e7a41-3b5d-4f88-a2e0-6d1c8f4e9b73" }
+}
+EOF
+```
+
+### Get Channels
+
+```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "query ListChannels(\$tenantId: ID, \$kind: String, \$q: String, \$limit: Int, \$offset: Int) { resources(tenantId: \$tenantId, kind: \$kind, q: \$q, limit: \$limit, offset: \$offset) { total items { id kind name alias attributes createdAt updatedAt } } }",
+  "variables": { "tenantId": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b", "kind": "channel", "limit": 20, "offset": 0 }
+}
+EOF
+```
+
+> Additional filter arguments: `attributesContains`, `parentGroupId` + `includeDescendants`, `deleted`, `order` (`created_at`/`updated_at`/`name`/`kind`), `dir`.
+
+### Update Channel
+
+```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "mutation UpdateChannel(\$id: ID!, \$input: UpdateResourceInput!) { updateResource(id: \$id, input: \$input) { id name attributes updatedAt } }",
+  "variables": {
+    "id": "9c2e7a41-3b5d-4f88-a2e0-6d1c8f4e9b73",
+    "input": { "name": "Telemetry Channel (v2)", "attributes": { "protocol": "mqtt", "qos": 1 } }
+  }
+}
+EOF
+```
+
+### Delete Channel
+
+```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "mutation DeleteChannel(\$id: ID!) { deleteResource(id: \$id) }",
+  "variables": { "id": "9c2e7a41-3b5d-4f88-a2e0-6d1c8f4e9b73" }
+}
+EOF
+```
+
+Platform-admin-only `restoreResource(id: ID!): Boolean` and `purgeResource(id: ID!): Boolean` mirror the Workspace/Device lifecycle above.
+
+<Callout type="warn" title="Enable/Disable and Connect/Disconnect have no direct equivalent">
+  There is **no** `enableResource`/`disableResource` mutation (Resources don't carry the
+  `active`/`inactive` status Devices and Workspaces do), and **no**
+  `connectResource`/`disconnectResource`-style mutation linking a specific Device to a specific
+  Channel. A stored "connection" object doesn't exist in the current model.
+
+  Publish/subscribe access is now purely an **authorization grant**: create a Permission Block
+  scoped to the channel object (`createPermissionBlock`, action `publish` and/or `subscribe`),
+  then attach it to the device via `createDirectPolicy` (or via a Role, for a reusable grant
+  across many devices) — see [Authorization](/dev-guide/authorization) for the full Permission
+  Block / Role / Direct Policy model.
+</Callout>
+
+### Object Groups
+
+`addResourceToObjectGroup(resourceId, objectGroupId)`, `removeResourceFromObjectGroup(resourceId, objectGroupId)`, and `clearResourceObjectGroups(resourceId)` manage a channel's membership in object groups — the same many-to-many mechanism Devices use (see [Groups](#groups)).
+
 ## Groups
 
-### Create group
+A **Group** is Atom's hierarchical structure for organizing entities — either an **object group** (grouping Devices/Channels) or a **principal group** (grouping Users, for use as a policy subject). The two are stored separately (`group_type` distinguishes them), but share the same query/lifecycle mutations.
 
-To create a group, you need the group name and a `user_token`
+Like the rest of this page, Groups are managed through **Atom's GraphQL API**: `POST http://localhost:8080/graphql`, `Authorization: Bearer <token>`, `Content-Type: application/json`, body `{"query": "...", "variables": {...}}`. Field/argument names below match Atom's schema (`src/graphql/groups.rs`, `src/graphql/types/mod.rs`) and the [Groups CLI](/dev-guide/cli/groups-cli).
+
+### Create Group
+
+There is one mutation per group type — both take the same `CreateGroupInput` and set `groupType` themselves:
 
 ```bash
-curl -sSiX POST http://localhost/{domain_id}/groups \
+curl -sSiX POST http://localhost:8080/graphql \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <user_token>" \
 -d @- <<EOF
 {
-  "name": "<group_name>",
-  "description": "[group_description]",
-  "parent_id": "[parent_id]",
-  "metadata": {
-    "[key1]": "[value1]",
-    "[key2]": "[value2]"
-  },
-  "status": "[enabled|disabled]"
-}
-EOF
-```
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost/{domain_id}/groups \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "name": "Security Engineers",
-  "description": "This group would be responsible for securing the platform."
-}
-EOF
-
-HTTP/1.1 201 Created
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:41:42 GMT
-Content-Type: application/json
-Content-Length: 252
-Connection: keep-alive
-Location: /groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-  "domain_id": "1234abcd-5678-efgh-ijkl-9012mnopqrst",
-  "name": "Security Engineers",
-  "description": "Group responsible for securing the platform.",
-  "metadata": {},
-  "status": "enabled",
-  "created_at": "2025-02-11T09:41:42Z",
-  "updated_at": "2025-02-11T09:41:42Z"
-}
-```
-
-When you use `parent_id` make sure the parent is an already exisiting group
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost/{domain_id}/groups \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- <<EOF
-{
-  "name": "Customer Support",
-  "description": "This group would be responsible for providing support to users of the platform.",
-  "parent_id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e"
-}
-EOF
-
-HTTP/1.1 201 Created
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 09:42:34 GMT
-Content-Type: application/json
-Content-Length: 306
-Connection: keep-alive
-Location: /groups/dd2dc8d4-f7cf-42f9-832b-81cae9a8e90a
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "dd2dc8d4-f7cf-42f9-832b-81cae9a8e90a",
-  "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "parent_id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-  "name": "Customer Support",
-  "description": "This group would be responsible for providing support to users of the platform.",
-  "created_at": "2023-06-15T09:42:34.063997Z",
-  "updated_at": "0001-01-01T00:00:00Z",
-  "status": "enabled"
-}
-```
-
-### Get group
-
-Get a group entity for a logged-in user
-
-```bash
-curl -sSiX GET http://localhost/{domain_id}/groups/{group_id} \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost/{domain_id}/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 10:00:52 GMT
-Content-Type: application/json
-Content-Length: 252
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-  "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "Security Engineers",
-  "description": "This group would be responsible for securing the platform.",
-  "created_at": "2023-06-15T09:41:42.860481Z",
-  "updated_at": "0001-01-01T00:00:00Z",
-  "status": "enabled"
-}
-```
-
-### Get groups
-
-You can get all groups for a logged-in user.
-
-If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parent_id`, `owner_id`, `tree` and `dir` as query parameters.
-
-```bash
-curl -sSiX GET http://localhost/{domain_id}/groups -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost/{domain_id}/groups -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 10:13:50 GMT
-Content-Type: application/json
-Content-Length: 807
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "limit": 0,
-  "offset": 0,
-  "total": 3,
-  "groups": [
-    {
-      "id": "0a4a2c33-2d0e-43df-b51c-d905aba99e17",
-      "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "Sensor Operators",
-      "created_at": "2023-06-14T13:33:52.249784Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-      "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "Security Engineers",
-      "description": "This group would be responsible for securing the platform.",
-      "created_at": "2023-06-15T09:41:42.860481Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    },
-    {
-      "id": "dd2dc8d4-f7cf-42f9-832b-81cae9a8e90a",
-      "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "parent_id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-      "name": "Customer Support",
-      "description": "This group would be responsible for providing support to users of the platform.",
-      "created_at": "2023-06-15T09:42:34.063997Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
+  "query": "mutation CreateObjectGroup(\$input: CreateGroupInput!) { createObjectGroup(input: \$input) { id name tenantId groupType description parentId status attributes createdAt updatedAt } }",
+  "variables": {
+    "input": {
+      "name": "<group_name>",
+      "tenantId": "<workspace_id>",
+      "description": "<optional description>",
+      "attributes": {}
     }
-  ]
-}
-```
-
-### Get Group Children
-
-You can get all groups that are children of a group for a logged-in user.
-
-If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `parent_id`, `tree` and `dir` as query parameters.
-
-```bash
-curl -sSiX GET "http://localhost/{domain_id}/groups/{group_id}/children" -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX GET http://localhost/{domain_id}/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e/children?tree=true -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 10:17:13 GMT
-Content-Type: application/json
-Content-Length: 755
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "limit": 10,
-  "offset": 0,
-  "total": 3,
-  "groups": [
-    {
-      "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-      "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-      "name": "Security Engineers",
-      "description": "This group would be responsible for securing the platform.",
-      "path": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-      "children": [
-        {
-          "id": "dd2dc8d4-f7cf-42f9-832b-81cae9a8e90a",
-          "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-          "parent_id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-          "name": "Customer Support",
-          "description": "This group would be responsible for providing support to users of the platform.",
-          "level": 1,
-          "path": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e.dd2dc8d4-f7cf-42f9-832b-81cae9a8e90a",
-          "created_at": "2023-06-15T09:42:34.063997Z",
-          "updated_at": "0001-01-01T00:00:00Z",
-          "status": "enabled"
-        }
-      ],
-      "created_at": "2023-06-15T09:41:42.860481Z",
-      "updated_at": "0001-01-01T00:00:00Z",
-      "status": "enabled"
-    }
-  ]
-}
-```
-
-### Get Group Hierarchy
-
-Retrieve the **ancestors** or **descendants** of a given group, with an option to return a **tree** or a **flat list**.  
-This endpoint is powered by the `HierarchyPageMeta` parameters:
-
-- **`level`** *(uint64)* — how many levels to include from the anchor group.  
-  - `0` → only the anchor group level  
-  - `1` → one level away (parents or children, depending on `direction`)  
-  - `N` → N levels away
-
-- **`direction`** *(int64)* — which direction to traverse:  
-  - **`+1`** → ancestors (up the tree)  
-  - **`-1`** → descendants (down the tree)  
-
-- **`tree`** *(bool)* — response shape:  
-  - **`true`** → return a **nested tree** (children embedded in `children` arrays)  
-  - **`false`** → return a **flat array** of groups
-
-The response envelope includes these fields:
-
-- **`level`** *(uint64)* — echo of requested `level`  
-- **`direction`** *(int64)* — echo of requested `direction`  
-- **`groups`** *(array)* — either a **tree** or a **flat list**, depending on `tree`  
-
-Request
-
-```bash
-curl -sSiX GET http://localhost/{domain_id}/groups/{group_id}/hierarchy \
--H "Authorization: Bearer <user_token>"
-```
-
-*(No query params: defaults apply — `level=0`, `direction=+1` (ancestors), `tree=false`.)*
-
-For example:
-
-```bash
-curl -sSiX GET "http://localhost/{domain_id}/groups/{group_id}/hierarchy?level=2&direction=-1&tree=true" \
--H "Authorization: Bearer <user_token>"
-```
-
-> **Tips**
->>
->> - Use **`direction=+1`** to walk **up** the tree (ancestors), **`-1`** to walk **down** (descendants).
->> - Use **`tree=false`** for paging and simple lists; use **`tree=true`** when you need a nested hierarchy in one payload.  
->> - Maximum allowed **`level`** is **20** (`MaxLevel`).
-
-### Update group
-
-Update group entity
-
-```bash
-curl -sSiX PUT http://localhost/{domain_id}/groups/{group_id} \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- << EOF
-{
-  "name": "<group_name>",
-  "description": "<group_description>",
-  "metadata": {
-    "<key1>": "<value1>",
-    "<key2>": "<value2>"
   }
 }
 EOF
 ```
 
-For example:
+Use `createPrincipalGroup` (identical input/output shape) to create a group of users instead. `createGroupInput` has no `parentId` field — to create a group under a parent, create it first and reparent it with `setGroupParent` (below).
+
+### Get Group / Get Groups
 
 ```bash
-curl -sSiX PUT http://localhost/{domain_id}/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <user_token>" \
--d @- << EOF
-{
-  "name": "Data Analysts",
-  "description": "This group would be responsible for analyzing data collected from sensors.",
-  "metadata": {
-    "location": "london"
-  }
-}
-EOF
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 10:17:56 GMT
-Content-Type: application/json
-Content-Length: 328
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-  "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "Data Analysts",
-  "description": "This group would be responsible for analyzing data collected from sensors.",
-  "metadata": { "location": "london" },
-  "created_at": "2023-06-15T09:41:42.860481Z",
-  "updated_at": "2023-06-15T10:17:56.475241Z",
-  "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "status": "enabled"
-}
-```
-
-### Disable group
-
-Disable a group entity
-
-```bash
-curl -sSiX POST http://localhost/{domain_id}/groups/{group_id}/disable -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost/{domain_id}/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e/disable -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 10:18:28 GMT
-Content-Type: application/json
-Content-Length: 329
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-  "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "Data Analysts",
-  "description": "This group would be responsible for analyzing data collected from sensors.",
-  "metadata": { "location": "london" },
-  "created_at": "2023-06-15T09:41:42.860481Z",
-  "updated_at": "2023-06-15T10:17:56.475241Z",
-  "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "status": "disabled"
-}
-```
-
-### Enable group
-
-Enable a group entity
-
-```bash
-curl -sSiX POST http://localhost/{domain_id}/groups/{group_id}/enable -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
-```
-
-For example:
-
-```bash
-curl -sSiX POST http://localhost/{domain_id}/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e/enable -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 10:18:55 GMT
-Content-Type: application/json
-Content-Length: 328
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{
-  "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-  "domain_id": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "name": "Data Analysts",
-  "description": "This group would be responsible for analyzing data collected from sensors.",
-  "metadata": { "location": "london" },
-  "created_at": "2023-06-15T09:41:42.860481Z",
-  "updated_at": "2023-06-15T10:17:56.475241Z",
-  "updated_by": "94939159-d129-4f17-9e4e-cc2d615539d7",
-  "status": "enabled"
-}
-```
-
-### Assign
-
-Assign user to a group
-
-```bash
-curl -sSiX POST http://localhost/users/policies \
+curl -sSiX POST http://localhost:8080/graphql \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <user_token>" \
 -d @- <<EOF
 {
-  "subject": "<user_id>",
-  "object": "<group_id>",
-  "actions": ["<member_action>"]
+  "query": "query Group(\$id: ID!) { group(id: \$id) { id name tenantId groupType description parentId status attributes createdAt updatedAt } }",
+  "variables": { "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e" }
 }
 EOF
 ```
 
-For example:
-
 ```bash
-curl -sSiX POST http://localhost/users/policies \
+curl -sSiX POST http://localhost:8080/graphql \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <user_token>" \
--d @- << EOF
+-d @- <<EOF
 {
-  "subject": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
-  "object": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
-  "actions": ["g_list", "c_list"]
+  "query": "query ListGroups(\$tenantId: ID, \$q: String, \$limit: Int, \$offset: Int) { groups(tenantId: \$tenantId, q: \$q, limit: \$limit, offset: \$offset) { total items { id name groupType description parentId status createdAt } } }",
+  "variables": { "tenantId": "d7f9b3b8-4f7e-4f44-8d47-1a6e5e6f7a2b", "limit": 20, "offset": 0 }
 }
 EOF
-
-HTTP/1.1 201 Created
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 10:19:59 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
 ```
 
-### Members
+### Get Group Children / Hierarchy
 
-You can get all users assigned to a group.
+- `childGroups(parentId, limit, offset): GroupList` — direct children of one group.
+- `objectGroups(q, tenantId, parentId, status, limit, offset): GroupList` / `principalGroups(q, tenantId, status, limit, offset): GroupList` — list all groups of one type, optionally filtered by parent (there is no single combined "hierarchy" query; walk `childGroups` recursively, or filter by `parentId` on the type-specific list).
 
-If you want to paginate your results then use `offset`, `limit`, `metadata`, `name`, `status`, `identity`, and `tag` as query parameters.
-
-> Must take into consideration the user identified by the `user_token` needs to be assigned to the same group identified by `group_id` with `g_list` action or be the owner of the group identified by `group_id`.
-
-```bash
-curl -sSiX GET http://localhost/{domain_id}/groups/{group_id}/members -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
-```
-
-For example:
+### Update Group
 
 ```bash
-curl -sSiX GET http://localhost/{domain_id}/groups/2766ae94-9a08-4418-82ce-3b91cf2ccd3e/members -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 200 OK
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 11:21:29 GMT
-Content-Type: application/json
-Content-Length: 318
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
 {
-  "limit": 10,
-  "total": 1,
-  "members": [
-    {
-      "id": "1890c034-7ef9-4cde-83df-d78ea1d4d281",
-      "name": "Jane Doe",
-      "tags": [
-        "male",
-        "developer"
-      ],
-      "credentials": { "identity": "updated.jane.doe@gmail.com" },
-      "metadata": { "location": "london" },
-      "created_at": "2023-06-14T13:46:47.322648Z",
-      "updated_at": "2023-06-14T13:59:53.422595Z",
-      "status": "enabled"
-    }
-  ]
+  "query": "mutation UpdateGroup(\$id: ID!, \$input: UpdateGroupInput!) { updateGroup(id: \$id, input: \$input) { id name description attributes updatedAt } }",
+  "variables": {
+    "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e",
+    "input": { "name": "Data Analysts", "description": "Analyzes sensor data" }
+  }
 }
+EOF
 ```
 
-### Unassign
-
-Unassign user from group
+### Set / Remove Parent
 
 ```bash
-curl -sSiX DELETE http://localhost/users/policies/{subject_id}/{object_id} -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "mutation SetGroupParent(\$id: ID!, \$parentId: ID!) { setGroupParent(id: \$id, parentId: \$parentId) { id parentId } }",
+  "variables": { "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e", "parentId": "<parent_group_id>" }
+}
+EOF
 ```
 
-For example:
+`removeGroupParent(id): Boolean` clears it. Object groups have parallel `setObjectGroupParent`/`removeObjectGroupParent` mutations.
+
+### Enable / Disable / Suspend / Delete Group
+
+`enableGroup(id)`, `disableGroup(id)`, and `suspendGroup(id)` each take just an `id` and return the updated Group (same three-state status Devices use). `deleteGroup(id): Boolean` soft-deletes.
 
 ```bash
-curl -sSiX DELETE http://localhost/users/policies/1890c034-7ef9-4cde-83df-d78ea1d4d281/2766ae94-9a08-4418-82ce-3b91cf2ccd3e  -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"
-
-HTTP/1.1 204 No Content
-Server: nginx/1.23.3
-Date: Thu, 15 Jun 2023 11:25:27 GMT
-Content-Type: application/json
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "mutation DisableGroup(\$id: ID!) { disableGroup(id: \$id) { id status } }",
+  "variables": { "id": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e" }
+}
+EOF
 ```
+
+### Members (Assign / Unassign)
+
+```bash
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "query GroupMembers(\$groupId: ID!) { groupMembers(groupId: \$groupId) { id kind name status } }",
+  "variables": { "groupId": "2766ae94-9a08-4418-82ce-3b91cf2ccd3e" }
+}
+EOF
+```
+
+`entityGroups(entityId): [ID]` is the reverse lookup — every group one entity belongs to.
+
+<Callout type="info">
+  `addEntityToObjectGroup(entityId, objectGroupId)` and `removeEntityFromObjectGroup(entityId, objectGroupId)`
+  manage membership in **object** groups — membership is many-to-many, so adding twice is a
+  no-op, not an error. The old REST API's group-membership grant also carried explicit **actions**
+  (`g_list`, `c_list`, etc.) alongside the assignment; that's now a separate concern — see
+  [Authorization](/dev-guide/authorization)'s Roles/Permission Blocks, not part of group
+  membership itself.
+</Callout>

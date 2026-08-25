@@ -14,7 +14,15 @@ image: /img/mg-preview.png
 ---
 
 
-Magistrala allows for fine-grained control over user permissions, taking into account hierarchical relationships between entities domains, groups, channels, and clients. The structure and functionality of an authorization system implemented using [SpiceDB](https://github.com/authzed/spicedb) and its associated [schema language](https://authzed.com/docs/reference/schema-lang). `auth` service backed by SpiceDB manages permissions for users, domains, groups, channels, and clients.
+<Callout type="warn">
+This page describes the previous SpiceDB-backed authorization model (`domains`/`clients`
+terminology, SpiceDB schema language). SpiceDB has been replaced — authorization now goes through
+**Atom**, and the public entities are **Workspaces**/**Devices**. See
+[Authorization](/dev-guide/authorization) for the current model. The content below is kept for
+historical reference only.
+</Callout>
+
+Magistrala allows for fine-grained control over user permissions, taking into account hierarchical relationships between entities workspaces, groups, channels, and devices. The structure and functionality of an authorization system previously implemented using [SpiceDB](https://github.com/authzed/spicedb) and its associated [schema language](https://authzed.com/docs/reference/schema-lang) — now superseded by Atom.
 
 ## Domains
 

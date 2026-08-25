@@ -15,11 +15,15 @@ image: /img/mg-preview.png
 ---
 
 
-Magistrala supports various storage databases in which messages are stored:
+<Callout type="warn">
+Postgres and Timescale (`postgres-writer`/`postgres-reader`, `timescale-writer`/`timescale-reader`)
+are the currently supported storage backends. `docker/addons/` no longer includes Cassandra,
+MongoDB, or InfluxDB writer/reader add-ons — the sections below describing them predate their
+removal and are kept for historical reference only.
+</Callout>
 
-- CassandraDB
-- MongoDB
-- InfluxDB
+Magistrala currently supports these storage databases for messages:
+
 - PostgreSQL
 - Timescale
 

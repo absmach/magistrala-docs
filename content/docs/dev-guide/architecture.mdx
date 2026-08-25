@@ -11,7 +11,7 @@ keywords:
 image: /img/mg-preview.png
 ---
 
-Magistrala is built on top of [FluxMQ](https://github.com/absmach/fluxmq), a message broker designed for both messaging and durable event streams, and on [Atom](https://github.com/absmach/atom), a lightweight identity-and-authorization service that is the system of record for domains, users, clients, channels, groups, roles, and policies. Magistrala itself provides everything around them: protocol adapters, device provisioning, data processing, and observability.
+Magistrala is built on top of [FluxMQ](https://github.com/absmach/fluxmq), a message broker designed for both messaging and durable event streams, and on [Atom](https://github.com/absmach/atom), a lightweight identity-and-authorization service that is the system of record for workspaces, users, devices, channels, groups, roles, and policies. Magistrala itself provides everything around them: protocol adapters, device provisioning, data processing, and observability.
 
 ![arch](../img/architecture.svg)
 
@@ -27,7 +27,7 @@ Three kinds of callers reach the platform: operators and apps — the web UI, mo
 
 The **FluxMQ auth bridge** sits between FluxMQ and Atom. It handles the broker's auth callouts — validating a connecting client's credentials and looking up its routes — and proxies HTTP publish requests.
 
-**Atom** is Magistrala's identity, authorization, and catalog service. It runs as its own deployment with its own PostgreSQL database, and is the system of record for domains, users, clients, channels, groups, roles, and policies. It issues the JWTs and JWKS that every other service validates on every request. See [Domain Model](#domain-model) below for how Magistrala's concepts map onto Atom's.
+**Atom** is Magistrala's identity, authorization, and catalog service. It runs as its own deployment with its own PostgreSQL database, and is the system of record for workspaces, users, devices, channels, groups, roles, and policies. It issues the JWTs and JWKS that every other service validates on every request. See [Core Concepts](#core-concepts) below for how Magistrala's concepts map onto Atom's.
 
 ## Application & Data Services
 
@@ -46,31 +46,31 @@ Each service that needs durable storage owns its own PostgreSQL database — Rul
 
 Platform services and the UI export distributed traces to **Jaeger** via **OpenTelemetry**, giving visibility into how a request or message moves across the system.
 
-## Domain Model
+## Core Concepts
 
-Magistrala keeps its own product concepts — **domain**, **user**, **client**, **channel**, and **group** — but Atom is their system of record:
+Magistrala keeps its own product concepts — **workspace**, **user**, **device**, **channel**, and **group** — but Atom is their system of record:
 
 | Magistrala concept | Atom concept              | Meaning                                                             |
 | :------------------ | :-------------------------- | :--------------------------------------------------------------------- |
-| Domain              | Tenant                     | Isolation boundary for one organization, project, or environment      |
+| Workspace            | Tenant                     | Isolation boundary for one organization, project, or environment      |
 | User                | Entity, kind `human`       | A person who logs in and uses the UI/API                              |
-| Client              | Entity, kind `device`      | A device or application that sends/receives data                      |
-| Channel             | Resource, kind `channel`   | A messaging/data path that clients can publish or subscribe to        |
-| Group               | Group                      | A collection of users, clients, channels, or other grouped objects    |
+| Device              | Entity, kind `device`      | A device or application that sends/receives data                      |
+| Channel             | Resource, kind `channel`   | A messaging/data path that devices can publish or subscribe to        |
+| Group               | Group                      | A collection of users, devices, channels, or other grouped objects    |
 
-`Domain` is the top-level organizational unit — every user, client, channel, and group belongs to one, and a user's role on a domain determines what they can do inside it.
+`Workspace` is the top-level organizational unit — every user, device, channel, and group belongs to one, and a user's role on a workspace determines what they can do inside it. The CLI and UI both call this concept "workspace"; Atom's own underlying concept is "tenant" (see the CLI's `workspaces` command, backed by `newWorkspacesCmd`, whose own description is "Manage Magistrala workspaces through Atom tenants").
 
-`User` is a person who authenticates against Atom to obtain an access token, then manages domains, groups, clients, and channels in CRUD fashion and defines access control by assigning roles.
+`User` is a person who authenticates against Atom to obtain an access token, then manages workspaces, groups, devices, and channels in CRUD fashion and defines access control by assigning roles.
 
-`Group` is a logical grouping of clients, channels, or other groups, used to simplify access control — a user who holds a role on a group can access everything the group contains. Groups support a parent/child hierarchy.
+`Group` is a logical grouping of devices, channels, or other groups, used to simplify access control — a user who holds a role on a group can access everything the group contains. Groups support a parent/child hierarchy.
 
-`Client` represents a device or application connected to Magistrala that exchanges messages with other clients. Roles determine which actions a role member can perform on a client.
+`Device` represents a device or application connected to Magistrala that exchanges messages with other devices. Roles determine which actions a role member can perform on a device. This is Magistrala's current public terminology (CLI command `devices`, replacing the older `clients` naming) and already matches Atom's own entity kind (`device`).
 
-`Channel` is a communication channel — a message topic that any connected client can publish or subscribe to, and a grouping mechanism for clients. A client's connection to a channel is publish-only, subscribe-only, or both.
+`Channel` is a communication channel — a message topic that any connected device can publish or subscribe to, and a grouping mechanism for devices. A device's connection to a channel is publish-only, subscribe-only, or both.
 
 ## Identity & Access Control
 
-Atom access control is built from **actions** (single permission verbs like `read`, `write`, `delete`, `role.manage`, `policy.manage`, `publish`, `subscribe`), **permission blocks** (where those actions apply — for example, read and publish on all channels in domain `d1`), and **roles** (a named bundle of permission blocks assigned to a user). A user holding the `tenant-admin` role on a domain can typically manage every client, channel, group, rule, alarm, and report inside it; narrower, object-scoped roles — such as a reader role on a single channel — restrict that further. See [Storage Architecture § Authorization](/dev-guide/storage-architecture#authorization) for how a permission check is evaluated on the message path.
+Atom access control is built from **actions** (single permission verbs like `read`, `write`, `delete`, `role.manage`, `policy.manage`, `publish`, `subscribe`), **permission blocks** (where those actions apply — for example, read and publish on all channels in workspace `w1`), and **roles** (a named bundle of permission blocks assigned to a user). A user holding the `tenant-admin` role on a workspace can typically manage every device, channel, group, rule, alarm, and report inside it; narrower, object-scoped roles — such as a reader role on a single channel — restrict that further. See [Storage Architecture § Authorization](/dev-guide/storage-architecture#authorization) for how a permission check is evaluated on the message path.
 
 ## Messaging
 

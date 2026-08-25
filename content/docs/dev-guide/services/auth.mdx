@@ -14,6 +14,18 @@ keywords:
 image: /img/mg-preview.png
 ---
 
+<Callout type="warn" title="cmd/auth still builds, but SpiceDB and its domain/PAT model are gone">
+  `cmd/auth` still exists and still builds — it's just absent from `docker-compose.yaml`'s default
+  service list and the Makefile's `SERVICES` — see [Getting Started § Build Individual
+  Microservice](/dev-guide/getting-started#build-individual-microservice). What's actually gone is
+  **SpiceDB**: no SpiceDB container exists in `docker-compose.yaml`, and platform-wide identity/
+  authorization now runs through Atom, which issues the JWTs/JWKS every other service validates —
+  see [Architecture § Identity & Access Control](/dev-guide/architecture#identity--access-control).
+  The Key Types, Domains, and PATs sections below describe `cmd/auth`'s own pre-Atom model and are
+  kept for historical reference only — for current tokens and workspaces, see
+  [Architecture](/dev-guide/architecture) and the [API reference](/dev-guide/api).
+</Callout>
+
 The **Auth service** is the security backbone of Magistrala. It issues and verifies all authentication tokens, manages domains, and enforces fine-grained access control via [SpiceDB](https://authzed.com/spicedb). Every other service delegates authentication and authorization decisions to Auth over gRPC.
 
 ## Key Types
@@ -36,7 +48,7 @@ A domain is the top-level organizational unit in Magistrala. Auth manages domain
 
 ## Personal Access Tokens (PATs)
 
-PATs allow API access without primary credentials. They are scoped to specific entity types and operations (e.g., `create` on `clients` in a given domain), expire on a configurable schedule, and can be revoked at any time. Secrets are stored hashed. See [Authorization](../dev-tools/authorization#personal-access-tokens) for the full PAT API reference.
+PATs allow API access without primary credentials. They are scoped to specific entity types and operations (e.g., `create` on `clients` in a given domain), expire on a configurable schedule, and can be revoked at any time. Secrets are stored hashed. See [Personal Access Tokens](/user-guide/pats) and the [API reference](/dev-guide/api#personal-access-tokens) for how PATs work today.
 
 ## Configuration
 
