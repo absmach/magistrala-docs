@@ -18,7 +18,8 @@ const DefaultImage = defaultMdxComponents.img as
 // carrying that prefix is rendered directly as a plain, zoomable <img> (no
 // next/image, no width/height needed); everything else keeps going through
 // the pre-existing assetPath()-prefixed next/image path unchanged.
-const DOC_IMAGE_PATTERN = /^\/docs\/magistrala\/(img|diagrams|screenshots)\//;
+const DOC_IMAGE_PATTERN =
+  /^\/docs\/magistrala\/v0-51-0\/(img|diagrams|screenshots)\//;
 
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
   return {
