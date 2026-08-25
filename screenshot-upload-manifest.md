@@ -308,3 +308,53 @@ New fixtures: message views **"Temperature Readings"** (SenML, filtered to Tempe
 - **"Invalid entity type" search failures recur across unrelated flows**: the same autocomplete/search-returns-nothing bug from pass 1 (channel connect dialogs, group assign dialogs) also hit the Send Message dialog's Publisher search and the Unit search — typing into the search box returns an empty `listbox` in the accessibility tree even though the underlying `cmdk` DOM list actually has matching items rendered (confirmed via `evaluate_script` reading `[role="listbox"]` textContent directly, then dispatching synthetic mouse events on the `[data-slot="command-item"]` node to select it). Root cause still unconfirmed; the accessibility-tree/synthetic-click workaround is reliable wherever it recurs.
 - **React Flow "Add Output" caps at 3 output nodes per rule**: once a rule has an Input, a Logic node, and 3 Output nodes, `Add Output` becomes disabled — confirmed by adding Channel Publisher + E-Mail + PostgreSQL and watching the button grey out, then re-enabling it by deleting one. `Add Input` and `Add Logic` are hard-capped at 1 each (button disables the instant one exists). Useful to know for anyone else scripting rule-canvas screenshots: you don't need a fresh rule per output type, just delete-and-replace on a shared canvas.
 - **Rules Engine "Internal DB (JSON)" output type is documented but not present in this build**: `content/docs/user-guide/rules-engine/overview.mdx` and `message-views.mdx` both reference a distinct **Internal DB (JSON)** output node (separate from **Internal DB**/SenML), but the live "Select an output type" dialog in this environment only lists: Channel Publisher, Alarm, E-Mail, PostgreSQL, Internal DB, Slack. No JSON variant exists to select. This directly blocks `json-view-populated.png` and `json-payload-viewer.png` in message-views.mdx — see that section above.
+
+## Pass 3 — Gap-closing: all 13 Workspace images + 2 renamed users-quick-start images (`docs/latest-workspaces` / `docs/latest-user-guide`)
+
+**Why this pass exists**: a PR reviewer on `docs/latest-workspaces` (#174) found live 404s. Auditing found the exact gap: only 6 of `workspace.mdx`'s 13 images were ever captured in passes 1–2, and 2 of `users-quick-start.mdx`'s images referenced renamed filenames whose old-named equivalents exist but show stale "Domain" UI text. Scope was then expanded mid-pass to recapture and re-upload **all 13** workspace images for consistency (not just the 7 gaps), so every image at these R2 keys now comes from the same session/fixture state.
+
+**This pass performs the full upload**, unlike passes 1–2 which only staged files — all 15 images below were captured, uploaded via `pnpm run publish-image`, and individually verified live (200) after upload. These **replace** whatever was previously live at the same `docs/magistrala/img/workspace/*.png` keys from pass 1 (an intentional overwrite of the same R2 keys, not new additions).
+
+Fixture used: existing **Demo Workspace** (`johnDoe`). No new workspace was created (the empty-state and create-dialog shots reuse the existing populated list / an unsubmitted dialog fill, same substitution call pass 1 made for the empty state). One real, additive change: added a permission scope (`All clients` → `read`) to the pre-existing `viewer` role, needed to show non-empty scope/action-button states — left in place, harmless.
+
+| Local file | R2 destination | Status |
+|---|---|---|
+| `workspace/create-workspace.png` | `docs/magistrala/img/workspace/create-workspace.png` | uploaded, verified live |
+| `workspace/workspace-dialog.png` | `docs/magistrala/img/workspace/workspace-dialog.png` | uploaded, verified live |
+| `workspace/created-workspace.png` | `docs/magistrala/img/workspace/created-workspace.png` | uploaded, verified live |
+| `workspace/workspace-homepage.png` | `docs/magistrala/img/workspace/workspace-homepage.png` | uploaded, verified live |
+| `workspace/workspace-settings.png` | `docs/magistrala/img/workspace/workspace-settings.png` | uploaded, verified live |
+| `workspace/workspace-metadata.png` | `docs/magistrala/img/workspace/workspace-metadata.png` | uploaded, verified live |
+| `workspace/workspace-members.png` | `docs/magistrala/img/workspace/workspace-members.png` | uploaded, verified live |
+| `workspace/assign-user-form.png` | `docs/magistrala/img/workspace/assign-user-form.png` | uploaded, verified live |
+| `workspace/unassign-user.png` | `docs/magistrala/img/workspace/unassign-user.png` | uploaded, verified live — **substitute**: no removable non-self member exists on this account (only `johnDoe`/"You"); captured the Members table as the closest honest substitute rather than a true unassign action, same as pass 1's empty-state precedent |
+| `workspace/roles.png` | `docs/magistrala/img/workspace/roles.png` | uploaded, verified live |
+| `workspace/create-role.png` | `docs/magistrala/img/workspace/create-role.png` | uploaded, verified live |
+| `workspace/workspace-role-id.png` | `docs/magistrala/img/workspace/workspace-role-id.png` | uploaded, verified live |
+| `workspace/role-actions.png` | `docs/magistrala/img/workspace/role-actions.png` | uploaded, verified live — this is the roles-list row's `···` menu (View/Copy ID/Edit Name/Add permissions/Remove permissions/Assign users/Delete), matching `workspace.mdx`'s actual context; first attempt captured the wrong element (the role-detail page's Add/Remove/Delete-scope buttons) and was corrected before upload |
+| `users-guide/janedoe-workspaceshome.png` | `docs/magistrala/img/users-guide/janedoe-workspaceshome.png` | uploaded, verified live |
+| `users-guide/jdoe-create-workspace.png` | `docs/magistrala/img/users-guide/jdoe-create-workspace.png` | uploaded, verified live |
+
+Upload commands (already run, kept for reference/reproducibility):
+
+```bash
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/workspace/create-workspace.png docs/magistrala/img/workspace/create-workspace.png
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/workspace/workspace-dialog.png docs/magistrala/img/workspace/workspace-dialog.png
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/workspace/created-workspace.png docs/magistrala/img/workspace/created-workspace.png
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/workspace/workspace-homepage.png docs/magistrala/img/workspace/workspace-homepage.png
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/workspace/workspace-settings.png docs/magistrala/img/workspace/workspace-settings.png
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/workspace/workspace-metadata.png docs/magistrala/img/workspace/workspace-metadata.png
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/workspace/workspace-members.png docs/magistrala/img/workspace/workspace-members.png
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/workspace/assign-user-form.png docs/magistrala/img/workspace/assign-user-form.png
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/workspace/unassign-user.png docs/magistrala/img/workspace/unassign-user.png
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/workspace/roles.png docs/magistrala/img/workspace/roles.png
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/workspace/create-role.png docs/magistrala/img/workspace/create-role.png
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/workspace/workspace-role-id.png docs/magistrala/img/workspace/workspace-role-id.png
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/workspace/role-actions.png docs/magistrala/img/workspace/role-actions.png
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/users-guide/janedoe-workspaceshome.png docs/magistrala/img/users-guide/janedoe-workspaceshome.png
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/users-guide/jdoe-create-workspace.png docs/magistrala/img/users-guide/jdoe-create-workspace.png
+```
+
+Note `CLOUDFLARE_ACCOUNT_ID` is required explicitly — without it `publish-image` fails with a 401 despite a valid, correctly-scoped `CLOUDFLARE_API_TOKEN`, root-caused to an ambiguous account-resolution conflict between this machine's wrangler OAuth session and a custom API token when no account ID is pinned.
+
+**UI finding**: the workspace role permission-scope selector's dropdown still literally lists "All clients" (not "All devices") as an option — same UI label lag already documented elsewhere for other Client→Device surfaces, now confirmed for this scope selector too.
