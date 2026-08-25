@@ -47,5 +47,5 @@ await clean(outDir);
 await fs.rename(enterpriseHold, outDir);
 
 console.log(
-  `Built Enterprise (out/docs/magistrala) + Community (out${communityBasePath}) editions`,
+  `Built Enterprise (out/docs/magistrala/v0-51-0) + Community (out${communityBasePath}) editions`,
 );

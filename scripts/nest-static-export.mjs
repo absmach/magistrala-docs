@@ -3,7 +3,7 @@ import path from "node:path";
 
 const outDir = path.resolve("out");
 const basePath = path.join(
-  ...(process.env.NEXT_PUBLIC_BASE_PATH || "/docs/magistrala")
+  ...(process.env.NEXT_PUBLIC_BASE_PATH || "/docs/magistrala/v0-51-0")
     .split("/")
     .filter(Boolean),
 );
