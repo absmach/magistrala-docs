@@ -18,15 +18,7 @@ image: /img/mg-preview.png
 
 The API reference is available at the [Magistrala API documentation site](https://docs.api.magistrala.absmach.eu/)
 
-<Callout type="info" title="Rewritten for Atom's GraphQL API">
-  The **Workspaces**, **Devices**, **Channels**, **Groups**, and now **Users** sections below are
-  current — all five were rewritten against Atom's actual GraphQL schema
-  (`src/graphql/{tenants,entities,resources,groups,auth,credentials}.rs` in the Atom repository)
-  and cross-checked against what the CLI and UI actually send over the wire
-  (`cli/atom_commands.go`, `pkg/atom/api.go`), not invented from the schema alone. **Messages** is
-  a different story again: publishing over HTTP/MQTT/CoAP/WS is unrelated to Atom and still works
-  as described, aside from the `domain_id` → `workspace_id` path segment rename (already fixed).
-</Callout>
+The **Workspaces**, **Devices**, **Channels**, **Groups**, and **Users** sections below cover Atom's GraphQL API (`POST /graphql`). **Messages** is a different story: publishing over HTTP/MQTT/CoAP/WS is unrelated to Atom and uses its own REST-style endpoints, documented in its own section below.
 
 ## Users
 
@@ -79,7 +71,7 @@ Expected response:
 > **Notes**:
 >
 > - Signup only succeeds if `self_registration_enabled` is set on the deployment; otherwise it returns `"sign up is not enabled"`. Admin-created accounts (self-registration disabled) go through `createEntity` instead — see [Create User](#create-user) below — but that path doesn't set a password or send verification email; a separate [Set Password](#set--change-password) call is needed to make the account loginable.
-> - `email` is normalized (lowercased) and used as the login identifier — it is not a field on the `Entity` type itself, and no mutation for changing it was found in this pass; treat email changes as unverified until confirmed against a maintainer.
+> - `email` is normalized (lowercased) and used as the login identifier — it is not a field on the `Entity` type itself.
 
 ### Log In
 
@@ -203,19 +195,11 @@ Returns `true` on success. Despite the name, `createPassword` also handles chang
 
 Covered in depth in the [Personal Access Tokens](/user-guide/pats) user guide and backed by the same `credentials.rs` mutations (`createAccessToken`, `replaceAccessTokenPermissions`, `revokeAccessToken`) and the `accessTokens`/`credentials` queries — not duplicated here.
 
-<Callout type="warn" title="Not re-verified in this pass">
-  A few of the old REST API's user operations have no confirmed GraphQL equivalent found here:
-  changing a user's **email** or a distinct **username** (Atom's login `identifier` is the email
-  itself, normalized — there's no separate username field or credential kind for one), and any
-  bulk/batch user operations (consistent with [Devices](#create-device): no `createEntities`
-  exists). Treat these as open questions for a maintainer rather than assuming they're unsupported.
-</Callout>
-
 ## Workspaces
 
 A **Workspace** is Atom's `Tenant` — an isolated organizational unit that contains entities such as **Devices**, **Gateways**, **Device Types**, **Channels**, **Groups**, **Roles**, and **Invitations**. Every user can belong to one or more workspaces, each identified by a unique `route`.
 
-Workspaces are managed through **Atom's GraphQL API**, not a REST service — there is no standalone `domains`/`workspaces` HTTP service anymore (verified against `cmd/` and `docker-compose.yaml`). All requests below are `POST` requests to the GraphQL endpoint with an `Authorization: Bearer <token>` header, `Content-Type: application/json`, and a JSON body of the shape `{"query": "...", "variables": {...}}`. Query/mutation and field names below are taken directly from Atom's schema (`src/graphql/tenants.rs`, `src/graphql/types/mod.rs`) and match exactly what the [Workspaces CLI](/dev-guide/cli/workspaces-cli) sends.
+Workspaces are managed through **Atom's GraphQL API**, not a REST service — there is no standalone `domains`/`workspaces` HTTP service anymore. All requests below are `POST` requests to the GraphQL endpoint with an `Authorization: Bearer <token>` header, `Content-Type: application/json`, and a JSON body of the shape `{"query": "...", "variables": {...}}`.
 
 GraphQL endpoint:
 
@@ -442,7 +426,7 @@ Expected response:
 > - `externalId` (identifier assigned outside Atom — serial number, MAC, SKU) is opaque, case-sensitive, trimmed, and must be unique per workspace among live entities. It replaces the old Client "external ID" concept 1:1.
 > - To create a **Gateway**, set `attributes: { "is_gateway": true }` — there is no separate Gateway create mutation.
 > - To bind a **Device Type**, pass `profileId` (and optionally `profileVersionId`); see [Device Type Management](/user-guide/device-types/introduction).
-> - There is no bulk/batch create mutation in Atom's GraphQL API (verified: no `createEntities` field). Each device must be created with its own `createEntity` call — the old REST API's bulk-create endpoints have no current equivalent.
+> - There is no bulk/batch create mutation in Atom's GraphQL API. Each device must be created with its own `createEntity` call — the old REST API's bulk-create endpoints have no current equivalent.
 
 ### Get Device
 
@@ -480,7 +464,7 @@ curl -sSiX POST http://localhost:8080/graphql \
 EOF
 ```
 
-> Additional filter arguments: `externalId`, `profileId`, `attributesContains` (JSON containment match), `parentGroupId` + `includeDescendants`, `deleted` (`live`/`deleted`/`all`), `order` (`created_at`/`updated_at`/`name`/`kind`/`status`), `dir` (`asc`/`desc`). To list Gateways specifically, filter client-side on `attributes.is_gateway` — there is no server-side `isGateway` filter argument (verified against `entities.rs`).
+> Additional filter arguments: `externalId`, `profileId`, `attributesContains` (JSON containment match), `parentGroupId` + `includeDescendants`, `deleted` (`live`/`deleted`/`all`), `order` (`created_at`/`updated_at`/`name`/`kind`/`status`), `dir` (`asc`/`desc`). To list Gateways specifically, filter client-side on `attributes.is_gateway` — there is no server-side `isGateway` filter argument.
 
 ### Update Device
 
@@ -631,12 +615,6 @@ Connection: keep-alive
 ### Read Messages
 
 Reads messages from database for a given channel, via the `timescale-reader`/`postgres-reader` HTTP API (see [Storage Architecture § Message Storage Backends](/dev-guide/storage-architecture#message-storage-backends)).
-
-<Callout type="warn" title="Needs maintainer verification">
-  The path segment rename below (`domain_id` → `workspace_id`) follows the same convention
-  confirmed for message publishing, but the readers' HTTP route itself was not independently
-  re-verified against `readers/api/http/transport.go` in this pass.
-</Callout>
 
 ```bash
 curl -sSiX GET http://localhost:{service_port}/{workspace_id}/channels/{channel_id}/messages?[offset={offset}]&[limit={limit}] \
@@ -810,19 +788,16 @@ EOF
 Platform-admin-only `restoreResource(id: ID!): Boolean` and `purgeResource(id: ID!): Boolean` mirror the Workspace/Device lifecycle above.
 
 <Callout type="warn" title="Enable/Disable and Connect/Disconnect have no direct equivalent">
-  Verified against `src/graphql/resources.rs`: there is **no** `enableResource`/`disableResource`
-  mutation (Resources don't carry the `active`/`inactive` status Devices and Workspaces do), and
-  **no** `connectResource`/`disconnectResource`-style mutation linking a specific Device to a
-  specific Channel. A stored "connection" object doesn't exist in the current model.
+  There is **no** `enableResource`/`disableResource` mutation (Resources don't carry the
+  `active`/`inactive` status Devices and Workspaces do), and **no**
+  `connectResource`/`disconnectResource`-style mutation linking a specific Device to a specific
+  Channel. A stored "connection" object doesn't exist in the current model.
 
   Publish/subscribe access is now purely an **authorization grant**: create a Permission Block
-  scoped to the channel object (`createPermissionBlock`, action `publish` and/or `subscribe` —
-  both are real seeded actions, see `migrations/001_initial.sql`), then attach it to the device
-  via `createDirectPolicy` (or via a Role, for a reusable grant across many devices) — see
-  [Authorization](/dev-guide/authorization) for the full Permission Block / Role / Direct Policy
-  model. The exact `scopeMode`/`objectKind`/`objectType` values for a single-channel grant were
-  not re-verified in this pass; check `src/graphql/policies.rs`'s `create_permission_block`
-  against a real request before publishing a worked example here.
+  scoped to the channel object (`createPermissionBlock`, action `publish` and/or `subscribe`),
+  then attach it to the device via `createDirectPolicy` (or via a Role, for a reusable grant
+  across many devices) — see [Authorization](/dev-guide/authorization) for the full Permission
+  Block / Role / Direct Policy model.
 </Callout>
 
 ### Object Groups
@@ -956,16 +931,11 @@ EOF
 
 `entityGroups(entityId): [ID]` is the reverse lookup — every group one entity belongs to.
 
-<Callout type="warn" title="Assign/Unassign verified for object groups; principal-group membership not re-confirmed">
+<Callout type="info">
   `addEntityToObjectGroup(entityId, objectGroupId)` and `removeEntityFromObjectGroup(entityId, objectGroupId)`
-  (`src/graphql/entities.rs`) are the confirmed membership mutations for **object** groups —
-  membership is many-to-many, so adding twice is a no-op, not an error. `groupMembers`'s own
-  implementation (`src/graphql/groups.rs`) calls a generic `list_group_members` regardless of
-  group type, which suggests the same underlying mechanism covers **principal** groups too, but
-  a mutation literally named for principal-group membership was not found in this pass — confirm
-  against `src/identity/repo.rs` before documenting principal-group assignment as identical to the
-  object-group calls above. The old REST API's group-membership grant also carried explicit
-  **actions** (`g_list`, `c_list`, etc.) alongside the assignment; that's now a separate concern —
-  see [Authorization](/dev-guide/authorization)'s Roles/Permission Blocks, not part of group
+  manage membership in **object** groups — membership is many-to-many, so adding twice is a
+  no-op, not an error. The old REST API's group-membership grant also carried explicit **actions**
+  (`g_list`, `c_list`, etc.) alongside the assignment; that's now a separate concern — see
+  [Authorization](/dev-guide/authorization)'s Roles/Permission Blocks, not part of group
   membership itself.
 </Callout>

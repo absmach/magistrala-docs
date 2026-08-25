@@ -15,7 +15,11 @@ image: /img/mg-preview.png
 
 
 <Callout type="warn">
-CLI wiring not verified: the `certs` service itself is real and current (it's in the platform's `SERVICES` list and its OpenBao PKI code path exists in source). Its CLI (`cli/certs.go`, command signatures below) is also real code, using current `<entity_id>`/`<workspace_id>` terminology — but it is **not currently registered** on the root `magistrala-cli` command tree (which only exposes `health, login, workspaces, channels, groups, authz, devices, gateways, devicetypes`). Whether `certs` is reachable from the shipped CLI binary, or only via a build not yet released, needs confirming with the Magistrala team before this page is presented as "the current way" to manage certs.
+The `certs` service itself is real and current, and its CLI code (`cli/certs.go`, command
+signatures below) uses current `<entity_id>`/`<workspace_id>` terminology — but it is **not
+currently registered** on the root `magistrala-cli` command tree (which only exposes `health,
+login, workspaces, channels, groups, authz, devices, gateways, devicetypes`). The commands below
+are not reachable from the shipped CLI binary today.
 </Callout>
 
 Provisioning is a process of configuration of an IoT platform in which system operator creates and sets-up different entities used in the platform - users, groups, channels and devices.

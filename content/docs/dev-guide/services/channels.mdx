@@ -13,11 +13,10 @@ image: /img/mg-preview.png
 ---
 
 <Callout type="warn" title="This page describes a service that no longer exists standalone">
-  Confirmed via `docker-compose.yaml` and `cmd/`: there is no separate Channels service. Channels
-  are Atom resources of kind `channel`, managed through Atom's GraphQL API — see [Architecture §
-  Core Concepts](/dev-guide/architecture#core-concepts). For current, verified commands see the
-  CLI's [Channels page](/dev-guide/cli/channels-cli). The content below documents the pre-Atom
-  architecture and is kept for historical reference only.
+  There is no separate Channels service. Channels are Atom resources of kind `channel`, managed
+  through Atom's GraphQL API — see [Architecture § Core Concepts](/dev-guide/architecture#core-concepts)
+  and the CLI's [Channels page](/dev-guide/cli/channels-cli). The content below documents the
+  pre-Atom architecture and is kept for historical reference only.
 </Callout>
 
 The **Channels service** manages communication channels in Magistrala. A channel is a message topic that clients connect to for pub/sub messaging. The service handles channel creation, configuration, client connections, group hierarchy, and role-based access control. It exposes both HTTP and gRPC APIs.

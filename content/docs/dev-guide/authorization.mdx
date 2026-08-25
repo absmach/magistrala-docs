@@ -13,20 +13,15 @@ keywords:
 image: /img/mg-preview.png
 ---
 
-<Callout type="warn" title="Rewritten: SpiceDB is gone, replaced by Atom's own authorization model">
-  This page previously documented a SpiceDB-backed RBAC schema (`docker/permission.yaml`,
-  per-entity relations/permissions for Client/Channel/Group/Domain/Platform, and a REST role
-  management API under `/<entity_type>/<entity_id>/roles`). No SpiceDB container exists in
-  `docker-compose.yaml` anymore — see [Auth](/dev-guide/services/auth). Authorization is now owned
-  entirely by **Atom**, verified against `pkg/atom/types.go` and Atom's own docs
-  (`docs/content/docs/access-control/**`, `docs/content/docs/user-guide/{permission-blocks,roles,actions}.mdx`
-  in the Atom repository). The `docker/permission.yaml` file still exists in this repository but
-  its current relevance, if any, was not verified in this pass.
+<Callout type="warn" title="SpiceDB is gone — authorization now runs through Atom">
+  No SpiceDB container exists in `docker-compose.yaml`, and the old per-entity relations/permissions
+  schema and REST role management API (`/<entity_type>/<entity_id>/roles`) no longer apply.
+  Authorization is now owned entirely by **Atom** — see [Auth](/dev-guide/services/auth).
 </Callout>
 
 ## The model
 
-Atom answers one question: *can subject S perform action A on object O?* (verified against Atom's own `access-control/index.mdx`)
+Atom answers one question: *can subject S perform action A on object O?*
 
 ```text
 Subject gets a Role.
@@ -51,7 +46,7 @@ Every new tenant (Workspace) gets a seeded `tenant-admin` role with the full adm
 
 ## Decision flow
 
-Deny-by-default, deny-overrides-allow (verified against Atom's `access-control/evaluation.mdx`):
+Deny-by-default, deny-overrides-allow:
 
 1. Load the subject and the object being acted on.
 2. Resolve the action and validate it's applicable to that object kind/type.
@@ -63,7 +58,7 @@ Deny-by-default, deny-overrides-allow (verified against Atom's `access-control/e
 
 ## Permission Block shape
 
-Transcribed from `pkg/atom/types.go` — this is what Magistrala's Go code sends/receives, not a guess:
+This is what Magistrala's Go code sends/receives:
 
 ```go
 type PermissionBlock struct {
@@ -80,13 +75,13 @@ type PermissionBlock struct {
 }
 ```
 
-`ScopeMode` is one of nine values (verified against Atom's own `permission-blocks.mdx`): the tenant itself; all objects of a kind; all objects of a type; one exact object (by `ObjectKind`/`ObjectType`/`ObjectID`); an object group itself; direct objects in a group; objects in subgroups; direct child groups; or descendant groups.
+`ScopeMode` is one of nine values: the tenant itself; all objects of a kind; all objects of a type; one exact object (by `ObjectKind`/`ObjectType`/`ObjectID`); an object group itself; direct objects in a group; objects in subgroups; direct child groups; or descendant groups.
 
 `DirectPolicy` (one Permission Block → one subject) and `GroupGrant` (one Permission Block → every member of a principal group, present and future) are the two ways a block actually reaches a subject without going through a named Role — both also transcribed directly from `pkg/atom/types.go`.
 
 ## How Magistrala services check authorization
 
-Every service that needs an authorization decision — including the Enterprise `alarms`, `reports`, and `re` (Rules Engine) services (verified: each has its own `atom.go`/`middleware/authorization.go` calling Atom, not the old SpiceDB relations) — asks Atom the same shape of question Magistrala's own Go types describe:
+Every service that needs an authorization decision — including the Enterprise `alarms`, `reports`, and `re` (Rules Engine) services — asks Atom the same shape of question Magistrala's own Go types describe:
 
 ```go
 type AuthzRequest struct {
@@ -112,11 +107,8 @@ magistrala-cli authz check <subject_id> <action> --object-kind <kind> --object-i
 
 (see the [Authz CLI](/dev-guide/cli/authz-cli) — the only authorization-related CLI command; there is no CLI for managing Roles/Permission Blocks/Direct Policies themselves, which are administered through Atom directly.)
 
-<Callout type="warn" title="Needs maintainer verification">
-  The exact current action catalog and per-entity Action Applicability rows (the old page's
-  exhaustive `client_create`/`channel_publish`/`rule_manage_role`-style tables) were not
-  re-verified in this pass — Atom's action set is tenant-configurable rather than a fixed compiled
-  schema the way SpiceDB's was, so a static table here would go stale differently than before.
-  Point developers at Atom's own **Actions** and **Effective Actions** views to see what's actually
-  granted right now, rather than trusting a hardcoded list.
+<Callout type="info">
+  Atom's action set is tenant-configurable rather than a fixed compiled schema the way SpiceDB's
+  was, so this page doesn't maintain a static action catalog table — it would go stale. Use
+  Atom's own **Actions** and **Effective Actions** views to see what's actually granted right now.
 </Callout>

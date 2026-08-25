@@ -14,7 +14,11 @@ image: /img/mg-preview.png
 ---
 
 <Callout type="warn">
-References `users`/`clients` as standalone services publishing events — per the current architecture, most per-entity services (including `clients`) have been consolidated into Atom, and `bootstrap` is now `atom-bootstrap`. Whether Redis Streams event sourcing survived that consolidation, and in what form, needs verifying against Atom's implementation before this page is trusted.
+This page describes the pre-Atom architecture, where `users`, `clients`, and `bootstrap` were
+standalone services publishing events to Redis Streams. Those services have since been
+consolidated into **Atom** (`bootstrap` is now `atom-bootstrap`) — see
+[Entities](/dev-guide/entities) and [Architecture](/dev-guide/architecture) for the current model.
+The content below is kept for historical reference only.
 </Callout>
 
 In order to be easily integrable system, Magistrala is using [Redis Streams][redis-streams] as an event log for event sourcing. Services that previously published events to Redis Streams included `users`, `clients`, `bootstrap`, and the `mqtt` adapter.

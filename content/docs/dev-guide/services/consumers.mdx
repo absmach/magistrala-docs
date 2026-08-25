@@ -13,14 +13,11 @@ keywords:
 image: /img/mg-preview.png
 ---
 
-<Callout type="info" title="Confirmed: Writers are real, Notifiers are orphaned code">
-  There is no standalone `cmd/consumers` binary — `consumers/` is a library package, confirmed
-  imported by `cmd/timescale-writer/main.go` (`consumers`, `consumers/tracing`,
-  `consumers/writers/api`, `consumers/writers/timescale`) and, by the same pattern,
-  `postgres-writer`. The **Writers** section below is accurate. The **Notifiers** section
-  (SMTP/SMPP) is not: `consumers/notifiers/*` still exists as source but is only imported by its
-  own subpackages, tests, and mocks — no `cmd/` binary or other service wires it up. It is dead
-  code today, not a running feature. The actual current mechanism for the one notification
+<Callout type="info" title="Writers are real; Notifiers are dead code">
+  There is no standalone `cmd/consumers` binary — `consumers/` is a library package imported by
+  `cmd/timescale-writer` and `cmd/postgres-writer`. The **Writers** section below is current. The
+  **Notifiers** section (SMTP/SMPP) is not: `consumers/notifiers/*` still exists as source but
+  nothing wires it up to a running service. The current mechanism for the one notification
   Magistrala still sends (workspace-invitation emails) is Atom, not this package — see
   [Notifications](/dev-guide/services/notifications).
 </Callout>

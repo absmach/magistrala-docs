@@ -16,16 +16,6 @@ image: /img/mg-preview.png
 
 The **Magistrala CLI** (`magistrala-cli`) is a thin command-line wrapper over [Atom](https://github.com/absmach/atom)'s GraphQL API — every resource command (`workspaces`, `channels`, `groups`, `devices`, `gateways`, `devicetypes`, `authz`) ultimately talks to Atom, not to a per-entity Magistrala microservice. Its source lives in the `magistrala` repository's [`cli/`](https://github.com/absmach/magistrala/tree/main/cli) package, built by `cmd/cli/main.go`.
 
-<Callout type="info" title="This page replaces an older CLI reference">
-  Earlier versions of this section documented a wider set of commands (`users`, `messages`,
-  `provision`, `bootstrap`, `consumers`, JSON-payload-style `domains`/`clients` commands) built
-  against pre-Atom, per-entity Magistrala services. That command set has been replaced by the
-  Atom-backed CLI described below. A few command files still exist in `cli/` (`message.go`,
-  `bootstrap.go`, `certs.go`) but are not currently registered in `cli/root.go`'s `NewRootCmd()`,
-  so they are not reachable from the built `magistrala-cli` binary — don't rely on them until
-  they're wired in.
-</Callout>
-
 ## Installation
 
 ### Build from source

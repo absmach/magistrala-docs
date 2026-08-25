@@ -12,11 +12,10 @@ image: /img/mg-preview.png
 enterprise: true
 ---
 
-<Callout type="warn" title="Rewritten: this is no longer a Magistrala service">
-  There is no standalone Notifications service, Users service, or NATS-driven event flow in the
-  current `cmd/`/`docker-compose.yaml` (verified). Invitation emails are now sent by **Atom**
-  itself, synchronously, as part of handling the invitation — not by a separate event-driven
-  Magistrala service. Verified against Atom's `src/mail.rs` and `src/tenants/email.rs`.
+<Callout type="warn" title="No longer a standalone Magistrala service">
+  There is no standalone Notifications service, Users service, or NATS-driven event flow.
+  Invitation emails are now sent by **Atom** itself, synchronously, as part of handling the
+  invitation — not by a separate event-driven Magistrala service.
 </Callout>
 
 When a user is invited to a workspace, Atom renders and sends the invitation email inline — there's no event stream, no gRPC call to a Users service, and nothing for Magistrala to deploy or configure for this to work. The old asynchronous, NATS-driven, cross-service design this page previously described does not exist anymore.

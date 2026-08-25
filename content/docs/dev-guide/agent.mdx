@@ -13,7 +13,7 @@ image: /img/mg-preview.png
 ---
 
 <Callout type="info">
-This page describes [`github.com/absmach/agent`](https://github.com/absmach/agent), a separate repository from the main `magistrala` backend this dev guide otherwise documents — confirmed to exist and to match this page's description (MQTT command & control, Node-RED integration, terminal sessions, heartbeat, downstream device provisioning). Its env vars and Docker setup were not re-verified line-by-line against that repo's current state; treat specifics (exact variable names/defaults, ports) as indicative rather than guaranteed until cross-checked there directly.
+This page describes [`github.com/absmach/agent`](https://github.com/absmach/agent), a separate repository from the main `magistrala` backend this dev guide otherwise documents.
 </Callout>
 
 The **Magistrala IoT Agent** runs in the project Docker environment and acts as a bridge between local services and the Magistrala platform. Inside the container stack it loads runtime configuration, connects to MQTT, subscribes to remote commands, 

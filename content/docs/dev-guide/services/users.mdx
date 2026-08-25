@@ -13,12 +13,11 @@ image: /img/mg-preview.png
 ---
 
 <Callout type="warn" title="This page describes a service that no longer exists standalone">
-  Confirmed via `docker-compose.yaml` and `cmd/`: there is no separate Users service (or Auth
-  service) in the current deployment. User accounts are now Atom entities of kind `human`, and
-  authentication goes through Atom directly (`magistrala-cli login`) rather than a per-domain
-  Users API. See [Architecture § Core Concepts](/dev-guide/architecture#core-concepts) for the
-  current model. The content below documents the pre-Atom architecture and is kept for historical
-  reference only — it does not describe how to manage users today.
+  There is no separate Users service (or Auth service) in the current deployment. User accounts
+  are now Atom entities of kind `human`, and authentication goes through Atom directly
+  (`magistrala-cli login`) — see [Architecture § Core Concepts](/dev-guide/architecture#core-concepts)
+  for the current model. The content below documents the pre-Atom architecture and is kept for
+  historical reference only.
 </Callout>
 
 The **Users service** provides an HTTP API for managing user accounts on the Magistrala platform. It handles registration, login, profile updates, password reset, email verification, and account lifecycle (enable/disable/delete). It communicates with the Auth service over gRPC for token issuance and validation.

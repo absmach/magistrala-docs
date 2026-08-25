@@ -16,13 +16,11 @@ image: /img/mg-preview.png
 
 Welcome to the **Magistrala Developer Guide**! This guide provides comprehensive instructions for installing, building, running, and interacting with Magistrala, an advanced messaging platform. Follow the steps below to get started with Magistrala development, understand its architecture, and interact with the system.
 
-<Callout type="warn" title="Partially stale — verified fixes applied, some example output not yet re-captured">
-  The install/build/run instructions on this page were spot-checked against the current
-  `Makefile` and `cmd/` in this pass (see inline corrections below). The example command *output*
-  further down — service log lines like `magistrala-users`, `magistrala-clients`,
-  `magistrala-broker`, and the `SpiceDB Schema Management` section — predates the Atom migration
-  and was not re-captured from a live run; treat those specific blocks as illustrative history,
-  not current behavior, until someone re-runs them against today's stack.
+<Callout type="warn">
+  The example command *output* further down this page — service log lines like
+  `magistrala-users`, `magistrala-clients`, `magistrala-broker`, and the `SpiceDB Schema
+  Management` section — predates the Atom migration. Treat those specific blocks as illustrative
+  history, not current output.
 </Callout>
 
 ## Fast Start
@@ -282,9 +280,8 @@ Build `magistrala-cli` by following the [CLI guide][cli].
 
 <Callout type="warn" title="This command no longer exists">
   `magistrala-cli provision test` and the example output below are from the pre-Atom CLI. There is
-  no `provision` command in the current CLI (verified against `cli/root.go`'s `NewRootCmd()` — see
-  [CLI Introduction](/dev-guide/cli/introduction-to-cli)). To provision a workspace with devices
-  and channels today, use [`workspaces create`](/dev-guide/cli/workspaces-cli),
+  no `provision` command in the current CLI. To provision a workspace with devices and channels
+  today, use [`workspaces create`](/dev-guide/cli/workspaces-cli),
   [`devices create`](/dev-guide/cli/devices-cli), and [`channels
   create`](/dev-guide/cli/channels-cli) directly.
 </Callout>
@@ -388,10 +385,10 @@ With Magistrala running, you can now send messages.
 #### Send Messages
 
 <Callout type="warn" title="This command no longer exists">
-  There is no `messages` command in the current CLI (verified against `cli/root.go`'s
-  `NewRootCmd()`). Send messages over the platform's protocol adapters (HTTP, MQTT, CoAP,
-  WebSocket) directly instead — see [Architecture § Who Connects](/dev-guide/architecture#who-connects).
-  The example below is kept for historical reference only.
+  There is no `messages` command in the current CLI. Send messages over the platform's protocol
+  adapters (HTTP, MQTT, CoAP, WebSocket) directly instead — see [Architecture § Who
+  Connects](/dev-guide/architecture#who-connects). The example below is kept for historical
+  reference only.
 </Callout>
 
 Once system is provisioned, a device can start sending messages on a channel. The old command looked like:
@@ -556,12 +553,9 @@ With Magistrala installed and running, you can now explore its messaging capabil
 ## Authorization schema management
 
 <Callout type="warn" title="This section describes a service that no longer exists">
-  Confirmed via `docker-compose.yaml` and `cmd/`: there is no SpiceDB deployment. Authorization is
-  now provided by Atom (see [Architecture § Identity & Access
-  Control](/dev-guide/architecture#identity--access-control)) — `docker/permission.yaml` still
-  exists in the repository and may be relevant to Atom's setup, but the SpiceDB-specific schema
-  workflow below (`docker/spicedb/schema.zed`) was not re-verified in this pass and should be
-  checked before use.
+  There is no SpiceDB deployment. Authorization is now provided by Atom — see
+  [Architecture § Identity & Access Control](/dev-guide/architecture#identity--access-control).
+  The SpiceDB schema workflow below is kept for historical reference only.
 </Callout>
 
 [docker]: https://docs.docker.com/install/

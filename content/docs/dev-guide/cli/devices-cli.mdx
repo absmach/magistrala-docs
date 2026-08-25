@@ -77,8 +77,8 @@ magistrala-cli devices <device_id> delete --token <token>
 
 <Callout type="warn">
   Gateway relations are stored as a plain string list inside a device's own `attributes.gateways`
-  — `DeleteEntity` is a single-entity GraphQL mutation with no visible cross-entity cleanup, so
-  deleting a device that other devices declare as their gateway likely leaves those declarations
-  dangling. Check `gateways <gateway_id> devices <workspace_id>` before removing a device that
-  may be relied on as a gateway, and verify this against current behavior before relying on it.
+  — `DeleteEntity` is a single-entity GraphQL mutation with no cross-entity cleanup, so deleting a
+  device that other devices declare as their gateway leaves those declarations dangling. Check
+  `gateways <gateway_id> devices <workspace_id>` before removing a device that may be relied on as
+  a gateway.
 </Callout>

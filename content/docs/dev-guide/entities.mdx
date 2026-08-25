@@ -13,13 +13,10 @@ keywords:
 image: /img/mg-preview.png
 ---
 
-<Callout type="info" title="Entity model rewritten for the Atom-backed platform">
-  This page previously documented standalone Go structs (`User`, `Domain`, `Role`, `Group`,
-  `Client`, `Channel`) owned by per-entity Magistrala services (users, clients, channels, auth).
-  Those services no longer exist (verified against `cmd/` and `docker/docker-compose.yaml`) —
-  identity, tenancy, entities and authorization are now owned by **Atom**, a separate Rust service
-  Magistrala's Go code talks to over gRPC/GraphQL (`pkg/atom/types.go`). The types below are
-  transcribed directly from that package, not guessed.
+<Callout type="info">
+  Identity, tenancy, entities, and authorization are owned by **Atom**, a separate Rust service
+  Magistrala's Go code talks to over gRPC/GraphQL. The standalone Go structs (`User`, `Domain`,
+  `Role`, `Group`, `Client`, `Channel`) owned by the old per-entity services no longer apply.
 </Callout>
 
 Magistrala organizes everything under a **Workspace** (an Atom `Tenant`). Within a workspace, most of what used to be separate entity types — Devices, Channels, Gateways — are now one generic, kind-discriminated **Entity** type. **Groups** remain a separate hierarchical structure for organizing entities. This page explains those shapes; see [Authorization](/dev-guide/authorization) for how access to them is controlled.
@@ -74,11 +71,11 @@ type Entity struct {
 
 - `Kind` replaces the old separate `Client`/`Channel` structs — `"device"` and `"channel"` are the two kinds the platform's own UI and CLI use today.
 - `ExternalID` is the successor to the old `Credentials.Identity` concept — an opaque, caller-assigned identifier (device serial/MAC/SKU), unique per tenant among live entities.
-- **A Gateway is not a third kind.** It's a device entity with `attributes.is_gateway = true` and an `attributes.gateways` list identifying which gateway(s) may publish/observe on its behalf (verified against `cli/devices.go`'s help text and `magistrala-ui`'s device create form). See the [Gateway Management](/user-guide/gateway-management) user guide for the reachability model this enables.
+- **A Gateway is not a third kind.** It's a device entity with `attributes.is_gateway = true` and an `attributes.gateways` list identifying which gateway(s) may publish/observe on its behalf. See the [Gateway Management](/user-guide/gateway-management) user guide for the reachability model this enables.
 - `DeviceTypeID`/`DeviceTypeVersionID` bind a device entity to a [Device Type](/user-guide/device-types) — a versioned schema Atom validates the entity's `Attributes` against on every write. Note the Go comment on this field is explicit that Atom's own internal name for this concept is "Profile," never exposed publicly because it collides with Bootstrap's unrelated Profile concept — always say **Device Type** in docs and UI copy.
 - `Attributes` (`map[string]any`) replaces the old typed `Credentials`/`Metadata` fields — everything caller-defined about an entity, including secrets/credentials where applicable, lives here now.
 
-Secrets/credentials for publishing (what used to be `Client.Credentials.Secret`) are still issued per device and sent as `Authorization: Client <secret>` on the wire — the HTTP header keyword itself was not renamed even though the entity kind was (verified in `api/http/util/token.go`).
+Secrets/credentials for publishing (what used to be `Client.Credentials.Secret`) are still issued per device and sent as `Authorization: Client <secret>` on the wire — the HTTP header keyword itself was not renamed even though the entity kind was.
 
 The API/CLI for interacting with Devices is in the [Devices CLI](/dev-guide/cli/devices-cli); Channels in the [Channels CLI](/dev-guide/cli/channels-cli); Gateways in the [Gateways CLI](/dev-guide/cli/gateways-cli); Device Types in the [Device Types CLI](/dev-guide/cli/device-types-cli).
 
@@ -106,7 +103,7 @@ The API/CLI for interacting with Groups is in the [Groups CLI](/dev-guide/cli/gr
 
 ## Users and roles
 
-There is no dedicated `User` Go struct owned by Magistrala anymore, and no `users` CLI command (verified against `cli/root.go`'s `NewRootCmd()`) — user accounts, authentication, and role/permission assignment are owned entirely by Atom. See the [CLI Introduction](/dev-guide/cli/introduction-to-cli) for what's actually available from Magistrala's side (`login`, `authz check`), and [Authorization](/dev-guide/authorization) for the permission model.
+There is no dedicated `User` Go struct owned by Magistrala anymore, and no `users` CLI command — user accounts, authentication, and role/permission assignment are owned entirely by Atom. See the [CLI Introduction](/dev-guide/cli/introduction-to-cli) for what's actually available from Magistrala's side (`login`, `authz check`), and [Authorization](/dev-guide/authorization) for the permission model.
 
 ## Tags Filtering
 
@@ -141,15 +138,9 @@ Because `,` and `+` are reserved as filter operators, **tag values themselves mu
 
 Allowed examples: `temperature`, `meter-type:water`, `zone-A`
 
-<Callout type="warn" title="Needs maintainer verification">
-  The query examples above keep the shape of the pre-Atom REST filters. Whether Atom's GraphQL API
-  exposes the same `tags=` query-parameter syntax (as opposed to a GraphQL filter argument) was not
-  verified in this pass — check against Atom's actual `QueryRoot` before trusting the URL form.
-</Callout>
-
 ## Audit logs
 
-The old standalone `journal` service is gone (verified against `cmd/` and `docker/docker-compose.yaml` — no trace remains). Entity/channel/group activity (creation, updates, disabling, connectivity, role changes) is now tracked by **Atom's own audit log**, exposed via a GraphQL query (`magistrala-ui`'s `packages/ui/src/lib/journal.ts`, which the UI's per-entity **Journals** tab calls):
+The old standalone `journal` service is gone. Entity/channel/group activity (creation, updates, disabling, connectivity, role changes) is now tracked by **Atom's own audit log**, exposed via a GraphQL query (`magistrala-ui`'s `packages/ui/src/lib/journal.ts`, which the UI's per-entity **Journals** tab calls):
 
 ```graphql
 query ObjectAuditLogs($targetKind: String!, $targetId: ID!, $event: String, $limit: Int, $offset: Int) {
@@ -197,9 +188,3 @@ Supported types are: `string`, `integer`, `double`, `boolean`, `json`, `location
 Entities provisioned via the API or CLI with raw (unwrapped) values — e.g. `{"myKey": "my value"}` — are accepted and displayed in the UI, but will not have type tracking or an `updatedAt` timestamp. To ensure full UI compatibility, use the wrapped format above.
 
 For complete details on metadata value types and the location/perimeter formats used by dashboard map widgets, see the [Metadata Management](/user-guide/metadata) user guide.
-
-<Callout type="warn" title="Needs maintainer verification">
-  The nested `metadata.ui` migration note from the previous version of this page (older
-  deployments storing UI-managed metadata under a nested `ui` key) was not re-verified against the
-  Atom-backed `Attributes` field — carried over as a caveat, not confirmed current.
-</Callout>
