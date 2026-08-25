@@ -9,6 +9,14 @@
   },
   "routes": [
     {
+      // Bare path, no trailing slash -- "/*" alone does not match this exact
+      // string (it requires the literal "/" the wildcard attaches to), so
+      // without this it falls through to main's broader /docs/magistrala/*
+      // route and 404s there instead of hitting this Worker at all.
+      "pattern": "absmach.eu/docs/magistrala/v0-51-0",
+      "zone_name": "absmach.eu"
+    },
+    {
       "pattern": "absmach.eu/docs/magistrala/v0-51-0/*",
       "zone_name": "absmach.eu"
     }
