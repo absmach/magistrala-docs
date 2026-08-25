@@ -358,3 +358,40 @@ CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .t
 Note `CLOUDFLARE_ACCOUNT_ID` is required explicitly — without it `publish-image` fails with a 401 despite a valid, correctly-scoped `CLOUDFLARE_API_TOKEN`, root-caused to an ambiguous account-resolution conflict between this machine's wrangler OAuth session and a custom API token when no account ID is pinned.
 
 **UI finding**: the workspace role permission-scope selector's dropdown still literally lists "All clients" (not "All devices") as an option — same UI label lag already documented elsewhere for other Client→Device surfaces, now confirmed for this scope selector too.
+
+---
+
+# Pass 4 — Reviewer-requested retake: 3 workspace images (`docs/latest-workspaces`)
+
+**Why this pass exists**: a PR reviewer on the live preview for `docs/latest-workspaces` asked for the 2nd–4th images on `workspace.mdx` (`workspace-dialog.png`, `created-workspace.png`, `workspace-homepage.png`) to be retaken. `workspace.mdx` had also been edited since pass 3 to remove an "Enterprise Edition" warning callout under **Alarms Overview** and to remove the entire **Usage and Limits** section that used to follow the **Overview Chart** — so `workspace-homepage.png` specifically needed to stop reflecting that now-removed section and instead frame around what the doc actually describes today: summary cards, Dashboards, Alarms Overview, Overview Chart.
+
+Fixture strategy: a fresh workspace **Field Operations** (route `field-operations`, tags `iot`/`monitoring`) was created live for the dialog/created-card shots, giving an honest "Created: Just now" moment rather than reusing a stale card. The existing **Demo Workspace** fixture (Members: 1, Devices: 3, Channels: 1, Groups: 3, dashboard **Temperature Dashboard**) was reused for the homepage shot since it already has real, populated data across every section the doc describes — a brand-new empty workspace would have shown all-zero cards and no dashboard, which is a worse illustration.
+
+| Local file | R2 destination | Status |
+|---|---|---|
+| `workspace/workspace-dialog.png` | `docs/magistrala/img/workspace/workspace-dialog.png` | uploaded, verified live (200) |
+| `workspace/created-workspace.png` | `docs/magistrala/img/workspace/created-workspace.png` | uploaded, verified live (200) |
+| `workspace/workspace-homepage.png` | `docs/magistrala/img/workspace/workspace-homepage.png` | uploaded, verified live (200) |
+
+What each image now shows:
+- **`workspace-dialog.png`** — the Create Workspace dialog fully filled out: Name (`Field Operations`), Route (`field-operations`), Tags (`iot`, `monitoring` as chips), Logo dropzone, and the collapsed **Optional** section (ID/Metadata), with the Close/Create buttons visible — no focus rings, no open dropdowns.
+- **`created-workspace.png`** — the Workspaces page grid with the new **Field Operations** card visible (Route, tags, Enabled status, "Created: Just now"), alongside the other pre-existing workspace cards.
+- **`workspace-homepage.png`** — the Demo Workspace homepage: the four summary cards (Members/Devices/Channels/Groups with Enabled/Disabled counts), the **Dashboards** section listing `Temperature Dashboard`, the **Alarms Overview** section (Total/Active/Cleared/Assigned to Me/Acknowledged by Me, all legitimately 0 — no active alarms in this fixture, no stale Enterprise Edition callout), and the **Overview** bar chart comparing Workspace Members/Devices/Channels/Groups. No Usage & Limits panel anywhere — matches the trimmed doc exactly.
+
+**Capture note**: this page's Overview bar chart animates in on mount (recharts entrance animation), which meant the DevTools `fullPage` screenshot mode reliably caught it mid-animation (bars at 0 height) even after waiting for the chart to visually settle in a normal viewport shot — full-page capture appears to force a reflow/remount that replays the animation faster than the screenshot fires. Worked around by capturing two normal 1440×900 viewport screenshots (top of page, then scrolled to the settled chart) and compositing them with Pillow, splicing only the main-content column (x ≥ 256px, past the fixed sidebar) so the independently-scrolling left nav doesn't duplicate at the seam. Final image is 1440×1277, pixel-accurate to the page's actual scrollHeight.
+
+Upload commands (already run):
+
+```bash
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/workspace/workspace-dialog.png docs/magistrala/img/workspace/workspace-dialog.png
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/workspace/created-workspace.png docs/magistrala/img/workspace/created-workspace.png
+CLOUDFLARE_ACCOUNT_ID=058225ae7b31fdf8131858ff8b8fd924 pnpm run publish-image .tmp/docs-screenshots/latest/workspace/workspace-homepage.png docs/magistrala/img/workspace/workspace-homepage.png
+```
+
+Verification (all returned 200):
+
+```bash
+curl -s -o /dev/null -w "%{http_code}" https://absmach.eu/docs/magistrala/img/workspace/workspace-dialog.png
+curl -s -o /dev/null -w "%{http_code}" https://absmach.eu/docs/magistrala/img/workspace/created-workspace.png
+curl -s -o /dev/null -w "%{http_code}" https://absmach.eu/docs/magistrala/img/workspace/workspace-homepage.png
+```
