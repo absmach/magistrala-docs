@@ -395,3 +395,47 @@ curl -s -o /dev/null -w "%{http_code}" https://absmach.eu/docs/magistrala/img/wo
 curl -s -o /dev/null -w "%{http_code}" https://absmach.eu/docs/magistrala/img/workspace/created-workspace.png
 curl -s -o /dev/null -w "%{http_code}" https://absmach.eu/docs/magistrala/img/workspace/workspace-homepage.png
 ```
+
+---
+
+# Pass 5 — Device Types resolved: image embeds added + 8 screenshots (`docs/latest-device-types`)
+
+**Why this pass exists**: the pass-1 "Not captured — Device Types" note above left an open decision — the `.mdx` source had zero image embeds, so there was nowhere to put screenshots. Resolved by adding embeds to `introduction.mdx` and `capabilities.mdx` directly (mirroring `devices.mdx`'s pattern: image immediately after the instruction it illustrates), then shooting all 8 against the live UI (`workspace/272c2daa-0a0d-4357-bbde-4ef45d69b5c2/device-types`, fixtures: existing default catalogue `Water Meter`/`Energy Meter`/`Pressure Sensor`/`Pump Controller`, plus the existing `Water Meter` **device** — distinct entity, same name — used for the bind flow).
+
+**Doc corrections found while verifying, not guessed**: the New Version editor's device-attribute fields are actually **Name** (identifier, e.g. `total_volume`) and a separate **Label** (optional display text) — the doc previously conflated these into a single "Label – the attribute's name" bullet, and called the type dropdown "Value type" when the UI literally labels it **Type**. Bigger finding: a version's **status** is not immutable after creation the way the doc claimed ("cannot be edited or re-statused") — confirmed live via network inspection that the Versions-tab Status select fires a real server action (`POST .../versions` with body `[deviceTypeId, versionId, "active"]`) that persists across reload. Only the version's **attributes/commands declaration** is actually immutable; status freely transitions Draft → Active → Deprecated/Disabled from that same list. Verified using a disposable throwaway type (`docs-verification-probe`, additive-only, left in place) rather than touching the shared `Water Meter`/`Energy Meter` fixtures other branches' docs also reference. Also confirmed the Device Type *entity*-level Deprecate/Reactivate button behavior the doc already described was accurate (unlike the version-status claim) — no change needed there.
+
+| Local file | R2 destination | Referenced by | Status |
+|---|---|---|---|
+| `device-types/device-types-list.png` | `docs/magistrala/img/device-types/device-types-list.png` | `introduction.mdx` | captured |
+| `device-types/device-type-create.png` | `docs/magistrala/img/device-types/device-type-create.png` | `introduction.mdx` | captured |
+| `device-types/device-type-detail.png` | `docs/magistrala/img/device-types/device-type-detail.png` | `introduction.mdx` | captured |
+| `device-types/device-type-versions-list.png` | `docs/magistrala/img/device-types/device-type-versions-list.png` | `capabilities.mdx` | captured |
+| `device-types/device-type-new-version.png` | `docs/magistrala/img/device-types/device-type-new-version.png` | `capabilities.mdx` | captured |
+| `device-types/device-type-version-commands.png` | `docs/magistrala/img/device-types/device-type-version-commands.png` | `capabilities.mdx` | captured |
+| `device-types/device-bind-dialog-filled.png` | `docs/magistrala/img/device-types/device-bind-dialog-filled.png` | `capabilities.mdx` | captured |
+| `device-types/device-bound.png` | `docs/magistrala/img/device-types/device-bound.png` | `capabilities.mdx` | captured |
+
+Two intermediate captures (`device-type-new-version.png`'s attributes view and a second scroll position for the commands section) were composited into a single decision: rather than one scrolled screenshot per dialog section, the attributes screenshot and the commands screenshot were taken as two separate, independently-scrolled states of the same New Version dialog — both kept since each documents a different `## Declaring ...` section. `device-unbound.png` and an empty-dropdown `device-bind-dialog.png` were captured but not embedded (redundant with `device-bound.png`'s before/after story once the filled dialog and bound-state shots already carry it) — left in `.tmp/` locally, not uploaded, not referenced.
+
+Publish commands (already run, from the main checkout — the worktree used for this pass doesn't carry `scripts/.env.publish-image`, which is gitignored per-checkout):
+
+```bash
+pnpm run publish-image .tmp/docs-screenshots/latest/device-types/device-types-list.png docs/magistrala/img/device-types/device-types-list.png
+pnpm run publish-image .tmp/docs-screenshots/latest/device-types/device-type-create.png docs/magistrala/img/device-types/device-type-create.png
+pnpm run publish-image .tmp/docs-screenshots/latest/device-types/device-type-detail.png docs/magistrala/img/device-types/device-type-detail.png
+pnpm run publish-image .tmp/docs-screenshots/latest/device-types/device-type-versions-list.png docs/magistrala/img/device-types/device-type-versions-list.png
+pnpm run publish-image .tmp/docs-screenshots/latest/device-types/device-type-new-version.png docs/magistrala/img/device-types/device-type-new-version.png
+pnpm run publish-image .tmp/docs-screenshots/latest/device-types/device-type-version-commands.png docs/magistrala/img/device-types/device-type-version-commands.png
+pnpm run publish-image .tmp/docs-screenshots/latest/device-types/device-bind-dialog-filled.png docs/magistrala/img/device-types/device-bind-dialog-filled.png
+pnpm run publish-image .tmp/docs-screenshots/latest/device-types/device-bound.png docs/magistrala/img/device-types/device-bound.png
+```
+
+Verification (all returned 200):
+
+```bash
+for f in device-types-list device-type-create device-type-detail device-type-versions-list device-type-new-version device-type-version-commands device-bind-dialog-filled device-bound; do
+  curl -s -o /dev/null -w "%{http_code}  $f\n" "https://absmach.eu/docs/magistrala/img/device-types/${f}.png"
+done
+```
+
+Both editions built clean on `docs/latest-device-types` after these changes (`pnpm run build`); the generated static HTML for both `introduction/index.html` and `capabilities/index.html` was grepped to confirm all 8 `docs/magistrala/img/device-types/*.png` URLs resolve as expected. Committed `38e73b3`, pushed — updates the existing open PR #177.
