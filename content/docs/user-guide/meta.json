@@ -7,6 +7,7 @@
     "device-management",
     "gateway-management",
     "device-types",
+    "bootstrap",
     "dashboards",
     "rules-engine",
     "messaging",

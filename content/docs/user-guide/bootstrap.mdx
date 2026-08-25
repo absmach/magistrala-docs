@@ -1,0 +1,51 @@
+---
+title: Bootstrap
+description: Configure devices to auto-connect securely from the UI
+keywords:
+  - Bootstrap
+  - Device provisioning
+  - Bootstrap Profile
+  - External ID
+  - External key
+image: /img/mg-preview.png
+---
+
+## Overview
+
+Bootstrap lets a device fetch its own runtime configuration on first boot (or whenever it needs to recover), instead of having that configuration baked in or entered by hand. A device that only has bootstrap credentials — an **External ID** and **External key** — can call the Bootstrap service and receive back the configuration it needs to start talking to Magistrala.
+
+Bootstrap is separate from creating Devices and Channels directly: those are provisioned as usual through [Device Management](/user-guide/device-management), and Bootstrap stores its own enrollment record referencing them.
+
+Bootstrap appears in the sidebar under **Device Management**, alongside Devices, Gateways, and Device Types, at `/workspace/{workspaceId}/bootstraps`.
+
+## Bootstrap Profiles
+
+A **Profile** is a reusable template that says how a device's configuration should be rendered — you write it once and reuse it across every device of that type (e.g. "Raspberry Pi temperature sensor").
+
+To create one, go to **Bootstrap → Profiles** and click **Create**:
+
+- **Name** (required)
+- **Description** (optional)
+- **Template Format** — the format the rendered configuration is produced in
+- **Content Template** — the template body itself
+- **Binding Slots** — named placeholders the template needs filled in before it can render (each slot has a name, a resource type such as `client`, and whether it's required)
+
+A slot doesn't create anything by itself — it declares what a Bootstrap Config binding to this profile still needs to attach (e.g. a specific Channel for telemetry) before that device's configuration can render.
+
+## Bootstrap Configs
+
+A **Config** is the actual per-device enrollment record. To create one, go to **Bootstrap → Configs** and click **Create**:
+
+- **Name** (required)
+- **External ID** (required) — the identifier the device itself will present when it calls Bootstrap
+- **External Key** (required) — the credential the device presents alongside its External ID; Bootstrap only stores it hashed
+- **Profile** (optional) — attach a Profile if you want this device's configuration rendered from a template
+- **Client Cert / Client Key / CA Cert** (optional, legacy) — only needed for the older certificate-based bootstrap flow
+
+Once created, opening a Config shows its status and lets you bind the resources its Profile's slots ask for (a Channel for a `telemetry` slot, for example). Binding copies a snapshot of that resource into the Config, so the device's own bootstrap call never has to reach Devices or Channels directly — it renders entirely from what's already stored on the Config, its Profile, and those snapshots.
+
+## How a device bootstraps
+
+A device that only has its External ID and External key calls the Bootstrap service with those credentials. Bootstrap looks up the matching Config, renders it (using its Profile and binding snapshots, if any), and returns the rendered configuration to the device — the device now has what it needs to connect and doesn't need to be given a Client ID/secret by hand.
+
+For the full data model (Config/Profile/Binding slot/Binding snapshot) and the service-level API, see [the Bootstrap dev-guide page](/dev-guide/services/bootstrap).

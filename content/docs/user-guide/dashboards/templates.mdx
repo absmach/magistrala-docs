@@ -7,14 +7,14 @@ keywords:
   - Tag-based Dashboards
   - IoT Customer Portal
   - Multi-user Dashboards
-  - Domain Admin
+  - Workspace Admin
   - Abstract Data Sources
 image: /img/mg-preview.png
 ---
 
 ### What are Templates?
 
-Templates are dashboards with **abstract data sources**. Instead of binding each widget to a specific channel or client, you configure widgets using **tags**. When a domain member views a shared template, the system resolves each tag to the entity assigned to that user — so the same template layout serves multiple users, each seeing their own data.
+Templates are dashboards with **abstract data sources**. Instead of binding each widget to a specific channel or client, you configure widgets using **tags**. When a workspace member views a shared template, the system resolves each tag to the entity assigned to that user — so the same template layout serves multiple users, each seeing their own data.
 
 
 This makes templates ideal for any scenario where many users need an identical dashboard layout but with data from their own assigned devices.
@@ -23,7 +23,7 @@ This makes templates ideal for any scenario where many users need an identical d
 
 #### Customer Portals
 
-Enterprise customers often need a self-service view of their own equipment and data. With templates, a domain admin creates a single dashboard layout once. Each customer is then assigned the entities (clients, channels) tagged appropriately, and when they log in they see a fully populated dashboard with their data — without any additional setup.
+Enterprise customers often need a self-service view of their own equipment and data. With templates, a workspace admin creates a single dashboard layout once. Each customer is then assigned the entities (clients, channels) tagged appropriately, and when they log in they see a fully populated dashboard with their data — without any additional setup.
 
 > Magistrala provides **custom customer portals** for enterprise users built on top of this templates feature. Contact us to learn more.
 
@@ -40,27 +40,27 @@ For deployments across multiple floors, buildings, or geographic zones, you can 
 
 ### How Tag Resolution Works
 
-When a domain member opens a shared template, the system resolves data sources for each widget as follows:
+When a workspace member opens a shared template, the system resolves data sources for each widget as follows:
 
 1. The widget is configured with a **tag** (e.g., `temperature-sensor`).
 2. The system looks up entities (clients, channels) assigned to the viewing user that carry that tag.
 3. The matching entity is used as the data source for that widget.
 
-> **Important:** Each user should have **at most one entity of a given type** with a particular tag. If multiple entities match, the system uses the **first entity** returned in the list. The domain admin is responsible for ensuring tags are applied correctly and unambiguously.
+> **Important:** Each user should have **at most one entity of a given type** with a particular tag. If multiple entities match, the system uses the **first entity** returned in the list. The workspace admin is responsible for ensuring tags are applied correctly and unambiguously.
 
 ### Prerequisites
 
-Before sharing a template, the domain admin must ensure:
+Before sharing a template, the workspace admin must ensure:
 
-- The relevant entities (clients, channels) have the correct tags applied.
-- Those entities are **assigned to the appropriate users** in the domain.
+- The relevant entities (devices, channels) have the correct tags applied.
+- Those entities are **assigned to the appropriate users** in the workspace.
 - Each user has **only one entity per type** with any given tag used in the template.
 
-> See the [Members Guide](/user-guide/domain-management/domain#domain-members) for instructions on assigning entities to users.
+> See the [Members Guide](/user-guide/workspace-management/workspace#workspace-members) for instructions on assigning entities to users.
 
 ### Creating a Template
 
-Only **domain admins** can create templates.
+Only **workspace admins** can create templates.
 
 Navigate to the **Dashboards** tab and click `+ Create`. In the create dialog, use the **type switch** at the top to select **Template** instead of Dashboard.
 
@@ -92,10 +92,10 @@ The tag you enter must match a tag on the entity assigned to each user who will 
 
 ### Sharing a Template
 
-A template must be shared with domain members for them to see it when they view the domain. The same share options available for dashboards apply to templates:
+A template must be shared with workspace members for them to see it when they view the workspace. The same share options available for dashboards apply to templates:
 
 - **None** — visible only to you (the admin who created it)
-- **Domain Members** — all domain members can view the template with their own data
+- **Workspace Members** — all workspace members can view the template with their own data
 - **Selected Users** — only the users you choose can view the template
 
 To update the share state, click the `Share` icon on the template card and select the desired option.
