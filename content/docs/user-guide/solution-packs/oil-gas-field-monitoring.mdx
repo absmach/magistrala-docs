@@ -18,13 +18,13 @@ The pack monitors a wellhead production site from field sensors through to the d
 
 Readings from seven field devices (wellhead gateway, flow meter, wellhead pressure sensor, gas detector, oil storage tank sensor, separator controller, and transfer pump controller) arrive in the Raw Telemetry Channel. A data processing rule validates each record before passing clean data to the Processed Data Channel. Five detection rules run continuously from there: catching high wellhead and casing pressure, H2S and LEL gas hazards, low oil flow, rising water cut, and tank overfill events. When thresholds are crossed, alarms fire immediately and email notifications go to configured recipients. A Commands Channel carries pump and separator control commands sent from the dashboards.
 
-Three pre-built dashboards serve domain admins: a Field Operations KPI Dashboard for the top-level view, a Real-Time Well Monitoring Dashboard for on-shift situational awareness, and an Alarm Monitoring Dashboard for triage. Two templates, Well Operator and Field Manager Summary, use tag-based device references so the same definition scales to multiple wells without configuration changes.
+Three pre-built dashboards serve workspace admins: a Field Operations KPI Dashboard for the top-level view, a Real-Time Well Monitoring Dashboard for on-shift situational awareness, and an Alarm Monitoring Dashboard for triage. Two templates, Well Operator and Field Manager Summary, use tag-based device references so the same definition scales to multiple wells without configuration changes.
 
 ## Key Features
 
-**End-to-end wellhead telemetry pipeline.** The pack provisions seven device clients, four channels (Raw Telemetry, Processed Data, Alerts, Commands), and four groups for access control (Wellhead Equipment, Storage & Transfer, Process Equipment, Field Infrastructure). Every SenML record arriving in the Raw Telemetry Channel is processed immediately by detection rules, so alarm latency equals the device's publish interval.
+**End-to-end wellhead telemetry pipeline.** The pack provisions seven devices, four channels (Raw Telemetry, Processed Data, Alerts, Commands), and four groups for access control (Wellhead Equipment, Storage & Transfer, Process Equipment, Field Infrastructure). Every SenML record arriving in the Raw Telemetry Channel is processed immediately by detection rules, so alarm latency equals the device's publish interval.
 
-![Provisioned device clients](/screenshots/solutions/oil-and-gas-monitoring/solution-clients.png)
+![Provisioned devices](/screenshots/solutions/oil-and-gas-monitoring/solution-clients.png)
 
 ![Provisioned channels](/screenshots/solutions/oil-and-gas-monitoring/solution-channels.png)
 
@@ -40,7 +40,7 @@ Three pre-built dashboards serve domain admins: a Field Operations KPI Dashboard
 
 **Device health monitoring.** The Device Health Monitor evaluates the timestamp of incoming records hourly. Any device whose last message is more than 600 seconds (10 minutes) behind server time raises a Warning alarm, flagging connectivity or hardware failures before they create gaps in regulatory records. For safety-critical devices such as the gas detector and pressure sensor, the alarm description recommends dispatching a field inspection.
 
-**Role-differentiated dashboards and templates.** Three dashboards serve domain admins. Two templates use tag-based device references (`device:flow-meter`, `device:pressure-sensor`, `device:gas-detector`, `device:tank-sensor`) so a single definition applies to any wellhead when assigned to a group containing devices with those tags.
+**Role-differentiated dashboards and templates.** Three dashboards serve workspace admins. Two templates use tag-based device references (`device:flow-meter`, `device:pressure-sensor`, `device:gas-detector`, `device:tank-sensor`) so a single definition applies to any wellhead when assigned to a group containing devices with those tags.
 
 ![Provisioned dashboards](/screenshots/solutions/oil-and-gas-monitoring/solution-dashboards.png)
 
@@ -56,7 +56,7 @@ Three pre-built dashboards serve domain admins: a Field Operations KPI Dashboard
 
 Before deploying the solution pack, confirm the following:
 
-- A Magistrala domain is provisioned and you have administrator credentials.
+- A Magistrala workspace is provisioned and you have administrator credentials.
 - At least one compatible field device is available: a flow meter reporting flow rate and gas flow, a wellhead pressure transducer, a fixed-head gas detection unit for H2S and LEL, a tank level transmitter, a separator controller, or a pump controller with pump status output.
 - Your device or gateway supports MQTT, HTTP, CoAP, or WebSocket and can publish JSON-encoded SenML payloads.
 - If you plan to use the Data Archival rule, a PostgreSQL instance is reachable from the Magistrala deployment and the connection string is available.
@@ -66,7 +66,7 @@ Before deploying the solution pack, confirm the following:
 
 **Step 1 — Provision credentials from the platform.**
 
-After deploying the solution pack, navigate to your domain's Clients section. Each device (Flow Meter, Wellhead Pressure Sensor, Gas Detector, etc.) has its own `client_id` and `client_secret`. Note the channel ID of the Raw Telemetry Channel from the Channels section.
+After deploying the solution pack, navigate to your workspace's Devices section. Each device (Flow Meter, Wellhead Pressure Sensor, Gas Detector, etc.) has its own `client_id` and `client_secret`. Note the channel ID of the Raw Telemetry Channel from the Channels section.
 
 **Step 2 — Configure your device or gateway.**
 
@@ -80,7 +80,7 @@ Set these connection parameters on the device or its gateway:
 | Username  | `<client_id>`                      |
 | Password  | `<client_secret>`                  |
 
-Use TLS (port 8883) in production. Plain MQTT is suitable for local development only. In a typical wellhead deployment, all sensors publish through the Wellhead Gateway using the gateway's credentials; each sensor type can also be given its own client credentials for per-device access control.
+Use TLS (port 8883) in production. Plain MQTT is suitable for local development only. In a typical wellhead deployment, all sensors publish through the Wellhead Gateway using the gateway's credentials; each sensor type can also be given its own device credentials for per-device access control.
 
 **Step 3 — Publish your first SenML payload.**
 
@@ -133,7 +133,7 @@ The KPI Dashboard gives field supervisors and production engineers a snapshot of
 
 **H2S Concentration** is a value card showing the most recent `h2s_concentration` reading in ppm, giving at-a-glance confirmation that gas levels are within safe limits.
 
-**Pump Control** is a switch widget that lets operators toggle the transfer pump on or off from the dashboard. It sends commands to the Transfer Pump Controller client on the Commands Channel.
+**Pump Control** is a switch widget that lets operators toggle the transfer pump on or off from the dashboard. It sends commands to the Transfer Pump Controller device on the Commands Channel.
 
 ![Field Operations KPI Dashboard](/screenshots/solutions/oil-and-gas-monitoring/field-operations-dashboard.png)
 
@@ -356,7 +356,7 @@ The Device Health Monitor compares the SenML `bt` field against server time. If 
 
 **The Well Operator or Field Manager template shows no data.**
 
-Tag-based templates require the assigned group to contain devices with the correct tags. Check that each device client has the expected tag: `device:flow-meter`, `device:pressure-sensor`, `device:gas-detector`, `device:tank-sensor`. Tags are case-sensitive. Navigate to the Clients section, open each device, and verify the tags match exactly.
+Tag-based templates require the assigned group to contain devices with the correct tags. Check that each device has the expected tag: `device:flow-meter`, `device:pressure-sensor`, `device:gas-detector`, `device:tank-sensor`. Tags are case-sensitive. Navigate to the Devices section, open each device, and verify the tags match exactly.
 
 **Low Oil Flow alarms fire when production is normal.**
 
@@ -374,7 +374,7 @@ Open the High Pressure Alert rule in the Rules page and edit the threshold const
 
 **Can the pack handle multiple wells or field sites?**
 
-Yes. Each field site is a Magistrala domain with its own device clients, channels, rules, and groups. The Well Operator and Field Manager Summary templates use tag-based device references, so deploying a new well means provisioning its clients and assigning a group, not duplicating template definitions. A central operations view can aggregate alarm counts across all sites while individual site data stays isolated.
+Yes. Each field site is a Magistrala workspace with its own devices, channels, rules, and groups. The Well Operator and Field Manager Summary templates use tag-based device references, so deploying a new well means provisioning its devices and assigning a group, not duplicating template definitions. A central operations view can aggregate alarm counts across all sites while individual site data stays isolated.
 
 **How are H2S safety alarms escalated if no one acknowledges them?**
 
@@ -382,4 +382,4 @@ The Gas Leak Detection rule sends email notifications to configured recipients t
 
 **Do all sensors need to connect through the Wellhead Gateway, or can they connect directly?**
 
-Either approach works. Each device type has its own client credentials, so sensors with MQTT capability can connect directly. In most field deployments, all sensors route through the Wellhead Gateway: a single TLS connection handles the entire wellsite stream and the gateway can buffer readings during brief connectivity outages. Both approaches deliver identical telemetry to the Raw Telemetry Channel.
+Either approach works. Each device type has its own device credentials, so sensors with MQTT capability can connect directly. In most field deployments, all sensors route through the Wellhead Gateway: a single TLS connection handles the entire wellsite stream and the gateway can buffer readings during brief connectivity outages. Both approaches deliver identical telemetry to the Raw Telemetry Channel.
