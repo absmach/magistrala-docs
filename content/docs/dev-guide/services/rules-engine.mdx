@@ -66,6 +66,24 @@ The Magistrala Rules Engine is designed for **real-time** and **scheduled messag
 
 > **Note:** Access to each operation is governed by domain-level roles. Refer to the [Roles Schema](/dev-guide/roles-schema#rules) for details on which permissions are required.
 
+### Broker Acknowledgment and Delivery
+
+Rules Engine acknowledgment timing is configurable independently of rule execution success. This lets operators favor asynchronous consumption or wait for rule completion without necessarily retrying poison messages.
+
+| Variable                       | Values            | Default  | Description                                                                                                                   |
+| ------------------------------ | ----------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `MG_RE_ACK_MODE`               | `before`, `after` | `before` | Selects whether the broker can acknowledge before execution or must wait for every matched rule.                              |
+| `MG_RE_ACK_ON_EXECUTION_ERROR` | `true`, `false`   | `true`   | In `after` mode, acknowledges execution errors when `true`; NACKs them for redelivery when `false`. Ignored in `before` mode. |
+
+With `MG_RE_ACK_MODE=before`, the service validates the message, selects matching enabled rules, dispatches their executions concurrently, and returns to the broker without waiting for scripts or outputs. Script and output failures are logged but cannot trigger redelivery. This is the default and keeps slow rules or external outputs off the consumer callback's critical path.
+
+With `MG_RE_ACK_MODE=after`, matching rules still execute concurrently, but the service waits for all of them before returning a broker disposition:
+
+- `MG_RE_ACK_ON_EXECUTION_ERROR=true` reports script or output failures and acknowledges the message, preventing a failing rule from clogging the stream.
+- `MG_RE_ACK_ON_EXECUTION_ERROR=false` NACKs the message when any matched rule fails and requests redelivery.
+
+Redelivery reruns every matching rule, including rules that succeeded on the previous attempt. Configure rule outputs to be idempotent before enabling NACK-on-execution-error behavior. Repository and rule-selection failures occur before execution and remain retryable in either acknowledgment mode. Any `MG_RE_ACK_MODE` value other than `before` or `after` causes Rules Engine startup to fail.
+
 ## Core Concepts
 
 Rules define the logic for processing messages. Each rule may specify:
@@ -101,15 +119,15 @@ type Rule struct {
 | Property        | Description                                       | Required       |
 | --------------- | ------------------------------------------------- | -------------- |
 | `id`            | Unique identifier for the rule.                   | Auto-generated |
-| `name`          | Descriptive name of the rule.                     | ✅             |
-| `domain`        | Domain ID associated with the rule.               | ✅             |
+| `name`          | Descriptive name of the rule.                     | ✅              |
+| `domain`        | Domain ID associated with the rule.               | ✅              |
 | `tags`          | Optional list of tags for categorization          | Optional       |
-| `input_channel` | Channel to listen for incoming messages           | ✅             |
+| `input_channel` | Channel to listen for incoming messages           | ✅              |
 | `input_topic`   | Topic within the input channel.                   | Optional       |
-| `logic`         | Script (Lua or Go) defining message processing.   | ✅             |
-| `outputs`       | List of outputs to send results to.               | ✅             |
+| `logic`         | Script (Lua or Go) defining message processing.   | ✅              |
+| `outputs`       | List of outputs to send results to.               | ✅              |
 | `schedule`      | Scheduling configuration                          | Optional       |
-| `status`        | Rule state (`enabled` or `disabled` or `deleted`) | ✅             |
+| `status`        | Rule state (`enabled` or `disabled` or `deleted`) | ✅              |
 | `created_at`    | Timestamp when the rule was created.              | Auto-generated |
 | `updated_at`    | Timestamp when the rule was last updated.         | Auto-generated |
 | `metadata`      | Additional rule metadata                          | Optional       |
