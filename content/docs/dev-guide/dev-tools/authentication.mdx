@@ -190,7 +190,7 @@ In most of the cases, HTTPS, WSS, MQTTS or secure CoAP are secure enough. Howeve
 AUTH=x509 docker-compose -f docker/docker-compose.yml up -d
 ```
 
-Mutual authentication includes client-side certificates. Certificates can be generated using the simple script provided in the [SSL Makefile][ssl-makefile]. In order to create a valid certificate, you need to create Magistrala client using the process described in the [provisioning section][provision]. After that, you need to fetch created client secret. Client secret will be used to create x.509 certificate for the corresponding client. To create a certificate, execute the following commands:
+Mutual authentication includes client-side certificates. Certificates can be generated using the simple script provided in the [SSL Makefile][ssl-makefile]. In order to create a valid certificate, you need to create Magistrala client using the process described in the provisioning section. After that, you need to fetch created client secret. Client secret will be used to create x.509 certificate for the corresponding client. To create a certificate, execute the following commands:
 
 ```bash
 cd docker/ssl
@@ -308,7 +308,6 @@ mosquitto_sub -I <client_name> -u <client_id> -P <client_secret> --cafile docker
 [messaging]: /dev-guide/dev-tools/messaging
 [rf5280]: https://tools.ietf.org/html/rfc5280
 [ssl-makefile]: https://github.com/absmach/magistrala/blob/main/docker/ssl/Makefile
-[provision]: /dev-guide/services/provision
 [openssl]: https://www.openssl.org/
 [vault]: https://www.vaultproject.io/
 [oidc]: https://openid.net/connect/

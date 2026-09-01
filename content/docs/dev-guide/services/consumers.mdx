@@ -18,8 +18,7 @@ image: /img/mg-preview.png
   `cmd/timescale-writer` and `cmd/postgres-writer`. The **Writers** section below is current. The
   **Notifiers** section (SMTP/SMPP) is not: `consumers/notifiers/*` still exists as source but
   nothing wires it up to a running service. The current mechanism for the one notification
-  Magistrala still sends (workspace-invitation emails) is Atom, not this package — see
-  [Notifications](/dev-guide/services/notifications).
+  Magistrala still sends (workspace-invitation emails) is Atom, not this package.
 </Callout>
 
 The **Consumers Service** in Magistrala handles the processing, storage, and notification of messages received from various channels. It is divided into two primary groups:

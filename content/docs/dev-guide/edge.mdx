@@ -42,7 +42,7 @@ Agent can be used to control deployed services as well as to monitor their livel
 
 ## Agent
 
-Agent is service that is used to manage gateways that are connected to Magistrala in cloud. It provides a way to send commands to gateway and receive response via mqtt. There are two types of channels used for **Agent** `data` and `control`. Over the `control` we are sending commands and receiving response from commands. Data collected from sensors connected to gateway are being sent over `data` channel. Agent is able to configure itself provided that [bootstrap server][bootstrap] is running, it will retrieve configuration from bootstrap server provided few arguments - `external_id` and `external_key` see [bootstraping][bootstraping].
+Agent is service that is used to manage gateways that are connected to Magistrala in cloud. It provides a way to send commands to gateway and receive response via mqtt. There are two types of channels used for **Agent** `data` and `control`. Over the `control` we are sending commands and receiving response from commands. Data collected from sensors connected to gateway are being sent over `data` channel. Agent is able to configure itself provided that bootstrap server is running, it will retrieve configuration from bootstrap server provided few arguments - `external_id` and `external_key` see bootstrapping.
 
 Agent service has following features:
 
@@ -54,9 +54,9 @@ Agent service has following features:
 
 ### Run Agent
 
-Before running agent we need to provision a client and DATA and CONTROL channel. Client that will be used as gateway representation and make bootstrap configuration. If using Magistrala UI this is done automatically when adding gateway through UI. Gateway can be provisioned with [`provision`][provision] service.
+Before running agent we need to provision a client and DATA and CONTROL channel. Client that will be used as gateway representation and make bootstrap configuration. If using Magistrala UI this is done automatically when adding gateway through UI. Gateway can be provisioned with `provision` service.
 
-When you provisioned gateway as described in [provision][provision] you can check results
+When you provisioned gateway as described in provision you can check results
 
 ```bash
 curl -s -S -X GET http://magistrala-domain.com:9013/clients/bootstrap/<external_id> -H "Authorization: Client <external_key>" -H 'Content-Type: application/json' |jq
@@ -387,7 +387,7 @@ payload := base64.StdEncoding.EncodeToString(b)
 
 ### Using configure script
 
-There is a `configuration.sh` script in a `scripts` directory that can be used for automatic configuration and start up of remotely deployed `export`. For this to work it is presumed that `magistrala-export` and `scripts/export_start` are placed in executable path on remote device. Additionally this script requires that remote device is provisioned following the steps described for [provision][provision] service.
+There is a `configuration.sh` script in a `scripts` directory that can be used for automatic configuration and start up of remotely deployed `export`. For this to work it is presumed that `magistrala-export` and `scripts/export_start` are placed in executable path on remote device. Additionally this script requires that remote device is provisioned following the steps described for provision service.
 
 To run it first edit script to set parameters
 
@@ -406,7 +406,7 @@ MAGISTRALA_USER_PASSWORD='12345678'
 
 ### Edge deployment
 
-The following are steps that are an example usage of Magistrala components to connect edge with cloud. We will start Magistrala in the cloud with additional services [Bootstrap][bootstrap] and [Provision][provision]. Using [Bootstrap][bootstrap] and [Provision][provision] we will create a configuration for use in gateway deployment. On the gateway we will start services [Agent][agent] and [Export][export] using previously created configuration.
+The following are steps that are an example usage of Magistrala components to connect edge with cloud. We will start Magistrala in the cloud with additional services Bootstrap and Provision. Using Bootstrap and Provision we will create a configuration for use in gateway deployment. On the gateway we will start services [Agent][agent] and [Export][export] using previously created configuration.
 
 ## Services in the cloud
 
@@ -583,9 +583,6 @@ magistrala-mqtt   | {"level":"info","message":"Publish - client ID export-88529f
 [agent]: /dev-guide/edge#agent
 [export]: /dev-guide/edge#export
 [magistrala]: /dev-guide/architecture
-[bootstrap]: /dev-guide/services/bootstrap
-[bootstraping]: /dev-guide/services/bootstrap#bootstrapping
-[provision]: /dev-guide/services/provision
 [edgex-repo]: https://github.com/edgexfoundry/edgex-go
 [conftoml]: https://github.com/absmach/export/blob/master/configs/config.toml
 [docker-compose]: https://github.com/absmach/magistrala/blob/main/docker/docker-compose.yaml
