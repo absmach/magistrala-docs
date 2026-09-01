@@ -20,7 +20,7 @@ The table can be filtered by first name, last name, username, email, ID, tag, an
 
 ## Create a user
 
-Click **+ Create** to open the create-user form. **Bulk Create** is also available for creating multiple users at once from a CSV file.
+Click **+ Create** to open the create-user form.
 
 |Property |Description| Required |
 |-----------------|------------------------------------------|----------|
@@ -34,13 +34,53 @@ Click **+ Create** to open the create-user form. **Bulk Create** is also availab
 
 ![Create User](../../img/platform-management/create-user.png)
 
+## Bulk create users
+
+Click **Bulk Create** to create multiple users at once from a CSV file. A [sample CSV](https://github.com/absmach/magistrala-ui/blob/main/samples/users.csv) is linked directly in the dialog.
+
+The CSV must have these column headers:
+
+|Header |Description|
+|-----------------|------------------------------------------|
+|Username |Login username| 
+|FirstName |First name|
+|LastName |Last name|
+|Email |Email address|
+|Secret |Initial password|
+|Tags |JSON array, e.g. `["a","b"]` — can be empty|
+|Metadata |JSON object — can be empty|
+
+![Bulk Create Users](../../img/platform-management/bulk-create-users.png)
+
+Each row is created individually and reported back on its own: a row with an invalid email, a missing required field, or malformed JSON in Tags/Metadata is skipped with an error naming that row number, while every valid row is still created. You'll see a per-row success or failure toast, plus a final summary once the whole file has been processed.
+
 ## Manage a user
 
-Click a row to open a user's detail page. From there, an administrator can:
-
-- Update the user's first name and last name
-- Update the username
-- Update the email address
-- Toggle the user's platform role between **admin** and **user**
+Click a row to open a user's detail page.
 
 ![User Detail](../../img/platform-management/user-detail.png)
+
+### Details tab
+
+|Field |Description|
+|-----------------|------------------------------------------|
+|Name |First and last name — editable inline|
+|Username |Editable inline|
+|ID |Read-only|
+|Email |Editable inline|
+|Tags |Editable via a dialog|
+|Metadata |Shown read-only here as a summary; edit it from the **Metadata** tab|
+|Role |Toggle between platform **admin** and regular **user** via a confirmation dialog|
+|Status |Toggle between **enabled** and **disabled** via the switch next to the status badge|
+
+### Metadata tab
+
+A full key/value editor for the user's metadata — add, edit, or remove entries directly, independent of the Details tab's read-only summary.
+
+![User Metadata Tab](../../img/platform-management/user-metadata.png)
+
+### Journals
+
+Below the tabs, every user detail page shows a **Journals** section — a paginated, filterable audit log of actions recorded against that user (filterable by operation).
+
+![User Journals](../../img/platform-management/user-journals.png)
