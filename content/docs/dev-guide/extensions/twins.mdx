@@ -337,7 +337,7 @@ where `<optional_subtopic>` is one of the following:
 - `save.success` - on successful state save
 - `save.failure` - on state save failure.
 
-Normally, you can use the default message broker, NATS, wildcards. In order to learn more about Magistrala channel topic composition, please read about [subtopics][messaging]. The point is to be able to subscribe to all subjects or any operation pair subject - e.g. create.success/failure - by means of one connection and read all messages or all operation related messages in the context of the same subscription.
+Normally, you can use the default message broker's wildcards. In order to learn more about Magistrala channel topic composition, please read about [subtopics][messaging]. The point is to be able to subscribe to all subjects or any operation pair subject - e.g. create.success/failure - by means of one connection and read all messages or all operation related messages in the context of the same subscription.
 
 Since messages published on message broker are republished on any other protocol supported by Magistrala - HTTP, MQTT, CoAP and WS - you can use any supported protocol client to pick up notifications.
 
