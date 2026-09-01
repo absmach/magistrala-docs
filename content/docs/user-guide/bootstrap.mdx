@@ -48,3 +48,4 @@ Once created, opening a Config shows its status and lets you bind the resources 
 
 A device that only has its External ID and External key calls the Bootstrap service with those credentials. Bootstrap looks up the matching Config, renders it (using its Profile and binding snapshots, if any), and returns the rendered configuration to the device — the device now has what it needs to connect and doesn't need to be given a Client ID/secret by hand.
 
+For the full data model (Config/Profile/Binding slot/Binding snapshot) and the service-level API, see [the Bootstrap dev-guide page](/dev-guide/services/bootstrap).

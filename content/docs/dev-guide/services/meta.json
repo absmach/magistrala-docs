@@ -1,4 +1,4 @@
 {
   "title": "Services",
-  "pages": ["consumers", "readers", "alarms", "reports", "rules-engine"]
+  "pages": ["bootstrap", "consumers", "readers", "alarms", "reports", "rules-engine"]
 }
