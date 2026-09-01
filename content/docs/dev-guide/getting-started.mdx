@@ -240,6 +240,12 @@ docker-compose -f docker/docker-compose.yml -f docker/docker-compose.custom1.yml
 
 In the command above each successive file overrides the previous parameters.
 
+<Callout type="warn" title="NATS is no longer the default broker">
+  FluxMQ is now Magistrala's default message broker; NATS is only available as a build-time
+  alternative. The override mechanism shown below still applies, but this specific example
+  targets the legacy `nats` service and won't apply to a default FluxMQ setup.
+</Callout>
+
 A practical example in our case would be to enable debugging and tracing in NATS so that we can see better how are the messages moving around.
 
 `docker-compose.nats-debugging.yml`
@@ -463,6 +469,13 @@ GOOS=linux GOARCH=arm GOARM=7 make
 
 ## Message Broker
 
+<Callout type="warn" title="FluxMQ is now the default message broker">
+  This section describes the previous NATS-based local dev setup. **FluxMQ** is now Magistrala's
+  default message broker; NATS remains available only as a build-time alternative. See
+  [Architecture](/dev-guide/architecture) for the current model. The content below is kept for
+  historical reference only.
+</Callout>
+
 Magistrala uses NATS as it's default central message bus. For development purposes (when not run via Docker), it expects that NATS is installed on the local system.
 
 To do this execute:
@@ -529,7 +542,7 @@ postgres=# ALTER USER magistrala WITH LOGIN ENCRYPTED PASSWORD 'magistrala';
 
 ### Deployment Prerequisites
 
-Magistrala depends on several infrastructural services, notably the default message broker, [NATS][nats] and [PostgreSQL][postgresql] database.
+Magistrala depends on several infrastructural services, notably the default message broker, FluxMQ, and the [PostgreSQL][postgresql] database.
 
 ## Troubleshooting
 

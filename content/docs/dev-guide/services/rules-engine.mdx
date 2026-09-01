@@ -22,7 +22,7 @@ The **Rules Engine** in Magistrala provides powerful, flexible message processin
 1. **Scriptable logic** - Use Lua or Go to define message execution behavior.
 2. **Flexible execution** - Rules can be triggered from input messages, schedules or both.
 3. **Pluggable outputs** - Built-in support for alarms, channels, email, Postgres, and SenML/JSON internal-DB writers.
-4. **Secure, scoped execution** - Using domain-level isolation and bearer token authorization. See the [Roles Schema](/dev-guide/roles-schema) for details on available roles and permissions.
+4. **Secure, scoped execution** - Using workspace-level isolation and bearer token authorization. See the [Roles Schema](/dev-guide/roles-schema) for details on available roles and permissions.
 5. **Disabled rules** - Rules can be disabled individually to prevent further executions. They can also be enabled to re-start their executions.
 
 ## Architecture
@@ -64,7 +64,7 @@ The Magistrala Rules Engine is designed for **real-time** and **scheduled messag
 - _Email_ - Send notifications to configured recipients.
 - _Slack_ - Send notifications to configured slack channel.
 
-> **Note:** Access to each operation is governed by domain-level roles. Refer to the [Roles Schema](/dev-guide/roles-schema#rules) for details on which permissions are required.
+> **Note:** Access to each operation is governed by workspace-level roles. Refer to the [Roles Schema](/dev-guide/roles-schema#rules) for details on which permissions are required.
 
 ### Broker Acknowledgment and Delivery
 
@@ -100,7 +100,7 @@ Rules define the logic for processing messages. Each rule may specify:
 type Rule struct {
   ID           string            `json:"id"`
   Name         string            `json:"name"`
-  DomainID     string            `json:"domain"`
+  WorkspaceID  string            `json:"workspace"`
   Metadata     Metadata          `json:"metadata,omitempty"`
   Tags         []string          `json:"tags,omitempty"`
   InputChannel string            `json:"input_channel"`
@@ -120,7 +120,7 @@ type Rule struct {
 | --------------- | ------------------------------------------------- | -------------- |
 | `id`            | Unique identifier for the rule.                   | Auto-generated |
 | `name`          | Descriptive name of the rule.                     | ✅              |
-| `domain`        | Domain ID associated with the rule.               | ✅              |
+| `workspace`     | Workspace ID associated with the rule.            | ✅              |
 | `tags`          | Optional list of tags for categorization          | Optional       |
 | `input_channel` | Channel to listen for incoming messages           | ✅              |
 | `input_topic`   | Topic within the input channel.                   | Optional       |
@@ -437,7 +437,7 @@ MQTT topics received by Magistrala are rewritten into dot-separated strings for 
 Topic:
 
 ```bash
-m/<domain_id>/c/<channel_id>/building1/floor2/temp
+m/<workspace_id>/c/<channel_id>/building1/floor2/temp
 ```
 
 Becomes:
@@ -481,12 +481,12 @@ The Rules Engine service provides the following operations:
 
 ### Create Rule
 
-Endpoint: `POST /{domain_id}/rules`
+Endpoint: `POST /{workspaceID}/rules`
 
 **Example command:**
 
 ```bash
-curl --location 'http://localhost:9008/<your_domain_id>/rules' \
+curl --location 'http://localhost:9008/<your_workspace_id>/rules' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer <your_access_token>' \
 --data '{
@@ -515,7 +515,7 @@ curl --location 'http://localhost:9008/<your_domain_id>/rules' \
 {
   "id": "d4b5c393-70fc-4399-829c-070df5205698",
   "name": "High Temperature Alert",
-  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "workspace": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
   "input_channel": "3214f360-cebd-449b-bc3c-9020a3be403a",
   "input_topic": "temperature",
   "logic": {
@@ -539,12 +539,12 @@ curl --location 'http://localhost:9008/<your_domain_id>/rules' \
 
 ### View Rule
 
-Enpoint: `Get /{domain_id}/rules/{rule_id}`
+Enpoint: `Get /{workspaceID}/rules/{rule_id}`
 
 **Example command:**
 
 ```bash
-curl --location 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>' \
+curl --location 'http://localhost:9008/<your_workspace_id>/rules/<your_rule_id>' \
 --header 'Authorization: Bearer <your_access_token>'
 ```
 
@@ -552,7 +552,7 @@ curl --location 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>' \
 {
   "id": "d4b5c393-70fc-4399-829c-070df5205698",
   "name": "High Temperature Alert",
-  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "workspace": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
   "input_channel": "3214f360-cebd-449b-bc3c-9020a3be403a",
   "input_topic": "temperature",
   "logic": {
@@ -576,7 +576,7 @@ curl --location 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>' \
 
 ### List Rules
 
-Endpoint: `GET /{domain_id}/rules`
+Endpoint: `GET /{workspaceID}/rules`
 
 **Query Parameters:**
 
@@ -588,7 +588,7 @@ Endpoint: `GET /{domain_id}/rules`
 **Example command:**
 
 ```bash
-curl --location 'http://localhost:9008/<your_domain_id>/rules?input_channel=<your_channel_id>&status=enabled' \
+curl --location 'http://localhost:9008/<your_workspace_id>/rules?input_channel=<your_channel_id>&status=enabled' \
 --header 'Authorization: Bearer <your_access_token>'
 ```
 
@@ -601,7 +601,7 @@ curl --location 'http://localhost:9008/<your_domain_id>/rules?input_channel=<you
     {
       "id": "d4b5c393-70fc-4399-829c-070df5205698",
       "name": "High Temperature Alert",
-      "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+      "workspace": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
       "input_channel": "3214f360-cebd-449b-bc3c-9020a3be403a",
       "input_topic": "temperature",
       "logic": {
@@ -627,12 +627,12 @@ curl --location 'http://localhost:9008/<your_domain_id>/rules?input_channel=<you
 
 ### Update Rule
 
-Endpoint: `PATCH /{domain_id}/rules/{rule_id}`
+Endpoint: `PATCH /{workspaceID}/rules/{rule_id}`
 
 **Example command:**
 
 ```bash
-curl --location --request PATCH 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>' \
+curl --location --request PATCH 'http://localhost:9008/<your_workspace_id>/rules/<your_rule_id>' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer <your_access_token>' \
 --data '{
@@ -644,7 +644,7 @@ curl --location --request PATCH 'http://localhost:9008/<your_domain_id>/rules/<y
 {
   "id": "d4b5c393-70fc-4399-829c-070df5205698",
   "name": "High Temp Alert Updated",
-  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "workspace": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
   "input_channel": "",
   "input_topic": "",
   "logic": {
@@ -668,12 +668,12 @@ curl --location --request PATCH 'http://localhost:9008/<your_domain_id>/rules/<y
 
 ### Update Rule Tags
 
-Endpoint: `PATCH /{domain_id}/rules/{rule_id}/tags`
+Endpoint: `PATCH /{workspaceID}/rules/{rule_id}/tags`
 
 **Example command:**
 
 ```bash
-curl --location --request PATCH 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>/tags' \
+curl --location --request PATCH 'http://localhost:9008/<your_workspace_id>/rules/<your_rule_id>/tags' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer <your_access_token>' \
 --data '{
@@ -685,7 +685,7 @@ curl --location --request PATCH 'http://localhost:9008/<your_domain_id>/rules/<y
 {
   "id": "d4b5c393-70fc-4399-829c-070df5205698",
   "name": "High Temp Alert Updated",
-  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "workspace": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
   "tags": ["tag1", "tag2"],
   "input_channel": "",
   "input_topic": "",
@@ -710,12 +710,12 @@ curl --location --request PATCH 'http://localhost:9008/<your_domain_id>/rules/<y
 
 ### Update Rule Scheduler
 
-Endpoint: `PATCH /{domain_id}/rules/{rule_id}/schedule`
+Endpoint: `PATCH /{workspaceID}/rules/{rule_id}/schedule`
 
 **Example command:**
 
 ```bash
-curl --location --request PATCH 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>/schedule' \
+curl --location --request PATCH 'http://localhost:9008/<your_workspace_id>/rules/<your_rule_id>/schedule' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer <your_access_token>' \
 --data '{
@@ -732,7 +732,7 @@ curl --location --request PATCH 'http://localhost:9008/<your_domain_id>/rules/<y
 {
   "id": "d4b5c393-70fc-4399-829c-070df5205698",
   "name": "High Temp Alert Updated",
-  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "workspace": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
   "tags": ["tag1", "tag2"],
   "input_channel": "",
   "input_topic": "",
@@ -759,12 +759,12 @@ curl --location --request PATCH 'http://localhost:9008/<your_domain_id>/rules/<y
 
 ### Disable Rule
 
-Endpoint: `POST /{domain_id}/rules/{rule_id}/disable`
+Endpoint: `POST /{workspaceID}/rules/{rule_id}/disable`
 
 **Example Command:**
 
 ```bash
-curl --location --request POST 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>/disable' \
+curl --location --request POST 'http://localhost:9008/<your_workspace_id>/rules/<your_rule_id>/disable' \
 --header 'Authorization: Bearer <your_access_token>' \
 ```
 
@@ -772,7 +772,7 @@ curl --location --request POST 'http://localhost:9008/<your_domain_id>/rules/<yo
 {
   "id": "d4b5c393-70fc-4399-829c-070df5205698",
   "name": "High Temp Alert Updated",
-  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "workspace": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
   "tags": ["tag1", "tag2"],
   "input_channel": "",
   "input_topic": "",
@@ -809,12 +809,12 @@ curl --location --request POST 'http://localhost:9008/<your_domain_id>/rules/<yo
 
 ### Enable Rule
 
-Endpoint: `POST /{domain_id}/rules/{rule_id}/enable`
+Endpoint: `POST /{workspaceID}/rules/{rule_id}/enable`
 
-The API endpoint follows the format: `http://localhost:9008/{domain_id}/rules/{ruleID}/enable`
+The API endpoint follows the format: `http://localhost:9008/{workspaceID}/rules/{ruleID}/enable`
 
 ```bash
-curl --location --request POST 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>/enable' \
+curl --location --request POST 'http://localhost:9008/<your_workspace_id>/rules/<your_rule_id>/enable' \
 --header 'Authorization: Bearer <your_access_token>' \
 ```
 
@@ -822,7 +822,7 @@ curl --location --request POST 'http://localhost:9008/<your_domain_id>/rules/<yo
 {
   "id": "d4b5c393-70fc-4399-829c-070df5205698",
   "name": "High Temp Alert Updated",
-  "domain": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
+  "workspace": "3bf0d3e6-5383-4838-96a7-52c18da0aca0",
   "tags": ["tag1", "tag2"],
   "input_channel": "",
   "input_topic": "",
@@ -859,11 +859,11 @@ curl --location --request POST 'http://localhost:9008/<your_domain_id>/rules/<yo
 
 ### Delete Rule
 
-Endpoint: `DELETE /{domain_id}/rules/{rule_id}`
+Endpoint: `DELETE /{workspaceID}/rules/{rule_id}`
 **Example Command:**
 
 ```bash
-curl --location --request DELETE 'http://localhost:9008/<your_domain_id>/rules/<your_rule_id>' \
+curl --location --request DELETE 'http://localhost:9008/<your_workspace_id>/rules/<your_rule_id>' \
 --header 'Authorization: Bearer <your_access_token>' \
 ```
 

@@ -68,7 +68,7 @@ The provisioning script supports both local and cloud targets:
 - Local Docker target: if `MG_API` is not set, provisioning uses the local service defaults such as `http://localhost:9006`, `http://localhost:9005`, `http://localhost:9008`, `http://localhost:9013`, and the MQTT default `ssl://host.docker.internal:8883`
 - Cloud target: if `MG_API=https://cloud.magistrala.absmach.eu/api` is set, the provisioning requests are sent to Magistrala Cloud and the default MQTT target becomes `ssl://messaging.magistrala.absmach.eu:8883`
 
-This is why provisioning is the first step in the Docker workflow: the agent container expects its channel, MQTT credentials, domain information, and bootstrap data to exist before it starts.
+This is why provisioning is the first step in the Docker workflow: the agent container expects its channel, MQTT credentials, workspace information, and bootstrap data to exist before it starts.
 
 ### Startup flow
 
@@ -88,12 +88,12 @@ At startup the agent:
 
 The agent subscribes to:
 
-- `m/<domain-id>/c/<channel-id>/req` for incoming remote commands.
+- `m/<workspace_id>/c/<channel_id>/req` for incoming remote commands.
 - `heartbeat.<service-name>.<service-type>` through the local pub/sub broker for service heartbeat tracking.
 
 The agent publishes responses to:
 
-- `m/<domain-id>/c/<channel-id>/res` for command results and status messages.
+- `m/<workspace_id>/c/<channel_id>/res` for command results and status messages.
 - terminal response topics while an interactive terminal session is active.
 
 All remote MQTT commands use SenML JSON array payloads. The `n` field selects the subsystem:
@@ -282,7 +282,7 @@ curl http://localhost:9999/services
 
 ## MQTT Commands
 
-Remote control happens over MQTT using SenML payloads published to `m/<domain-id>/c/<channel-id>/req`.
+Remote control happens over MQTT using SenML payloads published to `m/<workspace_id>/c/<channel_id>/req`.
 
 ### Execute a command
 
@@ -290,7 +290,7 @@ Remote control happens over MQTT using SenML payloads published to `m/<domain-id
 mosquitto_pub \
   -h <mqtt-host> -p 8883 --capath /etc/ssl/certs \
   -u <client-id> -P <client-secret> \
-  -t "m/<domain-id>/c/<channel-id>/req" \
+  -t "m/<workspace_id>/c/<channel_id>/req" \
   -m '[{"bn":"req-1:","n":"exec","vs":"ls,-la"}]'
 ```
 
@@ -300,7 +300,7 @@ mosquitto_pub \
 mosquitto_pub \
   -h <mqtt-host> -p 8883 --capath /etc/ssl/certs \
   -u <client-id> -P <client-secret> \
-  -t "m/<domain-id>/c/<channel-id>/req" \
+  -t "m/<workspace_id>/c/<channel_id>/req" \
   -m '[{"bn":"req-1:","n":"config","vs":"view"}]'
 ```
 
@@ -313,7 +313,7 @@ mosquitto_pub \
   -h <mqtt-host> -p 8883 --capath /etc/ssl/certs \
   -I "agent-mock-device" \
   -u <client-id> -P <client-secret> \
-  -t "m/<domain-id>/c/<channel-id>/req" \
+  -t "m/<workspace_id>/c/<channel_id>/req" \
   -m "[{\"bn\":\"req-1:\",\"n\":\"nodered\",\"vs\":\"nodered-deploy,$FLOWS\"}]"
 ```
 
@@ -326,7 +326,7 @@ mosquitto_pub \
   -h <mqtt-host> -p 8883 --capath /etc/ssl/certs \
   -I "agent-mock-device" \
   -u <client-id> -P <client-secret> \
-  -t "m/<domain-id>/c/<channel-id>/req" \
+  -t "m/<workspace_id>/c/<channel_id>/req" \
   -m "[{\"bn\":\"req-1:\",\"n\":\"nodered\",\"vs\":\"nodered-add-flow,$FLOWS\"}]"
 ```
 
@@ -337,7 +337,7 @@ mosquitto_pub \
   -h <mqtt-host> -p 8883 --capath /etc/ssl/certs \
   -I "agent-mock-device" \
   -u <client-id> -P <client-secret> \
-  -t "m/<domain-id>/c/<channel-id>/req" \
+  -t "m/<workspace_id>/c/<channel_id>/req" \
   -m '[{"bn":"req-2:","n":"nodered","vs":"nodered-ping"}]'
 ```
 
@@ -348,7 +348,7 @@ mosquitto_pub \
   -h <mqtt-host> -p 8883 --capath /etc/ssl/certs \
   -I "agent-mock-device" \
   -u <client-id> -P <client-secret> \
-  -t "m/<domain-id>/c/<channel-id>/req" \
+  -t "m/<workspace_id>/c/<channel_id>/req" \
   -m '[{"bn":"req-3:","n":"nodered","vs":"nodered-state"}]'
 ```
 
@@ -359,7 +359,7 @@ mosquitto_pub \
   -h <mqtt-host> -p 8883 --capath /etc/ssl/certs \
   -I "agent-mock-device" \
   -u <client-id> -P <client-secret> \
-  -t "m/<domain-id>/c/<channel-id>/req" \
+  -t "m/<workspace_id>/c/<channel_id>/req" \
   -m '[{"bn":"req-4:","n":"nodered","vs":"nodered-flows"}]'
 ```
 

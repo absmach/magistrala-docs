@@ -38,7 +38,7 @@ type ReportConfig struct {
     ID          string
     Name        string
     Description string
-    DomainID    string
+    WorkspaceID string
     Config      *MetricConfig
     Metrics     []Metric      
     Email       *EmailSetting        // Email Notification settings 
@@ -57,7 +57,7 @@ type ReportConfig struct {
 | ID            | string        | Auto-generated unique identifier         | Auto     |
 | Name          | string        | Unique report name                       | ✅       |
 | Description   | string        | Report description                       | Optional |
-| DomainID      | string        | Domain context identifier                | ✅       |
+| WorkspaceID   | string        | Workspace context identifier             | ✅       |
 | Schedule      | Schedule      | Execution schedule configuration         | ✅       |
 | Config        | MetricConfig  | Data collection parameters               | ✅       |
 | Email         | EmailSetting  | Email distribution settings              | Optional |
@@ -74,7 +74,7 @@ type ReportConfig struct {
 ```go
 type Metric struct {
     ChannelID  string  // Source channel for data
-    ClientID   string  // Device/sensor identifier
+    DeviceID   string  // Device/sensor identifier
     Name       string  // Metric name (e.g., "temperature", "current")
     Subtopic   string  // Data subtopic filter
     Protocol   string  // Protocol filter (MQTT, HTTP, etc.)
@@ -85,7 +85,7 @@ type Metric struct {
 | Field       | Type    | Description                              | Required |
 |-------------|---------|------------------------------------------|----------|
 | ChannelID   | string  | Source data channel ID                   | ✅       |
-| ClientID    | string  | Specific device/sensor ID                | Optional |
+| DeviceID    | string  | Specific device/sensor ID                | Optional |
 | Name        | string  | Metric name (e.g., "temperature")        | ✅       |
 | Subtopic    | string  | Data subtopic filter                     | Optional |
 | Protocol    | string  | Protocol filter (MQTT/HTTP/etc.)         | Optional |
@@ -269,7 +269,7 @@ These fields are only required if your data uses them:
 
 | Variable | Description | When Required |
 |----------|-------------|---------------|
-| `{{.Metric.ClientID}}` | Device/client identifier | When filtering by specific devices |
+| `{{.Metric.DeviceID}}` | Device/client identifier | When filtering by specific devices |
 | `{{.Unit}}` | Value unit | When measurements have units |
 | `{{.Protocol}}` | Protocol type | When protocol filtering is used |
 | `{{.Subtopic}}` | Message subtopic | When subtopic filtering is used |
@@ -319,7 +319,7 @@ type Report struct {
 
 type Metric struct {
     ChannelID string // Source channel ID
-    ClientID  string // Device/sensor ID
+    DeviceID  string // Device/sensor ID
     Name      string // Metric name
     Subtopic  string // Message subtopic
     Protocol  string // Protocol used
@@ -345,7 +345,7 @@ Templates have access to these custom functions:
 Update a custom template for a specific report configuration:
 
 ```bash
-curl --location --request PUT 'http://localhost:9008/domains/{domainID}/reports/configs/{reportID}/template' \
+curl --location --request PUT 'http://localhost:9008/{workspaceID}/reports/configs/{reportID}/template' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
@@ -358,7 +358,7 @@ curl --location --request PUT 'http://localhost:9008/domains/{domainID}/reports/
 Retrieve the current template for a report configuration:
 
 ```bash
-curl --location 'http://localhost:9008/domains/{domainID}/reports/configs/{reportID}/template' \
+curl --location 'http://localhost:9008/{workspaceID}/reports/configs/{reportID}/template' \
 --header 'Authorization: Bearer $ACCESSTOKEN'
 ```
 
@@ -374,7 +374,7 @@ Response:
 Remove a custom template (reverts to default):
 
 ```bash
-curl --location --request DELETE 'http://localhost:9008/domains/{domainID}/reports/configs/{reportID}/template' \
+curl --location --request DELETE 'http://localhost:9008/{workspaceID}/reports/configs/{reportID}/template' \
 --header 'Authorization: Bearer $ACCESSTOKEN'
 ```
 
@@ -388,7 +388,7 @@ Templates can be used in two ways:
 #### Configuration-level Usage
 
 ```bash
-curl --location 'http://localhost:9008/domains/{domainID}/reports/configs' \
+curl --location 'http://localhost:9008/{workspaceID}/reports/configs' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
@@ -407,7 +407,7 @@ curl --location 'http://localhost:9008/domains/{domainID}/reports/configs' \
 #### Request-level Usage
 
 ```bash
-curl --location 'http://localhost:9008/domains/{domainID}/reports?action=download' \
+curl --location 'http://localhost:9008/{workspaceID}/reports?action=download' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
@@ -507,10 +507,10 @@ Here's a complete working template that demonstrates all required elements:
                         <div class="metric-label">Name:</div>
                         <div class="metric-value">{{.Metric.Name}}</div>
                     </div>
-                    {{if .Metric.ClientID}}
+                    {{if .Metric.DeviceID}}
                     <div class="metric-row">
                         <div class="metric-label">Device ID:</div>
-                        <div class="metric-value">{{.Metric.ClientID}}</div>
+                        <div class="metric-value">{{.Metric.DeviceID}}</div>
                     </div>
                     {{end}}
                     <div class="metric-row">
@@ -642,7 +642,7 @@ This example demonstrates how all required elements work together:
 - `{{$.GeneratedDate}}` - Displayed in header date area.
 - `{{$.GeneratedTime}}` - Shown in footer.
 - `{{.Metric.Name}}` - Metric name in info section.
-- `{{.Metric.ClientID}}` - Device ID (with conditional display).
+- `{{.Metric.DeviceID}}` - Device ID (with conditional display).
 - `{{.Metric.ChannelID}}` - Channel ID in info section.
 - `{{len .Messages}}` - Record count display.
 - `{{range .Messages}}...{{end}}` - Iterates through data.
@@ -691,8 +691,8 @@ This example demonstrates how all required elements work together:
 {{range $index, $report := .Reports}}    <!-- Loop through reports -->
   {{$globalPage = add $globalPage 1}}    <!-- Variable assignment -->
   
-  {{if .Metric.ClientID}}               <!-- Conditional display -->
-    <div>{{.Metric.ClientID}}</div>
+  {{if .Metric.DeviceID}}               <!-- Conditional display -->
+    <div>{{.Metric.DeviceID}}</div>
   {{end}}
   
   {{range .Messages}}                   <!-- Nested loop for messages -->
@@ -837,14 +837,14 @@ If no custom template is provided, the system uses a built-in default template t
 
 ### API Operations
 
-Base URL: `http://localhost:9008/{domainID}/reports`
+Base URL: `http://localhost:9008/{workspaceID}/reports`
 
 1. Create Report Configuration
 
 Endpoint: `POST /configs`
 
 ```bash
-curl --location http://localhost:9008/domains/{domainID}/reports/configs \
+curl --location http://localhost:9008/{workspaceID}/reports/configs \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
@@ -862,7 +862,7 @@ curl --location http://localhost:9008/domains/{domainID}/reports/configs \
     "metrics": [
         {
             "channel_id": "{{CHANNELID}}",
-            "client_id": "{{THINGID}}",
+            "device_id": "{{THINGID}}",
             "name": "current",
             "subtopic": "lab/room1"
         }
@@ -890,7 +890,7 @@ Expected response:
     "id": "daebc977-60a6-49f9-8f9f-200474a8c697",
     "name": "lab report",
     "description": "lab 1 report",
-    "domain_id": "88c2bc9a-ce3b-4dfc-804d-219177cb9a75",
+    "workspace_id": "88c2bc9a-ce3b-4dfc-804d-219177cb9a75",
     "schedule": {
         "start_datetime": "2025-04-28T00:00:00Z",
         "time": "0001-01-01T20:30:00Z",
@@ -915,7 +915,7 @@ Expected response:
     "metrics": [
         {
             "channel_id": "f0e052ce-ef01-49b9-862c-2ecbc911f0a1",
-            "client_id": "69a9b488-523a-4805-aae9-123febaf83f5",
+            "device_id": "69a9b488-523a-4805-aae9-123febaf83f5",
             "name": "current",
             "format": ""
         }
@@ -931,7 +931,7 @@ Expected response:
 Endpoint: `POST /`
 
 ```bash
-curl -X POST http://localhost:9008/domains/{domainID}/reports \
+curl -X POST http://localhost:9008/{workspaceID}/reports \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
@@ -949,7 +949,7 @@ curl -X POST http://localhost:9008/domains/{domainID}/reports \
     "metrics": [
         {
             "channel_id": "{{CHANNELID}}",
-            "client_id": "{{THINGID}}",
+            "device_id": "{{THINGID}}",
             "name": "current"
             "subtopic": "lab/room1"
         }
@@ -969,7 +969,7 @@ Expected response:
         {
             "metric": {
                 "channel_id": "a246bea7-dc05-49f1-bb61-c08c44a7df33",
-                "client_id": "e2ab8673-8599-435f-8d42-62903d279492",
+                "device_id": "e2ab8673-8599-435f-8d42-62903d279492",
                 "name": "current",
                 "format": ""
             },
@@ -1015,7 +1015,7 @@ curl --location 'http://localhost:9008/bd1bb2c5-ce78-4456-8725-bd1beab80250/repo
     "metrics": [
         {
             "channel_id": "a246bea7-dc05-49f1-bb61-c08c44a7df33",
-            "client_id": "e2ab8673-8599-435f-8d42-62903d279492",
+            "device_id": "e2ab8673-8599-435f-8d42-62903d279492",
             "name": "current"       
         }
     ]  
@@ -1046,7 +1046,7 @@ curl --location 'http://localhost:9008/bd1bb2c5-ce78-4456-8725-bd1beab80250/repo
     "metrics": [
         {
             "channel_id": "a246bea7-dc05-49f1-bb61-c08c44a7df33",
-            "client_id": "e2ab8673-8599-435f-8d42-62903d279492",
+            "device_id": "e2ab8673-8599-435f-8d42-62903d279492",
             "name": "current"      
         }
     ],
@@ -1061,7 +1061,7 @@ curl --location 'http://localhost:9008/bd1bb2c5-ce78-4456-8725-bd1beab80250/repo
 Endpoint: `GET /configs`
 
 ```bash
-curl "http://localhost:9008/domains/{domainID}/reports/configs?status=enabled&limit=10" \
+curl "http://localhost:9008/{workspaceID}/reports/configs?status=enabled&limit=10" \
 --header 'Authorization: Bearer $ACCESSTOKEN'
 ```
 
@@ -1077,7 +1077,7 @@ Expected response:
             "id": "daebc977-60a6-49f9-8f9f-200474a8c697",
             "name": "lab report",
             "description": "lab 1 report",
-            "domain_id": "88c2bc9a-ce3b-4dfc-804d-219177cb9a75",
+            "workspace_id": "88c2bc9a-ce3b-4dfc-804d-219177cb9a75",
             "schedule": {
                 "start_datetime": "2025-04-28T00:00:00Z",
                 "time": "0001-01-01T20:30:00Z",
@@ -1101,7 +1101,7 @@ Expected response:
             "metrics": [
                 {
                     "channel_id": "f0e052ce-ef01-49b9-862c-2ecbc911f0a1",
-                    "client_id": "69a9b488-523a-4805-aae9-123febaf83f5",
+                    "device_id": "69a9b488-523a-4805-aae9-123febaf83f5",
                     "name": "current",
                     "format": ""
                 }
@@ -1121,7 +1121,7 @@ Expected response:
 Endpoint: `GET /configs/{reportID}`
 
 ```bash
-curl --location 'http://localhost:9008/{domainID}/reports/configs/{reportID}' \
+curl --location 'http://localhost:9008/{workspaceID}/reports/configs/{reportID}' \
 --header 'Authorization: Bearer $TOKEN'
 ```
 
@@ -1129,10 +1129,10 @@ curl --location 'http://localhost:9008/{domainID}/reports/configs/{reportID}' \
 Activate a scheduled report configuration.
 
 Endpoint:
-`POST /{domainID}/reports/configs/{reportID}/enable`
+`POST /{workspaceID}/reports/configs/{reportID}/enable`
 
 ```bash
-curl --location http://localhost:9008/domains/{domainID}/reports/configs/{reportID}/enable \
+curl --location http://localhost:9008/{workspaceID}/reports/configs/{reportID}/enable \
 --header 'Authorization: Bearer $ACCESSTOKEN'
 ```
 
@@ -1140,10 +1140,10 @@ curl --location http://localhost:9008/domains/{domainID}/reports/configs/{report
 Pause a scheduled report generation.
 
 Endpoint:
-`POST /{domainID}/reports/configs/{reportID}/disable`
+`POST /{workspaceID}/reports/configs/{reportID}/disable`
 
 ```bash
-curl --location http://localhost:9008/domains/{domainID}/reports/configs/{reportID}/disable \
+curl --location http://localhost:9008/{workspaceID}/reports/configs/{reportID}/disable \
 --header 'Authorization: Bearer $ACCESSTOKEN'
 ```
 
@@ -1151,10 +1151,10 @@ curl --location http://localhost:9008/domains/{domainID}/reports/configs/{report
 Modify an existing report configuration.
 
 Endpoint:
-`PATCH /{domainID}/reports/configs/{reportID}`
+`PATCH /{workspaceID}/reports/configs/{reportID}`
 
 ```bash
-curl --location --request PATCH 'http://localhost:9008/domains/{domainID}/reports/configs/{reportID}' \
+curl --location --request PATCH 'http://localhost:9008/{workspaceID}/reports/configs/{reportID}' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
@@ -1172,10 +1172,10 @@ curl --location --request PATCH 'http://localhost:9008/domains/{domainID}/report
 Update the custom HTML template for a report configuration.
 
 Endpoint:
-`PUT /{domainID}/reports/configs/{reportID}/template`
+`PUT /{workspaceID}/reports/configs/{reportID}/template`
 
 ```bash
-curl --location --request PUT 'http://localhost:9008/domains/{domainID}/reports/configs/{reportID}/template' \
+curl --location --request PUT 'http://localhost:9008/{workspaceID}/reports/configs/{reportID}/template' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
@@ -1187,10 +1187,10 @@ curl --location --request PUT 'http://localhost:9008/domains/{domainID}/reports/
 Retrieve the current template for a report configuration.
 
 Endpoint:
-`GET /{domainID}/reports/configs/{reportID}/template`
+`GET /{workspaceID}/reports/configs/{reportID}/template`
 
 ```bash
-curl --location 'http://localhost:9008/domains/{domainID}/reports/configs/{reportID}/template' \
+curl --location 'http://localhost:9008/{workspaceID}/reports/configs/{reportID}/template' \
 --header 'Authorization: Bearer $ACCESSTOKEN'
 ```
 
@@ -1198,9 +1198,9 @@ curl --location 'http://localhost:9008/domains/{domainID}/reports/configs/{repor
 Remove a custom template (reverts to default template).
 
 Endpoint:
-`DELETE /{domainID}/reports/configs/{reportID}/template`
+`DELETE /{workspaceID}/reports/configs/{reportID}/template`
 
 ```bash
-curl --location --request DELETE 'http://localhost:9008/domains/{domainID}/reports/configs/{reportID}/template' \
+curl --location --request DELETE 'http://localhost:9008/{workspaceID}/reports/configs/{reportID}/template' \
 --header 'Authorization: Bearer $ACCESSTOKEN'
 ```

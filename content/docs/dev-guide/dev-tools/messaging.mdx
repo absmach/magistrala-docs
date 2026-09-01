@@ -383,7 +383,7 @@ Our example topic `m/<workspace_id>/c/<channel_id>/bedroom/temperature` will be 
 You can use multilevel subtopics, that have multiple parts. These parts are separated by `.` or `/` separators.
 When you use combination of these two, have in mind that behind the scene, `/` separator will be replaced with `.`.
 Every empty part of subtopic will be removed. What this means is that subtopic `a///b` is equivalent to `a/b`.
-When you want to subscribe, you can use the default Message Broker, NATS, wildcards `*` and `>`. Every subtopic part can have `*` or `>` as it's value, but if there is any other character beside these wildcards, subtopic will be invalid. What this means is that subtopics such as `a.b*c.d` will be invalid, while `a.b.*.c.d` will be valid.
+When you want to subscribe, you can use the default Message Broker's (FluxMQ) MQTT-style wildcards `+` (single-level) and `#` (multi-level).
 
 Authorization is done on channel level, so you only have to have access to channel in order to have access to
 it's subtopics.
@@ -391,6 +391,15 @@ it's subtopics.
 **Note:** When using MQTT, it's recommended that you use standard MQTT wildcards `+` and `#`.
 
 ## MQTT Broker
+
+<Callout type="warn">
+The sections below (MQTT Broker, Message Broker, and their NATS/RabbitMQ/Kafka subsections)
+describe the previous pluggable-broker model. **FluxMQ** is now Magistrala's default message
+broker for both MQTT and general message exchange — NATS remains available only as a build-time
+alternative. See [Architecture](/dev-guide/architecture) and
+[Storage Architecture](/dev-guide/storage-architecture) for the current model. The content below
+is kept for historical reference only.
+</Callout>
 
 Magistrala supports the MQTT protocol for message exchange. MQTT is a lightweight Publish/Subscribe messaging protocol used to connect restricted devices in low bandwidth, high-latency or unreliable networks. The publish-subscribe messaging pattern requires a message broker. The broker is responsible for distributing messages to and from clients connected to the MQTT adapter.
 

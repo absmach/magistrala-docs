@@ -23,7 +23,7 @@ The alarm object includes the following fields:
 | `rule_id`         | ID of the rule that triggered the alarm                   | ✅ (added by system) |
 | `workspace_id`    | ID of the workspace this alarm belongs to                 | ✅ (added by system) |
 | `channel_id`      | ID of the channel related to the alarm                    | ✅ (added by system) |
-| `client_id`       | ID of the Device associated with the alarm (API field name is still `client_id`) | ✅ (added by system) |
+| `device_id`       | ID of the Device associated with the alarm                | ✅ (added by system) |
 | `subtopic`        | Subtopic of the message that triggered the alarm          | ❌                   |
 | `status`          | Current status of the alarm (e.g., active, cleared)       | ❌                   |
 | `measurement`     | Name of the measurement involved in the alarm condition   | ✅                   |
@@ -245,7 +245,7 @@ Export alarm data to CSV format for analysis or reporting:
 ### Field Selection
 
 Choose which fields to include in the CSV:  
-ID, Severity, Cause, Value, Threshold, Client ID, Assignee, Assigned At, Acknowledged At, Resolved At, Updated At, Rule, Status, Measurement, Unit, Channel ID, Subtopic, Assigned By, Acknowledged By, Resolved By, Updated By, Created At
+ID, Severity, Cause, Value, Threshold, Device ID, Assignee, Assigned At, Acknowledged At, Resolved At, Updated At, Rule, Status, Measurement, Unit, Channel ID, Subtopic, Assigned By, Acknowledged By, Resolved By, Updated By, Created At
 
 ![Field selection](../img/alarms/csv-fields.png)
 
