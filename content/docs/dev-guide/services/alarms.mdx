@@ -252,10 +252,19 @@ This command fetches the details of the alarm with the specified ID. The expecte
 
 ### Updating an Alarm
 
-To update an existing alarm, you can use the following API endpoint:
+<Callout type="info">
+Lifecycle attribution (who assigned, acknowledged, or resolved the alarm, and when) is derived
+server-side from the caller's session and the server clock — it can no longer be set by the
+client. Send `acknowledged: true` to acknowledge an alarm; the service records `acknowledged_by`
+and `acknowledged_at` itself. Sending any of `assigned_at`, `assigned_by`, `acknowledged_at`,
+`acknowledged_by`, `resolved_at`, or `resolved_by` in the request body is rejected rather than
+silently ignored.
+</Callout>
+
+To update an existing alarm, use `PATCH` (there is no `PUT` alias):
 
 ```bash
-curl --location --request PUT 'http://localhost:8050/<workspace_id>/alarms/<alarm_id>' \
+curl --location --request PATCH 'http://localhost:8050/<workspace_id>/alarms/<alarm_id>' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESS_TOKEN' \
 --data '{
@@ -297,16 +306,12 @@ This command updates the status, metadata, and assignee of the specified alarm. 
 }
 ```
 
-The fields that can be updated are:
+The client-settable fields are:
 
 - status
+- severity
 - assignee_id
-- assigned_at
-- assigned_by
-- acknowledged_at
-- acknowledged_by
-- resolved_at
-- resolved_by
+- acknowledged (boolean — set `true` to acknowledge the alarm)
 - metadata
 
 ### Deleting an Alarm
