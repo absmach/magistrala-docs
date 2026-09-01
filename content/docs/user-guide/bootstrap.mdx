@@ -22,7 +22,7 @@ Bootstrap appears in the sidebar under **Device Management**, alongside Devices,
 
 A **Profile** is a reusable template that says how a device's configuration should be rendered — you write it once and reuse it across every device of that type (e.g. "Raspberry Pi temperature sensor").
 
-![Bootstrap Profiles list](/img/bootstrap/05-profiles-list.png)
+![Bootstrap Profiles list](../../img/bootstrap/05-profiles-list.png)
 
 To create one, go to **Bootstrap → Profiles** and click **Create**:
 
@@ -32,7 +32,7 @@ To create one, go to **Bootstrap → Profiles** and click **Create**:
 - **Content Template** — the template body itself
 - **Binding Slots** — named placeholders the template needs filled in before it can render (each slot has a name, a resource type of `device` or `channel`, and whether it's required)
 
-![Create Bootstrap Profile dialog with a device binding slot](/img/bootstrap/06-create-profile-device-slot.png)
+![Create Bootstrap Profile dialog with a device binding slot](../../img/bootstrap/06-create-profile-device-slot.png)
 
 A slot doesn't create anything by itself — it declares what a Bootstrap Config binding to this profile still needs to attach (e.g. a specific Channel for telemetry) before that device's configuration can render. A slot's type must match exactly when you bind a resource to it later — a `device` slot needs a Device bound to it, not a Channel, and vice versa.
 
@@ -40,7 +40,7 @@ A slot doesn't create anything by itself — it declares what a Bootstrap Config
 
 A **Config** is the actual per-device enrollment record. To create one, go to **Bootstrap → Configs** and click **Create**:
 
-![Create Bootstrap Configuration dialog](/img/bootstrap/02-create-config-dialog.png)
+![Create Bootstrap Configuration dialog](../../img/bootstrap/02-create-config-dialog.png)
 
 - **Name** (required)
 - **External ID** (required) — the identifier the device itself will present when it calls Bootstrap
@@ -49,7 +49,7 @@ A **Config** is the actual per-device enrollment record. To create one, go to **
 
 A Profile is not selected at create time. Once the Config exists, assign a Profile to it with the **Assign Profile** action on the Config's detail page, then use **Add Binding** there to bind the resources its Profile's slots ask for (a Channel for a `telemetry` slot, for example). Binding copies a snapshot of that resource into the Config, so the device's own bootstrap call never has to reach Devices or Channels directly — it renders entirely from what's already stored on the Config, its Profile, and those snapshots.
 
-![Add Binding dialog with a device resource type](/img/bootstrap/07-add-binding-device-type.png)
+![Add Binding dialog with a device resource type](../../img/bootstrap/07-add-binding-device-type.png)
 
 Bootstrap keeps your External Key recoverable, not just write-only: click **Reveal external key** on the Configs list or a Config's detail page to read it back, for example to copy it onto a device during provisioning.
 
@@ -57,7 +57,7 @@ Bootstrap keeps your External Key recoverable, not just write-only: click **Reve
 
 The Configs tab filters by **Status**: **Enabled**, **Disabled**, or **All**. Configs are created enabled by default, so the list shows only enabled Configs unless you switch the filter. Use the row menu (or the switch on a Config's detail page) to **Enable**/**Disable** a Config — disabling it blocks device bootstrap calls without deleting the enrollment, which is useful while you're still setting up its Profile and bindings.
 
-![Bootstrap Configurations list filtered to All statuses](/img/bootstrap/01-configs-list.png)
+![Bootstrap Configurations list filtered to All statuses](../../img/bootstrap/01-configs-list.png)
 
 ## How a device bootstraps
 
@@ -65,6 +65,6 @@ A device that only has its External ID and External key requests a short-lived, 
 
 A Config's detail page includes a **Device provisioning and test** panel that runs this exact exchange against your workspace, step by step, so you can confirm a Config renders correctly before shipping credentials to a real device.
 
-![Bootstrap Configuration detail page with the device provisioning and test panel and its bindings](/img/bootstrap/04-config-detail-full.png)
+![Bootstrap Configuration detail page with the device provisioning and test panel and its bindings](../../img/bootstrap/04-config-detail-full.png)
 
 For the full data model (Config/Profile/Binding slot/Binding snapshot) and the service-level API, including the device bootstrap protocol, see [the Bootstrap dev-guide page](/dev-guide/services/bootstrap).
