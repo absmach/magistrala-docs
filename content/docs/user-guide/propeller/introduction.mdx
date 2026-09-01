@@ -1,0 +1,29 @@
+---
+title: Introduction
+description: What Propeller is and how Jobs and Proplets fit together
+keywords:
+  - Propeller
+  - Kubernetes
+  - Edge Compute
+  - Jobs
+  - Proplets
+image: /img/mg-preview.png
+---
+
+## Overview
+
+**Propeller** is a Magistrala app variant for running and monitoring compute workloads on Kubernetes-backed edge nodes. It introduces two concepts on top of the standard Magistrala platform:
+
+- **Proplets** — edge compute nodes. A Proplet is a Magistrala [Device](/user-guide/device-management/devices) under the hood, so everything you already know about managing devices (roles, members, connections, alarms, journals) applies to Proplets as-is. Propeller adds two extra tabs specific to it: [Logs](/user-guide/propeller/proplets#logs) and [Manifest](/user-guide/propeller/proplets#manifest).
+- **Jobs** — Kubernetes Jobs dispatched to run a specific function on a Proplet. The Jobs view in Propeller is **read-only**: jobs are created outside the UI (via `kubectl`, an API, or the control plane), and Propeller only lists them and visualizes their status and execution timeline.
+
+## Where things live
+
+Both Jobs and Proplets are workspace-scoped, reachable from the workspace sidebar:
+
+- **Jobs** — `/workspace/<id>/jobs`
+- **Proplets** — `/workspace/<id>/proplets`
+
+The workspace home page shows a summary card for each, with online/offline counts for Proplets and succeeded/failed counts for Jobs.
+
+See [Jobs](/user-guide/propeller/jobs) and [Proplets](/user-guide/propeller/proplets) for details on each.

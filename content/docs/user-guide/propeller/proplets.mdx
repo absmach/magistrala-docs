@@ -1,0 +1,49 @@
+---
+title: Proplets
+description: Manage edge compute nodes and their Propeller-specific Logs and Manifest views
+keywords:
+  - Propeller
+  - Proplets
+  - Kubernetes
+  - Logs
+  - Manifest
+image: /img/mg-preview.png
+---
+
+## Overview
+
+A **Proplet** is a Magistrala [Device](/user-guide/device-management/devices) — Propeller reuses the standard Devices list, create form, and detail page as-is, just under a different name. Everything you already know about devices applies directly: [creating one](/user-guide/device-management/devices#create-a-device), [configuration](/user-guide/device-management/devices#configurations), [connecting to a channel](/user-guide/device-management/devices#connect-to-a-channel), [roles](/user-guide/device-management/devices#device-roles), [members](/user-guide/device-management/devices#device-members), [alarms](/user-guide/device-management/devices#device-alarms), and [journals](/user-guide/device-management/devices#journals) all work the same way, and Proplets in a group show up under that group's Proplets tab exactly like devices do.
+
+![Proplets Table](../../img/propeller/proplets-table.png)
+
+Propeller adds two extra tabs on top of the standard device detail page: **Logs** and **Manifest**.
+
+## Logs
+
+The Logs tab shows a live view of the Proplet's pod logs.
+
+![Proplet Logs](../../img/propeller/proplet-logs.png)
+
+- **Search** — filters by message text or by the log entry's JSON `data` payload.
+- **Level** — filter by log level: All, Error, Warning, Info, or Debug.
+- **Refresh** — reloads the log stream.
+
+Each entry shows a compact timestamp, level badge, and service tag by default. Click an entry to expand it and see the full message, the raw JSON `data` (if any), and the full timestamp. If the Proplet hasn't produced any logs yet, the tab shows an empty state saying so.
+
+## Manifest
+
+The Manifest tab (titled **Proplet Manifest Visualization**) is a read-only view of the Proplet's underlying Kubernetes deployment.
+
+![Proplet Manifest](../../img/propeller/proplet-manifest.png)
+
+**Status Overview** — phase badge (`running`, `pending`, `failed`, or `stopped`), Type, Task Count, and Last Seen. If the manifest includes Kubernetes-specific fields, this also shows Image, Replicas, and Log Level.
+
+**Metadata** — Name, Created, UID, and Generation.
+
+**Resource Specifications** — requested CPU and Memory, and, if reported, the currently Available Resources (CPU and Memory).
+
+**Connection Configuration** (if present) — MQTT Address, Workspace ID, Client ID, Channel ID, MQTT QoS, and MQTT Timeout.
+
+**Kubernetes Status** (if present) — Available Replicas and Ready Replicas.
+
+**Status Conditions** — the same condition-history pattern as a [Job's Execution Timeline](/user-guide/propeller/jobs#job-detail-page): type, status, message, reason, and last transition time for each condition.
