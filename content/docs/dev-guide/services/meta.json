@@ -1,17 +1,18 @@
 {
   "title": "Services",
   "pages": [
+    "consumers",
+    "readers",
+    "alarms",
+    "reports",
+    "rules-engine",
+    "---Legacy (superseded by Atom)---",
     "auth",
     "users",
     "clients",
     "channels",
-    "consumers",
-    "readers",
     "provision",
     "bootstrap",
-    "alarms",
-    "reports",
-    "rules-engine",
     "notifications"
   ]
 }
