@@ -1,0 +1,46 @@
+---
+title: Platform Users
+description: Manage all platform users as a platform administrator
+keywords:
+  - Platform Management
+  - Platform Users
+  - Admin
+image: /img/mg-preview.png
+---
+
+## Overview
+
+The **Users** tab under **Platform Management** lets a platform administrator view and manage every user account on the platform, across all workspaces. It's only visible to users with the platform `admin` role.
+
+To access it, go to **Platform Management** in the sidebar, then select the **Users** tab.
+
+![Platform Users Table](../../img/platform-management/users-table.png)
+
+The table can be filtered by first name, last name, username, email, ID, tag, and status.
+
+## Create a user
+
+Click **+ Create** to open the create-user form. **Bulk Create** is also available for creating multiple users at once from a CSV file.
+
+|Property |Description| Required |
+|-----------------|------------------------------------------|----------|
+|First Name |The user's first name| ✅ |
+|Last Name |The user's last name| ✅ |
+|Username |A unique username for login| ✅ |
+|Email |The user's email address| ✅ |
+|Password |The user's initial password| ✅ |
+|Tags |Free-form tags for organizing users| Optional |
+|Metadata |Custom JSON metadata| Optional |
+
+![Create User](../../img/platform-management/create-user.png)
+
+## Manage a user
+
+Click a row to open a user's detail page. From there, an administrator can:
+
+- Update the user's first name and last name
+- Update the username
+- Update the email address
+- Toggle the user's platform role between **admin** and **user**
+
+![User Detail](../../img/platform-management/user-detail.png)
