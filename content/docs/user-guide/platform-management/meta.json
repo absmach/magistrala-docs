@@ -1,4 +1,4 @@
 {
   "title": "Platform Management",
-  "pages": ["workspaces", "users"]
+  "pages": ["workspaces", "users", "white-labeling"]
 }

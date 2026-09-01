@@ -24,7 +24,7 @@ Open the user menu in the top-right corner of the app (click your avatar) and se
 
 You can also reach it from **Platform Management → White Labeling**, alongside the [**Workspaces**](/user-guide/platform-management/workspaces) and [**Users**](/user-guide/platform-management/users) admin tabs. Both paths lead to the same page, `/platform-management/white-labeling`; the user menu is just the faster route.
 
-![White Labeling page, Organization tab, before any changes](../img/white-labeling/white-labeling-page.png)
+![White Labeling page, Organization tab, before any changes](../../img/white-labeling/white-labeling-page.png)
 
 The page has four tabs — **Organization**, **Colors**, **Media**, and **Links** — plus a single **Save** button at the bottom that writes every tab's changes at once. Editing a tab doesn't save it; only **Save** commits your changes, and unsaved edits are shared across tabs until you click it.
 
@@ -40,13 +40,13 @@ The **Organization** tab controls the deployment's identity: its name, meta desc
 
 Keywords are managed as chips: type a value into the field and press **Enter** to add it, or click the **×** on an existing chip to remove it.
 
-![Organization tab filled in for Acme Enterprises](../img/white-labeling/organization-tab-filled.png)
+![Organization tab filled in for Acme Enterprises](../../img/white-labeling/organization-tab-filled.png)
 
 ## Colors
 
 The **Colors** tab re-themes the app using the same design tokens as the underlying component library, so every color used anywhere in the UI can be overridden.
 
-![Colors tab, default values](../img/white-labeling/colors-tab-top.png)
+![Colors tab, default values](../../img/white-labeling/colors-tab-top.png)
 
 A few things worth knowing before you touch this tab:
 
@@ -59,7 +59,7 @@ A few things worth knowing before you touch this tab:
 
 For Acme Enterprises, only **Primary** (`#1E3A8A`, a navy blue) and **Secondary** (`#F59E0B`, amber) were set — everything else was left at its default:
 
-![Colors tab with Primary and Secondary set](../img/white-labeling/colors-tab-filled.png)
+![Colors tab with Primary and Secondary set](../../img/white-labeling/colors-tab-filled.png)
 
 > **Note:** color changes don't preview live on this page as you type — you'll see the new theme applied once you click **Save**.
 
@@ -67,7 +67,7 @@ For Acme Enterprises, only **Primary** (`#1E3A8A`, a navy blue) and **Secondary*
 
 The **Media** tab handles every image asset: the main logo, the collapsed-sidebar logo, the favicon, and the social share image. Each upload accepts an image up to **5MB**.
 
-![Media tab, before any uploads](../img/white-labeling/media-tab-empty.png)
+![Media tab, before any uploads](../../img/white-labeling/media-tab-empty.png)
 
 ### Logo
 
@@ -79,7 +79,7 @@ This single **Logo** upload is shown both on the **login/auth page** and in the 
 
 Use an SVG (or another format with a transparent background) sized roughly to its widest expected use — the width/height fields scale it down for the smaller placements, so a crisp source avoids blurring. Set **Alt text** too; it's read by screen readers everywhere the logo appears.
 
-![Logo uploaded, with a live preview and per-surface sizing](../img/white-labeling/media-tab-logo-uploaded.png)
+![Logo uploaded, with a live preview and per-surface sizing](../../img/white-labeling/media-tab-logo-uploaded.png)
 
 ### Collapsed sidebar logo
 
@@ -90,7 +90,7 @@ A **separate, smaller upload** for when the sidebar is collapsed — normally ju
 - **Favicon** — shown in the browser tab. Use a small square image; `.ico`, `.png`, or `.svg` all work.
 - **Social share image** — shown in link previews when a URL to this deployment is shared on social media or in chat apps (Slack, Discord, iMessage, etc.). The conventional size is **1200×630**.
 
-![Collapsed sidebar logo, favicon, and social share image previews](../img/white-labeling/media-tab-collapsed-logo.png)
+![Collapsed sidebar logo, favicon, and social share image previews](../../img/white-labeling/media-tab-collapsed-logo.png)
 
 Every upload shows a live thumbnail against a checkered (transparency) background as soon as it's chosen, and a red trash icon to remove it before saving.
 
@@ -98,7 +98,7 @@ Every upload shows a live thumbnail against a checkered (transparency) backgroun
 
 The **Links** tab controls outbound URLs shown around the app: the **Documentation URL** (linked from the sidebar, the support menu, and the 404 page), **Project website**, **GitHub URL**, and social links for **Twitter/X**, **LinkedIn**, and **Community**.
 
-![Links tab filled in for Acme Enterprises](../img/white-labeling/links-tab-filled.png)
+![Links tab filled in for Acme Enterprises](../../img/white-labeling/links-tab-filled.png)
 
 Leave any of these blank to fall back to the deployment's built-in defaults rather than hiding the element entirely — an empty field doesn't remove its link from the UI.
 
@@ -108,19 +108,19 @@ Click **Save** at the bottom of the page to write every tab's changes at once �
 
 After saving, the White Labeling page itself reflects the new branding:
 
-![White Labeling page after saving — sidebar, logo, and colors updated](../img/white-labeling/branding-applied-sidebar.png)
+![White Labeling page after saving — sidebar, logo, and colors updated](../../img/white-labeling/branding-applied-sidebar.png)
 
 So does the rest of the app — here's the workspace home page:
 
-![Workspace home page with Acme Enterprises branding applied](../img/white-labeling/branding-applied-home.png)
+![Workspace home page with Acme Enterprises branding applied](../../img/white-labeling/branding-applied-home.png)
 
 Collapsing the sidebar swaps in the smaller **Collapsed sidebar logo**:
 
-![Collapsed sidebar showing the Acme Enterprises icon mark](../img/white-labeling/branding-collapsed-sidebar.png)
+![Collapsed sidebar showing the Acme Enterprises icon mark](../../img/white-labeling/branding-collapsed-sidebar.png)
 
 And the login page picks up the new logo and Primary color as the login card background:
 
-![Login page with Acme Enterprises branding applied](../img/white-labeling/branding-login-page.png)
+![Login page with Acme Enterprises branding applied](../../img/white-labeling/branding-login-page.png)
 
 > **Design tip:** if "Match primary across app surfaces" is on, your login card background becomes your **Primary** color. Make sure your logo's wordmark (not just its icon) is legible against that color — a dark wordmark designed for a white background, like the one above, can end up low-contrast on a colored card. Test the login page after saving, not just the sidebar.
 
