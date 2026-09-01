@@ -6,7 +6,6 @@
     "workspace-management",
     "device-management",
     "gateway-management",
-    "propeller",
     "device-types",
     "bootstrap",
     "dashboards",
