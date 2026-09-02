@@ -20,10 +20,10 @@ Views are saved per channel: the set of tabs you see is scoped to whichever chan
 
 ## Prerequisites
 
-Messages only appear on the Messages page if a [Rule](/user-guide/rules-engine) is set up to store them in Magistrala's internal database — see [Store Messages](/user-guide/rules-engine#store-messages).
+Messages only appear on the Messages page if a [Rule](/user-guide/rules-engine/overview) is set up to store them in Magistrala's internal database — see [Store Messages](/user-guide/rules-engine/overview#store-messages).
 
 - For a **SenML** view, use the Rules Engine's **Internal DB** output node (or publish SenML directly via the built-in **Send Message** dialog).
-- For a **JSON** view, use the Rules Engine's **Internal DB (JSON)** output node — see [Store as JSON](/user-guide/rules-engine#store-as-json) — or have your own device or service publish real JSON payloads to the channel.
+- For a **JSON** view, use the Rules Engine's **Internal DB (JSON)** output node — see [Store as JSON](/user-guide/rules-engine/overview#store-as-json) — or have your own device or service publish real JSON payloads to the channel.
 
 Either way, a JSON-format view also needs a JSON-capable message writer deployed before anything persists — see [Running SenML and JSON Writers Together](/dev-guide/dev-tools/storage#running-senml-and-json-writers-together). A JSON-format view is still fully configurable without one; it just won't have anything to show until a writer is deployed and messages start arriving.
 

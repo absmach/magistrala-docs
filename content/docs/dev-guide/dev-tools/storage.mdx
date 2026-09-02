@@ -171,7 +171,7 @@ docker-compose -f docker/addons/timescale-writer/docker-compose.yml up -d
 
 Timescale default port (5432) is exposed, so you can use various tools for database inspection and data visualization.
 
-By default, the `timescale-writer` add-on's `config.toml` has no `[transformer]` section at all, which means it silently falls back to the SenML transformer (see [Transformer config](#transformer-config) above) - it will not persist JSON messages, including ones saved via the Rules Engine's [Internal DB (JSON)](/user-guide/rules-engine#store-as-json) output.
+By default, the `timescale-writer` add-on's `config.toml` has no `[transformer]` section at all, which means it silently falls back to the SenML transformer (see [Transformer config](#transformer-config) above) - it will not persist JSON messages, including ones saved via the Rules Engine's [Internal DB (JSON)](/user-guide/rules-engine/overview#store-as-json) output.
 
 #### Running SenML and JSON Writers Together
 
@@ -188,7 +188,7 @@ A single writer *process* is locked to whichever transformer `format` its `confi
    format = "JSON"
    ```
 
-   This particular filter matches messages whose subtopic is exactly `json` - the case where the rule's input channel itself has no subtopic, which the Rules Engine's [Internal DB (JSON)](/user-guide/rules-engine#store-as-json) output produces by default. If your rule's input channel does have a subtopic, the JSON output appends `/json` to it instead (e.g. an input subtopic of `devices/dev-1` becomes `devices/dev-1/json`), which needs an extra `+` per subtopic level to match, e.g. `writers/+/c/+/+/json`.
+   This particular filter matches messages whose subtopic is exactly `json` - the case where the rule's input channel itself has no subtopic, which the Rules Engine's [Internal DB (JSON)](/user-guide/rules-engine/overview#store-as-json) output produces by default. If your rule's input channel does have a subtopic, the JSON output appends `/json` to it instead (e.g. an input subtopic of `devices/dev-1` becomes `devices/dev-1/json`), which needs an extra `+` per subtopic level to match, e.g. `writers/+/c/+/+/json`.
 3. Leave the existing SenML `timescale-writer` instance's `config.toml` and `topics` filter unchanged (it defaults to `["writers/#"]`, matching every writer-bound message regardless of format).
 
 `#` is a trailing wildcard only - it can't express "anything ending in `.../json`" regardless of depth in a single filter, so a topic tree with subtopics of varying depth needs either one `+`-based filter per depth you expect, or falling back to the broader `["writers/#"]` catch-all. With that catch-all, the JSON writer attempts to parse every message it receives as JSON: messages whose subtopic doesn't end in a `json` segment still get stored, just under a table named after whatever their own last subtopic segment is, rather than the `json` table - harmless clutter, not data corruption, but worth scoping down with the `+`-based filter above once you know your deployment's topic structure.
