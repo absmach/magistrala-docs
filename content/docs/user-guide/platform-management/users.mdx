@@ -1,0 +1,86 @@
+---
+title: Platform Users
+description: Manage all platform users as a platform administrator
+keywords:
+  - Platform Management
+  - Platform Users
+  - Admin
+image: /img/mg-preview.png
+---
+
+## Overview
+
+The **Users** tab under **Platform Management** lets a platform administrator view and manage every user account on the platform, across all workspaces. It's only visible to users with the platform `admin` role.
+
+To access it, go to **Platform Management** in the sidebar, then select the **Users** tab.
+
+![Platform Users Table](../../img/platform-management/users-table.png)
+
+The table can be filtered by first name, last name, username, email, ID, tag, and status.
+
+## Create a user
+
+Click **+ Create** to open the create-user form.
+
+|Property |Description| Required |
+|-----------------|------------------------------------------|----------|
+|First Name |The user's first name| ✅ |
+|Last Name |The user's last name| ✅ |
+|Username |A unique username for login| ✅ |
+|Email |The user's email address| ✅ |
+|Password |The user's initial password| ✅ |
+|Tags |Free-form tags for organizing users| Optional |
+|Metadata |Custom JSON metadata| Optional |
+
+![Create User](../../img/platform-management/create-user.png)
+
+## Bulk create users
+
+Click **Bulk Create** to create multiple users at once from a CSV file. A [sample CSV](https://github.com/absmach/magistrala-ui/blob/main/samples/users.csv) is linked directly in the dialog.
+
+The CSV must have these column headers:
+
+|Header |Description|
+|-----------------|------------------------------------------|
+|Username |Login username| 
+|FirstName |First name|
+|LastName |Last name|
+|Email |Email address|
+|Secret |Initial password|
+|Tags |JSON array, e.g. `["a","b"]` — can be empty|
+|Metadata |JSON object — can be empty|
+
+![Bulk Create Users](../../img/platform-management/bulk-create-users.png)
+
+Each row is created individually and reported back on its own: a row with an invalid email, a missing required field, or malformed JSON in Tags/Metadata is skipped with an error naming that row number, while every valid row is still created. You'll see a per-row success or failure toast, plus a final summary once the whole file has been processed.
+
+## Manage a user
+
+Click a row to open a user's detail page.
+
+![User Detail](../../img/platform-management/user-detail.png)
+
+### Details tab
+
+|Field |Description|
+|-----------------|------------------------------------------|
+|Name |First and last name — editable inline|
+|Username |Editable inline|
+|ID |Read-only|
+|Email |Editable inline|
+|Tags |Editable via a dialog|
+|Metadata |Shown read-only here as a summary; edit it from the **Metadata** tab|
+|Role |Toggle between platform **admin** and regular **user** via a confirmation dialog|
+|Status |Toggle between **enabled** and **disabled** via the switch next to the status badge|
+
+### Metadata tab
+
+A full key/value editor for the user's metadata — add, edit, or remove entries directly, independent of the Details tab's read-only summary.
+
+![User Metadata Tab](../../img/platform-management/user-metadata.png)
+
+### Journals
+
+Below the tabs, every user detail page shows a **Journals** section — a paginated, filterable audit log of actions recorded against that user (filterable by operation).
+
+![User Journals](../../img/platform-management/user-journals.png)

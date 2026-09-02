@@ -14,9 +14,10 @@
     "message-views",
     "alarms",
     "reports",
-    "white-labeling",
+    "platform-management",
     "profile-management",
     "pats",
+    "support",
     "metadata"
   ],
   "defaultOpen": true
