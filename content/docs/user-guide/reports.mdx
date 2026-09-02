@@ -33,8 +33,8 @@ In the Configuration section, the user is required to input general settings for
 |Description |Additional context about the report| Optional |
 |Report Title | The title for the report | ✅ |
 |Report Format | The file format for the report(pdf or csv) | ✅ |
-|Start Time | The start time of the report| ✅ |
-|End Time | The end time for the report| Optional |
+|Start Time | How far back the report data starts, relative to now (e.g. `1h`, `10h`, `1d`). The actual start time is calculated as `now() - Start Time`.| ✅ |
+|End Time | How far back the report data ends, relative to now (e.g. `1h`, `10h`, `1d`). The actual end time is calculated as `now() - End Time`. Defaults to now if left empty.| Optional |
 |Timezone | The timezone for displaying timestamps (e.g., "America/New_York", "Europe/London"). Defaults to UTC if not specified | Optional |
 |Aggregation Method | The aggregation method e.g Maximum, Minimum e.t.c| Optional |
 |Aggregation Interval |  The interval used for aggregating messages | Optional |
@@ -118,7 +118,7 @@ The fields to be filled include:
 |Active From  | The start date for the report| ✅ |
 |Occurs at | The time of the report should be sent  |  ✅ |
 |Recurring Interval | How often the report should repeat (e.g., daily, weekly). | ✅ |
-|Recurring Period | How many intervals to skip between executions (e.g., 1 = every interval, 2 = every second interval, etc.).|  Optional |
+|Recurring Period | How many intervals to skip between executions (e.g., 1 = every interval, 2 = every second interval, etc.).| Required if Recurring Interval is not `None` |
 
 ![Schedule Report](../img/reports/schedule-report.png)
 
@@ -156,13 +156,12 @@ The **Role name** is compulsory. You can optionally provide the role actions by 
 
 The following is the list of available actions for a report:
 
-- `report_read`
-- `report_update`
-- `report_delete`
-- `report_manage_role`
-- `report_add_role_users`
-- `report_view_role_users`
-- `report_remove_role_users`
+- `read`
+- `write`
+- `delete`
+- `execute`
+- `role.manage`
+- `policy.manage`
 
 #### Update Report Roles
 
