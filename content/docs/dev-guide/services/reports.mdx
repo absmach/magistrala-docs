@@ -40,7 +40,7 @@ type ReportConfig struct {
     Description string
     WorkspaceID string
     Config      *MetricConfig
-    Metrics     []Metric      
+    Metrics     []ReqMetric   
     Email       *EmailSetting        // Email Notification settings 
     Schedule    Schedule      // Generation schedule
     ReportTemplate ReportTemplate    // Custom HTML template for PDF generation
@@ -61,7 +61,7 @@ type ReportConfig struct {
 | Schedule      | Schedule      | Execution schedule configuration         | ✅       |
 | Config        | MetricConfig  | Data collection parameters               | ✅       |
 | Email         | EmailSetting  | Email distribution settings              | Optional |
-| Metrics       | []Metric      | List of metrics to include               | ✅       |
+| Metrics       | []ReqMetric   | List of metrics to include               | ✅       |
 | ReportTemplate| ReportTemplate| Custom HTML template for PDF generation  | Optional |
 | Status        | Status        | Enabled/Disabled state                   | ✅       |
 | CreatedAt     | time.Time     | Creation timestamp                       | Auto     |

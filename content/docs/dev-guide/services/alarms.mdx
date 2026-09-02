@@ -65,7 +65,7 @@ type Alarm struct {
 | unit            | string    | Unit of the measurement value                             | ❌                       |
 | threshold       | string    | Threshold value set in the rule that triggered the alarm  | ✅                       |
 | cause           | string    | Explanation of why the alarm was triggered                | ✅                       |
-| severity        | uint8     | Severity level of the alarm (e.g., 1 = low, 5 = critical) | ✅                       |
+| severity        | uint8     | Severity level of the alarm, 0-100 (e.g., 10 = low, 90 = critical) | ✅                       |
 | assignee_id     | string    | ID of the user assigned to resolve the alarm              | ❌                       |
 | created_at      | time.Time | Timestamp when the alarm was created                      | ❌                       |
 | updated_at      | time.Time | Timestamp when the alarm was last updated                 | ❌                       |
@@ -87,7 +87,7 @@ The `status` field in the Alarm struct indicates the current state of the alarm.
 
 ### Severity Levels
 
-The `severity` field indicates the importance of the alarm. The severity levels are user defined and can range from low to critical (e.g., 1 to 5).
+The `severity` field indicates the importance of the alarm. It accepts a `uint8` from 0 to 100 (`ErrInvalidSeverity` is returned above that) — the scale within that range is otherwise up to you, e.g. 10 = low, 90 = critical.
 
 ## Alarm API Endpoints
 
