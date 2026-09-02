@@ -585,11 +585,20 @@ To create a role, navigate to the **Roles** tab on the rule sidebar. Click on th
 
 The **Role name** is compulsory. You can optionally provide the role actions by selecting from the available actions. You can also optionally provide the members by searching for a user with their **username**.
 
-> As with devices, channels and groups (see [Workspace Roles](/user-guide/workspace-management/workspace#workspace-roles)), rule roles use the platform's generic action vocabulary rather than rule-specific action names:
+> Unlike devices, channels and groups, rule roles use a larger, rule-specific action set — it includes
+> `execute` plus separate actions for managing the alarms a rule's output can create, on top of the
+> platform's generic vocabulary:
 >
 > - read
 > - write
 > - delete
+> - execute
+> - alarm_read
+> - alarm_update
+> - alarm_delete
+> - alarm_assign
+> - alarm_acknowledge
+> - alarm_resolve
 > - role.manage
 > - policy.manage
 

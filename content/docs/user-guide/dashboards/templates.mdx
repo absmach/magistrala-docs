@@ -14,7 +14,7 @@ image: /img/mg-preview.png
 
 ### What are Templates?
 
-Templates are dashboards with **abstract data sources**. Instead of binding each widget to a specific channel or client, you configure widgets using **tags**. When a workspace member views a shared template, the system resolves each tag to the entity assigned to that user — so the same template layout serves multiple users, each seeing their own data.
+Templates are dashboards with **abstract data sources**. Instead of binding each widget to a specific channel or device, you configure widgets using **tags**. When a workspace member views a shared template, the system resolves each tag to the entity assigned to that user — so the same template layout serves multiple users, each seeing their own data.
 
 
 This makes templates ideal for any scenario where many users need an identical dashboard layout but with data from their own assigned devices.
@@ -23,9 +23,7 @@ This makes templates ideal for any scenario where many users need an identical d
 
 #### Customer Portals
 
-Enterprise customers often need a self-service view of their own equipment and data. With templates, a workspace admin creates a single dashboard layout once. Each customer is then assigned the entities (clients, channels) tagged appropriately, and when they log in they see a fully populated dashboard with their data — without any additional setup.
-
-> Magistrala provides **custom customer portals** for enterprise users built on top of this templates feature. Contact us to learn more.
+Enterprise customers often need a self-service view of their own equipment and data. With templates, a workspace admin creates a single dashboard layout once. Each customer is then assigned the entities (devices, channels) tagged appropriately, and when they log in they see a fully populated dashboard with their data — without any additional setup.
 
 
 #### Field Technician Dashboards
@@ -43,7 +41,7 @@ For deployments across multiple floors, buildings, or geographic zones, you can 
 When a workspace member opens a shared template, the system resolves data sources for each widget as follows:
 
 1. The widget is configured with a **tag** (e.g., `temperature-sensor`).
-2. The system looks up entities (clients, channels) assigned to the viewing user that carry that tag.
+2. The system looks up entities (devices, channels) assigned to the viewing user that carry that tag.
 3. The matching entity is used as the data source for that widget.
 
 > **Important:** Each user should have **at most one entity of a given type** with a particular tag. If multiple entities match, the system uses the **first entity** returned in the list. The workspace admin is responsible for ensuring tags are applied correctly and unambiguously.
