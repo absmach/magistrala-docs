@@ -2,18 +2,18 @@
   "title": "Dev Guide",
   "pages": [
     "introduction",
-    "agent",
+    "getting-started",
     "architecture",
     "storage-architecture",
-    "getting-started",
     "entities",
     "cli",
     "services",
     "api",
     "authorization",
     "dev-tools",
-    "edge",
     "certs",
+    "agent",
+    "edge",
     "extensions"
   ],
   "defaultOpen": true

@@ -21,7 +21,7 @@ Any data producer or data consumer - which we refer to here collectively as data
 
 Although this works well, satisfies the requirements of a wide variety of use cases and corresponds to the intended use of Mainlfux IoT platform, this setup can be insufficient in two important ways. Firstly, different clients, channels, and their connections - i.e. Magistrala representations of different data agent structures - are unrelated to each other, i.e. they do not form a **meaningful whole** and, as a consequence, they do not represent a **single unified system**. Secondly, the **semantic** aspect, i.e. the **meaning** of different clients and channels is not transparent and defined by the sole use of Magistrala platform entities (channels and clients).
 
-Certainly, we can try to describe clients and channels connections and relations as well as their meaning - i.e. their role, position, function in the overall system - by means of their [metadata][provision]. Although this might work well - with a proviso of a lot of additional effort of writing the relatively complex code to create and parse metadata - it is not a practical approach and we still don't get - at least not out of the box - a readable and useful overview of the system as a whole. Also, this approach does not enable us to answer a simple but very important question, i.e. what was the detailed state of a complete system at a certain moment in time.
+Certainly, we can try to describe clients and channels connections and relations as well as their meaning - i.e. their role, position, function in the overall system - by means of their metadata. Although this might work well - with a proviso of a lot of additional effort of writing the relatively complex code to create and parse metadata - it is not a practical approach and we still don't get - at least not out of the box - a readable and useful overview of the system as a whole. Also, this approach does not enable us to answer a simple but very important question, i.e. what was the detailed state of a complete system at a certain moment in time.
 
 To overcome these problems, Magistrala comes with a **digital twin service**. The twins service is built on top of the Magistrala platform and relies on its architecture and entities, more precisely, on Magistrala users, clients and channels. The primary task of the twin service is to handle Magistrala digital twins. Magistrala digital twin consists of three parts:
 
@@ -39,7 +39,7 @@ You use an HTTP client to communicate with the twins service. Every request sent
 
 Twins service listens to the message broker server and intercepts messages passing _via_ the message broker. Every Magistrala message contains information about subchannel and topic used to send a message. Twins service compares this info with attribute definitions of twins persisted in the database, fetches the corresponding twins and updates their respective states.
 
-Before we dwell into twin's anatomy, it is important to realize that in order to use Magistrala twin service, you have to [provision Magistrala clients and channels][provision] and you have to connect clients and channels beforehand. As you go, you can modify your clients, channels and connections and you can modify your digital twin to reflect these modifications, but you have to have at least a minimal setup in order to use the twin service.
+Before we dwell into twin's anatomy, it is important to realize that in order to use Magistrala twin service, you have to provision Magistrala clients and channels and you have to connect clients and channels beforehand. As you go, you can modify your clients, channels and connections and you can modify your digital twin to reflect these modifications, but you have to have at least a minimal setup in order to use the twin service.
 
 ## Twin's Anatomy
 
@@ -342,7 +342,6 @@ Normally, you can use the default message broker's wildcards. In order to learn 
 Since messages published on message broker are republished on any other protocol supported by Magistrala - HTTP, MQTT, CoAP and WS - you can use any supported protocol client to pick up notifications.
 
 [architecture]: /dev-guide/architecture
-[provision]: /dev-guide/services/provision
 [writer]: /dev-guide/dev-tools/storage
 [senml]: https://tools.ietf.org/html/rfc8428#section-4.3
 [authentication]: /dev-guide/dev-tools/authentication
