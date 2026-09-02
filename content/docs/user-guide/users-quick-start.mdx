@@ -137,11 +137,14 @@ Adding tags can help you quickly locate and manage devices in larger setups.
 
 A user can also create bulk devices by clicking on the `Upload` button. This will lead to a dialog box that takes in a _.CSV_ file with the device's details filled in correctly as seen in these [samples](https://github.com/absmach/magistrala-ui/tree/main/samples).
 
-The file should have the following fields in order:
+The CSV is parsed by column header, not position, so the columns can be in any order — but these four headers must all be present or the upload is rejected:
 
-1. Name (Required)
-2. Metadata
-3. Tags
+- **Name** (required — a row is also skipped if this is blank)
+- **Secret** (required header, but the value itself may be left blank per row)
+- **Tags**
+- **Metadata**
+
+An optional **Identity** column is read too, if present.
 
 ![Create Devices](../img/users-guide/group-clients-create.png)
 
