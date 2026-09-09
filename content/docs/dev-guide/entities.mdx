@@ -140,7 +140,7 @@ Allowed examples: `temperature`, `meter-type:water`, `zone-A`
 
 ## Audit logs
 
-The old standalone `journal` service is gone. Entity/channel/group activity (creation, updates, disabling, connectivity, role changes) is now tracked by **Atom's own audit log**, exposed via a GraphQL query (`magistrala-ui`'s `packages/ui/src/lib/journal.ts`, which the UI's per-entity **Journals** tab calls):
+Entity/channel/group activity (creation, updates, disabling, connectivity, role changes) is tracked by **Atom's own audit log**, exposed via a GraphQL query (`magistrala-ui`'s `packages/ui/src/lib/journal.ts`, which the UI's per-entity **Journals** tab calls):
 
 ```graphql
 query ObjectAuditLogs($targetKind: String!, $targetId: ID!, $event: String, $limit: Int, $offset: Int) {
@@ -160,9 +160,8 @@ query ObjectAuditLogs($targetKind: String!, $targetId: ID!, $event: String, $lim
 `targetKind` follows Atom's own event-recording convention (`atom`: `src/graphql/{resources,entities,groups}.rs`): `"resource"` for Channels, `"group"` for Groups, `"entity"` for everything else (Devices, Users, Gateways, Device Types).
 
 <Callout type="warn" title="Atom-backed deployments only">
-  This query is only available when the deployment targets Atom (`MG_ATOM_URL` set). Legacy
-  deployments without Atom fall back to the old journal SDK — not documented here since that
-  service no longer exists in this repository.
+  This query is only available when the deployment targets Atom (`MG_ATOM_URL` set). Deployments
+  without Atom configured do not have this audit log available.
 </Callout>
 
 ## Attributes / Metadata

@@ -15,11 +15,10 @@ image: /img/mg-preview.png
 ---
 
 
-<Callout type="warn">
-Postgres and Timescale (`postgres-writer`/`postgres-reader`, `timescale-writer`/`timescale-reader`)
-are the currently supported storage backends. `docker/addons/` no longer includes Cassandra,
-MongoDB, or InfluxDB writer/reader add-ons — the sections below describing them predate their
-removal and are kept for historical reference only.
+<Callout type="info">
+PostgreSQL and Timescale (`postgres-writer`/`postgres-reader`, `timescale-writer`/`timescale-reader`)
+are the storage backends shipped in `docker/addons/` today. The Cassandra, MongoDB, and InfluxDB
+sections below describe add-ons from an earlier release and aren't part of the current `docker/addons/`.
 </Callout>
 
 Magistrala currently supports these storage databases for messages:

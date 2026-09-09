@@ -16,13 +16,6 @@ image: /img/mg-preview.png
 
 Welcome to the **Magistrala Developer Guide**! This guide provides comprehensive instructions for installing, building, running, and interacting with Magistrala, an advanced messaging platform. Follow the steps below to get started with Magistrala development, understand its architecture, and interact with the system.
 
-<Callout type="warn">
-  The example command *output* further down this page — service log lines like
-  `magistrala-users`, `magistrala-clients`, `magistrala-broker`, and the `SpiceDB Schema
-  Management` section — predates the Atom migration. Treat those specific blocks as illustrative
-  history, not current output.
-</Callout>
-
 ## Fast Start
 
 To spin up Magistrala, run the following commands:
@@ -240,10 +233,10 @@ docker-compose -f docker/docker-compose.yml -f docker/docker-compose.custom1.yml
 
 In the command above each successive file overrides the previous parameters.
 
-<Callout type="warn" title="NATS is no longer the default broker">
-  FluxMQ is now Magistrala's default message broker; NATS is only available as a build-time
-  alternative. The override mechanism shown below still applies, but this specific example
-  targets the legacy `nats` service and won't apply to a default FluxMQ setup.
+<Callout type="info">
+  This example overrides the `nats` service, which applies only when Magistrala is built with NATS
+  as the broker. FluxMQ is the default message broker — see [Message Broker](#message-broker) — so
+  adapt the override to the `fluxmq` service for a default setup.
 </Callout>
 
 A practical example in our case would be to enable debugging and tracing in NATS so that we can see better how are the messages moving around.
@@ -284,105 +277,16 @@ Build `magistrala-cli` by following the [CLI guide][cli].
 
 ### Step 6 - Provision the System
 
-<Callout type="warn" title="This command no longer exists">
-  `magistrala-cli provision test` and the example output below are from the pre-Atom CLI. There is
-  no `provision` command in the current CLI. To provision a workspace with devices and channels
-  today, use [`workspaces create`](/dev-guide/cli/workspaces-cli),
-  [`devices create`](/dev-guide/cli/devices-cli), and [`channels
-  create`](/dev-guide/cli/channels-cli) directly.
-</Callout>
-
-Output of the old command followed this pattern (kept for historical reference only):
-
-```json
-{
-  "created_at": "2023-04-04T08:02:47.686337Z",
-  "credentials": {
-    "identity": "crazy_feistel@email.com",
-    "secret": "12345678"
-  },
-  "id": "0216df07-8f08-40ef-ba91-ff0e700f387a",
-  "name": "crazy_feistel",
-  "status": "enabled",
-  "updated_at": "2023-04-04T08:02:47.686337Z"
-}
-
-
-{
-  "access_token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODA1OTYyNjcsImlhdCI6MTY4MDU5NTM2NywiaWRlbnRpdHkiOiJjcmF6eV9mZWlzdGVsQGVtYWlsLmNvbSIsImlzcyI6ImNsaWVudHMuYXV0aCIsInN1YiI6IjAyMTZkZjA3LThmMDgtNDBlZi1iYTkxLWZmMGU3MDBmMzg3YSIsInR5cGUiOiJhY2Nlc3MifQ.EpaFDcRjYAHwqhejLfay5ju8L1a7VdhXKohUlwTv7YTeOK-ClfNNx6KznV05Swdj6lgvbmVAfe0wz2JMpfMjdw",
-  "access_type": "Bearer",
-  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODA2ODE3NjcsImlhdCI6MTY4MDU5NTM2NywiaWRlbnRpdHkiOiJjcmF6eV9mZWlzdGVsQGVtYWlsLmNvbSIsImlzcyI6ImNsaWVudHMuYXV0aCIsInN1YiI6IjAyMTZkZjA3LThmMDgtNDBlZi1iYTkxLWZmMGU3MDBmMzg3YSIsInR5cGUiOiJyZWZyZXNoIn0.3xcrkIBbi2a8firNHtnK6I8sBBOgrQ6XBa3x7cybKc6omOuqrkkNjXGjKU9tgShvjpfCWT48AR1VqO_VxJxL8g"
-}
-
-
-[
-  {
-    "created_at": "2023-04-04T08:02:47.81865461Z",
-    "credentials": {
-      "secret": "fc9473d8-6756-4fcc-968f-ea43cd0b803b"
-    },
-    "id": "5d5e593b-7629-4cc3-bebc-b20d8ab9dbef",
-    "name": "d0",
-    "owner": "0216df07-8f08-40ef-ba91-ff0e700f387a",
-    "status": "enabled",
-    "updated_at": "2023-04-04T08:02:47.81865461Z"
-  },
-  {
-    "created_at": "2023-04-04T08:02:47.818661382Z",
-    "credentials": {
-      "secret": "56a4b1bd-9750-42b3-a3cb-cf5ee2b86fe4"
-    },
-    "id": "45048a8e-c602-4e91-9556-a9d3af6617fb",
-    "name": "d1",
-    "owner": "0216df07-8f08-40ef-ba91-ff0e700f387a",
-    "status": "enabled",
-    "updated_at": "2023-04-04T08:02:47.818661382Z"
-  }
-]
-
-
-[
-  {
-    "created_at": "2023-04-04T08:02:47.857619Z",
-    "id": "a31e16f8-343c-4366-8b4f-c95e190937f4",
-    "name": "c0",
-    "owner_id": "0216df07-8f08-40ef-ba91-ff0e700f387a",
-    "status": "enabled",
-    "updated_at": "2023-04-04T08:02:47.857619Z"
-  },
-  {
-    "created_at": "2023-04-04T08:02:47.867336Z",
-    "id": "e20ad0bb-c490-47dd-9366-fb8ffd56c5dc",
-    "name": "c1",
-    "owner_id": "0216df07-8f08-40ef-ba91-ff0e700f387a",
-    "status": "enabled",
-    "updated_at": "2023-04-04T08:02:47.867336Z"
-  }
-]
-
-```
-
-In the Magistrala system terminal (where docker compose is running) you should see following logs:
+Provision a workspace with devices and channels using the CLI:
 
 ```bash
-...
-magistrala-users  | {"level":"info","message":"Method register_client with id 0216df07-8f08-40ef-ba91-ff0e700f387a using token  took 87.335902ms to complete without errors.","ts":"2023-04-04T08:02:47.722776862Z"}
-magistrala-users  | {"level":"info","message":"Method issue_token of type Bearer for client crazy_feistel@email.com took 55.342161ms to complete without errors.","ts":"2023-04-04T08:02:47.783884818Z"}
-magistrala-users  | {"level":"info","message":"Method identify for token eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODA1OTYyNjcsImlhdCI6MTY4MDU5NTM2NywiaWRlbnRpdHkiOiJjcmF6eV9mZWlzdGVsQGVtYWlsLmNvbSIsImlzcyI6ImNsaWVudHMuYXV0aCIsInN1YiI6IjAyMTZkZjA3LThmMDgtNDBlZi1iYTkxLWZmMGU3MDBmMzg3YSIsInR5cGUiOiJhY2Nlc3MifQ.EpaFDcRjYAHwqhejLfay5ju8L1a7VdhXKohUlwTv7YTeOK-ClfNNx6KznV05Swdj6lgvbmVAfe0wz2JMpfMjdw with id 0216df07-8f08-40ef-ba91-ff0e700f387a took 1.389463ms to complete without errors.","ts":"2023-04-04T08:02:47.817018631Z"}
-magistrala-clients | {"level":"info","message":"Method create_clients 2 clients using token eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODA1OTYyNjcsImlhdCI6MTY4MDU5NTM2NywiaWRlbnRpdHkiOiJjcmF6eV9mZWlzdGVsQGVtYWlsLmNvbSIsImlzcyI6ImNsaWVudHMuYXV0aCIsInN1YiI6IjAyMTZkZjA3LThmMDgtNDBlZi1iYTkxLWZmMGU3MDBmMzg3YSIsInR5cGUiOiJhY2Nlc3MifQ.EpaFDcRjYAHwqhejLfay5ju8L1a7VdhXKohUlwTv7YTeOK-ClfNNx6KznV05Swdj6lgvbmVAfe0wz2JMpfMjdw took 48.137759ms to complete without errors.","ts":"2023-04-04T08:02:47.853310066Z"}
-magistrala-users  | {"level":"info","message":"Method identify for token eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODA1OTYyNjcsImlhdCI6MTY4MDU5NTM2NywiaWRlbnRpdHkiOiJjcmF6eV9mZWlzdGVsQGVtYWlsLmNvbSIsImlzcyI6ImNsaWVudHMuYXV0aCIsInN1YiI6IjAyMTZkZjA3LThmMDgtNDBlZi1iYTkxLWZmMGU3MDBmMzg3YSIsInR5cGUiOiJhY2Nlc3MifQ.EpaFDcRjYAHwqhejLfay5ju8L1a7VdhXKohUlwTv7YTeOK-ClfNNx6KznV05Swdj6lgvbmVAfe0wz2JMpfMjdw with id 0216df07-8f08-40ef-ba91-ff0e700f387a took 302.571µs to complete without errors.","ts":"2023-04-04T08:02:47.856820523Z"}
-magistrala-clients | {"level":"info","message":"Method create_channel for 2 channels using token eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODA1OTYyNjcsImlhdCI6MTY4MDU5NTM2NywiaWRlbnRpdHkiOiJjcmF6eV9mZWlzdGVsQGVtYWlsLmNvbSIsImlzcyI6ImNsaWVudHMuYXV0aCIsInN1YiI6IjAyMTZkZjA3LThmMDgtNDBlZi1iYTkxLWZmMGU3MDBmMzg3YSIsInR5cGUiOiJhY2Nlc3MifQ.EpaFDcRjYAHwqhejLfay5ju8L1a7VdhXKohUlwTv7YTeOK-ClfNNx6KznV05Swdj6lgvbmVAfe0wz2JMpfMjdw took 15.340692ms to complete without errors.","ts":"2023-04-04T08:02:47.872089509Z"}
-magistrala-users  | {"level":"info","message":"Method identify for token eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODA1OTYyNjcsImlhdCI6MTY4MDU5NTM2NywiaWRlbnRpdHkiOiJjcmF6eV9mZWlzdGVsQGVtYWlsLmNvbSIsImlzcyI6ImNsaWVudHMuYXV0aCIsInN1YiI6IjAyMTZkZjA3LThmMDgtNDBlZi1iYTkxLWZmMGU3MDBmMzg3YSIsInR5cGUiOiJhY2Nlc3MifQ.EpaFDcRjYAHwqhejLfay5ju8L1a7VdhXKohUlwTv7YTeOK-ClfNNx6KznV05Swdj6lgvbmVAfe0wz2JMpfMjdw with id 0216df07-8f08-40ef-ba91-ff0e700f387a took 271.162µs to complete without errors.","ts":"2023-04-04T08:02:47.875812318Z"}
-magistrala-clients | {"level":"info","message":"Method add_policy for client with id 5d5e593b-7629-4cc3-bebc-b20d8ab9dbef using token eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODA1OTYyNjcsImlhdCI6MTY4MDU5NTM2NywiaWRlbnRpdHkiOiJjcmF6eV9mZWlzdGVsQGVtYWlsLmNvbSIsImlzcyI6ImNsaWVudHMuYXV0aCIsInN1YiI6IjAyMTZkZjA3LThmMDgtNDBlZi1iYTkxLWZmMGU3MDBmMzg3YSIsInR5cGUiOiJhY2Nlc3MifQ.EpaFDcRjYAHwqhejLfay5ju8L1a7VdhXKohUlwTv7YTeOK-ClfNNx6KznV05Swdj6lgvbmVAfe0wz2JMpfMjdw took 28.632906ms to complete without errors.","ts":"2023-04-04T08:02:47.904041832Z"}
-magistrala-users  | {"level":"info","message":"Method identify for token eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODA1OTYyNjcsImlhdCI6MTY4MDU5NTM2NywiaWRlbnRpdHkiOiJjcmF6eV9mZWlzdGVsQGVtYWlsLmNvbSIsImlzcyI6ImNsaWVudHMuYXV0aCIsInN1YiI6IjAyMTZkZjA3LThmMDgtNDBlZi1iYTkxLWZmMGU3MDBmMzg3YSIsInR5cGUiOiJhY2Nlc3MifQ.EpaFDcRjYAHwqhejLfay5ju8L1a7VdhXKohUlwTv7YTeOK-ClfNNx6KznV05Swdj6lgvbmVAfe0wz2JMpfMjdw with id 0216df07-8f08-40ef-ba91-ff0e700f387a took 269.959µs to complete without errors.","ts":"2023-04-04T08:02:47.906989497Z"}
-magistrala-clients | {"level":"info","message":"Method add_policy for client with id 5d5e593b-7629-4cc3-bebc-b20d8ab9dbef using token eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODA1OTYyNjcsImlhdCI6MTY4MDU5NTM2NywiaWRlbnRpdHkiOiJjcmF6eV9mZWlzdGVsQGVtYWlsLmNvbSIsImlzcyI6ImNsaWVudHMuYXV0aCIsInN1YiI6IjAyMTZkZjA3LThmMDgtNDBlZi1iYTkxLWZmMGU3MDBmMzg3YSIsInR5cGUiOiJhY2Nlc3MifQ.EpaFDcRjYAHwqhejLfay5ju8L1a7VdhXKohUlwTv7YTeOK-ClfNNx6KznV05Swdj6lgvbmVAfe0wz2JMpfMjdw took 6.303771ms to complete without errors.","ts":"2023-04-04T08:02:47.910594262Z"}
-magistrala-users  | {"level":"info","message":"Method identify for token eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODA1OTYyNjcsImlhdCI6MTY4MDU5NTM2NywiaWRlbnRpdHkiOiJjcmF6eV9mZWlzdGVsQGVtYWlsLmNvbSIsImlzcyI6ImNsaWVudHMuYXV0aCIsInN1YiI6IjAyMTZkZjA3LThmMDgtNDBlZi1iYTkxLWZmMGU3MDBmMzg3YSIsInR5cGUiOiJhY2Nlc3MifQ.EpaFDcRjYAHwqhejLfay5ju8L1a7VdhXKohUlwTv7YTeOK-ClfNNx6KznV05Swdj6lgvbmVAfe0wz2JMpfMjdw with id 0216df07-8f08-40ef-ba91-ff0e700f387a took 364.448µs to complete without errors.","ts":"2023-04-04T08:02:47.912905436Z"}
-magistrala-clients | {"level":"info","message":"Method add_policy for client with id 45048a8e-c602-4e91-9556-a9d3af6617fb using token eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODA1OTYyNjcsImlhdCI6MTY4MDU5NTM2NywiaWRlbnRpdHkiOiJjcmF6eV9mZWlzdGVsQGVtYWlsLmNvbSIsImlzcyI6ImNsaWVudHMuYXV0aCIsInN1YiI6IjAyMTZkZjA3LThmMDgtNDBlZi1iYTkxLWZmMGU3MDBmMzg3YSIsInR5cGUiOiJhY2Nlc3MifQ.EpaFDcRjYAHwqhejLfay5ju8L1a7VdhXKohUlwTv7YTeOK-ClfNNx6KznV05Swdj6lgvbmVAfe0wz2JMpfMjdw took 7.73352ms to complete without errors.","ts":"2023-04-04T08:02:47.920205467Z"}
-...
-
+magistrala-cli workspaces create "Acme IoT" --token $TOKEN
+magistrala-cli devices create '{"name":"Temperature Sensor 1"}' <workspace_id> --token $TOKEN
+magistrala-cli channels create <workspace_id> "Telemetry Channel" --token $TOKEN
 ```
 
-This proves that these provisioning commands were sent from the CLI to the Magistrala system.
+See the [Workspaces](/dev-guide/cli/workspaces-cli), [Devices](/dev-guide/cli/devices-cli), and
+[Channels](/dev-guide/cli/channels-cli) CLI guides for the full set of options.
 
 ### Step 7 - Interact with Magistrala
 
@@ -390,32 +294,18 @@ With Magistrala running, you can now send messages.
 
 #### Send Messages
 
-<Callout type="warn" title="This command no longer exists">
-  There is no `messages` command in the current CLI. Send messages over the platform's protocol
-  adapters (HTTP, MQTT, CoAP, WebSocket) directly instead — see [Architecture § Who
-  Connects](/dev-guide/architecture#who-connects). The example below is kept for historical
-  reference only.
-</Callout>
-
-Once system is provisioned, a device can start sending messages on a channel. The old command looked like:
+Once a device is connected to a channel, it can publish messages over any of the platform's
+protocol adapters (HTTP, MQTT, CoAP, WebSocket). For example, over HTTP:
 
 ```bash
-magistrala-cli messages send <channel_id> <JSON_string> <client_secret>
+curl -sSiX POST http://localhost/http/m/<workspace_id>/c/<channel_id> \
+-H "Content-Type: application/senml+json" \
+-H "Authorization: Client <device_secret>" \
+-d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
-In the Magistrala system terminal you should see following logs:
-
-```bash
-...
-magistrala-clients | {"level":"info","message":"Method authorize_by_key for channel with id a31e16f8-343c-4366-8b4f-c95e190937f4 by client with secret fc9473d8-6756-4fcc-968f-ea43cd0b803b took 7.048706ms to complete without errors.","ts":"2023-04-04T08:06:09.750992633Z"}
-magistrala-broker | [1] 2023/04/04 08:06:09.753072 [TRC] 192.168.144.11:60616 - cid:10 - "v1.18.0:go" - <<- [PUB channels.a31e16f8-343c-4366-8b4f-c95e190937f4 261]
-magistrala-broker | [1] 2023/04/04 08:06:09.754037 [TRC] 192.168.144.11:60616 - cid:10 - "v1.18.0:go" - <<- MSG_PAYLOAD: ["\n$a31e16f8-343c-4366-8b4f-c95e190937f4\x1a$5d5e593b-7629-4cc3-bebc-b20d8ab9dbef\"\x04http*\xa6\x01[{\"bn\":\"some-base-name:\",\"bt\":1.276020076001e+09, \"bu\":\"A\",\"bver\":5, \"n\":\"voltage\",\"u\":\"V\",\"v\":120.1}, {\"n\":\"current\",\"t\":-5,\"v\":1.2}, {\"n\":\"current\",\"t\":-4,\"v\":1.3}]0\xd9\xe6\x8b\xc9Ø\xab\xa9\x17"]
-magistrala-broker | [1] 2023/04/04 08:06:09.755550 [TRC] 192.168.144.13:58572 - cid:8 - "v1.18.0:go" - ->> [MSG channels.a31e16f8-343c-4366-8b4f-c95e190937f4 1 261]
-magistrala-http   | {"level":"info","message":"Method publish to channel a31e16f8-343c-4366-8b4f-c95e190937f4 took 15.979094ms to complete without errors.","ts":"2023-04-04T08:06:09.75232571Z"}
-...
-```
-
-This proves that messages have been correctly sent through the system via the protocol adapter (`magistrala-http`).
+See [Messaging](/user-guide/messaging) for the other protocol adapters, and the [API
+reference](/dev-guide/api#messages) for the full Messages API.
 
 ## Managing Microservices
 
@@ -469,22 +359,18 @@ GOOS=linux GOARCH=arm GOARM=7 make
 
 ## Message Broker
 
-<Callout type="warn" title="FluxMQ is now the default message broker">
-  This section describes the previous NATS-based local dev setup. **FluxMQ** is now Magistrala's
-  default message broker; NATS remains available only as a build-time alternative. See
-  [Architecture](/dev-guide/architecture) for the current model. The content below is kept for
-  historical reference only.
-</Callout>
+[FluxMQ](https://github.com/absmach/fluxmq) is Magistrala's default message broker and event
+stream, handling MQTT, WebSocket, HTTP, CoAP, and AMQP protocol adapters — see
+[Architecture](/dev-guide/architecture) for the full model. NATS remains available as a build-time
+alternative for local development.
 
-Magistrala uses NATS as it's default central message bus. For development purposes (when not run via Docker), it expects that NATS is installed on the local system.
-
-To do this execute:
+To run NATS instead (when not running via Docker), install and start it locally:
 
 ```bash
 go install github.com/nats-io/nats-server/v2@latest
 ```
 
-This will install `nats-server` binary that can be simply run by executing:
+This will install the `nats-server` binary, which can be run directly:
 
 ```bash
 nats-server
@@ -492,14 +378,16 @@ nats-server
 
 ### Switching Brokers
 
-To use an alternative broker (e.g., RabbitMQ or VerneMQ) you need to set the env variable:
+To use an alternative broker (e.g., NATS, RabbitMQ, or VerneMQ) at build time, set the env
+variable:
 
 - `MG_BROKER_TYPE=<broker_name>`
 
-**Supported Brokers:**  
+**Supported Brokers:**
 
-- `nats` (default)  
-- `rabbitmq`  
+- `fluxmq` (default)
+- `nats`
+- `rabbitmq`
 - `vernemq`
 
 ```bash
@@ -559,17 +447,7 @@ Magistrala depends on several infrastructural services, notably the default mess
 
 ## Conclusion
 
-With Magistrala installed and running, you can now explore its messaging capabilities, test interactions, and extend the system as needed
-
----
-
-## Authorization schema management
-
-<Callout type="warn" title="This section describes a service that no longer exists">
-  There is no SpiceDB deployment. Authorization is now provided by Atom — see
-  [Architecture § Identity & Access Control](/dev-guide/architecture#identity--access-control).
-  The SpiceDB schema workflow below is kept for historical reference only.
-</Callout>
+With Magistrala installed and running, you can now explore its messaging capabilities, test interactions, and extend the system as needed. For authorization and access control, see [Authorization](/dev-guide/authorization).
 
 [docker]: https://docs.docker.com/install/
 [docker-compose]: https://docs.docker.com/compose/install/
