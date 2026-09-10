@@ -91,26 +91,42 @@ type Metric struct {
 | Protocol    | string  | Protocol filter (MQTT/HTTP/etc.)         | Optional |
 | Format      | string  | Data format specification                | Optional |
 
+`Metric` is the shape a report configuration is *returned* as. When *creating or updating* one, the `metrics` array in the request body takes a different shape, `ReqMetric`, whose one difference is a `device_ids` array instead of a single `device_id`:
+
+```go
+type ReqMetric struct {
+    ChannelID string    // Mandatory field
+    DeviceIDs []string  // Optional field
+    Name      string    // Mandatory field
+    Subtopic  string    // Optional field
+    Protocol  string    // Optional field
+    Format    string    // Optional field
+}
+```
+
 ## Report Parameters
 
 ```go
 type MetricConfig struct {
-    From        string      // Relative start time (e.g., "now()-24h")
-    To          string      // Relative end time (e.g., "now")
+    From        string      // Mandatory field. Relative start time (e.g., "now()-24h")
+    To          string      // Mandatory field. Relative end time (e.g., "now")
+    Title       string      // Mandatory field
     FileFormat  Format      // Optional field
     Timezone    string      // Optional field (IANA timezone name, defaults to UTC)
     Aggregation AggConfig   // Data processing method
 }
+```
 
 | Field         | Type      | Description                              | Required |
 |---------------|-----------|------------------------------------------|----------|
 | From          | string    | Start time (relative/absolute)           | ✅       |
 | To            | string    | End time (relative/absolute)             | ✅       |
+| Title         | string    | Report title                             | ✅       |
 | FileFormat    | Format    | Output format (PDF/CSV)                  | Optional |
 | Timezone      | string    | IANA timezone name ("Europe/Paris")      | Optional |
 | Aggregation   | AggConfig | Data processing configuration            | Optional |
 
-
+```go
 type AggConfig struct {
     AggType string  // "SUM", "AVG", "MIN", "MAX", "COUNT"
     Interval string
@@ -197,6 +213,7 @@ Timestamp,Value,Unit,Protocol,Subtopic
 type EmailSetting struct {
     To      []string  // Recipient addresses
     Subject string    // Email subject line
+    Content string    // Email body content
 }
 ```
 
@@ -345,7 +362,7 @@ Templates have access to these custom functions:
 Update a custom template for a specific report configuration:
 
 ```bash
-curl --location --request PUT 'http://localhost:9008/{workspaceID}/reports/configs/{reportID}/template' \
+curl --location --request PUT 'http://localhost:9017/{workspaceID}/reports/configs/{reportID}/template' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
@@ -358,7 +375,7 @@ curl --location --request PUT 'http://localhost:9008/{workspaceID}/reports/confi
 Retrieve the current template for a report configuration:
 
 ```bash
-curl --location 'http://localhost:9008/{workspaceID}/reports/configs/{reportID}/template' \
+curl --location 'http://localhost:9017/{workspaceID}/reports/configs/{reportID}/template' \
 --header 'Authorization: Bearer $ACCESSTOKEN'
 ```
 
@@ -374,7 +391,7 @@ Response:
 Remove a custom template (reverts to default):
 
 ```bash
-curl --location --request DELETE 'http://localhost:9008/{workspaceID}/reports/configs/{reportID}/template' \
+curl --location --request DELETE 'http://localhost:9017/{workspaceID}/reports/configs/{reportID}/template' \
 --header 'Authorization: Bearer $ACCESSTOKEN'
 ```
 
@@ -388,7 +405,7 @@ Templates can be used in two ways:
 #### Configuration-level Usage
 
 ```bash
-curl --location 'http://localhost:9008/{workspaceID}/reports/configs' \
+curl --location 'http://localhost:9017/{workspaceID}/reports/configs' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
@@ -407,7 +424,7 @@ curl --location 'http://localhost:9008/{workspaceID}/reports/configs' \
 #### Request-level Usage
 
 ```bash
-curl --location 'http://localhost:9008/{workspaceID}/reports?action=download' \
+curl --location 'http://localhost:9017/{workspaceID}/reports?action=download' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
@@ -837,20 +854,21 @@ If no custom template is provided, the system uses a built-in default template t
 
 ### API Operations
 
-Base URL: `http://localhost:9008/{workspaceID}/reports`
+Base URL: `http://localhost:9017/{workspaceID}/reports`
 
 1. Create Report Configuration
 
 Endpoint: `POST /configs`
 
 ```bash
-curl --location http://localhost:9008/{workspaceID}/reports/configs \
+curl --location http://localhost:9017/{workspaceID}/reports/configs \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
     "name": "lab 1 report",
     "description": "lab 1 sensors report",
     "config": {
+        "title": "Lab 1 Sensors",
         "from": "now()-5d",
         "to": "now()",
         "timezone": "America/New_York",
@@ -862,11 +880,11 @@ curl --location http://localhost:9008/{workspaceID}/reports/configs \
     "metrics": [
         {
             "channel_id": "{{CHANNELID}}",
-            "device_id": "{{THINGID}}",
+            "device_ids": ["{{THINGID}}"],
             "name": "current",
             "subtopic": "lab/room1"
         }
-    ]
+    ],
     "schedule": {
         "start_datetime": "2025-04-28T00:00:00.000Z",
         "time": "0001-01-01T20:30:00.000Z",
@@ -931,7 +949,7 @@ Expected response:
 Endpoint: `POST /`
 
 ```bash
-curl -X POST http://localhost:9008/{workspaceID}/reports \
+curl -X POST http://localhost:9017/{workspaceID}/reports \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
@@ -1000,7 +1018,7 @@ Expected response:
 > The available actions are `view`, `download` and `email`. The default action is `view`. To change the action you can pass the action parameter:
 
 ```bash
-curl --location 'http://localhost:9008/bd1bb2c5-ce78-4456-8725-bd1beab80250/reports?action=download' \
+curl --location 'http://localhost:9017/bd1bb2c5-ce78-4456-8725-bd1beab80250/reports?action=download' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
@@ -1031,7 +1049,7 @@ Expected response:
 To send the generated report via email it can be done as follows:
 
 ```bash
-curl --location 'http://localhost:9008/bd1bb2c5-ce78-4456-8725-bd1beab80250/reports?action=email' \
+curl --location 'http://localhost:9017/bd1bb2c5-ce78-4456-8725-bd1beab80250/reports?action=email' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data-raw '{
@@ -1061,7 +1079,7 @@ curl --location 'http://localhost:9008/bd1bb2c5-ce78-4456-8725-bd1beab80250/repo
 Endpoint: `GET /configs`
 
 ```bash
-curl "http://localhost:9008/{workspaceID}/reports/configs?status=enabled&limit=10" \
+curl "http://localhost:9017/{workspaceID}/reports/configs?status=enabled&limit=10" \
 --header 'Authorization: Bearer $ACCESSTOKEN'
 ```
 
@@ -1121,7 +1139,7 @@ Expected response:
 Endpoint: `GET /configs/{reportID}`
 
 ```bash
-curl --location 'http://localhost:9008/{workspaceID}/reports/configs/{reportID}' \
+curl --location 'http://localhost:9017/{workspaceID}/reports/configs/{reportID}' \
 --header 'Authorization: Bearer $TOKEN'
 ```
 
@@ -1132,7 +1150,7 @@ Endpoint:
 `POST /{workspaceID}/reports/configs/{reportID}/enable`
 
 ```bash
-curl --location http://localhost:9008/{workspaceID}/reports/configs/{reportID}/enable \
+curl --location http://localhost:9017/{workspaceID}/reports/configs/{reportID}/enable \
 --header 'Authorization: Bearer $ACCESSTOKEN'
 ```
 
@@ -1143,7 +1161,7 @@ Endpoint:
 `POST /{workspaceID}/reports/configs/{reportID}/disable`
 
 ```bash
-curl --location http://localhost:9008/{workspaceID}/reports/configs/{reportID}/disable \
+curl --location http://localhost:9017/{workspaceID}/reports/configs/{reportID}/disable \
 --header 'Authorization: Bearer $ACCESSTOKEN'
 ```
 
@@ -1154,7 +1172,7 @@ Endpoint:
 `PATCH /{workspaceID}/reports/configs/{reportID}`
 
 ```bash
-curl --location --request PATCH 'http://localhost:9008/{workspaceID}/reports/configs/{reportID}' \
+curl --location --request PATCH 'http://localhost:9017/{workspaceID}/reports/configs/{reportID}' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
@@ -1175,7 +1193,7 @@ Endpoint:
 `PUT /{workspaceID}/reports/configs/{reportID}/template`
 
 ```bash
-curl --location --request PUT 'http://localhost:9008/{workspaceID}/reports/configs/{reportID}/template' \
+curl --location --request PUT 'http://localhost:9017/{workspaceID}/reports/configs/{reportID}/template' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ACCESSTOKEN' \
 --data '{
@@ -1190,7 +1208,7 @@ Endpoint:
 `GET /{workspaceID}/reports/configs/{reportID}/template`
 
 ```bash
-curl --location 'http://localhost:9008/{workspaceID}/reports/configs/{reportID}/template' \
+curl --location 'http://localhost:9017/{workspaceID}/reports/configs/{reportID}/template' \
 --header 'Authorization: Bearer $ACCESSTOKEN'
 ```
 
@@ -1201,6 +1219,6 @@ Endpoint:
 `DELETE /{workspaceID}/reports/configs/{reportID}/template`
 
 ```bash
-curl --location --request DELETE 'http://localhost:9008/{workspaceID}/reports/configs/{reportID}/template' \
+curl --location --request DELETE 'http://localhost:9017/{workspaceID}/reports/configs/{reportID}/template' \
 --header 'Authorization: Bearer $ACCESSTOKEN'
 ```

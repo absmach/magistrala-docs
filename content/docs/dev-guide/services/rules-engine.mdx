@@ -349,9 +349,9 @@ type Postgres struct {
 #### alarms
 
 ```go
-type Alarms struct {
-  Type    string  `json:"type"`
-  RuleID  string  `json:"rule_id"`
+type Alarm struct {
+  Identity          // embeds ID; "type" on the wire comes from a custom MarshalJSON, not a literal field
+  RuleID string `json:"rule_id"`
 }
 ```
 
