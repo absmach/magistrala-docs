@@ -4,6 +4,7 @@
     "introduction-to-cli",
     "workspaces-cli",
     "devices-cli",
+    "users-cli",
     "gateways-cli",
     "devicetypes-cli",
     "channels-cli",
