@@ -17,11 +17,13 @@ image: /img/mg-preview.png
 `users`, `clients`, and `bootstrap` are now consolidated into **Atom** (`bootstrap` is now
 `atom-bootstrap`) — see [Entities](/dev-guide/entities) and [Architecture](/dev-guide/architecture)
 for the current service model. Event streaming for messaging now runs through FluxMQ — see
-[Architecture](/dev-guide/architecture) — while the Redis Streams mechanism below covers the
-`mqtt` adapter's own event log.
+[Architecture](/dev-guide/architecture). The standalone `mqtt` adapter this page's Redis Streams
+example describes no longer exists (MQTT protocol handling is absorbed into FluxMQ natively), and
+the Go package this mechanism was implemented in (`pkg/messaging/events`) has no current importers
+anywhere in the codebase — nothing below reflects current, running behavior.
 </Callout>
 
-In order to be easily integrable system, Magistrala uses [Redis Streams][redis-streams] as an event log for event sourcing, currently used by the `mqtt` adapter.
+In order to be easily integrable system, Magistrala previously used [Redis Streams][redis-streams] as an event log for event sourcing, published to by a standalone `mqtt` adapter that no longer exists.
 
 ## Users Service
 

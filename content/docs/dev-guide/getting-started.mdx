@@ -233,28 +233,21 @@ docker-compose -f docker/docker-compose.yml -f docker/docker-compose.custom1.yml
 
 In the command above each successive file overrides the previous parameters.
 
-<Callout type="info">
-  This example overrides the `nats` service, which applies only when Magistrala is built with NATS
-  as the broker. FluxMQ is the default message broker — see [Message Broker](#message-broker) — so
-  adapt the override to the `fluxmq` service for a default setup.
-</Callout>
+A practical example in our case would be overriding one of the [FluxMQ](#message-broker) broker
+nodes — say, to disable its restart policy while you're actively debugging it.
 
-A practical example in our case would be to enable debugging and tracing in NATS so that we can see better how are the messages moving around.
-
-`docker-compose.nats-debugging.yml`
+`docker-compose.fluxmq-debug.yml`
 
 ```yaml
-version: "3"
-
 services:
-  nats:
-    command: --debug -DV
+  fluxmq-node1:
+    restart: "no"
 ```
 
 When we have the override files in place, to compose the whole infrastructure including the persistent volumes we can execute:
 
 ```bash
-docker-compose -f docker/docker-compose.yml -f docker/docker-compose.nats-debugging.yml up -d
+docker-compose -f docker/docker-compose.yml -f docker/docker-compose.fluxmq-debug.yml up -d
 ```
 
 >**Note:** Please store your customizations to some folder outside the Magistrala's source folder and maybe add them to some other git repository. You can always apply your customizations by pointing to the right file using `docker-compose -f ...`.
@@ -359,41 +352,11 @@ GOOS=linux GOARCH=arm GOARM=7 make
 
 ## Message Broker
 
-[FluxMQ](https://github.com/absmach/fluxmq) is Magistrala's default message broker and event
-stream, handling MQTT, WebSocket, HTTP, CoAP, and AMQP protocol adapters — see
-[Architecture](/dev-guide/architecture) for the full model. NATS remains available as a build-time
-alternative for local development.
-
-To run NATS instead (when not running via Docker), install and start it locally:
-
-```bash
-go install github.com/nats-io/nats-server/v2@latest
-```
-
-This will install the `nats-server` binary, which can be run directly:
-
-```bash
-nats-server
-```
-
-### Switching Brokers
-
-To use an alternative broker (e.g., NATS, RabbitMQ, or VerneMQ) at build time, set the env
-variable:
-
-- `MG_BROKER_TYPE=<broker_name>`
-
-**Supported Brokers:**
-
-- `fluxmq` (default)
-- `nats`
-- `rabbitmq`
-- `vernemq`
-
-```bash
-MG_BROKER_TYPE=<broker-type> make
-MG_BROKER_TYPE=<broker-type> make run
-```
+[FluxMQ](https://github.com/absmach/fluxmq) is Magistrala's message broker and event stream,
+handling MQTT, WebSocket, HTTP, CoAP, and AMQP protocol adapters — see
+[Architecture](/dev-guide/architecture) for the full model. There is no build-time alternative:
+`pkg/messaging/brokers/` contains only the FluxMQ implementation, and there are no NATS,
+RabbitMQ, or VerneMQ references anywhere in the current codebase.
 
 ### MQTT Broker
 
