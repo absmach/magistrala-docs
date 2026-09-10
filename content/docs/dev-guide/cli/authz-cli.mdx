@@ -17,13 +17,13 @@ magistrala-cli authz check <subject_id> <action> [--object-kind <kind>] [--objec
 ```
 
 ```bash
-magistrala-cli authz check user-123 read --object-kind channel --object-id chan-1 --token $TOKEN
+magistrala-cli authz check user-123 read --object-kind resource --object-id chan-1 --token $TOKEN
 ```
 
 ```json
-{ "authorized": true }
+{ "allowed": true }
 ```
 
 - `<subject_id>` / `<action>` are required positional arguments — the entity asking, and the permission verb (`read`, `write`, `delete`, `publish`, `subscribe`, `role.manage`, `policy.manage`, ...).
-- `--object-kind` / `--object-id` scope the check to a specific object (e.g. a channel or device).
+- `--object-kind` / `--object-id` scope the check to a specific object. `--object-kind` is Atom's generic object-kind category — `resource` for a Channel/Rule/Report/Bootstrap object, `entity` for a Device/Gateway/User, `group`, or `tenant` — not the specific type name; Atom resolves the exact type from `--object-id`.
 - `--resource-id` and `--context` support finer-grained or conditional checks where applicable.

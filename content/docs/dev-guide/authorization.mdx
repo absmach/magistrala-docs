@@ -76,7 +76,7 @@ type PermissionBlock struct {
 }
 ```
 
-`ScopeMode` is one of nine values: the tenant itself; all objects of a kind; all objects of a type; one exact object (by `ObjectKind`/`ObjectType`/`ObjectID`); an object group itself; direct objects in a group; objects in subgroups; direct child groups; or descendant groups.
+`ScopeMode` is one of nine values: the whole platform; the tenant itself; all objects of a kind; all objects of a type; one exact object (by `ObjectKind`/`ObjectType`/`ObjectID`); direct objects in a group; objects in subgroups; direct child groups; or descendant groups.
 
 `DirectPolicy` (one Permission Block → one subject) and `GroupGrant` (one Permission Block → every member of a principal group, present and future) are the two ways a block actually reaches a subject without going through a named Role — both also transcribed directly from `pkg/atom/types.go`.
 
