@@ -354,9 +354,7 @@ GOOS=linux GOARCH=arm GOARM=7 make
 
 [FluxMQ](https://github.com/absmach/fluxmq) is Magistrala's message broker and event stream,
 handling MQTT, WebSocket, HTTP, CoAP, and AMQP protocol adapters — see
-[Architecture](/dev-guide/architecture) for the full model. There is no build-time alternative:
-`pkg/messaging/brokers/` contains only the FluxMQ implementation, and there are no NATS,
-RabbitMQ, or VerneMQ references anywhere in the current codebase.
+[Architecture](/dev-guide/architecture) for the full model.
 
 ### MQTT Broker
 

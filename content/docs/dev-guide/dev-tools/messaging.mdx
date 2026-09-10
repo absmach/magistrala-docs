@@ -392,11 +392,7 @@ it's subtopics.
 
 **FluxMQ** is Magistrala's message broker for both MQTT and general message exchange — see
 [Architecture](/dev-guide/architecture) and [Storage Architecture](/dev-guide/storage-architecture)
-for the current model. There is no pluggable-broker configuration: `MG_BROKER_TYPE`,
-`MG_MQTT_BROKER_TYPE`, and the NATS/RabbitMQ/Kafka environment variables this section used to
-describe don't exist anywhere in the current codebase — `pkg/messaging/brokers/` contains only the
-FluxMQ implementation. Magistrala does depend on `rabbitmq/amqp091-go`, but as an AMQP 0.9.1 client
-for talking to FluxMQ itself, not as support for an alternative RabbitMQ broker.
+for the current model.
 
 [http-api]: https://docs.api.magistrala.absmach.eu/?urls.primaryName=api%2Fhttp.yaml&service=http.yaml
 [mosquitto]: https://mosquitto.org
