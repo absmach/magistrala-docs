@@ -22,12 +22,13 @@ The **Workspaces**, **Devices**, **Channels**, **Groups**, and **Users** section
 
 ## Users
 
-A **User** is an Atom `Entity` of kind `human` — the same generic entity type documented in [Devices](#devices), with the same `createEntity`/`entity`/`entities`/`updateEntity`/`enableEntity`/`disableEntity`/`deleteEntity` mutations and queries. This section only covers what's specific to human users: signing up, logging in, and password/session management (`src/graphql/auth.rs`, `src/graphql/credentials.rs`).
+A **User** is an Atom `Entity` of kind `human` — the same generic entity type documented in [Devices](#devices), with the same `createEntity`/`entity`/`entities`/`updateEntity`/`enableEntity`/`disableEntity`/`deleteEntity` mutations and queries, also wrapped by the [Users CLI](/dev-guide/cli/users-cli). This section only covers what's specific to human users: signing up, logging in, and password/session management (`src/graphql/auth.rs`, `src/graphql/credentials.rs`).
 
-<Callout type="warn" title="No CLI equivalent">
-  Unlike Workspaces/Devices/Channels/Groups, user management has no CLI wrapper — the shipped CLI
-  (`cli/root.go`) has no `users` command. Everything below is GraphQL-only, or reachable through
-  `magistrala-ui`'s sign-up/login pages.
+<Callout type="info">
+  Sign up, log in, log out, and session refresh below are GraphQL-only, or reachable through
+  `magistrala-ui`'s sign-up/login pages — they're unauthenticated or session-scoped operations, not
+  entity management. Create/Get/Update/Enable/Disable/Delete User and Set/Change Password all have
+  a CLI equivalent — see the [Users CLI](/dev-guide/cli/users-cli).
 </Callout>
 
 Same connection details as the rest of this API reference: `POST http://localhost:8080/graphql`, `Content-Type: application/json`, body `{"query": "...", "variables": {...}}`. Login/signup requests need no `Authorization` header (they establish one); everything else needs `Authorization: Bearer <user_token>`.
