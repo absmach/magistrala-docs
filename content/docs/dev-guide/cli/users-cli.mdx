@@ -1,0 +1,90 @@
+---
+title: Users
+description: Manage users in Magistrala using the CLI.
+keywords:
+  - CLI
+  - Users
+  - Management
+  - Magistrala
+  - Atom
+image: /img/mg-preview.png
+---
+
+Users are Atom entities of kind `human` (`cli/users.go`) — the same generic entity type used for Devices, with the same create/get/update/delete/enable/disable shape. This command is for admin-created accounts and account maintenance; self-service sign-up, login, logout, and session refresh stay GraphQL-only (or go through `magistrala-ui`'s sign-up/login pages) — see [API § Users](/dev-guide/api#users). All commands require `--token` from [`login`](/dev-guide/cli/introduction-to-cli#authentication).
+
+### Create a user
+
+```bash
+magistrala-cli users create <JSON_user> [workspace_id] --token <token>
+```
+
+```bash
+magistrala-cli users create '{"name":"Jane Doe"}' --token $TOKEN
+```
+
+`workspace_id` is optional, unlike [`devices create`](/dev-guide/cli/devices-cli#create-a-device) — a user need not belong to a workspace (a self-registered account starts without one too).
+
+`createEntity` has no password field, so a user created this way cannot log in until a password is set — see [Set a password](#set-a-password) below.
+
+### List users
+
+```bash
+magistrala-cli users all get [workspace_id] --token <token>
+```
+
+Omit `workspace_id` to list across every workspace. Combine with `--name` to search:
+
+```bash
+magistrala-cli users all get --name "jane" --token $TOKEN
+```
+
+### Get a user
+
+```bash
+magistrala-cli users <user_id> get --token <token>
+```
+
+```json
+{
+  "id": "758050fd-...",
+  "kind": "human",
+  "name": "Jane Doe",
+  "status": "active",
+  "attributes": {}
+}
+```
+
+### Update a user
+
+```bash
+magistrala-cli users <user_id> update <JSON_string> --token <token>
+```
+
+```bash
+magistrala-cli users 758050fd-... update '{"name":"Jane Doe-Smith"}' --token $TOKEN
+```
+
+`update` can change `name` and `attributes`. It cannot change email (set at sign-up) or password — see [Set a password](#set-a-password).
+
+### Enable / disable a user
+
+```bash
+magistrala-cli users <user_id> enable --token <token>
+magistrala-cli users <user_id> disable --token <token>
+```
+
+These map to Atom's `active`/`inactive` entity status, not Magistrala's separate enabled/disabled vocabulary used elsewhere.
+
+### Set a password
+
+```bash
+magistrala-cli users <user_id> password set <new_password> --token <token>
+```
+
+Wraps the same `createPassword` mutation as the API reference's [Set / Change Password](/dev-guide/api#set--change-password) — despite the name, it also handles replacing an existing password, since there is no separate "update password" mutation. Setting another user's password requires `manage` capability on them (or on their workspace).
+
+### Delete a user
+
+```bash
+magistrala-cli users <user_id> delete --token <token>
+```
