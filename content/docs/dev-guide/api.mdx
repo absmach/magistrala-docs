@@ -788,17 +788,36 @@ EOF
 
 Platform-admin-only `restoreResource(id: ID!): Boolean` and `purgeResource(id: ID!): Boolean` mirror the Workspace/Device lifecycle above.
 
-<Callout type="warn" title="Enable/Disable and Connect/Disconnect have no direct equivalent">
-  There is **no** `enableResource`/`disableResource` mutation (Resources don't carry the
-  `active`/`inactive` status Devices and Workspaces do), and **no**
-  `connectResource`/`disconnectResource`-style mutation linking a specific Device to a specific
-  Channel. A stored "connection" object doesn't exist in the current model.
+<Callout type="warn" title="Enable/disable is an attributes convention, not an access control">
+  There is **no** `enableResource`/`disableResource` mutation — Resources don't carry a dedicated
+  `active`/`inactive` status field the way Devices and Workspaces do. `magistrala-ui`'s Enable/Disable
+  toggle for a channel is a convention on top of the generic `attributes` field: it calls
+  `updateResource` to set `attributes.status` to `"active"` or `"inactive"`.
 
-  Publish/subscribe access is now purely an **authorization grant**: create a Permission Block
-  scoped to the channel object (`createPermissionBlock`, action `publish` and/or `subscribe`),
-  then attach it to the device via `createDirectPolicy` (or via a Role, for a reusable grant
-  across many devices) — see [Authorization](/dev-guide/authorization) for the full Permission
-  Block / Role / Direct Policy model.
+  ```bash
+  curl -sSiX POST http://localhost:8080/graphql \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <user_token>" \
+  -d @- <<EOF
+  {
+    "query": "mutation DisableChannel(\$id: ID!, \$input: UpdateResourceInput!) { updateResource(id: \$id, input: \$input) { id attributes } }",
+    "variables": { "id": "<channel_id>", "input": { "attributes": { "status": "inactive" } } }
+  }
+  EOF
+  ```
+
+  This flag is display-only: Atom's authorization checks don't read it, so a channel with
+  `attributes.status: "inactive"` still accepts publish/subscribe traffic from anyone holding a
+  valid Permission Block for it. To actually revoke access, remove or deny the relevant Direct
+  Policy/Permission Block instead — see below.
+
+  There is also **no** `connectResource`/`disconnectResource`-style mutation linking a specific
+  Device to a specific Channel. A stored "connection" object doesn't exist in the current model.
+  Publish/subscribe access is purely an **authorization grant**: create a Permission Block scoped
+  to the channel object (`createPermissionBlock`, action `publish` and/or `subscribe`), then attach
+  it to the device via `createDirectPolicy` (or via a Role, for a reusable grant across many
+  devices) — see [Authorization](/dev-guide/authorization) for the full Permission Block / Role /
+  Direct Policy model.
 </Callout>
 
 ### Object Groups

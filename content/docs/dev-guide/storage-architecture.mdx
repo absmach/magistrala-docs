@@ -53,7 +53,7 @@ Magistrala's concepts map onto Atom's native primitives rather than onto bespoke
 | Connection / access grant             | Role assignment or Direct Policy   | `role_assignments` / `direct_policies`            |
 | Credentials (password, API key, cert) | Credential                         | `credentials`                                     |
 
-Application-specific fields that Atom doesn't model natively live in an `attributes.magistrala` JSONB blob on the object, so Magistrala never needs a second store. Because a Magistrala **workspace** is an Atom **tenant**, multi-tenancy is a first-class property of the schema — every entity, resource, group, role, and credential is scoped to a tenant.
+Application-specific fields that Atom doesn't model natively live directly in the object's `attributes` JSONB column, so Magistrala never needs a second store. Because a Magistrala **workspace** is an Atom **tenant**, multi-tenancy is a first-class property of the schema — every entity, resource, group, role, and credential is scoped to a tenant.
 
 This metadata changes relatively infrequently compared with the message firehose, but when it does it must update atomically, consistently, and reliably, because it is the foundation the whole platform rests on. That is why it lives in a relational database.
 
@@ -102,7 +102,7 @@ FROM entities
 WHERE tenant_id = $1
   AND kind = 'device'
   AND status = 'active'
-  AND attributes -> 'magistrala' -> 'tags' @> '["region:EU"]';
+  AND attributes -> 'tags' @> '["region:EU"]';
 ```
 
 Crucially, Atom applies **authorization filtering in SQL**: a listing returns only the objects the caller is allowed to `read`, rather than fetching everything and running a permission check per row. A schemaless store would forfeit both the guaranteed validity of those references and the ability to express this filtering efficiently — pushing complexity, latency, and inconsistency back into the application.
@@ -178,6 +178,7 @@ CREATE TABLE IF NOT EXISTS messages (
     data_value    BYTEA,
     sum           FLOAT,
     update_time   FLOAT,
+    device_id     TEXT NOT NULL DEFAULT '',
     PRIMARY KEY (time, channel, subtopic, protocol, publisher, name)
 );
 ```
@@ -300,7 +301,7 @@ Not every payload fits neatly into a relational row or a time-series point. For 
 
 Message persistence follows a **writer/reader** pattern that keeps the transport and the storage engine decoupled:
 
-- **Writers** consume a durable stream on the internal message bus (FluxMQ, with NATS available as a build-time alternative) and store messages in the chosen backend.
+- **Writers** consume a durable stream on the internal message bus (FluxMQ) and store messages in the chosen backend.
 - **Readers** expose an HTTP API for querying stored messages.
 
 Magistrala ships writer and reader services for two backends:
@@ -314,12 +315,12 @@ TimescaleDB is the default for production-scale time-series workloads; the plain
 
 ### What feeds the writers
 
-The broker provisions two durable streams that matter for storage. Their bindings use different syntax in FluxMQ and NATS, but their roles are the same:
+The broker provisions two durable streams that matter for storage:
 
-| Stream    | FluxMQ binding     | NATS subject | Receives                                                                      |
-| --------- | ------------------ | ------------ | ----------------------------------------------------------------------------- |
-| `m`       | `m/#`              | `m.>`        | Every message published to any channel, captured automatically by the binding |
-| `writers` | `$queue/writers/#` | `writers.>`  | Only messages a service explicitly republishes there                          |
+| Stream    | FluxMQ binding     | Receives                                                                      |
+| --------- | ------------------ | ------------------------------------------------------------------------------ |
+| `m`       | `m/#`              | Every message published to any channel, captured automatically by the binding |
+| `writers` | `$queue/writers/#` | Only messages a service explicitly republishes there                          |
 
 Writers consume **`writers`**, not `m`. Nothing publishes into `writers` on its own: Magistrala's built-in producer is the Rules Engine, whose `save_senml` and `save_json` outputs republish a matched message for storage. Persistence is therefore *selective* — a message is stored because a rule chose it, not because it was published.
 

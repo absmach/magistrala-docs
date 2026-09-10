@@ -21,7 +21,7 @@ consolidated into **Atom** (`bootstrap` is now `atom-bootstrap`) — see
 The content below is kept for historical reference only.
 </Callout>
 
-In order to be easily integrable system, Magistrala is using [Redis Streams][redis-streams] as an event log for event sourcing. Services that previously published events to Redis Streams included `users`, `clients`, `bootstrap`, and the `mqtt` adapter.
+In order to be easily integrable system, Magistrala is using [Redis Streams][redis-streams] as an event log for event sourcing. Services that previously published events to Redis Streams included `users`, `clients`, `bootstrap`, and a standalone `mqtt` adapter. There is no `cmd/mqtt` service anymore — MQTT protocol handling is now absorbed into FluxMQ natively — and the Go package this mechanism was implemented in (`pkg/messaging/events`) has no current importers anywhere in the codebase, so nothing below reflects current, running behavior.
 
 ## Users Service
 

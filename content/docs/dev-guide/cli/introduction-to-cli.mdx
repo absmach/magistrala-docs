@@ -14,7 +14,7 @@ keywords:
 image: /img/mg-preview.png
 ---
 
-The **Magistrala CLI** (`magistrala-cli`) is a thin command-line wrapper over [Atom](https://github.com/absmach/atom)'s GraphQL API — every resource command (`workspaces`, `channels`, `groups`, `devices`, `gateways`, `devicetypes`, `authz`) ultimately talks to Atom, not to a per-entity Magistrala microservice. Its source lives in the `magistrala` repository's [`cli/`](https://github.com/absmach/magistrala/tree/main/cli) package, built by `cmd/cli/main.go`.
+The **Magistrala CLI** (`magistrala-cli`) is a thin command-line wrapper over [Atom](https://github.com/absmach/atom)'s GraphQL API — every resource command (`workspaces`, `channels`, `groups`, `devices`, `gateways`, `devicetypes`, `users`, `authz`) ultimately talks to Atom, not to a per-entity Magistrala microservice. Its source lives in the `magistrala` repository's [`cli/`](https://github.com/absmach/magistrala/tree/main/cli) package, built by `cmd/cli/main.go`.
 
 ## Installation
 
@@ -54,10 +54,12 @@ Available Commands:
   health       Health Check
   help         Help about any command
   login        Authenticate against Atom
+  password     Manage the authenticated user's password
+  users        Users management
   workspaces   Manage Magistrala workspaces through Atom tenants
 
 Flags:
-  -d, --graphql-url string   Atom GraphQL endpoint
+      --graphql-url string   Atom GraphQL endpoint
   -h, --help                  help for magistrala-cli
   -l, --limit uint            Limit query parameter
   -n, --name string           Name query parameter
@@ -66,7 +68,7 @@ Flags:
       --token string          Atom bearer token
 ```
 
-(Reconstructed from `cli/root.go`'s command registration and persistent flags, not captured from a running binary — the checked-out `magistrala` working copy does not currently build cleanly (`pkg/sdk/bootstrap.go` references undefined `enableEndpoint`/`disableEndpoint`), unrelated to the CLI package itself. Verify with your own `--help` run before publishing exact flag text.)
+(Reconstructed from `cli/root.go`'s command registration and persistent flags, not captured from a running binary. `--graphql-url` and `--token` have no shorthand. Verify with your own `--help` run before relying on exact flag text.)
 
 Every resource command supports `--help` for its own usage, e.g. `magistrala-cli devices --help`.
 
@@ -98,4 +100,5 @@ magistrala-cli health <service>
 - [Device Types](/dev-guide/cli/devicetypes-cli)
 - [Channels](/dev-guide/cli/channels-cli)
 - [Groups](/dev-guide/cli/groups-cli)
+- [Users](/dev-guide/cli/users-cli)
 - [Authorization](/dev-guide/cli/authz-cli)

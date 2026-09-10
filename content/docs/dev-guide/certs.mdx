@@ -1,112 +1,144 @@
 ---
 title: Certs
-description: Issue, retrieve and revoke client certificates in Magistrala.
+description: Issue, renew and revoke device/gateway certificates for mTLS through Atom's certificate API.
 keywords:
   - Certificates
   - Certs
   - PKI
-  - OpenBao
   - mTLS
   - Security
   - X.509
+  - Atom
   - Magistrala
 image: /img/mg-preview.png
 ---
 
+Certificate issuance is provided by **Atom**, for mutual TLS between devices/gateways and the platform. There is no standalone `certs` HTTP service or CLI command — everything below is Atom's GraphQL API, same connection details as the rest of this reference: `POST http://localhost:8080/graphql`, `Content-Type: application/json`, `Authorization: Bearer <user_token>`.
 
-<Callout type="warn">
-The `certs` service itself is real and current, and its CLI code (`cli/certs.go`, command
-signatures below) uses current `<entity_id>`/`<workspace_id>` terminology — but it is **not
-currently registered** on the root `magistrala-cli` command tree (which only exposes `health,
-login, workspaces, channels, groups, authz, devices, gateways, devicetypes`). The commands below
-are not reachable from the shipped CLI binary today.
-</Callout>
+## Configuration
 
-Provisioning is a process of configuration of an IoT platform in which system operator creates and sets-up different entities used in the platform - users, groups, channels and devices.
-
-## Certs Service
-
-Issues certificates for entities (devices, gateways, etc). `Certs` service can create certificates to be used when `Magistrala` is deployed to support mTLS.
-`Certs` service will create a certificate for a valid entity ID if a valid user token is passed and the user is authorized for the provided entity ID.
-
-Certificate service can create certificates in PKI mode - where certificates issued by PKI, when you deploy `OpenBao` as PKI certificate management `cert` service will proxy requests to the configured PKI previously checking access rights and saving info on successfully created certificate.
-
-### PKI mode
-
-When `MG_CERTS_VAULT_HOST` is set, it is presumed that `OpenBao` is installed and `certs` service will issue certificates using the configured PKI API.
-
-First you'll need to set up `OpenBao`.
-
-To setup `OpenBao` follow the [PKI secrets engine setup and usage guide][openbao-pki-setup].
-
-To setup certs service with `OpenBao` following environment variables must be set:
+Certificate issuance is enabled per deployment:
 
 ```bash
-MG_CERTS_VAULT_HOST=vault-domain.com
-MG_CERTS_VAULT_PKI_PATH=<vault_pki_path>
-MG_CERTS_VAULT_ROLE=<vault_role>
-MG_CERTS_VAULT_TOKEN=<openbao_access_token>
+ATOM_CERTS_ENABLED=true
+ATOM_CERTS_CA_MODE=file_root_issuer
+ATOM_CERTS_ROOT_CA_CERT_PATH=/certs/ca.crt
+ATOM_CERTS_ROOT_CA_KEY_PATH=/certs/ca.key
 ```
 
-Make sure you have an already running instance of `Magistrala`, `OpenBao` and `Certs` service.
+`ATOM_CERTS_CA_DIR` (defaulting to `./ssl/certs`) is mounted into the Atom container as `/certs`, so the root CA cert/key paths above are read from there. `ATOM_CERTS_LEAF_DEFAULT_TTL_SECS` and `ATOM_CERTS_LEAF_MAX_TTL_SECS` bound how long an issued leaf certificate is valid for.
 
-To start Magistrala run:
+## Issue a certificate
+
+Two ways to issue: Atom generates the key pair for you, or you supply your own CSR.
+
+### Generated key pair
 
 ```bash
-make run_latest args="-d"
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "mutation IssueCert(\$input: IssueGeneratedCertificateV2Input!) { issueGeneratedCertificateV2(input: \$input) { certificate { credentialId serialNumber expiresAt } privateKeyPem chainPem } }",
+  "variables": {
+    "input": {
+      "entityId": "<device_id>",
+      "ttlSecs": 31536000
+    }
+  }
+}
+EOF
 ```
 
-OpenBao deployment and PKI bootstrap steps are documented separately. Until then, configure OpenBao PKI before starting `certs`.
+The response's `privateKeyPem` is only returned once, at issuance — Atom does not store it.
 
-To start certs service run:
+### From a CSR
 
 ```bash
-make run_addons certs up args="-d"
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "mutation IssueFromCSR(\$input: IssueCertificateFromCsrV2Input!) { issueCertificateFromCsrV2(input: \$input) { certificate { credentialId serialNumber expiresAt } } }",
+  "variables": {
+    "input": {
+      "entityId": "<device_id>",
+      "csrPem": "<csr_pem_content>",
+      "ttlSecs": 31536000,
+      "idempotencyKey": "<client_generated_uuid>"
+    }
+  }
+}
+EOF
 ```
 
-To stop certs service run:
+`idempotencyKey` is required on the CSR path — a retried request with the same key replays the original result (`idempotentReplay: true`) instead of issuing a second certificate.
+
+## View / list certificates
 
 ```bash
-make run_addons certs down
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "query Certs(\$entityId: ID, \$status: String, \$limit: Int, \$offset: Int) { certificates(entityId: \$entityId, status: \$status, limit: \$limit, offset: \$offset) { total items { credentialId serialNumber status expiresAt } } }",
+  "variables": { "entityId": "<device_id>", "status": "active", "limit": 20, "offset": 0 }
+}
+EOF
 ```
 
-You'll need an entity ID (a device or gateway ID) and a user token before issuing a certificate.
+A single certificate can be fetched with `certificate(credentialId: ID!)`.
 
-The real command surface, from `cli/certs.go` (subject to the CLI-wiring caveat above):
-
-```text
-certs [issue | get | revoke | renew | ocsp | view | download-ca | view-ca | csr | issue-csr | issue-csr-internal | crl | entity-id]
-```
-
-#### 1. Issue a certificate
+## Renew a certificate
 
 ```bash
-magistrala-cli certs issue <entity_id> <common_name> <ip_addrs_json> [<options_json>] <workspace_id> <token> [--ttl=8760h]
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "mutation RenewCert(\$input: RenewGeneratedCertificateV2Input!) { renewGeneratedCertificateV2(input: \$input) { certificate { credentialId serialNumber expiresAt } privateKeyPem } }",
+  "variables": {
+    "input": {
+      "credentialId": "<credential_id>",
+      "ttlSecs": 31536000,
+      "revokeOld": true,
+      "idempotencyKey": "<client_generated_uuid>"
+    }
+  }
+}
+EOF
 ```
 
-For example:
+`renewCertificateFromCsrV2` is the CSR-based equivalent, taking `credentialId`/`csrPem` instead of generating a new key pair. `revokeOld: true` revokes the certificate being renewed once the new one is issued.
+
+## Revoke a certificate
 
 ```bash
-magistrala-cli certs issue f13f0f30-f923-4504-8a7a-6aa45bcb4866 my-device '[]' <workspace_id> $USER_TOKEN --ttl=8760h
+curl -sSiX POST http://localhost:8080/graphql \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <user_token>" \
+-d @- <<EOF
+{
+  "query": "mutation RevokeCert(\$input: RevokeCertificateV2Input!) { revokeCertificateV2(input: \$input) { certificate { credentialId status } } }",
+  "variables": { "input": { "credentialId": "<credential_id>", "reason": "device decommissioned" } }
+}
+EOF
 ```
 
-#### 2. Retrieve a certificate
+`RevokeCertificateV2Input` also accepts `serialNumber` or `fingerprintSha256` in place of `credentialId`. To revoke everything an entity holds, use `revokeEntityCertificates(entityId: ID!, reason: String): Int!` — it returns the number revoked. For a workspace- or issuer-wide sweep, `bulkRevokeCertificates` pages through matching certificates via `afterCredentialId`/`snapshotAt` cursors.
+
+## CA, CRL and OCSP
+
+These are plain HTTPS routes served directly by Atom, not GraphQL:
 
 ```bash
-magistrala-cli certs get [all | <entity_id>] <workspace_id> <token>
-magistrala-cli certs view <serial_number> <workspace_id> <token>
+curl https://<atom-host>/certs/trust-bundle.pem
+curl https://<atom-host>/certs/issuers/<issuer_id>/crl
+curl https://<atom-host>/certs/issuers/<issuer_id>/ocsp
 ```
 
-#### 3. Revoke or renew a certificate
-
-```bash
-magistrala-cli certs revoke <serial_number> <workspace_id> <token>
-magistrala-cli certs renew <serial_number> <workspace_id> <token>
-```
-
-Other subcommands exist for CA inspection (`view-ca`, `download-ca`, `crl`), CSR-based issuance (`csr`, `issue-csr`, `issue-csr-internal`), OCSP status (`ocsp`), and looking up the entity behind a serial (`entity-id`) — see `cli/certs.go` for exact arguments.
-
-For more information about the Certification service, please check out the [Certs documentation][api-docs].
-
-[openbao-pki-setup]: https://openbao.org/docs/secrets/pki/setup/
-[api-docs]: https://docs.api.magistrala.absmach.eu/?urls.primaryName=api%2Fhttp.yaml&service=certs.yaml
+`ATOM_PUBLIC_URL` (or `ATOM_PUBLIC_BASE_URL`) must be set for these routes to be reachable at a stable, publicly-resolvable address — devices validating a peer's chain or checking revocation status need a URL they can actually reach, not `localhost`.

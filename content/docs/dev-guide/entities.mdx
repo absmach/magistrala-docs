@@ -19,7 +19,7 @@ image: /img/mg-preview.png
   `Role`, `Group`, `Client`, `Channel`) owned by the old per-entity services no longer apply.
 </Callout>
 
-Magistrala organizes everything under a **Workspace** (an Atom `Tenant`). Within a workspace, most of what used to be separate entity types — Devices, Channels, Gateways — are now one generic, kind-discriminated **Entity** type. **Groups** remain a separate hierarchical structure for organizing entities. This page explains those shapes; see [Authorization](/dev-guide/authorization) for how access to them is controlled.
+Magistrala organizes everything under a **Workspace** (an Atom `Tenant`). Within a workspace, Devices, Gateways, and Users are all one generic, kind-discriminated **Entity** type, while Channels are a separate **Resource** type. **Groups** remain a separate hierarchical structure for organizing both. This page explains those shapes; see [Authorization](/dev-guide/authorization) for how access to them is controlled.
 
 ## Workspace (Atom `Tenant`)
 
@@ -45,14 +45,14 @@ type Tenant struct {
 
 The API/CLI for interacting with Workspaces is described in the [Workspaces CLI](/dev-guide/cli/workspaces-cli). There is no `workspaces` REST section in [API](./api) — workspace management goes through Atom's GraphQL API, which the CLI wraps; see the callout on that page.
 
-## Entity — Devices, Channels, and Gateways
+## Entity — Devices, Gateways, and Users
 
-Devices, Channels, and Gateways are not separate Go types. They are all `atom.Entity`, discriminated by `Kind`:
+Devices, Gateways, and Users are not separate Go types. They are all `atom.Entity`, discriminated by `Kind`:
 
 ```go
 type Entity struct {
 	ID         string     `json:"id,omitempty"`
-	Kind       string     `json:"kind"` // e.g. "device", "channel"
+	Kind       string     `json:"kind"` // e.g. "device", "human"
 	Name       string     `json:"name"`
 	ExternalID string     `json:"external_id,omitempty"` // caller-assigned ID: serial, MAC, SKU
 	TenantID   string     `json:"tenant_id,omitempty"`
@@ -69,7 +69,7 @@ type Entity struct {
 }
 ```
 
-- `Kind` replaces the old separate `Client`/`Channel` structs — `"device"` and `"channel"` are the two kinds the platform's own UI and CLI use today.
+- `Kind` replaces the old separate `Client`/`User` structs — `"device"` and `"human"` are the two kinds the platform's own UI and CLI use today (Channels are a different Go type entirely — see [Resource — Channels](#resource--channels) below).
 - `ExternalID` is the successor to the old `Credentials.Identity` concept — an opaque, caller-assigned identifier (device serial/MAC/SKU), unique per tenant among live entities.
 - **A Gateway is not a third kind.** It's a device entity with `attributes.is_gateway = true` and an `attributes.gateways` list identifying which gateway(s) may publish/observe on its behalf. See the [Gateway Management](/user-guide/gateway-management/introduction) user guide for the reachability model this enables.
 - `DeviceTypeID`/`DeviceTypeVersionID` bind a device entity to a [Device Type](/user-guide/device-types/introduction) — a versioned schema Atom validates the entity's `Attributes` against on every write. Note the Go comment on this field is explicit that Atom's own internal name for this concept is "Profile," never exposed publicly because it collides with Bootstrap's unrelated Profile concept — always say **Device Type** in docs and UI copy.
@@ -77,7 +77,28 @@ type Entity struct {
 
 Secrets/credentials for publishing (what used to be `Client.Credentials.Secret`) are still issued per device and sent as `Authorization: Client <secret>` on the wire — the HTTP header keyword itself was not renamed even though the entity kind was.
 
-The API/CLI for interacting with Devices is in the [Devices CLI](/dev-guide/cli/devices-cli); Channels in the [Channels CLI](/dev-guide/cli/channels-cli); Gateways in the [Gateways CLI](/dev-guide/cli/gateways-cli); Device Types in the [Device Types CLI](/dev-guide/cli/devicetypes-cli).
+The API/CLI for interacting with Devices is in the [Devices CLI](/dev-guide/cli/devices-cli); Gateways in the [Gateways CLI](/dev-guide/cli/gateways-cli); Device Types in the [Device Types CLI](/dev-guide/cli/devicetypes-cli); Users in the [Users CLI](/dev-guide/cli/users-cli).
+
+## Resource — Channels
+
+Channels are a separate Go type from Entities, `atom.Resource` — they don't carry `ExternalID`, `DeviceTypeID`/`DeviceTypeVersionID`, or `Status`:
+
+```go
+type Resource struct {
+	ID         string     `json:"id,omitempty"`
+	Kind       string     `json:"kind"` // "channel"
+	Name       string     `json:"name"`
+	TenantID   string     `json:"tenant_id,omitempty"`
+	OwnerID    string     `json:"owner_id,omitempty"`
+	Attributes Attributes `json:"attributes,omitempty"` // map[string]any
+	CreatedAt  time.Time  `json:"created_at,omitempty"`
+	UpdatedAt  time.Time  `json:"updated_at,omitempty"`
+}
+```
+
+There's no `enableResource`/`disableResource` mutation and no dedicated status field — see the [API reference's Channels callout](/dev-guide/api#channels) for the `attributes.status` convention `magistrala-ui` uses instead, and why it doesn't itself gate publish/subscribe access. Publish/subscribe access to a channel is purely an authorization grant — a Permission Block scoped to the channel object, attached to a device via a Direct Policy or Role — see [Authorization](/dev-guide/authorization).
+
+The API/CLI for interacting with Channels is in the [Channels CLI](/dev-guide/cli/channels-cli).
 
 ## Group
 
@@ -103,40 +124,7 @@ The API/CLI for interacting with Groups is in the [Groups CLI](/dev-guide/cli/gr
 
 ## Users and roles
 
-There is no dedicated `User` Go struct owned by Magistrala anymore, and no `users` CLI command — user accounts, authentication, and role/permission assignment are owned entirely by Atom. See the [CLI Introduction](/dev-guide/cli/introduction-to-cli) for what's actually available from Magistrala's side (`login`, `authz check`), and [Authorization](/dev-guide/authorization) for the permission model.
-
-## Tags Filtering
-
-Tags are supported on **Workspaces**, **Groups**, and **Entities** (Devices/Channels). When listing any of these, the `tags` query parameter can be used to filter results by one or more tag values.
-
-### Operators
-
-| Operator | Symbol | URL-encoded | Behaviour |
-|----------|--------|-------------|-----------|
-| OR | `,` | `,` | Returns entities that have **at least one** of the specified tags |
-| AND | `+` | `%2B` | Returns entities that have **all** of the specified tags |
-
-### Examples
-
-**OR filter** — return entities tagged `temperature` or `humidity`:
-
-```
-GET /workspaces/{workspaceID}/channels?tags=temperature,humidity
-```
-
-**AND filter** — return entities tagged both `outdoor` and `sensor`:
-
-```
-GET /workspaces/{workspaceID}/channels?tags=outdoor%2Bsensor
-```
-
-> **Note:** Because `+` is interpreted as a space in URL query strings, always percent-encode it as `%2B` when constructing AND filter requests manually.
-
-### Tag Value Constraints
-
-Because `,` and `+` are reserved as filter operators, **tag values themselves must not contain these characters**. A tag such as `outdoor+sensor` or `type,water` would conflict with the query syntax and produce incorrect filter results.
-
-Allowed examples: `temperature`, `meter-type:water`, `zone-A`
+There is no dedicated `User` Go struct — a User is an `atom.Entity` of kind `"human"`, the same generic type documented above for Devices, wrapped by the [Users CLI](/dev-guide/cli/users-cli) (`create`/`get`/`update`/`delete`/`enable`/`disable`/`password set`). Account authentication (sign up, log in, session refresh) and role/permission assignment are owned entirely by Atom — see [Authorization](/dev-guide/authorization) for the permission model, and the [API reference's Users section](/dev-guide/api#users) for what's GraphQL-only versus CLI-wrapped.
 
 ## Audit logs
 

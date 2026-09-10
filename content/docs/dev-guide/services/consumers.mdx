@@ -58,7 +58,7 @@ This makes it ideal for IoT applications where devices generate continuous strea
 For example:
 
 ```go
-import "github.com/absmach/magistrala/consumers/timescale"
+import "github.com/absmach/magistrala/consumers/writers/timescale"
 
 db := // initialize your TimescaleDB connection
 consumer := timescale.New(db)
@@ -78,7 +78,7 @@ It is a general-purpose relational database storage for structured data. It's wi
 For example:
 
 ```go
-import "github.com/absmach/magistrala/consumers/postgres"
+import "github.com/absmach/magistrala/consumers/writers/postgres"
 
 db := // initialize your PostgreSQL connection
 consumer := postgres.New(db)
